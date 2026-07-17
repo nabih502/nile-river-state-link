@@ -5,3 +5,97 @@
 @media(max-width:1000px){.topbar nav{display:none;position:fixed;top:74px;right:0;left:0;background:#fff;padding:15px 20px;box-shadow:var(--shadow);height:auto;flex-wrap:wrap}.topbar nav.open{display:flex}.topbar nav a{height:42px}.mobile-menu{display:grid}.primary.compact{display:none}.exact-hero{grid-template-columns:1fr 1fr}.metric-bar{grid-template-columns:repeat(3,1fr)}.metric-bar>div:nth-child(n+4){display:none}.join-strip{grid-template-columns:250px 1fr}.join-cta{grid-column:1/-1;height:auto}.service-columns{grid-template-columns:repeat(3,1fr)}.market-strip{grid-template-columns:220px 1fr}.market-strip>.deep-btn{grid-column:1/-1}.portal-hero{grid-template-columns:1fr 1fr}.portal-side{display:none}.portal-education .portal-copy,.portal-investment .portal-copy,.portal-culture .portal-copy{padding-right:5vw}.visual-card-grid{grid-template-columns:repeat(2,1fr)}.support-bar{grid-template-columns:auto 1fr 1fr}.support-bar>a{grid-column:1/-1}.support-bar>div:nth-of-type(3){display:none}.membership-hero{grid-template-columns:1fr 1fr}.membership-card-image{grid-column:1/-1}.member-benefits{grid-template-columns:repeat(3,1fr)}.plans-grid{gap:12px}.mega-form{grid-template-columns:repeat(2,1fr)}.mega-form .interests{grid-column:1/-1}.interests>div{grid-template-columns:repeat(4,1fr)}.privacy{grid-column:1/-1}.payment-options article,.payment-options .visa{grid-template-columns:45px 70px 1fr}.payment-options label,.payment-options .visa>a{grid-column:1/-1}.footer-inner{grid-template-columns:repeat(3,1fr)}.footer-brand{grid-column:1/-1}}
 @media(max-width:700px){.topbar{height:66px}.topbar-inner{width:calc(100% - 20px)}.brand{width:155px;flex-basis:155px}.brand img{height:56px}.topbar nav{top:66px;display:none!important;flex-direction:column;align-items:stretch;gap:0}.topbar nav.open{display:flex!important}.topbar nav a{border-bottom:1px solid var(--line)}.search-btn{display:none}.exact-hero{grid-template-columns:1fr;min-height:auto}.hero-content{text-align:center;padding:34px 18px}.hero-content h1{font-size:38px}.hero-content p{font-size:13px}.hero-photo{height:250px;min-height:0;order:2!important}.values{justify-content:center;overflow-x:auto}.values b{min-width:65px}.hero-buttons{flex-direction:column}.metric-bar{margin:0;width:100%;border-radius:0;grid-template-columns:repeat(2,1fr)}.metric-bar>div:nth-child(3){display:none}.metric-bar>div{padding:12px 4px}.join-strip{grid-template-columns:1fr;text-align:center;margin-top:15px}.member-card-css{width:290px;margin:auto;text-align:right}.section{padding-block:32px}.section-heading h2{font-size:23px}.section-heading:before,.section-heading:after{width:25px;margin:0 7px}.service-columns{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:15px}.service-column{min-width:76vw;scroll-snap-align:center}.investment-banner{margin-inline:16px;width:auto;height:230px;display:grid;text-align:center}.investment-banner>.primary{margin:auto}.two-features{grid-template-columns:1fr;margin-inline:16px;width:auto}.feature-panel{grid-template-columns:1fr}.feature-panel img{height:180px;order:0}.market-strip{grid-template-columns:1fr;text-align:center;margin-inline:16px;width:auto}.market-strip>img{width:100%}.news-grid{display:flex;overflow-x:auto}.news-card{min-width:78vw}.portal-hero{height:auto;grid-template-columns:1fr}.portal-copy{grid-column:1;text-align:center;padding:32px 18px}.portal-image{grid-column:1;grid-row:2;height:240px}.portal-features{width:100%;border-radius:0;margin:0;display:flex;overflow-x:auto}.portal-features>div{min-width:145px}.stat-ribbon{width:100%;border-radius:0;grid-template-columns:1fr 1fr;gap:15px}.stat-ribbon>div{border:0}.visual-card-grid{display:flex;overflow-x:auto;scroll-snap-type:x mandatory}.visual-card{min-width:83vw;scroll-snap-align:center}.visual-card>img{height:145px}.library-band,.solar-banner{grid-template-columns:1fr;margin-inline:16px;width:auto}.library-band>img,.solar-banner>img{height:180px}.solar-banner>img,.solar-banner>div{grid-column:1}.solar-banner>div{grid-row:2}.library-items{grid-template-columns:1fr 1fr}.compact-panels{grid-template-columns:1fr;margin-inline:16px;width:auto}.icon-row{grid-template-columns:1fr 1fr}.social-counts{grid-template-columns:repeat(3,1fr)}.health-help{grid-template-columns:1fr;text-align:center;margin-inline:16px;width:auto}.health-tips>div:last-child{display:flex;overflow-x:auto}.health-tips b{min-width:70vw}.support-bar{grid-template-columns:1fr;text-align:center;margin-inline:16px;width:auto}.support-bar>i{margin:auto}.membership-hero{grid-template-columns:1fr}.membership-card-image{grid-column:1}.member-benefits{grid-template-columns:1fr 1fr;margin-top:10px}.plans-grid{display:flex;overflow-x:auto;padding:12px;scroll-snap-type:x mandatory}.price-card{min-width:82vw;scroll-snap-align:center}.price-card.chosen{transform:none}.all-benefits>div:last-child{display:flex;overflow-x:auto}.all-benefits b{min-width:45%}.register-intro{grid-template-columns:1fr;text-align:center}.register-intro>div{padding:32px 18px}.register-intro h1{font-size:37px}.register-intro h2{font-size:21px}.register-intro>img{height:230px}.mini-stats{justify-content:center}.mega-form{grid-template-columns:1fr}.mega-form .interests{grid-column:1}.interests>div{grid-template-columns:1fr 1fr}.membership-step{padding:15px}.membership-step .section-heading h2{font-size:25px}.upload-ways{display:flex;overflow-x:auto}.upload-ways button{min-width:75vw}.photo-rules{grid-template-columns:1fr}.photo-rules p{border:0;padding:0}.payment-options article,.payment-options .visa{grid-template-columns:45px 1fr}.payment-options article>i{grid-column:1}.payment-options article>div{grid-column:2}.payment-options label,.payment-options .visa>a{grid-column:1/-1}.success-view>h1{font-size:42px}.success-view>h2{font-size:22px}.member-number strong{font-size:20px}.thanks{align-items:flex-start}.contact-layout{grid-template-columns:1fr}.form-row{grid-template-columns:1fr}.faq-cards{display:flex;overflow-x:auto}.faq-cards a{min-width:65vw}.newsletter{grid-template-columns:1fr;text-align:center;margin-inline:16px;width:auto}.newsletter form{margin-top:12px}.footer-inner{grid-template-columns:1fr 1fr}.footer-brand{grid-column:1/-1}.motion{opacity:1;transform:none}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}.motion{opacity:1;transform:none;transition:none}.primary,.deep-btn,.service-column,.visual-card{transition:none}}
+
+/* Pixel-match refinements: crisp brand, clean image/text separation and safe motion. */
+.brand{width:auto;flex:0 0 auto;display:inline-flex;align-items:center;gap:9px;background:transparent;text-decoration:none}
+.brand-mark{position:relative;display:inline-block;width:50px;height:50px;flex:none}
+.brand-mark:after{content:"";position:absolute;width:20px;height:20px;border-radius:50%;background:linear-gradient(145deg,#ff9a1f,#f07800);left:15px;top:15px;box-shadow:0 3px 8px rgba(243,126,0,.28);z-index:2}
+.brand-mark i{position:absolute;width:12px;height:24px;border-radius:80% 80% 45% 45%;background:#8793a1;left:19px;top:1px;transform-origin:6px 24px}
+.brand-mark i:nth-child(2){transform:rotate(90deg)}
+.brand-mark i:nth-child(3){transform:rotate(180deg)}
+.brand-mark i:nth-child(4){transform:rotate(270deg)}
+.brand-copy{display:flex;flex-direction:column;line-height:1.15;text-align:right;white-space:nowrap;color:var(--navy)}
+.brand-copy b{font-size:15px;font-weight:950}
+.brand-copy em{font-size:11px;font-style:normal;color:var(--orange);font-weight:900;letter-spacing:.5px}
+.brand.light .brand-copy,.topbar.dark .brand-copy{color:#fff}
+.brand.light .brand-mark i,.topbar.dark .brand-mark i{background:#edf1f5}
+.topbar.dark{background:#1b2a3d;border-bottom-color:rgba(255,255,255,.1)}
+.topbar.dark nav a{color:#f7f9fb}
+.topbar.dark nav a.current{color:#ff9919}
+.topbar.dark .search-btn,.topbar.dark .mobile-menu{color:var(--navy);background:#fff;border-color:rgba(255,255,255,.45)}
+img{image-rendering:auto}
+.motion{opacity:1;transform:none;transition:none}
+.motion.in{animation:sectionRise .46s cubic-bezier(.2,.75,.25,1) both}
+@keyframes sectionRise{from{opacity:1;transform:translateY(14px)}to{opacity:1;transform:none}}
+.home-visual{position:relative}
+.home-visual>img{width:100%;height:100%;object-fit:cover;object-position:center}
+.hero-points{position:absolute;left:20px;bottom:24px;width:min(265px,calc(100% - 40px));padding:14px 16px;border-radius:10px;background:linear-gradient(145deg,rgba(20,35,53,.94),rgba(42,58,76,.92));color:#fff;box-shadow:0 14px 28px rgba(8,20,34,.28);backdrop-filter:blur(6px)}
+.hero-points b{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.13);font-size:12px}
+.hero-points b:last-child{border-bottom:0}
+.hero-points i{font-style:normal;color:var(--orange);font-size:21px;width:25px;text-align:center}
+.hero-points span{display:grid}
+.hero-points small{font-size:9px;color:#d5dce4;font-weight:500}
+.join-strip{direction:ltr;grid-template-columns:300px 1fr 180px}
+.join-strip>*{direction:rtl}
+.member-card-css .brand{margin:0 0 4px;width:auto;background:transparent}
+.member-card-css .brand-mark{width:34px;height:34px}
+.member-card-css .brand-mark:after{width:14px;height:14px;left:10px;top:10px}
+.member-card-css .brand-mark i{width:8px;height:17px;left:13px;top:0;transform-origin:4px 17px}
+.member-card-css .brand-copy b{font-size:9px}
+.member-card-css .brand-copy em{font-size:7px}
+.investment-banner>img,.feature-panel>img,.market-strip>img,.news-card>img,.visual-card>img{image-rendering:auto}
+.visual-card>img{object-fit:cover;object-position:center}
+.membership-pricing-logo{min-height:92px;display:grid;place-items:center;background:#fff;border-bottom:1px solid var(--line)}
+.membership-pricing-logo .brand-mark{width:58px;height:58px}
+.membership-pricing-logo .brand-mark:after{width:23px;height:23px;left:18px;top:18px}
+.membership-pricing-logo .brand-mark i{width:14px;height:29px;left:22px;top:0;transform-origin:7px 29px}
+.membership-pricing-logo .brand-copy b{font-size:19px}
+.membership-pricing-logo .brand-copy em{font-size:13px}
+.membership-hero{direction:ltr;grid-template-columns:1fr 1.2fr 1fr;min-height:400px}
+.membership-hero>*{direction:rtl}
+.membership-hero .hero-photo{grid-column:1;grid-row:1;order:unset;min-height:400px}
+.membership-hero .hero-content{grid-column:2;grid-row:1;order:unset;text-align:center}
+.membership-card-image{grid-column:3;grid-row:1;padding:30px;display:flex;align-items:center;background:#f5f6f7}
+.membership-card-preview{width:100%;min-height:220px;border-radius:16px;padding:20px;color:#fff;background:linear-gradient(145deg,#132236,#34475d);box-shadow:0 18px 38px rgba(14,29,46,.25);display:flex;flex-direction:column;position:relative;overflow:hidden}
+.membership-card-preview:after{content:"";position:absolute;width:170px;height:170px;border:28px solid rgba(246,139,11,.15);border-radius:50%;left:-75px;bottom:-90px}
+.membership-card-preview .brand{margin:0 0 22px;width:auto;background:transparent;z-index:1}
+.membership-card-preview .brand-mark{width:32px;height:32px}
+.membership-card-preview .brand-mark:after{width:13px;height:13px;left:10px;top:10px}
+.membership-card-preview .brand-mark i{width:8px;height:16px;left:12px;top:0;transform-origin:4px 16px}
+.membership-card-preview .brand-copy b{font-size:9px}
+.membership-card-preview .brand-copy em{font-size:7px}
+.membership-card-preview .card-chip{position:absolute;left:18px;top:22px;color:#ff9a19;font-size:11px;font-weight:900}
+.membership-card-preview>strong{font-size:18px;z-index:1}
+.membership-card-preview>small{color:#d4dbe3;z-index:1}
+.membership-card-preview>div{display:flex;justify-content:space-between;margin-top:auto;border-top:1px solid rgba(255,255,255,.17);padding-top:12px;z-index:1}
+.membership-card-preview>div em{font-style:normal;color:#ff9a19;font-weight:900;letter-spacing:2px}
+.membership-hero+.member-benefits{grid-template-columns:repeat(4,1fr)}
+
+@media(max-width:1000px){
+  .topbar.dark nav{background:#fff}
+  .topbar.dark nav a{color:var(--navy)}
+  .membership-hero{grid-template-columns:1fr 1fr}
+  .membership-hero .hero-photo{grid-column:1;grid-row:1}
+  .membership-hero .hero-content{grid-column:2;grid-row:1}
+  .membership-card-image{grid-column:1/-1;grid-row:2}
+}
+
+@media(max-width:700px){
+  .brand{gap:6px}
+  .brand-mark{width:40px;height:40px}
+  .brand-mark:after{width:16px;height:16px;left:12px;top:12px}
+  .brand-mark i{width:10px;height:20px;left:15px;top:0;transform-origin:5px 20px}
+  .brand-copy b{font-size:12px}
+  .brand-copy em{font-size:9px}
+  .topbar.dark nav.open{background:#fff}
+  .topbar.dark nav.open a{color:var(--navy)}
+  .hero-points{left:12px;bottom:12px;width:calc(100% - 24px);padding:9px 12px}
+  .hero-points b{padding:4px 0}
+  .join-strip{direction:rtl;grid-template-columns:1fr}
+  .membership-pricing-logo{min-height:76px}
+  .membership-hero{grid-template-columns:1fr}
+  .membership-hero .hero-content{grid-column:1;grid-row:1}
+  .membership-hero .hero-photo{grid-column:1;grid-row:2;min-height:250px}
+  .membership-card-image{grid-column:1;grid-row:3;padding:22px}
+  .membership-card-preview{max-width:340px;margin:auto}
+}
