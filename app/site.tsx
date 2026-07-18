@@ -10,7 +10,7 @@ import {
   Landmark, LayoutGrid, Menu, Megaphone, MonitorCheck, Network,
   MessageCircle,
   LockKeyhole, Mail, MapPin, Percent, Phone, QrCode, ReceiptText,
-  ScanFace, Search, Settings2, Share2, Shield, ShieldCheck,
+  Pill, ScanFace, Search, Settings2, Share2, Shield, ShieldCheck, Stethoscope,
   ShoppingCart, Sparkles, Sprout, Store, Tags, TrendingUp, Truck,
   Upload, UserCheck, UserRound, UsersRound, Video, WalletCards, X,
 } from "lucide-react";
@@ -354,6 +354,69 @@ function EducationPage(){
   </div>
 }
 
+function HealthPage(){
+  const trust=[
+    {icon:Globe2,title:"في خدمتكم أينما كنتم",text:"داخل السودان وخارجه"},
+    {icon:MonitorCheck,title:"متاحة إلكترونياً",text:"خدمات صحية من أي مكان"},
+    {icon:Clock3,title:"خدمة سريعة",text:"استجابة ومتابعة مستمرة"},
+    {icon:ShieldCheck,title:"موثوقة وآمنة",text:"خصوصية ورعاية معتمدة"},
+  ];
+  const medicalServices=[
+    {tone:"consult",image:"/assets/health-consult-hq.webp",icon:Stethoscope,title:"الاستشارات الطبية",lead:"استشارات مع نخبة من الأطباء والاستشاريين في مختلف التخصصات",tags:["الباطنية","الأطفال","النساء والتوليد","القلب","الجراحة","وغيرها"],action:"تصفح التخصصات"},
+    {tone:"clinic",image:"/assets/health-clinic-hq.webp",icon:MonitorCheck,title:"العيادة الإلكترونية",lead:"استشر الطبيب المختص عبر الإنترنت من أي مكان وفي أي وقت",tags:["مواعيد إلكترونية","كشف عن بُعد","متابعة دورية"],action:"ابدأ الاستشارة الآن",featured:true},
+    {tone:"insurance",image:"/assets/health-insurance-hq.webp",icon:ShieldCheck,title:"التأمين الطبي",lead:"باقات تأمين ميسرة بأسعار تفضيلية لأعضاء الرابطة وأسرهم",tags:["شراكات مع شركات معتمدة","تغطية داخل وخارج السودان","رعاية شاملة للأسرة"],action:"معرفة المزيد"},
+  ];
+  const helpOptions=[
+    {icon:HandHeart,title:"رفع حالة لطلب طبي"},
+    {icon:Clock3,title:"طلب مساعدة صحية عاجلة"},
+    {icon:MessageCircle,title:"التواصل المباشر",text:"مع لجنة الشؤون الاجتماعية"},
+    {icon:ReceiptText,title:"متابعة حالة",text:"ومعرفة نتيجة الطلب"},
+  ];
+  const reasons=[
+    {icon:UsersRound,title:"مجتمع صحي متكامل"},
+    {icon:HandHeart,title:"دعم حقيقي للمحتاجين"},
+    {icon:Stethoscope,title:"رعاية شاملة لك ولأسرتك"},
+  ];
+  const tips=[
+    {icon:HeartPulse,title:"متابعة دورية",text:"لحالتك المرضية"},
+    {icon:Sprout,title:"تغذية متوازنة",text:"لجسم أكثر صحة"},
+    {icon:UserRound,title:"المشي 30 دقيقة",text:"يومياً لحياة أطول"},
+    {icon:Globe2,title:"اشرب الماء",text:"لصحة أفضل"},
+  ];
+  return <div className="health-redesign">
+    <section className="health-master-hero">
+      <div className="health-hero-photo motion"><img src="/assets/health-hero-hq.webp" alt="طبيب من فريق الرعاية الصحية"/></div>
+      <div className="health-hero-copy motion"><span className="health-heart-mark"><HeartPulse/></span><div><h1>الصحة</h1><h2>معاً من أجل صحة أفضل</h2><p>خدمات صحية متكاملة لأبناء ولاية نهر النيل<br/>في الداخل والخارج، برعاية رابطة الولاية الرقمية</p><blockquote>صحتك .. مسؤوليتنا <HeartPulse/></blockquote></div></div>
+      <span className="health-hero-waves" aria-hidden="true"/>
+    </section>
+
+    <section className="health-trust page-width motion">{trust.map(item=>{const Icon=item.icon;return <a href="#health-services" key={item.title}><Icon/><span><b>{item.title}</b><small>{item.text}</small></span></a>})}</section>
+
+    <section id="health-services" className="health-services page-width">
+      <div className="health-section-title motion"><span/><h2>خدماتنا الصحية</h2><span/></div>
+      <div className="health-service-grid">{medicalServices.map(service=>{const Icon=service.icon;return <article className={`health-service-card ${service.tone} ${service.featured?"featured":""} motion`} key={service.title}>
+        <div className="health-service-photo"><img src={service.image} alt={service.title}/>{service.featured&&<b>الأكثر استخداماً <HeartPulse/></b>}</div>
+        <header><span><Icon/></span><h3>{service.title}</h3></header><p>{service.lead}</p>
+        <div className="health-tags">{service.tags.map(tag=><small key={tag}><Check/>{tag}</small>)}</div>
+        <a href="/contact">{service.action}<ChevronLeft/></a>
+      </article>})}</div>
+    </section>
+
+    <section className="health-secondary page-width">
+      <article className="health-pharmacy motion"><div className="health-pharmacy-photo"><img src="/assets/health-pharmacy-hq.webp" alt="الصيدلية الخيرية"/></div><div><header><Pill/><h2>الصيدلية الخيرية</h2></header><p>توفير الأدوية للمحتاجين وأسر الأعضاء</p><ul><li>أدوية أساسية ومزمنة</li><li>أسعار رمزية للطلبة</li><li>شراكات مع صيدليات معتمدة</li></ul><a href="/contact">طلب دواء <ChevronLeft/></a></div></article>
+      <article className="health-help-new motion"><header><HeartHandshake/><div><h2>طلب المساعدة والتواصل مع الرابطة</h2><p>نحن معك في الحالات الصحية والإنسانية</p></div></header><div>{helpOptions.map(item=>{const Icon=item.icon;return <a href="/contact" key={item.title}><Icon/><span><b>{item.title}</b>{item.text&&<small>{item.text}</small>}</span></a>})}</div><a className="health-help-cta" href="/contact">إرسال طلب المساعدة <ArrowLeft/></a></article>
+    </section>
+
+    <section className="health-reasons page-width motion"><div className="health-inline-title"><span/><h2>لماذا تستخدم خدمات الرابطة الصحية؟</h2><span/></div><div>{reasons.map(item=>{const Icon=item.icon;return <article key={item.title}><Icon/><b>{item.title}</b></article>})}</div></section>
+
+    <section className="health-tips-new page-width"><div className="health-inline-title motion"><span/><h2>نصائح صحية</h2><span/></div><div>{tips.map(item=>{const Icon=item.icon;return <a className="motion" href="/contact" key={item.title}><Icon/><span><b>{item.title}</b><small>{item.text}</small></span><ChevronLeft/></a>})}</div></section>
+
+    <section className="health-privacy page-width motion"><ShieldCheck/><div><h2>خصوصيتك تهمنا</h2><p>جميع بياناتك الصحية سرية وآمنة، ولا تتم مشاركتها مع أي جهة خارجية.</p></div><span><b><Clock3/> خدمة على مدار الساعة</b><b><Stethoscope/> أطباء معتمدون</b><b><LockKeyhole/> سرية تامة</b><b><ShieldCheck/> أمان البيانات</b></span></section>
+
+    <section className="health-join page-width motion"><div className="health-pulse-line" aria-hidden="true"><HeartPulse/></div><div><h2>صحتك تهمنا .. نحن دائماً معك</h2><p>انضم إلى رابطة ولاية نهر النيل الإلكترونية وتمتع بخدمات صحية متكاملة</p></div><a href="/membership">سجل عضويتك الآن <UserRound/></a></section>
+  </div>
+}
+
 function PortalHero({type}:{type:PortalKey}){const p=info[type];return <><section className={`portal-hero portal-${type}`}><div className="portal-copy motion"><h1>{p.title}</h1><h2>{p.accent}</h2><p>{p.lead}</p></div><div className="portal-image motion"><img src={p.hero} alt={p.title}/></div>{["education","investment","culture"].includes(type)&&<aside className="portal-side motion"><h3>{p.icon}&nbsp; خدمات {p.title}</h3>{p.tabs.map((t,i)=><a key={t} className={i===0?"selected":""} href="#services">{t}<span>⌃</span></a>)}</aside>}</section><section className="portal-features motion">{(type==="health"?["في خدمتكم أينما كنتم","متاحة إلكترونياً","خدمة سريعة","موثوقة وآمنة"]:type==="social"?["حالات إنسانية","تواصل مباشر","استشارة اجتماعية","برامج ومبادرات","دعم المحتاجين"]:["جودة وتميز","دعم شامل","محتوى متخصص","تعلّم مرن"]).map((x,i)=><div key={x}><i>{["◎","▣","◷","♢","♡"][i]}</i><b>{x}</b><span>خدمة رقمية متكاملة</span></div>)}</section></>}
 
 function PortalPage({type}:{type:PortalKey}){const p=info[type];return <><PortalHero type={type}/><section className="stat-ribbon page-width motion">{p.stats.map(([n,l],i)=><div key={l}><i>{["♧","⌂","▦","↗"][i]}</i><b>{n}</b><span>{l}</span></div>)}</section><section id="services" className="section page-width"><SectionTitle mini="خدمات متكاملة بين يديك">{p.section}</SectionTitle><div className={`visual-card-grid ${type==="health"?"three-primary":""}`}>{p.cards.map((c,i)=><article className={`visual-card motion ${i===3&&type==="health"?"wide-health":""}`} key={c.title}><img src={c.image} alt={c.title}/><div><i>{c.icon}</i><h3>{c.title}</h3><p>{c.text}</p><ul><li>خدمة سهلة وسريعة</li><li>متابعة ودعم مستمر</li><li>خصوصية وأمان</li></ul><a href="/contact" className="card-action">{type==="social"?"ساهم الآن":"معرفة المزيد"} <Arrow/></a></div></article>)}</div></section>{type==="education"&&<EducationExtras/>}{type==="investment"&&<InvestmentExtras/>}{type==="culture"&&<CultureExtras/>}{type==="social"&&<SocialExtras/>}{type==="health"&&<HealthExtras/>}<SupportBar/></>}
@@ -486,4 +549,4 @@ function Success(){return <MemberStepShell className="success-step"><header clas
 
 function Contact(){const [sent,setSent]=useState(false);const submit=(e:FormEvent)=>{e.preventDefault();setSent(true)};return <><section className="contact-hero exact-hero"><div className="hero-content motion"><h1>تواصل معنا</h1><h2>نحن هنا لخدمتكم</h2><p>نسعد بتواصلكم واستقبال استفساراتكم ومقترحاتكم وشكاواكم، فريقنا جاهز للرد عليكم وتقديم الدعم في أسرع وقت ممكن.</p></div><div className="hero-photo motion"><img src="/assets/contact-hero-hq.webp" alt="تواصل معنا"/></div></section><section className="member-benefits page-width motion">{[["♧","نحن معكم","نتواصل معكم بما يسهم في تطوير خدماتنا"],["◎","خدمتكم أينما كنتم","ندعمكم من داخل وخارج الولاية"],["♢","خصوصية وأمان","نحافظ على سرية معلوماتكم"],["◷","استجابة سريعة","نرد على رسائلكم في أسرع وقت"],["☏","فريق متخصص","فريق دعم متكامل لخدمتكم"]].map(([i,t,d])=><div key={t}><i>{i}</i><h3>{t}</h3><p>{d}</p></div>)}</section><section className="contact-layout page-width"><aside><h2>طرق التواصل</h2>{[["◉","واتساب","+249 912 345 678"],["☏","اتصال هاتفي","+249 123 456 789"],["✉","البريد الإلكتروني","info@nilenile.org"],["⌖","العنوان","ولاية نهر النيل - السودان"],["◷","ساعات العمل","الأحد إلى الخميس · 9ص - 5م"]].map(([i,t,d])=><div key={t}><i>{i}</i><span><b>{t}</b>{d}</span></div>)}</aside><form onSubmit={submit}><h2>أرسل لنا رسالة</h2>{sent?<div className="sent"><i>✓</i><h2>تم إرسال رسالتك بنجاح</h2><p>سنتواصل معك في أقرب وقت.</p></div>:<><div className="form-row"><label>الاسم الكامل *<input required/></label><label>البريد الإلكتروني *<input required type="email"/></label></div><label>رقم الجوال<input type="tel"/></label><label>اختر نوع الرسالة *<select required><option>استفسار عام</option><option>شكوى</option><option>اقتراح</option><option>دعم فني</option></select></label><label>نص الرسالة *<textarea required rows={5}/></label><label className="file-field">⇧ إرفاق ملف (اختياري)<input type="file"/></label><button className="primary">إرسال الرسالة <Arrow/></button></>}</form></section><section className="section page-width"><SectionTitle>أسئلة شائعة</SectionTitle><div className="faq-cards">{[["الخدمات والبرامج","تفاصيل عن خدماتنا وبرامجنا"],["الدعم الفني","المساعدة في استخدام المنصة"],["العضوية والدفع","الاستفسار عن العضوية وطرق الدفع"],["الشكاوى والمقترحات","نستقبل شكاواكم ومقترحاتكم"],["الاستفسارات العامة","إجابات على أكثر الأسئلة الشائعة"]].map(([t,d])=><a href="#" key={t}><i>◫</i><b>{t}</b><span>{d}</span></a>)}</div></section><section className="newsletter page-width motion"><div><h2>كن على تواصل دائم</h2><p>اشترك في نشرتنا البريدية ليصلك كل جديد من أخبار الرابطة والفعاليات والخدمات.</p></div><form><input type="email" placeholder="البريد الإلكتروني"/><button className="primary">اشترك الآن</button></form></section></>}
 
-export default function NileSite({page}:{page:string}){const active=routeMap[page]||"home";const hideHeader=["membership","photo","payment","success"].includes(active);const hideFooter=["membership","photo","payment","success"].includes(active);return <div dir="rtl"><Motion/>{!hideHeader&&<Header active={active}/>}<main>{active==="home"?<Home/>:active==="social"?<SocialPage/>:active==="education"?<EducationPage/>:active==="membership"?<Membership/>:active==="register"?<Register/>:active==="photo"?<PhotoUpload/>:active==="payment"?<Payment/>:active==="success"?<Success/>:active==="contact"?<Contact/>:<PortalPage type={active}/>}</main>{!hideFooter&&<Footer/>}</div>}
+export default function NileSite({page}:{page:string}){const active=routeMap[page]||"home";const hideHeader=["membership","photo","payment","success"].includes(active);const hideFooter=["membership","photo","payment","success"].includes(active);return <div dir="rtl"><Motion/>{!hideHeader&&<Header active={active}/>}<main>{active==="home"?<Home/>:active==="social"?<SocialPage/>:active==="education"?<EducationPage/>:active==="health"?<HealthPage/>:active==="membership"?<Membership/>:active==="register"?<Register/>:active==="photo"?<PhotoUpload/>:active==="payment"?<Payment/>:active==="success"?<Success/>:active==="contact"?<Contact/>:<PortalPage type={active}/>}</main>{!hideFooter&&<Footer/>}</div>}
