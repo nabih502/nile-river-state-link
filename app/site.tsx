@@ -3,7 +3,7 @@
 import { FormEvent, useEffect, useRef, useState } from "react";
 import {
   Aperture, ArrowLeft, Award, BadgeCheck, BadgePercent, Banknote,
-  BookOpen, BriefcaseBusiness, Building2, Camera, ChartNoAxesCombined,
+  BookOpen, BriefcaseBusiness, Building2, Camera, ChartNoAxesCombined, ChartPie,
   Check, ChevronLeft, CircleAlert, CircleCheckBig, Clock3, CreditCard, Crown,
   Factory, FileImage, FileUp, Gem, Gift, Globe2, GraduationCap,
   HandHeart, Handshake, HeartHandshake, HeartPulse,
@@ -287,10 +287,10 @@ function EducationPage(){
     {icon:HandHeart,n:"98%",label:"نسبة رضا الطلاب"},
   ];
   const courses=[
-    {image:"/assets/course-4.jpg",category:"إدارة",title:"إدارة المشاريع",meta:"متوسط  ·  15 درس",price:"200 ر.س"},
-    {image:"/assets/course-3.jpg",category:"لغة",title:"اللغة الإنجليزية",meta:"20 درس  ·  مبتدئ",price:"مجاني"},
-    {image:"/assets/course-2.jpg",category:"تصميم",title:"تصميم الجرافيك",meta:"18 درس  ·  متوسط",price:"150 ر.س"},
-    {image:"/assets/course-1.jpg",category:"برمجة",title:"أساسيات البرمجة للمبتدئين",meta:"12 درس  ·  مبتدئ",price:"مجاني"},
+    {image:"/assets/course-project-hq.webp",category:"إدارة",title:"إدارة المشاريع",meta:"متوسط  ·  15 درس",price:"200 ر.س"},
+    {image:"/assets/course-english-hq.webp",category:"لغة",title:"اللغة الإنجليزية",meta:"20 درس  ·  مبتدئ",price:"مجاني"},
+    {image:"/assets/course-design-hq.webp",category:"تصميم",title:"تصميم الجرافيك",meta:"18 درس  ·  متوسط",price:"150 ر.س"},
+    {image:"/assets/course-code-hq.webp",category:"برمجة",title:"أساسيات البرمجة للمبتدئين",meta:"12 درس  ·  مبتدئ",price:"مجاني"},
   ];
   const library=[
     {icon:ReceiptText,n:"1,500+",label:"اختبارات تفاعلية"},
@@ -312,7 +312,7 @@ function EducationPage(){
       <div className="edu-hero-features motion">{heroFeatures.map(item=>{const Icon=item.icon;return <article key={item.title}><Icon/><b>{item.title}</b><small>{item.text}</small></article>})}</div>
     </section>
 
-    <section className="edu-stats page-width motion"><div className="edu-stats-art"><img src="/assets/education-reference-stats-chart.png" alt="مؤشرات التعليم"/></div>{stats.map(item=>{const Icon=item.icon;return <article key={item.label}><Icon/><b>{item.n}</b><small>{item.label}</small></article>})}<h2>أرقام وإحصائيات التعليم</h2></section>
+    <section className="edu-stats page-width motion"><div className="edu-stats-art" aria-hidden="true"><ChartNoAxesCombined className="edu-stats-line"/><ChartPie className="edu-stats-pie"/></div>{stats.map(item=>{const Icon=item.icon;return <article key={item.label}><Icon/><b>{item.n}</b><small>{item.label}</small></article>})}<h2>أرقام وإحصائيات التعليم</h2></section>
 
     <div className="edu-dashboard page-width">
       <div className="edu-primary-column">
@@ -326,7 +326,7 @@ function EducationPage(){
           ].map(([icon,title,text])=>{const Icon=icon as typeof BookOpen;return <article key={String(title)}><Icon/><b>{String(title)}</b><small>{String(text)}</small></article>})}</div><a href="#courses">استعراض جميع المراحل <ArrowLeft/></a></div>
         </section>
 
-        <section id="courses" className="edu-courses"><header><a href="/contact">عرض الكل <ArrowLeft/></a><h2>الدورات وكورسات التقوية</h2></header><div>{courses.map(course=><article className="motion" key={course.title}><div className="edu-course-photo"><img src={course.image} alt={course.title}/></div><h3>{course.title}</h3><p>{course.meta}</p><footer><b>{course.price}</b><HeartHandshake/></footer></article>)}</div><span className="edu-dots">● ● ●</span></section>
+        <section id="courses" className="edu-courses"><header><a href="/contact">عرض الكل <ArrowLeft/></a><h2>الدورات وكورسات التقوية</h2></header><div>{courses.map(course=><article className="motion" key={course.title}><div className="edu-course-photo"><img src={course.image} alt={course.title}/><span className="edu-course-badge">{course.category}</span></div><h3>{course.title}</h3><p>{course.meta}</p><footer><b>{course.price}</b><HeartHandshake/></footer></article>)}</div><span className="edu-dots">● ● ●</span></section>
       </div>
 
       <aside className="edu-side-column">
