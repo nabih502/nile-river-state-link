@@ -646,3 +646,58 @@ body:has(.social-redesign) .topbar.home-topbar .primary.compact{height:43px!impo
 @media(prefers-reduced-motion:reduce){
   .education-redesign :is(a,article,section,img,svg){transition:none!important;transform:none!important}
 }
+
+/* Shared interaction language for every completed screen. */
+@media(hover:hover) and (pointer:fine){
+  :is(.home-redesign,.social-redesign,.member-pricing-page,.register-page,.member-step-page) :is(a,button,article,section,img,svg,fieldset,label),
+  :is(.portal-hero,.portal-features,.stat-ribbon,.visual-card-grid,.library-band,.solar-banner,.compact-panels,.social-counts,.health-help,.health-tips,.support-bar,.contact-layout,.member-benefits,.faq-cards,.newsletter) :is(a,button,article,div,img,svg){transition:transform .28s cubic-bezier(.2,.75,.25,1),box-shadow .28s ease,border-color .28s ease,background-color .28s ease,color .28s ease,opacity .28s ease,filter .28s ease}
+
+  .topbar .search-btn:hover,.topbar .mobile-menu:hover{transform:scale(1.07) rotate(-5deg);border-color:#f3a34a;box-shadow:0 7px 17px rgba(20,34,51,.15)}
+  .topbar .brand:hover img{transform:scale(1.025)}.site-footer a:hover{color:#ff9a19;transform:translateX(-4px)}.socials b:hover{background:#f68b0b;color:#fff;border-color:#f68b0b;transform:translateY(-3px)}
+
+  .home-hero-stage:hover>img{transform:scale(1.035)}.home-benefit-panel>div:hover{background:rgba(255,255,255,.07);transform:translateX(-5px)}.home-benefit-panel>div:hover svg{transform:scale(1.13) rotate(-4deg)}
+  .home-values b:hover,.home-metrics>div:hover{background:#fff7ed;transform:translateY(-4px)}.home-values b:hover svg,.home-metrics>div:hover svg{color:#ef8610;transform:scale(1.13)}
+  .home-join:hover,.home-investment:hover,.home-opportunity:hover,.home-market:hover{transform:translateY(-4px);box-shadow:0 14px 30px rgba(23,38,54,.14)}.home-member-card:hover{transform:rotate(0) scale(1.035)}.home-join-cta:hover{transform:translateY(-4px);box-shadow:0 13px 25px rgba(236,122,0,.3)}
+  .home-service-card:hover{transform:translateY(-7px);box-shadow:0 15px 29px rgba(23,38,54,.15)}.home-service-card:hover .service-icon svg{transform:scale(1.13) rotate(-4deg)}.home-service-card:hover>a{filter:brightness(1.08);box-shadow:0 7px 16px color-mix(in srgb,var(--tone) 28%,transparent)}
+  .home-investment:hover>.investment-bg,.home-market:hover>img{transform:scale(1.045)}.home-investment>a:hover,.home-opportunity>a:hover,.home-market>a:hover,.home-program .program-copy>a:hover{transform:translateY(-3px);filter:brightness(1.08);box-shadow:0 8px 18px rgba(22,35,50,.2)}
+  .home-program:hover{transform:translateY(-6px);box-shadow:0 15px 29px rgba(23,38,54,.14);border-color:#d9a566}.home-program:hover>img{transform:scale(1.055)}.program-features>b:hover{background:#fff5e9;color:#d87500}.program-features>b:hover svg{transform:scale(1.14)}
+  .home-news-card:hover{transform:translateY(-6px);box-shadow:0 14px 28px rgba(23,38,54,.14);border-color:#efb168}.home-news-card:hover>img{transform:scale(1.07)}.all-news-link:hover{color:#d87500;transform:translateX(-5px)}
+
+  .ss-hero-visual:hover img{transform:scale(1.035)}.ss-quick>a:hover{background:#fff4e7;transform:translateY(-4px)}.ss-quick>a:hover img,.ss-quick>a:hover svg{transform:scale(1.12) rotate(-3deg)}
+  .ss-service-card:hover{border-color:#efb168;transform:translateY(-7px);box-shadow:0 15px 29px rgba(27,40,54,.14)}.ss-service-card:hover .ss-service-icon img,.ss-service-card:hover .ss-service-icon svg{transform:scale(1.12) rotate(-4deg)}
+  .ss-initiative-card:hover{border-color:#efb168;transform:translateY(-6px);box-shadow:0 14px 27px rgba(27,40,54,.14)}.ss-initiative-card:hover>img{transform:scale(1.065)}.ss-initiative-card footer a:hover{background:var(--ss-orange);color:#fff}
+  .ss-stats>div:hover,.ss-values article:hover{background:#fff7ed;transform:translateY(-4px)}.ss-stats>div:hover img,.ss-stats>div:hover svg,.ss-values article:hover img,.ss-values article:hover svg{transform:scale(1.13)}
+  .ss-support:hover{transform:translateY(-4px);box-shadow:0 14px 28px rgba(23,38,54,.2)}.ss-help-copy a:hover,.ss-contact-methods a:hover{color:#ff9b1a;transform:translateY(-3px)}.ss-contact-methods a:hover svg{transform:scale(1.13)}
+
+  .portal-image:hover img{transform:scale(1.04)}.portal-side a:hover{background:#fff2e2;color:#d87500;transform:translateX(-4px)}.portal-side a.selected:hover{background:#f68b0b;color:#fff}
+  .portal-features>div:hover,.stat-ribbon>div:hover,.social-counts>div:hover{background:#fff7ed;color:#d87500;transform:translateY(-4px)}.stat-ribbon>div:hover{background:rgba(255,255,255,.08);color:#fff}.portal-features>div:hover i,.stat-ribbon>div:hover i{transform:scale(1.15)}
+  .visual-card:hover{transform:translateY(-7px);box-shadow:0 15px 29px rgba(20,35,54,.15);border-color:#efb168}.visual-card:hover>img{transform:scale(1.065)}.visual-card:hover .card-action{background:#f68b0b;color:#fff}
+  .library-band:hover,.solar-banner:hover,.health-help:hover,.support-bar:hover{transform:translateY(-5px);box-shadow:0 15px 30px rgba(22,36,52,.15)}.library-band:hover>img,.solar-banner:hover>img{transform:scale(1.05)}
+  .compact-panels>article:hover{transform:translateY(-5px);box-shadow:0 13px 26px rgba(22,36,52,.12);border-color:#efb168}.compact-panels p:hover,.icon-row b:hover,.health-actions b:hover,.health-tips b:hover{background:#fff6eb;color:#d87500;transform:translateY(-3px)}
+
+  .mp-photo:hover img,.reg-visual:hover img{transform:scale(1.035)}.mp-card-wrap:hover .member-card-art,.reg-join-banner:hover .member-card-art{transform:rotate(0) scale(1.035)}
+  .mp-benefits>div:hover,.mp-all article:hover{background:#fff6eb;color:#d87500;transform:translateY(-5px)}.mp-benefits>div:hover svg,.mp-all article:hover svg{transform:scale(1.14) rotate(-4deg)}
+  .mp-plan:hover{transform:translateY(-9px);border-color:#efad58;box-shadow:0 17px 34px rgba(22,36,52,.15)}.mp-plan.selected:hover{transform:translateY(-12px) scale(1.01)}.mp-plan-button:hover{filter:brightness(1.08);box-shadow:0 9px 20px rgba(239,126,0,.28)}
+  .mp-support>div:hover{background-color:#fff6eb;transform:translateY(-3px)}.mp-help:hover{background:linear-gradient(120deg,#26384d,#3b4c5d);color:#fff}.mp-qr:hover>svg{transform:scale(1.08)}
+
+  .reg-stats>b:hover,.reg-benefits p:hover,.reg-interests label:hover,.reg-dash-grid>article:hover,.reg-partners>b:hover{background:#fff6eb;color:#d87500;transform:translateY(-3px)}.reg-stats>b:hover svg,.reg-benefits p:hover svg,.reg-interests label:hover svg{transform:scale(1.13)}
+  .reg-form fieldset:hover{border-color:#efb168;box-shadow:0 10px 22px rgba(24,38,53,.09);transform:translateY(-2px)}.member-file:hover{border-color:#ef8a10;background:#fff8ef}.reg-join-banner>button:hover,.reg-newsletter button:hover{transform:translateY(-3px);filter:brightness(1.08);box-shadow:0 9px 20px rgba(239,126,0,.28)}
+  .member-field :is(input,select,textarea):focus,.reg-newsletter input:focus,.contact-layout :is(input,select,textarea):focus,.newsletter input:focus{outline:0;border-color:#ef8a10;box-shadow:0 0 0 3px rgba(239,138,16,.14);background:#fff}
+
+  .photo-preview:hover,.photo-conditions:hover,.step-warning:hover,.payment-notice:hover,.success-member-card:hover,.success-thanks:hover{border-color:#efb168;box-shadow:0 14px 29px rgba(22,36,52,.12);transform:translateY(-4px)}.photo-methods button:hover{transform:translateY(-6px);border-color:#ef8a10;box-shadow:0 13px 25px rgba(22,36,52,.13)}.photo-methods button:hover svg{transform:scale(1.12) rotate(-4deg)}
+  .payment-cards>article:hover{transform:translateY(-6px);border-color:#efb168;box-shadow:0 16px 31px rgba(22,36,52,.14)}.payment-cards>article>label:hover{border-color:#ef8a10;background:#fff8ef}.payment-cards>article:hover>aside svg{transform:scale(1.1)}.visa-card>a:hover,.step-continue:hover{transform:translateY(-3px);filter:brightness(1.08);box-shadow:0 9px 20px rgba(239,126,0,.3)}
+  .success-check:hover{transform:scale(1.06) rotate(-4deg)}.success-user:hover{transform:scale(1.08)}
+
+  .member-benefits>div:hover,.contact-layout>aside>div:hover,.faq-cards a:hover{background:#fff6eb;color:#d87500;transform:translateY(-4px)}.contact-layout>aside>div:hover i,.faq-cards a:hover i{transform:scale(1.12)}.contact-layout>form:hover,.contact-layout>aside:hover,.newsletter:hover{border-color:#efb168;box-shadow:0 13px 26px rgba(22,36,52,.12);transform:translateY(-3px)}
+  :is(.home-redesign,.social-redesign,.member-pricing-page,.register-page,.member-step-page) a:focus-visible,
+  :is(.portal-hero,.visual-card-grid,.compact-panels,.contact-layout,.faq-cards,.newsletter) a:focus-visible{outline:2px solid #ef8a10;outline-offset:3px}
+}
+
+@media(hover:none){
+  :is(.home-service-card,.home-news-card,.ss-service-card,.ss-initiative-card,.visual-card,.mp-plan,.reg-interests label,.photo-methods button,.payment-cards>article,.faq-cards a):active{transform:scale(.985);filter:brightness(.98)}
+}
+
+@media(prefers-reduced-motion:reduce){
+  :is(.home-redesign,.social-redesign,.member-pricing-page,.register-page,.member-step-page) :is(a,button,article,section,img,svg,fieldset,label),
+  :is(.portal-hero,.portal-features,.stat-ribbon,.visual-card-grid,.library-band,.solar-banner,.compact-panels,.social-counts,.health-help,.health-tips,.support-bar,.contact-layout,.member-benefits,.faq-cards,.newsletter) :is(a,button,article,div,img,svg){transition:none!important}
+}
