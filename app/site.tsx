@@ -417,6 +417,87 @@ function HealthPage(){
   </div>
 }
 
+function InvestmentPage(){
+  const heroMenu=[
+    {icon:ChartNoAxesCombined,label:"فرص الاستثمار"},
+    {icon:LayoutGrid,label:"القطاعات الاستثمارية"},
+    {icon:Gift,label:"الحوافز والتسهيلات"},
+    {icon:BookOpen,label:"دليل المستثمر"},
+    {icon:Award,label:"قصص نجاح"},
+    {icon:UsersRound,label:"شركاؤنا"},
+    {icon:MessageCircle,label:"تواصل مع إدارة الاستثمار"},
+  ];
+  const features=[
+    {icon:ChartNoAxesCombined,title:"عائد استثماري مجزٍ",text:"فرص متنوعة بعوائد مرتفعة ومستدامة"},
+    {icon:Sprout,title:"موارد طبيعية غنية",text:"أراضٍ زراعية واسعة وثروات معدنية ومائية"},
+    {icon:MapPin,title:"موقع استراتيجي",text:"يربط بين السودان ودول الجوار والأسواق العالمية"},
+    {icon:ShieldCheck,title:"بيئة استثمارية آمنة",text:"تسهيلات وحوافز وتشريعات داعمة للمستثمرين"},
+  ];
+  const stats=[
+    {icon:Sprout,n:"2.9+ مليون",label:"هكتار أراضٍ زراعية"},
+    {icon:Landmark,n:"500 ألف",label:"هكتار نيلية وشبكة مائية"},
+    {icon:Building2,n:"11+",label:"مجمعات ذات مقومات متنوعة"},
+    {icon:UsersRound,n:"850 كم",label:"من نهر النيل والسواقي"},
+    {icon:Gem,n:"3 مليون",label:"نسمة قوة بشرية شابة"},
+  ];
+  const sectors=[
+    {image:"/assets/investment-hero-hq.webp",icon:Sprout,title:"الزراعة والإنتاج النباتي",text:"أراضٍ خصبة ومياه وفيرة ومحاصيل استراتيجية"},
+    {image:"/assets/invest-livestock-hq.webp",icon:UsersRound,title:"الثروة الحيوانية",text:"ثروة حيوانية كبيرة ومراعي طبيعية واسعة"},
+    {image:"/assets/invest-industry-hq.webp",icon:Factory,title:"الصناعة التحويلية",text:"مواد خام متوفرة وبنية صناعية متكاملة"},
+    {image:"/assets/invest-mining-hq.webp",icon:Gem,title:"التعدين والمحاجر",text:"ذهب، معادن، حجر جيري وموارد طبيعية"},
+    {image:"/assets/invest-tourism-hq.webp",icon:Landmark,title:"السياحة والضيافة",text:"مواقع أثرية وطبيعية وفنادق ومنتجعات"},
+  ];
+  const opportunities=[
+    {image:"/assets/investment-hero-hq.webp",tag:"فرصة جديدة",title:"مشروع مزارع فواكه استوائية",location:"شندي",area:"3,000 فدان"},
+    {image:"/assets/invest-industry-hq.webp",tag:"فرصة جديدة",title:"مشروع منطقة صناعية متكاملة",location:"شندي",area:"200 فدان"},
+    {image:"/assets/invest-mining-hq.webp",tag:"فرصة جديدة",title:"مصنع الطوب الأحمر والبلوك",location:"بربر",area:"5 هكتار"},
+    {image:"/assets/home-investment-banner-v2.webp",tag:"فرصة جديدة",title:"مشروع استزراع سكني",location:"عطبرة",area:"500 فدان"},
+  ];
+  const benefits=[
+    {icon:Clock3,title:"حوافز ضريبية وجمركية"},
+    {icon:WalletCards,title:"تسهيلات في تملك الأراضي"},
+    {icon:ShieldCheck,title:"دعم فني وإداري متكامل"},
+    {icon:ReceiptText,title:"إجراءات سريعة وسهلة"},
+    {icon:Percent,title:"بيئة تحقق عائد استثماري مستمر"},
+  ];
+  const trust=[
+    {icon:MessageCircle,title:"دعم فني متواصل",text:"فريق متخصص لمساعدة المستثمر"},
+    {icon:ReceiptText,title:"معلومات وبيانات دقيقة",text:"تقارير وإحصائيات محدثة"},
+    {icon:UserCheck,title:"الشفافية والمصداقية",text:"بيئة استثمارية موثوقة"},
+    {icon:BadgeCheck,title:"تواصل فعال",text:"استجابة سريعة لاستفساراتكم"},
+    {icon:Clock3,title:"متابعة مستمرة",text:"من الفكرة وحتى التنفيذ"},
+  ];
+  return <div className="investment-redesign">
+    <section className="inv-hero">
+      <div className="inv-hero-visual motion"><img src="/assets/investment-hero-hq.webp" alt="نهر النيل والأراضي الزراعية"/><article className="inv-hero-opportunity"><span>فرصة استثمارية مميزة</span><img src="/assets/investment-hero-hq.webp" alt="مشروع زراعة محورية متكامل"/><h3>مشروع زراعة محورية متكامل</h3><p>المساحة: 5,000 هكتار<br/>العائد المتوقع: 25% سنوياً</p><a href="/contact">عرض التفاصيل <ChevronLeft/></a></article></div>
+      <div className="inv-hero-copy motion"><h1>الاستثمار في<br/><span>ولاية نهر النيل</span></h1><h2>فرص واعدة .. مستقبل مستدام</h2><p>بيئة استثمارية جاذبة بموارد طبيعية غنية، موقع استراتيجي<br/>يدعم التنمية ويحقق عوائد مجزية للمستثمرين.</p><div className="inv-hero-features">{features.map(item=>{const Icon=item.icon;return <article key={item.title}><Icon/><b>{item.title}</b><small>{item.text}</small></article>})}</div></div>
+      <aside className="inv-hero-menu motion"><h2><ChartNoAxesCombined/> خدمات الاستثمار</h2>{heroMenu.map((item,index)=>{const Icon=item.icon;return <a className={index===0?"active":""} href="#investment-opportunities" key={item.label}><Icon/>{item.label}</a>})}</aside>
+    </section>
+
+    <section className="inv-stats page-width motion"><div className="inv-map"><Globe2/><span>ولاية نهر النيل</span></div>{stats.map(item=>{const Icon=item.icon;return <article key={item.label}><Icon/><b>{item.n}</b><small>{item.label}</small></article>})}<h2>أرقام الاستثمار في ولاية نهر النيل</h2></section>
+
+    <div className="inv-dashboard page-width">
+      <div className="inv-main-column">
+        <section className="inv-sectors"><header><a href="/contact">عرض الكل</a><h2>القطاعات الاستثمارية</h2></header><div className="inv-sector-grid">{sectors.map(item=>{const Icon=item.icon;return <article className="motion" key={item.title}><div><img src={item.image} alt={item.title}/><span><Icon/></span></div><h3>{item.title}</h3><p>{item.text}</p><a href="/contact">استعرض الفرص</a></article>})}</div></section>
+
+        <section className="inv-solar motion"><img src="/assets/investment-solar-hq.webp" alt="مشروع الطاقة الشمسية"/><span>مساحة إعلانية</span><div><h2>استثمر في الطاقة الشمسية</h2><p>مشروع محطة طاقة شمسية بقدرة 50 ميجاوات</p><aside><b><Clock3/> عقد طويل الأجل</b><b><Percent/> عائد مستقر</b><b><ChartNoAxesCombined/> دعم حكومي</b></aside><a href="/contact">اعرف المزيد</a></div></section>
+
+        <section id="investment-opportunities" className="inv-opportunities"><header><a href="/contact">عرض الكل</a><h2>أحدث الفرص الاستثمارية</h2></header><div>{opportunities.map(item=><article className="motion" key={item.title}><div><img src={item.image} alt={item.title}/><span>{item.tag}</span></div><h3>{item.title}</h3><p>الموقع: {item.location}<br/>المساحة: {item.area}</p><a href="/contact">عرض التفاصيل</a></article>)}</div><small>● ● ●</small></section>
+      </div>
+
+      <aside className="inv-side-column">
+        <section className="inv-featured motion"><header><a href="/contact">عرض الكل</a><h2>إعلانات فرص استثمارية مميزة</h2></header><img src="/assets/invest-industry-hq.webp" alt="مشروع مصنع زيوت نباتية"/><h3>مشروع مصنع زيوت نباتية</h3><p>الموقع: عطبرة<br/>المساحة: 10 هكتار<br/>العائد المتوقع: 22% سنوياً</p><a href="/contact">عرض التفاصيل</a></section>
+        <section className="inv-resort motion"><img src="/assets/invest-tourism-hq.webp" alt="مشروع منتجع سياحي متكامل"/><h3>مشروع منتجع سياحي متكامل</h3><p>الموقع: المنطقة السياحية<br/>المساحة: 15 هكتار<br/>العائد المتوقع: 18% سنوياً</p><span>مساحة إعلانية</span></section>
+        <section className="inv-partner motion"><img src="/assets/home-investment-banner-v2.webp" alt="الشراكة والاستثمار"/><div><h2>شراكة .. تنمية .. ازدهار</h2><p>كن شريكاً في تطوير ولاية نهر النيل<br/>واستثمر في مستقبل واعد</p><a href="/contact">تواصل معنا</a></div><footer><b><ChartNoAxesCombined/> فرصة</b><b><Handshake/> شراكة</b><b><UsersRound/> تنمية</b></footer></section>
+        <section className="inv-story motion"><header><a href="/contact">عرض الكل</a><h2>قصص نجاح</h2></header><div><img src="/assets/invest-livestock-hq.webp" alt="مشروع دواجن الدامر"/><p><b>مشروع دواجن الدامر</b><span>بدأ المشروع بمزرعة صغيرة وأصبح اليوم من أكبر مشاريع الدواجن بالولاية.</span><a href="/contact">اقرأ القصة كاملة</a></p></div></section>
+      </aside>
+    </div>
+
+    <section className="inv-benefits page-width motion"><h2>مزايا المستثمر</h2><div>{benefits.map(item=>{const Icon=item.icon;return <article key={item.title}><Icon/><b>{item.title}</b></article>})}</div></section>
+    <section className="inv-trust motion">{trust.map(item=>{const Icon=item.icon;return <article key={item.title}><Icon/><span><b>{item.title}</b><small>{item.text}</small></span></article>})}</section>
+  </div>
+}
+
 function PortalHero({type}:{type:PortalKey}){const p=info[type];return <><section className={`portal-hero portal-${type}`}><div className="portal-copy motion"><h1>{p.title}</h1><h2>{p.accent}</h2><p>{p.lead}</p></div><div className="portal-image motion"><img src={p.hero} alt={p.title}/></div>{["education","investment","culture"].includes(type)&&<aside className="portal-side motion"><h3>{p.icon}&nbsp; خدمات {p.title}</h3>{p.tabs.map((t,i)=><a key={t} className={i===0?"selected":""} href="#services">{t}<span>⌃</span></a>)}</aside>}</section><section className="portal-features motion">{(type==="health"?["في خدمتكم أينما كنتم","متاحة إلكترونياً","خدمة سريعة","موثوقة وآمنة"]:type==="social"?["حالات إنسانية","تواصل مباشر","استشارة اجتماعية","برامج ومبادرات","دعم المحتاجين"]:["جودة وتميز","دعم شامل","محتوى متخصص","تعلّم مرن"]).map((x,i)=><div key={x}><i>{["◎","▣","◷","♢","♡"][i]}</i><b>{x}</b><span>خدمة رقمية متكاملة</span></div>)}</section></>}
 
 function PortalPage({type}:{type:PortalKey}){const p=info[type];return <><PortalHero type={type}/><section className="stat-ribbon page-width motion">{p.stats.map(([n,l],i)=><div key={l}><i>{["♧","⌂","▦","↗"][i]}</i><b>{n}</b><span>{l}</span></div>)}</section><section id="services" className="section page-width"><SectionTitle mini="خدمات متكاملة بين يديك">{p.section}</SectionTitle><div className={`visual-card-grid ${type==="health"?"three-primary":""}`}>{p.cards.map((c,i)=><article className={`visual-card motion ${i===3&&type==="health"?"wide-health":""}`} key={c.title}><img src={c.image} alt={c.title}/><div><i>{c.icon}</i><h3>{c.title}</h3><p>{c.text}</p><ul><li>خدمة سهلة وسريعة</li><li>متابعة ودعم مستمر</li><li>خصوصية وأمان</li></ul><a href="/contact" className="card-action">{type==="social"?"ساهم الآن":"معرفة المزيد"} <Arrow/></a></div></article>)}</div></section>{type==="education"&&<EducationExtras/>}{type==="investment"&&<InvestmentExtras/>}{type==="culture"&&<CultureExtras/>}{type==="social"&&<SocialExtras/>}{type==="health"&&<HealthExtras/>}<SupportBar/></>}
@@ -549,4 +630,4 @@ function Success(){return <MemberStepShell className="success-step"><header clas
 
 function Contact(){const [sent,setSent]=useState(false);const submit=(e:FormEvent)=>{e.preventDefault();setSent(true)};return <><section className="contact-hero exact-hero"><div className="hero-content motion"><h1>تواصل معنا</h1><h2>نحن هنا لخدمتكم</h2><p>نسعد بتواصلكم واستقبال استفساراتكم ومقترحاتكم وشكاواكم، فريقنا جاهز للرد عليكم وتقديم الدعم في أسرع وقت ممكن.</p></div><div className="hero-photo motion"><img src="/assets/contact-hero-hq.webp" alt="تواصل معنا"/></div></section><section className="member-benefits page-width motion">{[["♧","نحن معكم","نتواصل معكم بما يسهم في تطوير خدماتنا"],["◎","خدمتكم أينما كنتم","ندعمكم من داخل وخارج الولاية"],["♢","خصوصية وأمان","نحافظ على سرية معلوماتكم"],["◷","استجابة سريعة","نرد على رسائلكم في أسرع وقت"],["☏","فريق متخصص","فريق دعم متكامل لخدمتكم"]].map(([i,t,d])=><div key={t}><i>{i}</i><h3>{t}</h3><p>{d}</p></div>)}</section><section className="contact-layout page-width"><aside><h2>طرق التواصل</h2>{[["◉","واتساب","+249 912 345 678"],["☏","اتصال هاتفي","+249 123 456 789"],["✉","البريد الإلكتروني","info@nilenile.org"],["⌖","العنوان","ولاية نهر النيل - السودان"],["◷","ساعات العمل","الأحد إلى الخميس · 9ص - 5م"]].map(([i,t,d])=><div key={t}><i>{i}</i><span><b>{t}</b>{d}</span></div>)}</aside><form onSubmit={submit}><h2>أرسل لنا رسالة</h2>{sent?<div className="sent"><i>✓</i><h2>تم إرسال رسالتك بنجاح</h2><p>سنتواصل معك في أقرب وقت.</p></div>:<><div className="form-row"><label>الاسم الكامل *<input required/></label><label>البريد الإلكتروني *<input required type="email"/></label></div><label>رقم الجوال<input type="tel"/></label><label>اختر نوع الرسالة *<select required><option>استفسار عام</option><option>شكوى</option><option>اقتراح</option><option>دعم فني</option></select></label><label>نص الرسالة *<textarea required rows={5}/></label><label className="file-field">⇧ إرفاق ملف (اختياري)<input type="file"/></label><button className="primary">إرسال الرسالة <Arrow/></button></>}</form></section><section className="section page-width"><SectionTitle>أسئلة شائعة</SectionTitle><div className="faq-cards">{[["الخدمات والبرامج","تفاصيل عن خدماتنا وبرامجنا"],["الدعم الفني","المساعدة في استخدام المنصة"],["العضوية والدفع","الاستفسار عن العضوية وطرق الدفع"],["الشكاوى والمقترحات","نستقبل شكاواكم ومقترحاتكم"],["الاستفسارات العامة","إجابات على أكثر الأسئلة الشائعة"]].map(([t,d])=><a href="#" key={t}><i>◫</i><b>{t}</b><span>{d}</span></a>)}</div></section><section className="newsletter page-width motion"><div><h2>كن على تواصل دائم</h2><p>اشترك في نشرتنا البريدية ليصلك كل جديد من أخبار الرابطة والفعاليات والخدمات.</p></div><form><input type="email" placeholder="البريد الإلكتروني"/><button className="primary">اشترك الآن</button></form></section></>}
 
-export default function NileSite({page}:{page:string}){const active=routeMap[page]||"home";const hideHeader=["membership","photo","payment","success"].includes(active);const hideFooter=["membership","photo","payment","success"].includes(active);return <div dir="rtl"><Motion/>{!hideHeader&&<Header active={active}/>}<main>{active==="home"?<Home/>:active==="social"?<SocialPage/>:active==="education"?<EducationPage/>:active==="health"?<HealthPage/>:active==="membership"?<Membership/>:active==="register"?<Register/>:active==="photo"?<PhotoUpload/>:active==="payment"?<Payment/>:active==="success"?<Success/>:active==="contact"?<Contact/>:<PortalPage type={active}/>}</main>{!hideFooter&&<Footer/>}</div>}
+export default function NileSite({page}:{page:string}){const active=routeMap[page]||"home";const hideHeader=["membership","photo","payment","success"].includes(active);const hideFooter=["membership","photo","payment","success"].includes(active);return <div dir="rtl"><Motion/>{!hideHeader&&<Header active={active}/>}<main>{active==="home"?<Home/>:active==="social"?<SocialPage/>:active==="education"?<EducationPage/>:active==="health"?<HealthPage/>:active==="investment"?<InvestmentPage/>:active==="membership"?<Membership/>:active==="register"?<Register/>:active==="photo"?<PhotoUpload/>:active==="payment"?<Payment/>:active==="success"?<Success/>:active==="contact"?<Contact/>:<PortalPage type={active}/>}</main>{!hideFooter&&<Footer/>}</div>}
