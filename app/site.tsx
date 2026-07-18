@@ -39,9 +39,7 @@ function Brand({light=false}:{light?:boolean}){return <a href="/" className={`br
 
 function Header({active}:{active:PageKey}){
   const [open,setOpen]=useState(false);
-  const dark=active==="home"||active==="register";
-  const links=active==="home"?homeNav:active==="social"?socialNav:nav;
-  return <header className={`topbar ${dark?"dark":""} ${active==="home"?"home-topbar":""}`}><div className="topbar-inner"><Brand light={dark}/><nav className={open?"open":""}>{links.map(([href,label])=><a key={`${href}-${label}`} href={href} className={(href==="/"&&active==="home")||href.includes(active)?"current":""}>{label}</a>)}</nav><div className="header-tools"><button className="search-btn" aria-label="البحث"><Search size={19}/></button><a className="primary compact" href="/membership"><UserRound size={16}/><span>تسجيل الدخول</span></a><button className="mobile-menu" onClick={()=>setOpen(!open)} aria-label="فتح القائمة">{open?<X size={21}/>:<Menu size={21}/>}</button></div></div></header>
+  return <header className="topbar dark home-topbar"><div className="topbar-inner"><Brand light/><nav className={open?"open":""}>{homeNav.map(([href,label])=><a key={`${href}-${label}`} href={href} className={(href==="/"&&active==="home")||(href.startsWith("/")&&href.slice(1)===active)?"current":""}>{label}</a>)}</nav><div className="header-tools"><button className="search-btn" aria-label="البحث"><Search size={19}/></button><a className="primary compact" href="/membership"><UserRound size={16}/><span>تسجيل الدخول</span></a><button className="mobile-menu" onClick={()=>setOpen(!open)} aria-label="فتح القائمة">{open?<X size={21}/>:<Menu size={21}/>}</button></div></div></header>
 }
 
 function Footer(){return <footer className="site-footer"><div className="footer-inner"><div className="footer-brand"><Brand light/><p>منصة رقمية شاملة لخدمة أبناء ولاية نهر النيل في الداخل والخارج.</p></div><div><h4>تواصل معنا</h4><p>☎ +249 912 345 678</p><p>✉ info@nilenile.org</p><p>⌖ ولاية نهر النيل - السودان</p></div><div><h4>الدعم والمساعدة</h4><a href="/contact">الأسئلة الشائعة</a><a href="/contact">سياسة الخصوصية</a><a href="/contact">الشروط والأحكام</a></div><div><h4>خدمات الرابطة</h4><a href="/education">التعليم</a><a href="/health">الصحة</a><a href="/investment">الاستثمار</a><a href="/culture">الثقافة</a></div><div><h4>روابط سريعة</h4><a href="/">الرئيسية</a><a href="/membership">عن الرابطة</a><a href="/contact">تواصل معنا</a></div></div><div className="footer-bottom"><span>جميع الحقوق محفوظة © 2026</span><span className="socials"><b>f</b><b>𝕏</b><b>▶</b><b>◎</b><b>in</b></span></div></footer>}
@@ -272,6 +270,90 @@ function SocialPage(){
   </div>
 }
 
+function EducationPage(){
+  const heroMenu=["مدرسة نهر النيل الإلكترونية","الدورات وكورسات التقوية","المنح الدراسية","المكتبة الرقمية","الاختبارات والامتحانات","النتائج والتقارير","الاستشارات التعليمية","الأخبار والفعاليات التعليمية"];
+  const heroFeatures=[
+    {icon:ShieldCheck,title:"جودة تعليمية",text:"معايير عالية لضمان جودة التعليم"},
+    {icon:UsersRound,title:"دعم شامل",text:"دعم الطلاب والمعلمين وأولياء الأمور"},
+    {icon:Award,title:"محتوى متميز",text:"مناهج حديثة ومحتوى تعليمي معتمد"},
+    {icon:Clock3,title:"تعلّم مرن",text:"تعلّم في أي وقت ومن أي مكان"},
+  ];
+  const stats=[
+    {icon:UsersRound,n:"12,680",label:"طالب وطالبة"},
+    {icon:GraduationCap,n:"65",label:"معلم ومعلمة"},
+    {icon:BookOpen,n:"156",label:"مادة افتراضية"},
+    {icon:UserRound,n:"420",label:"دورة تدريبية"},
+    {icon:UsersRound,n:"3,250",label:"مستخدم نشط"},
+    {icon:HandHeart,n:"98%",label:"نسبة رضا الطلاب"},
+  ];
+  const courses=[
+    {image:"/assets/course-4.jpg",category:"إدارة",title:"إدارة المشاريع",meta:"متوسط  ·  15 درس",price:"200 ر.س"},
+    {image:"/assets/course-3.jpg",category:"لغة",title:"اللغة الإنجليزية",meta:"20 درس  ·  مبتدئ",price:"مجاني"},
+    {image:"/assets/course-2.jpg",category:"تصميم",title:"تصميم الجرافيك",meta:"18 درس  ·  متوسط",price:"150 ر.س"},
+    {image:"/assets/course-1.jpg",category:"برمجة",title:"أساسيات البرمجة للمبتدئين",meta:"12 درس  ·  مبتدئ",price:"مجاني"},
+  ];
+  const library=[
+    {icon:ReceiptText,n:"1,500+",label:"اختبارات تفاعلية"},
+    {icon:FileImage,n:"3,000+",label:"ملفات تعليمية"},
+    {icon:Video,n:"800+",label:"فيديوهات تعليمية"},
+    {icon:BookOpen,n:"1,200+",label:"أبحاث ومقالات"},
+    {icon:BookOpen,n:"2,500+",label:"كتب"},
+  ];
+  const news=[
+    {image:"/assets/education-reference-news-1.png",title:"إطلاق منصة مدرسة نهر النيل الإلكترونية",date:"10 مايو 2025"},
+    {image:"/assets/education-reference-news-2.png",title:"ورشة عمل للمعلمين عن دور التعليم الرقمي",date:"10 مايو 2025"},
+    {image:"/assets/education-reference-news-3.png",title:"نتائج الاختبارات الفصلية متاحة الآن",date:"5 مايو 2025"},
+  ];
+  return <div className="education-redesign">
+    <section className="edu-hero">
+      <div className="edu-hero-photo motion"><img src="/assets/education-hero-hq.webp" alt="منصة التعليم الإلكتروني"/></div>
+      <div className="edu-hero-copy motion"><h1><span>التعليم</span> .. استثمار في المستقبل</h1><p>نقدم بيئة تعليمية رقمية متكاملة تدعم الطلاب والمعلمين<br/>وتوفر محتوى تعليمي متطوراً لتلبية احتياجات التعليم<br/>في مكان وزمان يناسب الجميع.</p></div>
+      <aside className="edu-hero-menu motion"><h2><GraduationCap/> خدمات التعليم</h2>{heroMenu.map((item,index)=><a href="#edu-school" className={index===0?"active":""} key={item}><BookOpen/>{item}</a>)}</aside>
+      <div className="edu-hero-features motion">{heroFeatures.map(item=>{const Icon=item.icon;return <article key={item.title}><Icon/><b>{item.title}</b><small>{item.text}</small></article>})}</div>
+    </section>
+
+    <section className="edu-stats page-width motion"><div className="edu-stats-art"><img src="/assets/education-reference-stats-chart.png" alt="مؤشرات التعليم"/></div>{stats.map(item=>{const Icon=item.icon;return <article key={item.label}><Icon/><b>{item.n}</b><small>{item.label}</small></article>})}<h2>أرقام وإحصائيات التعليم</h2></section>
+
+    <div className="edu-dashboard page-width">
+      <div className="edu-primary-column">
+        <section id="edu-school" className="edu-school motion">
+          <div className="edu-school-intro"><h2>مدرسة نهر النيل الإلكترونية</h2><p>تعليم إلكتروني شامل من المرحلة الابتدائية حتى الثانوية</p><div><img src="/assets/education-reference-school.png" alt="مدرسة نهر النيل الإلكترونية"/><ul><li>مناهج معتمدة ومحدثة</li><li>فصول افتراضية تفاعلية</li><li>أدوات تقييم ومتابعة</li><li>متابعة أداء الطالب</li><li>تواصل مباشر مع المعلمين</li></ul></div><a href="/contact">الدخول إلى المدرسة <GraduationCap/></a></div>
+          <div className="edu-levels"><nav><b>المرحلة الابتدائية</b><span>المرحلة المتوسطة</span><span>المرحلة الثانوية</span></nav><div>{[
+            [BookOpen,"الفصول الافتراضية","حصص مباشرة وتسجيل المحاضرات"],
+            [BookOpen,"المواد الدراسية","كتب رقمية وملخصات وتمارين"],
+            [Award,"الأنشطة المدرسية","أنشطة تفاعلية ومشاريع تعليمية"],
+            [ReceiptText,"التقييم","اختبارات دورية وتقارير أداء"],
+          ].map(([icon,title,text])=>{const Icon=icon as typeof BookOpen;return <article key={String(title)}><Icon/><b>{String(title)}</b><small>{String(text)}</small></article>})}</div><a href="#courses">استعراض جميع المراحل <ArrowLeft/></a></div>
+        </section>
+
+        <section id="courses" className="edu-courses"><header><a href="/contact">عرض الكل <ArrowLeft/></a><h2>الدورات وكورسات التقوية</h2></header><div>{courses.map(course=><article className="motion" key={course.title}><div className="edu-course-photo"><img src={course.image} alt={course.title}/><span>{course.category}</span></div><h3>{course.title}</h3><p>{course.meta}</p><footer><b>{course.price}</b><HeartHandshake/></footer></article>)}</div><span className="edu-dots">● ● ●</span></section>
+      </div>
+
+      <aside className="edu-side-column">
+        <section className="edu-quick-links"><h3>روابط سريعة</h3>{["دليل الطالب","دليل المعلم","الجدول الدراسي","التقويم الأكاديمي","الرسوم والمصروفات"].map(item=><a href="/contact" key={item}><ChevronLeft/>{item}</a>)}</section>
+        <section className="edu-help"><h3>تحتاج مساعدة؟</h3><p>فريق الدعم التعليمي<br/>جاهز لمساعدتك</p><a href="/contact">تواصل معنا <MessageCircle/></a></section>
+        <section className="edu-scholarships"><GraduationCap/><h3>المنح الدراسية</h3><p>فرص دراسية في أفضل<br/>الجامعات والمؤسسات التعليمية</p><ul><li>منح دراسية محلية</li><li>منح دراسية خارجية</li><li>إسناد الطلاب</li><li>إرشاد ومتابعة</li></ul><a href="/contact">استعراض المنح</a></section>
+      </aside>
+    </div>
+
+    <section className="edu-library page-width motion"><div className="edu-library-promo"><img src="/assets/education-reference-library-books.png" alt="كتب المكتبة الرقمية"/><div><h3>محتوى تعليمي ثري ومتجدد</h3><p>مصادر متنوعة تدعم تعلمك<br/>وتجعل المعرفة أقرب إليك</p><a href="/contact">تصفح مكتبة <ArrowLeft/></a></div></div><div className="edu-library-items">{library.map(item=>{const Icon=item.icon;return <article key={item.label}><Icon/><b>{item.label}</b><small>{item.n}</small></article>})}</div><h2>المكتبة الرقمية</h2></section>
+
+    <section className="edu-information page-width">
+      <article className="edu-news motion"><header><a href="/contact">عرض الكل <ArrowLeft/></a><h2>الأخبار التعليمية</h2></header>{news.map(item=><div key={item.title}><img src={item.image} alt=""/><p><b>{item.title}</b><small>{item.date}</small></p></div>)}</article>
+      <article className="edu-events motion"><header><a href="/contact">عرض الكل <ArrowLeft/></a><h2>الفعاليات القادمة</h2></header>{[["28","مايو","ورشة استراتيجيات التعليم الحديثة"],["05","يونيو","ندوة مستجدات التعليم في السودان"],["15","يونيو","ملتقى الطلاب والمعلمين"]].map(([day,month,title])=><div key={title}><time><b>{day}</b>{month}</time><p>{title}<small>قاعة التدريب الافتراضية</small></p></div>)}<a href="/contact">اعرض كل الفعاليات</a></article>
+      <article className="edu-consult motion"><img src="/assets/social-reference-help-transparent.png" alt="الدعم التعليمي"/><h2>هل لديك استفسار؟</h2><p>فريقنا التعليمي جاهز<br/>لمساعدتك</p><a href="/contact">تواصل معنا</a></article>
+    </section>
+
+    <section className="edu-quality">{[
+      [Award,"شهادات معتمدة","شهادات مصدقة قابلة للتحقق"],
+      [Clock3,"تعلّم مدى الحياة","طور مهاراتك باستمرار"],
+      [ShieldCheck,"بيئة آمنة","حماية بياناتك وخصوصيتك"],
+      [MonitorCheck,"متاح لجميع الأجهزة","تعلم من أي مكان وعلى أي جهاز"],
+      [MessageCircle,"دعم فني متواصل","فريق متخصص لمساعدتك"],
+    ].map(([icon,title,text])=>{const Icon=icon as typeof Award;return <article key={String(title)}><Icon/><b>{String(title)}</b><small>{String(text)}</small></article>})}</section>
+  </div>
+}
+
 function PortalHero({type}:{type:PortalKey}){const p=info[type];return <><section className={`portal-hero portal-${type}`}><div className="portal-copy motion"><h1>{p.title}</h1><h2>{p.accent}</h2><p>{p.lead}</p></div><div className="portal-image motion"><img src={p.hero} alt={p.title}/></div>{["education","investment","culture"].includes(type)&&<aside className="portal-side motion"><h3>{p.icon}&nbsp; خدمات {p.title}</h3>{p.tabs.map((t,i)=><a key={t} className={i===0?"selected":""} href="#services">{t}<span>⌃</span></a>)}</aside>}</section><section className="portal-features motion">{(type==="health"?["في خدمتكم أينما كنتم","متاحة إلكترونياً","خدمة سريعة","موثوقة وآمنة"]:type==="social"?["حالات إنسانية","تواصل مباشر","استشارة اجتماعية","برامج ومبادرات","دعم المحتاجين"]:["جودة وتميز","دعم شامل","محتوى متخصص","تعلّم مرن"]).map((x,i)=><div key={x}><i>{["◎","▣","◷","♢","♡"][i]}</i><b>{x}</b><span>خدمة رقمية متكاملة</span></div>)}</section></>}
 
 function PortalPage({type}:{type:PortalKey}){const p=info[type];return <><PortalHero type={type}/><section className="stat-ribbon page-width motion">{p.stats.map(([n,l],i)=><div key={l}><i>{["♧","⌂","▦","↗"][i]}</i><b>{n}</b><span>{l}</span></div>)}</section><section id="services" className="section page-width"><SectionTitle mini="خدمات متكاملة بين يديك">{p.section}</SectionTitle><div className={`visual-card-grid ${type==="health"?"three-primary":""}`}>{p.cards.map((c,i)=><article className={`visual-card motion ${i===3&&type==="health"?"wide-health":""}`} key={c.title}><img src={c.image} alt={c.title}/><div><i>{c.icon}</i><h3>{c.title}</h3><p>{c.text}</p><ul><li>خدمة سهلة وسريعة</li><li>متابعة ودعم مستمر</li><li>خصوصية وأمان</li></ul><a href="/contact" className="card-action">{type==="social"?"ساهم الآن":"معرفة المزيد"} <Arrow/></a></div></article>)}</div></section>{type==="education"&&<EducationExtras/>}{type==="investment"&&<InvestmentExtras/>}{type==="culture"&&<CultureExtras/>}{type==="social"&&<SocialExtras/>}{type==="health"&&<HealthExtras/>}<SupportBar/></>}
@@ -404,4 +486,4 @@ function Success(){return <MemberStepShell className="success-step"><header clas
 
 function Contact(){const [sent,setSent]=useState(false);const submit=(e:FormEvent)=>{e.preventDefault();setSent(true)};return <><section className="contact-hero exact-hero"><div className="hero-content motion"><h1>تواصل معنا</h1><h2>نحن هنا لخدمتكم</h2><p>نسعد بتواصلكم واستقبال استفساراتكم ومقترحاتكم وشكاواكم، فريقنا جاهز للرد عليكم وتقديم الدعم في أسرع وقت ممكن.</p></div><div className="hero-photo motion"><img src="/assets/contact-hero-hq.webp" alt="تواصل معنا"/></div></section><section className="member-benefits page-width motion">{[["♧","نحن معكم","نتواصل معكم بما يسهم في تطوير خدماتنا"],["◎","خدمتكم أينما كنتم","ندعمكم من داخل وخارج الولاية"],["♢","خصوصية وأمان","نحافظ على سرية معلوماتكم"],["◷","استجابة سريعة","نرد على رسائلكم في أسرع وقت"],["☏","فريق متخصص","فريق دعم متكامل لخدمتكم"]].map(([i,t,d])=><div key={t}><i>{i}</i><h3>{t}</h3><p>{d}</p></div>)}</section><section className="contact-layout page-width"><aside><h2>طرق التواصل</h2>{[["◉","واتساب","+249 912 345 678"],["☏","اتصال هاتفي","+249 123 456 789"],["✉","البريد الإلكتروني","info@nilenile.org"],["⌖","العنوان","ولاية نهر النيل - السودان"],["◷","ساعات العمل","الأحد إلى الخميس · 9ص - 5م"]].map(([i,t,d])=><div key={t}><i>{i}</i><span><b>{t}</b>{d}</span></div>)}</aside><form onSubmit={submit}><h2>أرسل لنا رسالة</h2>{sent?<div className="sent"><i>✓</i><h2>تم إرسال رسالتك بنجاح</h2><p>سنتواصل معك في أقرب وقت.</p></div>:<><div className="form-row"><label>الاسم الكامل *<input required/></label><label>البريد الإلكتروني *<input required type="email"/></label></div><label>رقم الجوال<input type="tel"/></label><label>اختر نوع الرسالة *<select required><option>استفسار عام</option><option>شكوى</option><option>اقتراح</option><option>دعم فني</option></select></label><label>نص الرسالة *<textarea required rows={5}/></label><label className="file-field">⇧ إرفاق ملف (اختياري)<input type="file"/></label><button className="primary">إرسال الرسالة <Arrow/></button></>}</form></section><section className="section page-width"><SectionTitle>أسئلة شائعة</SectionTitle><div className="faq-cards">{[["الخدمات والبرامج","تفاصيل عن خدماتنا وبرامجنا"],["الدعم الفني","المساعدة في استخدام المنصة"],["العضوية والدفع","الاستفسار عن العضوية وطرق الدفع"],["الشكاوى والمقترحات","نستقبل شكاواكم ومقترحاتكم"],["الاستفسارات العامة","إجابات على أكثر الأسئلة الشائعة"]].map(([t,d])=><a href="#" key={t}><i>◫</i><b>{t}</b><span>{d}</span></a>)}</div></section><section className="newsletter page-width motion"><div><h2>كن على تواصل دائم</h2><p>اشترك في نشرتنا البريدية ليصلك كل جديد من أخبار الرابطة والفعاليات والخدمات.</p></div><form><input type="email" placeholder="البريد الإلكتروني"/><button className="primary">اشترك الآن</button></form></section></>}
 
-export default function NileSite({page}:{page:string}){const active=routeMap[page]||"home";const hideHeader=["membership","photo","payment","success"].includes(active);const hideFooter=["membership","photo","payment","success"].includes(active);return <div dir="rtl"><Motion/>{!hideHeader&&<Header active={active}/>}<main>{active==="home"?<Home/>:active==="social"?<SocialPage/>:active==="membership"?<Membership/>:active==="register"?<Register/>:active==="photo"?<PhotoUpload/>:active==="payment"?<Payment/>:active==="success"?<Success/>:active==="contact"?<Contact/>:<PortalPage type={active}/>}</main>{!hideFooter&&<Footer/>}</div>}
+export default function NileSite({page}:{page:string}){const active=routeMap[page]||"home";const hideHeader=["membership","photo","payment","success"].includes(active);const hideFooter=["membership","photo","payment","success"].includes(active);return <div dir="rtl"><Motion/>{!hideHeader&&<Header active={active}/>}<main>{active==="home"?<Home/>:active==="social"?<SocialPage/>:active==="education"?<EducationPage/>:active==="membership"?<Membership/>:active==="register"?<Register/>:active==="photo"?<PhotoUpload/>:active==="payment"?<Payment/>:active==="success"?<Success/>:active==="contact"?<Contact/>:<PortalPage type={active}/>}</main>{!hideFooter&&<Footer/>}</div>}
