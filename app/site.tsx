@@ -474,7 +474,7 @@ function InvestmentPage(){
       <aside className="inv-hero-menu motion"><h2><ChartNoAxesCombined/> خدمات الاستثمار</h2>{heroMenu.map((item,index)=>{const Icon=item.icon;return <a className={index===0?"active":""} href="#investment-opportunities" key={item.label}><Icon/>{item.label}</a>})}</aside>
     </section>
 
-    <section className="inv-stats page-width motion"><div className="inv-map"><Globe2/><span>ولاية نهر النيل</span></div>{stats.map(item=>{const Icon=item.icon;return <article key={item.label}><Icon/><b>{item.n}</b><small>{item.label}</small></article>})}<h2>أرقام الاستثمار في ولاية نهر النيل</h2></section>
+    <section className="inv-stats page-width motion"><div className="inv-map"><svg viewBox="0 0 1653.539 1450.11" role="img" aria-label="خريطة السودان موضحاً عليها موقع ولاية نهر النيل"><use href="/assets/investment-river-nile-map.svg#States"/><use href="/assets/investment-river-nile-map.svg#Borders"/></svg></div>{stats.slice().reverse().map(item=>{const Icon=item.icon;return <article key={item.label}><Icon/><b>{item.n}</b><small>{item.label}</small></article>})}<h2>أرقام الاستثمار في ولاية نهر النيل</h2></section>
 
     <div className="inv-dashboard page-width">
       <div className="inv-main-column">
