@@ -14,7 +14,9 @@
     "db:generate": "drizzle-kit generate"
   },
   "dependencies": {
+    "@fontsource/cairo": "^5.2.7",
     "drizzle-orm": "0.45.2",
+    "lucide-react": "^1.25.0",
     "next": "16.2.6",
     "react": "19.2.6",
     "react-dom": "19.2.6"

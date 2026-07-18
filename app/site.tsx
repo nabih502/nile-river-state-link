@@ -1,6 +1,14 @@
 "use client";
 
 import { FormEvent, useEffect, useRef, useState } from "react";
+import {
+  ArrowLeft, Award, BadgeCheck, BookOpen, Building2,
+  ChartNoAxesCombined, ChevronLeft, Clock3, Factory,
+  Globe2, GraduationCap, HandHeart, HeartHandshake,
+  Landmark, LayoutGrid, Menu, Megaphone, MonitorCheck, Network,
+  Search, Settings2, Share2, ShieldCheck, ShoppingCart, Sprout,
+  Store, Tags, Truck, UserRound, UsersRound, Video, X,
+} from "lucide-react";
 
 type PageKey = "home" | "social" | "education" | "health" | "investment" | "culture" | "membership" | "register" | "photo" | "payment" | "success" | "contact";
 type PortalKey = "social" | "education" | "health" | "investment" | "culture";
@@ -11,6 +19,7 @@ const routeMap: Record<string, PageKey> = {
 };
 
 const nav = [["/","الرئيسية"],["/membership","عن الرابطة"],["/social","الخدمات"],["/investment","المبادرات"],["/culture","الثقافة"],["/education","التعليم"],["/contact","تواصل معنا"]];
+const homeNav = [["/","الرئيسية"],["/membership","عن الرابطة"],["/education","التعليم"],["/social","الاجتماعية"],["/culture","الثقافية"],["#market","السوق السوداني"],["/investment","الاستثمار"],["#news","الأخبار والفعاليات"],["/contact","تواصل معنا"]];
 
 const info: Record<PortalKey, {title:string; accent:string; lead:string; hero:string; icon:string; tabs:string[]; stats:[string,string][]; cards:{title:string;text:string;image?:string;icon:string}[]; section:string}> = {
   social:{title:"الخدمات الاجتماعية",accent:"معاً.. نرعى ونساند",lead:"نقدم برامج ومبادرات اجتماعية وإنسانية تهدف إلى دعم أبناء مجتمعنا في مختلف الظروف، لبناء مجتمع متماسك ومتكافل.",hero:"/assets/social-hero-hq.webp",icon:"♡",tabs:["حالات إنسانية","تواصل مباشر","استشارة اجتماعية","برامج ومبادرات","دعم المحتاجين"],stats:[["12,680+","مستفيد من خدماتنا"],["3,250+","أسرة مستفيدة"],["1,850+","حالة إنسانية"],["650+","فرصة دعم"]],section:"مبادراتنا الحالية",cards:[{title:"صندوق العلاج",text:"مساعدة المرضى في تغطية تكاليف العلاج والأدوية",image:"/assets/social-medical-hq.webp",icon:"✚"},{title:"مشروع ترميم المنازل",text:"ترميم المنازل المتضررة وتحسين بيئة السكن",image:"/assets/social-renovation-hq.webp",icon:"⌂"},{title:"دعم التعليم",text:"دعم الرسوم والاحتياجات التعليمية لأبناء الأسر",image:"/assets/social-education-hq.webp",icon:"✦"},{title:"سلة الخير الرمضانية",text:"توزيع سلات غذائية على الأسر المحتاجة",image:"/assets/social-basket-hq.webp",icon:"♡"}]},
@@ -20,32 +29,178 @@ const info: Record<PortalKey, {title:string; accent:string; lead:string; hero:st
   culture:{title:"الثقافة",accent:"هوية وإبداع.. نصون تراثنا ونبدع لمستقبلنا",lead:"منصة ثقافية رقمية شاملة تهدف إلى إبراز التراث السوداني الأصيل ودعم المواهب والإبداع في جميع المجالات الثقافية والفنية.",hero:"/assets/culture-hero-hq.webp",icon:"◈",tabs:["الفعاليات والأنشطة","الأخبار الثقافية","المكتبة الرقمية","الفنون والأدب","التراث والتاريخ"],stats:[["35","فرقة وجمعية"],["650+","عضو فني"],["120","مبادرة ثقافية"],["85","فعالية ثقافية"]],section:"الفعاليات والأنشطة الثقافية",cards:[{title:"ندوة دور الثقافة",text:"ندوة حول الثقافة في بناء المجتمع",image:"/assets/culture-seminar-hq.webp",icon:"♙"},{title:"معرض الفنون",text:"معرض الفنون التشكيلية السنوي",image:"/assets/culture-gallery-hq.webp",icon:"▥"},{title:"أمسية شعرية",text:"أمسية للشعراء والشباب",image:"/assets/culture-poetry-hq.webp",icon:"♩"},{title:"مهرجان تراث النيل",text:"مهرجان تراثي يحتفي بالهوية",image:"/assets/culture-folk-hq.webp",icon:"◈"}]},
 };
 
-function Brand({light=false}:{light?:boolean}){return <a href="/" className={`brand ${light?"light":""}`} aria-label="رابطة ولاية نهر النيل الإلكترونية"><span className="brand-mark" aria-hidden><i/><i/><i/><i/></span><span className="brand-copy"><b>رابطة ولاية نهر النيل</b><em>الإلكترونية</em></span></a>}
+function Brand({light=false}:{light?:boolean}){return <a href="/" className={`brand ${light?"light":""}`} aria-label="رابطة ولاية نهر النيل الرقمية"><img src={light?"/assets/home-logo-dark.jpg":"/assets/logo.jpeg"} alt="رابطة ولاية نهر النيل الرقمية"/></a>}
 
 function Header({active}:{active:PageKey}){
   const [open,setOpen]=useState(false);
   const dark=active==="home"||active==="register";
-  return <header className={`topbar ${dark?"dark":""}`}><div className="topbar-inner"><Brand light={dark}/><nav className={open?"open":""}>{nav.map(([href,label])=><a key={href} href={href} className={(href==="/"&&active==="home")||href.includes(active)?"current":""}>{label}</a>)}</nav><div className="header-tools"><button className="search-btn" aria-label="البحث">⌕</button><a className="primary compact" href="/membership">♟&nbsp; تسجيل الدخول</a><button className="mobile-menu" onClick={()=>setOpen(!open)} aria-label="فتح القائمة">{open?"×":"☰"}</button></div></div></header>
+  const links=active==="home"?homeNav:nav;
+  return <header className={`topbar ${dark?"dark":""} ${active==="home"?"home-topbar":""}`}><div className="topbar-inner"><Brand light={dark}/><nav className={open?"open":""}>{links.map(([href,label])=><a key={`${href}-${label}`} href={href} className={(href==="/"&&active==="home")||href.includes(active)?"current":""}>{label}</a>)}</nav><div className="header-tools"><button className="search-btn" aria-label="البحث"><Search size={19}/></button><a className="primary compact" href="/membership"><UserRound size={16}/><span>تسجيل الدخول</span></a><button className="mobile-menu" onClick={()=>setOpen(!open)} aria-label="فتح القائمة">{open?<X size={21}/>:<Menu size={21}/>}</button></div></div></header>
 }
 
-function Footer(){return <footer className="site-footer"><div className="footer-inner"><div className="footer-brand"><Brand/><p>منصة رقمية شاملة لخدمة أبناء ولاية نهر النيل في الداخل والخارج.</p></div><div><h4>تواصل معنا</h4><p>☎ +249 912 345 678</p><p>✉ info@nilenile.org</p><p>⌖ ولاية نهر النيل - السودان</p></div><div><h4>الدعم والمساعدة</h4><a href="/contact">الأسئلة الشائعة</a><a href="/contact">سياسة الخصوصية</a><a href="/contact">الشروط والأحكام</a></div><div><h4>خدمات الرابطة</h4><a href="/education">التعليم</a><a href="/health">الصحة</a><a href="/investment">الاستثمار</a><a href="/culture">الثقافة</a></div><div><h4>روابط سريعة</h4><a href="/">الرئيسية</a><a href="/membership">عن الرابطة</a><a href="/contact">تواصل معنا</a></div></div><div className="footer-bottom"><span>جميع الحقوق محفوظة © 2026</span><span className="socials">f&nbsp; 𝕏&nbsp; ▶&nbsp; ◎&nbsp; in</span></div></footer>}
+function Footer(){return <footer className="site-footer"><div className="footer-inner"><div className="footer-brand"><Brand light/><p>منصة رقمية شاملة لخدمة أبناء ولاية نهر النيل في الداخل والخارج.</p></div><div><h4>تواصل معنا</h4><p>☎ +249 912 345 678</p><p>✉ info@nilenile.org</p><p>⌖ ولاية نهر النيل - السودان</p></div><div><h4>الدعم والمساعدة</h4><a href="/contact">الأسئلة الشائعة</a><a href="/contact">سياسة الخصوصية</a><a href="/contact">الشروط والأحكام</a></div><div><h4>خدمات الرابطة</h4><a href="/education">التعليم</a><a href="/health">الصحة</a><a href="/investment">الاستثمار</a><a href="/culture">الثقافة</a></div><div><h4>روابط سريعة</h4><a href="/">الرئيسية</a><a href="/membership">عن الرابطة</a><a href="/contact">تواصل معنا</a></div></div><div className="footer-bottom"><span>جميع الحقوق محفوظة © 2026</span><span className="socials"><b>f</b><b>𝕏</b><b>▶</b><b>◎</b><b>in</b></span></div></footer>}
 
 function Motion(){useEffect(()=>{const obs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add("in")}),{threshold:.08});document.querySelectorAll(".motion").forEach(el=>obs.observe(el));return()=>obs.disconnect()},[]);return null}
 function SectionTitle({children,mini}:{children:React.ReactNode;mini?:string}){return <div className="section-heading motion">{mini&&<span>{mini}</span>}<h2>{children}</h2></div>}
-function Arrow(){return <span aria-hidden>←</span>}
+function Arrow(){return <ArrowLeft size={15} aria-hidden/>}
 
 function Home(){
-  const services=[{title:"الثقافة",icon:"▥",desc:["التراث","الفعاليات الثقافية","المكتبة الرقمية"],href:"/culture",tone:"cyan"},{title:"التعليم",icon:"▣",desc:["مدرسة نهر النيل","المنح الدراسية","الدورات التدريبية"],href:"/education",tone:"blue"},{title:"الاستثمار",icon:"↗",desc:["الفرص الاستثمارية","المشروعات التنموية","دليل المستثمر"],href:"/investment",tone:"orange"},{title:"السوق السوداني الإلكتروني",icon:"▤",desc:["المنتجات","الخدمات","الشركات"],href:"#market",tone:"purple"},{title:"الخدمات الاجتماعية",icon:"♡",desc:["طلب المساعدة","التكافل الاجتماعي","دعم المرضى"],href:"/social",tone:"green"}];
-  return <>
-    <section className="home-hero exact-hero"><div className="hero-content motion"><span className="orange-dot">رابطة ولاية</span><h1>نهر النيل الرقمية</h1><h3>منصة رقمية شاملة تربط أبناء ولاية نهر النيل</h3><p>في الداخل والخارج، وتوفر خدمات تواصل وتفاعل وتنمية وتطوير.</p><div className="values"><b>♧<small>تواصل</small></b><b>⌘<small>تفاعل</small></b><b>⚙<small>تنمية</small></b><b>♧<small>تطوير</small></b></div><div className="hero-buttons"><a className="primary" href="#services">استكشف المنصة <Arrow/></a><a className="outline" href="#services">تعرّف على خدماتنا ▦</a></div></div><div className="hero-photo home-visual motion"><img src="/assets/home-hero-hq.webp" alt="منظر علوي عالي الدقة لنهر النيل والجسور"/><div className="hero-points"><b><i>♡</i><span>وحدة وتكافل<small>نجمع أبناء الولاية على قلب واحد</small></span></b><b><i>⌘</i><span>خدمات رقمية<small>خدمات متكاملة وسهلة الوصول</small></span></b><b><i>↗</i><span>تنمية مستدامة<small>مبادرات تصنع أثراً حقيقياً</small></span></b><b><i>◎</i><span>وصول عالمي<small>نربط أبناء الولاية حول العالم</small></span></b></div></div></section>
-    <section className="metric-bar motion">{[["200+","المبادرات والبرامج","♡"],["35K+","المستفيدون الحاليون","♧"],["120+","الخدمات المقدمة","▦"],["45+","دولة حول العالم","◎"],["850K+","أبناء الولاية حول العالم","⌖"]].map(([n,l,i])=><div key={l}><i>{i}</i><b>{n}</b><span>{l}</span></div>)}</section>
-    <section className="join-strip page-width motion"><div className="member-card-css"><Brand light/><strong>عضو في<br/>رابطة ولاية نهر النيل الرقمية</strong><small>0001&nbsp;&nbsp; عضوية</small></div><div><span>انضم الآن إلى</span><h2>رابطة ولاية نهر النيل الرقمية</h2><p>كن جزءاً من أكبر تجمع رقمي لأبناء ولاية نهر النيل واستفد من جميع الخدمات والمبادرات والفرص المتاحة.</p></div><a className="primary join-cta" href="/membership">اضغط هنا<br/>للانضمام الآن <Arrow/></a></section>
-    <section id="services" className="section page-width"><SectionTitle mini="ابدأ رحلتك من هنا">خدمات الرابطة الرقمية</SectionTitle><div className="service-columns">{services.map(s=><a className={`service-column motion ${s.tone}`} href={s.href} key={s.title}><i>{s.icon}</i><h3>{s.title}</h3><ul>{s.desc.map(x=><li key={x}>{x}</li>)}</ul><b>الدخول للخدمة <Arrow/></b></a>)}</div></section>
-    <section className="investment-banner page-width motion"><img src="/assets/investment-hero-hq.webp" alt="فرص الاستثمار في ولاية نهر النيل"/><div className="banner-overlay"><h2>الاستثمار في ولاية نهر النيل</h2><p>فرص استثمارية واعدة في القطاعات الصناعية والزراعية والسكنية</p></div><a href="/investment" className="primary">استكشف الفرص الاستثمارية <Arrow/></a></section>
-    <section className="two-features page-width"><article className="feature-panel motion"><div><h2>مدرسة نهر النيل الإلكترونية</h2><h4>تعليم رقمي متكامل من المرحلة الابتدائية حتى الثانوية</h4><ul><li>مناهج تفاعلية وشروحات مرئية</li><li>اختبارات إلكترونية وتقارير دورية</li><li>منصة آمنة وسهلة الاستخدام</li></ul><a className="deep-btn" href="/education">الدخول إلى المدرسة <Arrow/></a></div><img src="/assets/home-school-hq.webp" alt="طالبة تستخدم منصة التعليم"/></article><article className="feature-panel motion"><div><h2>معهد نهر النيل الإلكتروني</h2><h4>التدريب المهني والتطوير المستمر</h4><ul><li>دورات مهنية معتمدة</li><li>شهادات احترافية</li><li>لقاءات وتدريب مباشر</li></ul><a className="deep-btn dark" href="/education">الدخول إلى المعهد <Arrow/></a></div><img src="/assets/home-training-hq.webp" alt="التدريب المهني عبر الإنترنت"/></article></section>
-    <section id="market" className="market-strip page-width motion"><img src="/assets/home-market-hq.webp" alt="السوق السوداني الإلكتروني"/><div><span>السوق السوداني الإلكتروني</span><h2>منصة آمنة لبيع وشراء المنتجات والخدمات السودانية</h2><p>ادعم المنتج السوداني وكن جزءاً من تنمية الاقتصاد الوطني.</p></div><a className="deep-btn" href="#">تصفح السوق الآن ▤</a></section>
-    <section className="section page-width"><SectionTitle mini="آخر المستجدات">آخر الأخبار والفعاليات</SectionTitle><div className="news-grid">{["مشروع التنمية المستدامة","دورات تدريبية متخصصة","مبادرة دعم المدارس","ملتقى شباب نهر النيل 2025"].map((x,i)=><article className="news-card motion" key={x}><img src={["/assets/invest-livestock-hq.webp","/assets/culture-seminar-hq.webp","/assets/social-education-hq.webp","/assets/culture-poetry-hq.webp"][i]} alt=""/><div><time>مايو 2025</time><h3>{x}</h3><p>خبر جديد من فعاليات ومبادرات رابطة ولاية نهر النيل.</p><a href="/culture">اقرأ المزيد <Arrow/></a></div></article>)}</div></section>
-  </>
+  const heroBenefits=[
+    {title:"منصة رقمية واحدة",text:"لكل أبناء الولاية",icon:UsersRound},
+    {title:"خدمات رقمية",text:"سريعة وآمنة",icon:MonitorCheck},
+    {title:"عائلة واحدة",text:"هدف واحد",icon:ShieldCheck},
+    {title:"مستقبل أفضل",text:"لأبناء الولاية",icon:ChartNoAxesCombined},
+  ];
+  const metrics=[
+    {number:"200+",label:"المبادرات والبرامج",icon:HeartHandshake},
+    {number:"35K+",label:"المستفيدون الحاليون",icon:UsersRound},
+    {number:"120+",label:"الخدمات المقدمة",icon:LayoutGrid},
+    {number:"45+",label:"دولة حول العالم",icon:Globe2},
+    {number:"850K+",label:"أبناء الولاية حول العالم",icon:Network},
+  ];
+  const services=[
+    {title:"الثقافة",icon:Landmark,items:["التراث","الفعاليات الثقافية","الشخصيات","الإعلام"],href:"/culture",tone:"cyan",button:"الدخول للثقافة"},
+    {title:"التعليم",icon:GraduationCap,items:["مدرسة نهر النيل الإلكترونية","المنح الدراسية","الدورات التدريبية","المكتبة الرقمية"],href:"/education",tone:"blue",button:"الدخول للتعليم"},
+    {title:"الاستثمار",icon:ChartNoAxesCombined,items:["الفرص الاستثمارية","المشروعات التنموية","الاستثمار الزراعي","دليل المستثمر"],href:"/investment",tone:"orange",button:"الدخول للاستثمار"},
+    {title:"السوق السوداني الإلكتروني",icon:ShoppingCart,items:["المنتجات","الخدمات","الوظائف","الشركات"],href:"#market",tone:"purple",button:"الدخول للسوق"},
+    {title:"الخدمات الاجتماعية",icon:HandHeart,items:["طلب المساعدة","التكافل الاجتماعي","دعم المرضى","رعاية الأيتام والأرامل"],href:"/social",tone:"green",button:"الدخول للخدمة"},
+  ];
+  const news=[
+    {title:"مشروع التنمية المستدامة",date:"02 مايو",image:"/assets/investment-hero-hq.webp",text:"مشروع رائد للتنمية المستدامة في الولاية"},
+    {title:"دورات تدريبية متخصصة",date:"10 مايو",image:"/assets/course-project-hq.webp",text:"دورات للشباب في مجالات متعددة داخل الولاية"},
+    {title:"مبادرة دعم المدارس",date:"18 مايو",image:"/assets/social-education-hq.webp",text:"مبادرة لدعم وتطوير المدارس وبيئة التعليم"},
+    {title:"ملتقى شباب نهر النيل 2025",date:"25 مايو",image:"/assets/culture-seminar-hq.webp",text:"ملتقى شبابي يجمع أبناء الولاية للحوار وتبادل الخبرات"},
+  ];
+  return <div className="home-redesign">
+    <section className="home-master-hero">
+      <div className="home-hero-copy motion">
+        <span className="home-eyebrow">رابطة ولاية</span>
+        <h1>نهر النيل الرقمية</h1>
+        <h2>منصة رقمية شاملة تربط أبناء ولاية نهر النيل</h2>
+        <p>في الداخل والخارج</p>
+        <div className="home-values">
+          <b><UsersRound/><small>تواصل</small></b>
+          <b><Share2/><small>تفاعل</small></b>
+          <b><Settings2/><small>تنمية</small></b>
+          <b><Network/><small>تطوير</small></b>
+        </div>
+        <div className="home-hero-actions">
+          <a className="home-primary" href="#services">استكشف المنصة <ChevronLeft/></a>
+          <a className="home-outline" href="#services">تعرّف على خدماتنا <LayoutGrid/></a>
+        </div>
+      </div>
+      <div className="home-hero-stage motion">
+        <img src="/assets/home-hero-reference-v2.webp" alt="نهر النيل والجسور في ولاية نهر النيل"/>
+        <div className="home-image-fade" aria-hidden/>
+        <aside className="home-benefit-panel">
+          {heroBenefits.map(item=>{const Icon=item.icon;return <div key={item.title}><Icon/><span><b>{item.title}</b><small>{item.text}</small></span></div>})}
+        </aside>
+      </div>
+    </section>
+
+    <section className="home-metrics page-width motion">
+      {metrics.map(item=>{const Icon=item.icon;return <div key={item.label}><Icon/><span><b>{item.number}</b><small>{item.label}</small></span></div>})}
+    </section>
+
+    <section className="home-join page-width motion">
+      <div className="home-member-card">
+        <img src="/assets/home-logo-dark.jpg" alt="رابطة ولاية نهر النيل الرقمية"/>
+        <div><span>عضو في</span><strong>رابطة ولاية نهر النيل الرقمية</strong><small>معاً.. لنبني المستقبل</small></div>
+        <footer><b>0001</b><span>عضوية</span></footer>
+      </div>
+      <div className="home-join-copy">
+        <span>انضم الآن إلى</span>
+        <h2>رابطة ولاية نهر النيل الرقمية</h2>
+        <p>كن جزءاً من أكبر تجمع رقمي لأبناء ولاية نهر النيل واستفد من جميع الخدمات والمبادرات والفرص المتاحة.</p>
+      </div>
+      <a className="home-join-cta" href="/membership"><UsersRound/><b>اضغط هنا<br/>للانضمام الآن</b><span><ArrowLeft/></span></a>
+    </section>
+
+    <section id="services" className="home-services page-width">
+      <div className="home-section-title motion"><span/><h2>ابدأ رحلتك من هنا</h2><span/></div>
+      <div className="home-service-grid">
+        {services.map(service=>{const Icon=service.icon;return <article className={"home-service-card motion "+service.tone} key={service.title}>
+          <div className="service-icon"><Icon/></div>
+          <h3>{service.title}</h3>
+          <ul>{service.items.map(item=><li key={item}>{item}</li>)}</ul>
+          <a href={service.href}>{service.button}<ArrowLeft/></a>
+        </article>})}
+      </div>
+    </section>
+
+    <section className="home-investment page-width motion">
+      <img className="investment-bg" src="/assets/home-investment-banner-v2.webp" alt="القطاع الصناعي والزراعة في ولاية نهر النيل"/>
+      <div className="investment-center">
+        <h2>الاستثمار في ولاية نهر النيل</h2>
+        <p>فرص استثمارية واعدة في القطاعات الصناعية والزراعية والسكنية</p>
+        <div>
+          <b><Building2/><small>سكني</small></b>
+          <b><Sprout/><small>زراعي</small></b>
+          <b><Sprout/><small>زراعي</small></b>
+          <b><Factory/><small>صناعي</small></b>
+        </div>
+      </div>
+      <a href="/investment">استكشف الفرص الاستثمارية <ArrowLeft/></a>
+    </section>
+
+    <section className="home-programs page-width">
+      <article className="home-program school motion">
+        <div className="program-copy">
+          <h2>مدرسة نهر النيل الإلكترونية</h2>
+          <h4>تعليم رقمي متكامل من المرحلة الابتدائية حتى الثانوية</h4>
+          <ul><li>فصول افتراضية تفاعلية</li><li>واجبات واختبارات إلكترونية</li><li>متابعة مع ولي الأمر</li><li>شهادات وتقارير دورية</li><li>منصة تعليمية متاحة على مدار الساعة</li></ul>
+          <a href="/education">الدخول إلى المدرسة <ArrowLeft/></a>
+        </div>
+        <img src="/assets/home-school-hq.webp" alt="طالبة في مدرسة نهر النيل الإلكترونية"/>
+        <div className="program-features">
+          <b><Clock3/><small>متاحة 24/7</small></b><b><BookOpen/><small>اختبارات دورية</small></b><b><Video/><small>فصول مباشرة</small></b><b><BadgeCheck/><small>تقارير متابعة</small></b>
+        </div>
+      </article>
+      <article className="home-program institute motion">
+        <div className="program-copy">
+          <h2>معهد نهر النيل الإلكتروني</h2>
+          <h4>التدريب المهني والتطوير المستمر</h4>
+          <ul><li>دورات مهنية معتمدة</li><li>شهادات احترافية</li><li>لقاءات وتدريب مباشر</li><li>زيادة المهارات</li><li>تعلم في أي وقت ومن أي مكان</li></ul>
+          <a href="/education">الدخول إلى المعهد <ArrowLeft/></a>
+        </div>
+        <img src="/assets/home-training-hq.webp" alt="التدريب في معهد نهر النيل الإلكتروني"/>
+        <div className="program-features">
+          <b><Clock3/><small>تعلم مرن</small></b><b><Award/><small>مدربون متخصصون</small></b><b><UsersRound/><small>شهادات معتمدة</small></b><b><BadgeCheck/><small>دورات مهنية</small></b>
+        </div>
+      </article>
+    </section>
+
+    <section className="home-opportunity page-width motion">
+      <Megaphone/>
+      <div><h2>مساحتك مميزة لعرض خدماتك ومنتجاتك</h2><p>تواصل مع آلاف المستفيدين من أبناء ولاية نهر النيل.</p></div>
+      <a href="/contact">استكشف الفرص الاستثمارية <ArrowLeft/></a>
+    </section>
+
+    <section id="market" className="home-market page-width motion">
+      <img src="/assets/home-market-hq.webp" alt="السوق السوداني الإلكتروني"/>
+      <div className="market-copy">
+        <span>السوق السوداني الإلكتروني</span>
+        <h2>منصة آمنة لبيع وشراء المنتجات والخدمات السودانية</h2>
+        <p>ادعم المنتج السوداني وكن جزءاً من تنمية الاقتصاد الوطني.</p>
+        <div><b><Tags/><small>عروض وخصومات مميزة</small></b><b><Truck/><small>توصيل سريع داخل السودان وخارجه</small></b><b><ShieldCheck/><small>دفع آمن وسهل</small></b><b><Store/><small>منتجات موثوقة من تجار سودانيين</small></b></div>
+      </div>
+      <a href="#"><ShoppingCart/> تصفح السوق الآن</a>
+    </section>
+
+    <section id="news" className="home-news page-width">
+      <div className="home-section-title motion"><span/><h2>آخر الأخبار والمبادرات</h2><span/></div>
+      <div className="home-news-grid">
+        {news.map(item=><article className="home-news-card motion" key={item.title}>
+          <div className="news-date"><b>{item.date.split(" ")[0]}</b><small>{item.date.split(" ")[1]}</small></div>
+          <h3>{item.title}</h3>
+          <p>{item.text}</p>
+          <img src={item.image} alt={item.title}/>
+          <a href="/culture">اقرأ المزيد <ArrowLeft/></a>
+        </article>)}
+      </div>
+      <a className="all-news-link" href="/culture">عرض المزيد من الأخبار والفعاليات</a>
+    </section>
+  </div>
 }
 
 function PortalHero({type}:{type:PortalKey}){const p=info[type];return <><section className={`portal-hero portal-${type}`}><div className="portal-copy motion"><h1>{p.title}</h1><h2>{p.accent}</h2><p>{p.lead}</p></div><div className="portal-image motion"><img src={p.hero} alt={p.title}/></div>{["education","investment","culture"].includes(type)&&<aside className="portal-side motion"><h3>{p.icon}&nbsp; خدمات {p.title}</h3>{p.tabs.map((t,i)=><a key={t} className={i===0?"selected":""} href="#services">{t}<span>⌃</span></a>)}</aside>}</section><section className="portal-features motion">{(type==="health"?["في خدمتكم أينما كنتم","متاحة إلكترونياً","خدمة سريعة","موثوقة وآمنة"]:type==="social"?["حالات إنسانية","تواصل مباشر","استشارة اجتماعية","برامج ومبادرات","دعم المحتاجين"]:["جودة وتميز","دعم شامل","محتوى متخصص","تعلّم مرن"]).map((x,i)=><div key={x}><i>{["◎","▣","◷","♢","♡"][i]}</i><b>{x}</b><span>خدمة رقمية متكاملة</span></div>)}</section></>}
