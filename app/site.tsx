@@ -24,7 +24,7 @@ const routeMap: Record<string, PageKey> = {
 };
 
 const nav = [["/","الرئيسية"],["/membership","عن الرابطة"],["/social","الخدمات"],["/investment","المبادرات"],["/culture","الثقافة"],["/education","التعليم"],["/contact","تواصل معنا"]];
-const homeNav = [["/","الرئيسية"],["/membership","عن الرابطة"],["/education","التعليم"],["/social","الاجتماعية"],["/culture","الثقافية"],["#market","السوق السوداني"],["/investment","الاستثمار"],["#news","الأخبار والفعاليات"],["/contact","تواصل معنا"]];
+const homeNav = [["/","الرئيسية"],["/membership","عن الرابطة"],["/education","التعليم"],["/health","الصحة"],["/social","الاجتماعية"],["/culture","الثقافية"],["#market","السوق السوداني"],["/investment","الاستثمار"],["#news","الأخبار والفعاليات"],["/contact","تواصل معنا"]];
 const socialNav = [["/","الرئيسية"],["/membership","عن الرابطة"],["/social","الخدمات"],["/investment","المبادرات"],["/culture","الأخبار والفعاليات"],["/education","المكتبة الرقمية"],["/contact","تواصل معنا"]];
 
 const info: Record<PortalKey, {title:string; accent:string; lead:string; hero:string; icon:string; tabs:string[]; stats:[string,string][]; cards:{title:string;text:string;image?:string;icon:string}[]; section:string}> = {
