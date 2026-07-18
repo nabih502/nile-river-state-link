@@ -610,3 +610,39 @@ body:has(.social-redesign) .topbar.home-topbar .primary.compact{height:43px!impo
 @media(max-width:700px){
   .education-redesign .page-width{width:calc(100% - 20px)}.edu-hero{height:auto;display:flex;flex-direction:column}.edu-hero-copy{order:1;padding:28px 17px;left:0;top:0}.edu-hero-copy h1{font-size:26px;white-space:normal}.edu-hero-copy p{font-size:9px}.edu-hero-photo{order:2;height:250px}.edu-hero-menu{order:3;margin:10px}.edu-hero-menu a{height:38px;font-size:9px}.edu-hero-features{order:4;position:static;width:calc(100% - 20px);height:auto;margin:0 auto 10px;grid-template-columns:1fr 1fr}.edu-hero-features article{min-height:95px}.edu-stats{height:auto;min-height:320px;grid-template-columns:1fr 1fr;padding:40px 10px 10px}.edu-stats-art{grid-column:1/-1;height:95px}.edu-stats article{height:70px}.edu-dashboard{grid-template-columns:1fr}.edu-school{height:auto;grid-template-columns:1fr}.edu-school-intro h2,.edu-school-intro>p,.edu-school-intro>a{width:100%;align-self:stretch}.edu-school-intro>div{height:170px}.edu-school-intro img{height:165px}.edu-school-intro ul{font-size:8px}.edu-levels>div{height:170px}.edu-side-column{display:grid;grid-template-columns:1fr 1fr}.edu-scholarships{grid-column:1/-1}.edu-courses{height:205px}.edu-courses>div{display:flex;overflow-x:auto}.edu-courses article{min-width:72vw}.edu-library{height:auto;grid-template-columns:1fr}.edu-library-promo{grid-column:1}.edu-library-items{grid-column:1;display:flex;overflow-x:auto;padding:10px}.edu-library-items article{min-width:110px}.edu-library>h2{position:static;text-align:center;grid-row:1}.edu-information{grid-template-columns:1fr}.edu-information>article{height:auto;min-height:155px}.edu-quality{height:auto;display:flex;overflow-x:auto}.edu-quality article{min-width:62vw;min-height:90px}.site-footer{margin-top:20px}
 }
+
+/* Education usability pass — clearer lower content and responsive pointer feedback. */
+.edu-information>article{height:190px;padding:9px 11px}.edu-information header{height:26px}.edu-information h2{font-size:13px}.edu-information header a{font-size:7.5px;font-weight:800}.edu-news>div{height:42px;grid-template-columns:78px 1fr;gap:9px}.edu-news img{width:78px;height:39px;border-radius:3px}.edu-news p{font-size:7.2px;line-height:1.55}.edu-news small{font-size:5.8px}.edu-events>div{height:38px;grid-template-columns:38px 1fr}.edu-events time{height:33px;font-size:5.7px}.edu-events time b{font-size:12px}.edu-events p{font-size:7.2px;line-height:1.45;padding-right:9px}.edu-events p small{font-size:5.7px}.edu-events>a{height:25px;margin-top:4px;font-size:7px;border-radius:3px}.edu-consult{grid-template-columns:94px 1fr;padding:14px!important}.edu-consult img{width:88px;height:112px}.edu-consult h2{font-size:17px;margin:0;line-height:1.35}.edu-consult p{font-size:9px;line-height:1.6}.edu-consult a{height:30px;font-size:8px}
+
+@media(min-width:1001px){
+  .edu-information>article{height:300px;padding:13px 16px}.edu-information header{height:34px}.edu-information h2{font-size:20px}.edu-information header a{font-size:10.5px}.edu-information header a svg{width:16px}.edu-news>div{height:62px;grid-template-columns:118px 1fr;gap:13px;margin-bottom:2px}.edu-news img{width:118px;height:58px;border-radius:5px}.edu-news p{font-size:12px;line-height:1.55}.edu-news small{font-size:8.5px}.edu-events>div{height:59px;grid-template-columns:55px 1fr}.edu-events time{height:50px;font-size:8.5px;border-radius:5px}.edu-events time b{font-size:18px}.edu-events p{font-size:11.5px;line-height:1.5;padding-right:13px}.edu-events p small{font-size:8.5px}.edu-events>a{height:32px;margin-top:5px;font-size:10px}.edu-consult{grid-template-columns:140px 1fr;padding:20px!important}.edu-consult img{width:132px;height:175px}.edu-consult h2{font-size:25px}.edu-consult p{font-size:13px;line-height:1.7}.edu-consult a{height:38px;font-size:11px}
+}
+
+@media(max-width:700px){
+  .edu-information{gap:14px}.edu-information>article{height:auto;min-height:280px;padding:14px}.edu-information header{height:34px}.edu-information h2{font-size:19px}.edu-information header a{font-size:10px}.edu-news>div{height:60px;grid-template-columns:96px 1fr;gap:11px}.edu-news img{width:96px;height:56px}.edu-news p{font-size:11px}.edu-news small{font-size:8px}.edu-events>div{height:58px;grid-template-columns:52px 1fr}.edu-events time{height:48px;font-size:8px}.edu-events time b{font-size:17px}.edu-events p{font-size:11px}.edu-events p small{font-size:8px}.edu-events>a{height:36px;font-size:10px}.edu-consult{min-height:230px;grid-template-columns:112px 1fr;padding:18px!important}.edu-consult img{width:104px;height:150px}.edu-consult h2{font-size:23px}.edu-consult p{font-size:13px}.edu-consult a{height:39px;font-size:11px}
+}
+
+@media(hover:hover) and (pointer:fine){
+  .education-redesign :is(a,article,section,img,svg){transition:transform .28s cubic-bezier(.2,.75,.25,1),box-shadow .28s ease,border-color .28s ease,background-color .28s ease,color .28s ease,opacity .28s ease}
+  .edu-hero-photo:hover img{transform:scale(1.035)}
+  .edu-hero-menu a:hover{background:#fff4e7;color:#d87500;transform:translateX(-4px)}.edu-hero-menu a:hover svg{transform:scale(1.12)}
+  .edu-hero-menu a.active:hover{background:linear-gradient(90deg,#f7a52c,#e97900);color:#fff}
+  .edu-hero-features article:hover{background:#fff8ef;transform:translateY(-5px);box-shadow:0 10px 22px rgba(31,43,57,.1)}.edu-hero-features article:hover svg{transform:scale(1.14) rotate(-4deg)}
+  .edu-stats article:hover{background:rgba(255,255,255,.08);transform:translateY(-3px)}.edu-stats article:hover svg{color:#ffad35;transform:scale(1.1)}
+  .edu-school:hover,.edu-library:hover{border-color:#efb56e;box-shadow:0 12px 28px rgba(31,43,57,.12);transform:translateY(-3px)}
+  .edu-levels article:hover{background:#fff8ef;border-color:#f3b66d;transform:translateY(-3px)}.edu-levels article:hover svg{transform:scale(1.14)}
+  .edu-school-intro>a:hover,.edu-help a:hover,.edu-scholarships>a:hover,.edu-library-promo a:hover,.edu-consult a:hover{transform:translateY(-2px);box-shadow:0 8px 18px rgba(239,138,16,.3);filter:saturate(1.08)}
+  .edu-courses article:hover{transform:translateY(-6px);border-color:#efad5b;box-shadow:0 13px 25px rgba(31,43,57,.14)}.edu-courses article:hover .edu-course-photo img{transform:scale(1.075)}.edu-courses article:hover .edu-course-badge{background:var(--edu-orange);color:#fff;transform:translateY(-1px)}
+  .edu-quick-links a:hover{background:#fff5e9;color:#d87500;padding-inline:8px;transform:translateX(-3px)}
+  .edu-side-column section:hover{border-color:#efb56e;box-shadow:0 10px 22px rgba(31,43,57,.1);transform:translateY(-3px)}
+  .edu-library-items article:hover{background:#fff8ef;transform:translateY(-4px)}.edu-library-items article:hover svg{color:var(--edu-orange);transform:scale(1.14)}
+  .edu-information>article:hover{border-color:#efa84e;box-shadow:0 14px 30px rgba(31,43,57,.14);transform:translateY(-5px)}
+  .edu-news>div:hover,.edu-events>div:hover{background:#fff8ef;transform:translateX(-4px)}.edu-news>div:hover img{transform:scale(1.045)}
+  .edu-events>a:hover{background:#4a5865;letter-spacing:.15px}.edu-consult:hover img{transform:scale(1.06) rotate(-2deg)}
+  .edu-quality article:hover{background:#fff7ed;color:#d87500}.edu-quality article:hover svg{transform:scale(1.14) rotate(-4deg)}
+  .education-redesign a:focus-visible{outline:2px solid var(--edu-orange);outline-offset:3px}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .education-redesign :is(a,article,section,img,svg){transition:none!important;transform:none!important}
+}
