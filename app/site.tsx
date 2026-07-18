@@ -3,15 +3,15 @@
 import { FormEvent, useEffect, useRef, useState } from "react";
 import {
   Aperture, ArrowLeft, Award, BadgeCheck, BadgePercent, Banknote,
-  BookOpen, BriefcaseBusiness, Building2, Camera, ChartNoAxesCombined, ChartPie,
+  BookOpen, BriefcaseBusiness, Building2, CalendarDays, Camera, ChartNoAxesCombined, ChartPie,
   Check, ChevronLeft, CircleAlert, CircleCheckBig, Clock3, CreditCard, Crown,
-  Factory, FileImage, FileUp, Gem, Gift, Globe2, GraduationCap,
+  Factory, Feather, FileImage, FileText, FileUp, Gem, Gift, Globe2, GraduationCap,
   HandHeart, Handshake, HeartHandshake, HeartPulse,
-  Landmark, LayoutGrid, Menu, Megaphone, MonitorCheck, Network,
+  Landmark, LayoutGrid, LibraryBig, Lightbulb, Menu, Megaphone, MonitorCheck, Music2, Network, Newspaper,
   MessageCircle,
   LockKeyhole, Mail, MapPin, Percent, Phone, QrCode, ReceiptText,
-  Pill, ScanFace, Search, Settings2, Share2, Shield, ShieldCheck, Stethoscope,
-  ShoppingCart, Sparkles, Sprout, Store, Tags, TrendingUp, Truck,
+  Palette, Pill, PlayCircle, RefreshCw, ScanFace, Search, Settings2, Share2, Shield, ShieldCheck, Stethoscope,
+  ShoppingCart, Sparkles, Sprout, Store, Tags, TrendingUp, Trophy, Truck,
   Upload, UserCheck, UserRound, UsersRound, Video, WalletCards, X,
 } from "lucide-react";
 
@@ -498,6 +498,136 @@ function InvestmentPage(){
   </div>
 }
 
+function CulturePage(){
+  const heroMenu=[
+    {icon:CalendarDays,label:"الفعاليات والأنشطة",href:"#culture-activities"},
+    {icon:Newspaper,label:"الأخبار الثقافية",href:"#culture-news"},
+    {icon:LibraryBig,label:"المكتبة الرقمية",href:"#culture-library"},
+    {icon:Palette,label:"الفنون والأدب",href:"#culture-arts"},
+    {icon:Landmark,label:"التراث والتاريخ",href:"#culture-activities"},
+    {icon:GraduationCap,label:"التعليم الثقافي",href:"#culture-library"},
+    {icon:MessageCircle,label:"المنتديات الثقافية",href:"#culture-associations"},
+    {icon:Lightbulb,label:"المبادرات والمشاريع",href:"#culture-initiatives"},
+    {icon:Trophy,label:"المسابقات والجوائز",href:"#culture-contests"},
+    {icon:UsersRound,label:"الفرق والجمعيات الثقافية",href:"#culture-associations"},
+  ];
+  const heroFeatures=[
+    {icon:Aperture,title:"الإبداع والابتكار",text:"تشجيع التفكير الإبداعي وتطوير المبادرات الثقافية"},
+    {icon:Globe2,title:"التواصل الثقافي",text:"التفاعل الثقافي بين أبناء الولاية والعالم"},
+    {icon:UsersRound,title:"دعم المواهب",text:"اكتشاف ورعاية المواهب في مختلف المجالات"},
+    {icon:Award,title:"إحياء التراث",text:"حفظ وإحياء التراث السوداني الأصيل"},
+  ];
+  const stats=[
+    {icon:UserRound,n:"2,450",label:"عضو نشط"},
+    {icon:CalendarDays,n:"85",label:"فعالية ثقافية"},
+    {icon:Lightbulb,n:"120",label:"مبادرة ثقافية"},
+    {icon:UsersRound,n:"650+",label:"مبدع وفنان"},
+    {icon:Landmark,n:"35",label:"فرقة وجمعية"},
+  ];
+  const activities=[
+    {image:"/assets/culture-folk-hq.webp",tag:"مهرجان تراثي",title:"مهرجان نهر النيل للتراث",date:"18 مايو 2025",location:"المدينة القديمة - عطبرة"},
+    {image:"/assets/culture-seminar-hq.webp",tag:"ندوة ثقافية",title:"ندوة دور الثقافة في بناء المجتمع",date:"22 مايو 2025",location:"قاعة المؤتمرات"},
+    {image:"/assets/culture-gallery-hq.webp",tag:"معرض فني",title:"معرض الفنون التشكيلية",date:"23 مايو 2025",location:"مركز الفنون"},
+    {image:"/assets/culture-poetry-hq.webp",tag:"أمسية شعرية",title:"أمسية شعرية لشعراء الشباب",date:"25 مايو 2025",location:"قاعة بيت الثقافة"},
+  ];
+  const artists=[
+    {image:"/assets/culture-tayeb.jpg",name:"د. الطيب صالح",role:"أديب وروائي سوداني"},
+    {image:"/assets/culture-ahmed.jpg",name:"أحمد المصطفى",role:"شاعر سوداني"},
+    {image:"/assets/culture-taj.jpg",name:"تاج السر الحسن",role:"كاتب وإعلامي"},
+    {image:"/assets/culture-wardi.gif",name:"محمد وردي",role:"فنان ومطرب"},
+  ];
+  const arts=[
+    {image:"/assets/culture-hero-hq.webp",icon:Feather,title:"القصة والشعر",text:"قصائد وأعمال أدبية"},
+    {image:"/assets/culture-gallery-hq.webp",icon:Palette,title:"الفنون التشكيلية",text:"رسم وفنون بصرية"},
+    {image:"/assets/culture-poetry-hq.webp",icon:Music2,title:"الموسيقى والغناء",text:"إبداع موسيقي"},
+    {image:"/assets/culture-seminar-hq.webp",icon:UsersRound,title:"المسرح والدراما",text:"عروض وتمثيل"},
+    {image:"/assets/culture-folk-hq.webp",icon:Camera,title:"التصوير الفوتوغرافي",text:"صور وحكايات"},
+  ];
+  const associations=[
+    {icon:Feather,title:"جمعية الخط العربي",place:"شندي"},
+    {icon:Aperture,title:"فرقة المسرح الشبابي",place:"المتمة"},
+    {icon:Globe2,title:"نادي الأدب والفنون",place:"عطبرة"},
+    {icon:RefreshCw,title:"جمعية التراث السوداني",place:"بربر"},
+    {icon:Landmark,title:"فرقة نهر النيل التقليدية",place:"الدامر"},
+  ];
+  const initiatives=[
+    {image:"/assets/culture-folk-hq.webp",title:"مشروع توثيق التراث الشفهي",text:"جمع وتوثيق الحكايات والأغاني الشعبية"},
+    {image:"/assets/culture-seminar-hq.webp",title:"مبادرة دعم المواهب الشابة",text:"احتضان وتنمية المبدعين في السودان"},
+    {image:"/assets/culture-gallery-hq.webp",title:"مشروع المتاحف المتنقلة",text:"نشر الثقافة في المناطق المختلفة"},
+  ];
+  const contests=[
+    {title:"مسابقة الشعر السنوية",date:"آخر موعد: 30 مايو 2025"},
+    {title:"جائزة الإبداع الفني",date:"آخر موعد: 15 يونيو 2025"},
+    {title:"مسابقة التصوير الضوئي",date:"آخر موعد: 1 يوليو 2025"},
+  ];
+  const news=[
+    {image:"/assets/culture-seminar-hq.webp",title:"إطلاق مبادرة إحياء التراث السوداني",date:"20 مايو 2025"},
+    {image:"/assets/culture-gallery-hq.webp",title:"نجاح معرض الفنون التشكيلية الأول",date:"18 مايو 2025"},
+    {image:"/assets/culture-poetry-hq.webp",title:"ندوة حول دور الشباب في الثقافة",date:"15 مايو 2025"},
+    {image:"/assets/culture-folk-hq.webp",title:"توقيع اتفاقية شراكة ثقافية جديدة",date:"10 مايو 2025"},
+  ];
+  const media=[
+    {image:"/assets/culture-folk-hq.webp",type:"فيديو",title:"مهرجان التراث السوداني 2025",date:"12 مايو 2025"},
+    {image:"/assets/culture-poetry-hq.webp",type:"بودكاست",title:"أمسية شعرية رائعة",date:"8 مايو 2025"},
+    {image:"/assets/culture-gallery-hq.webp",type:"فيديو",title:"معرض الفنون التشكيلية",date:"5 مايو 2025"},
+  ];
+  const calendar=[
+    {day:"25",month:"مايو",title:"أمسية شعرية للشباب",place:"قاعة بيت الثقافة - عطبرة"},
+    {day:"30",month:"مايو",title:"معرض الفنون التشكيلية",place:"مركز الفنون - بربر"},
+    {day:"5",month:"يونيو",title:"ندوة الثقافة والمجتمع",place:"قاعة المؤتمرات - شندي"},
+    {day:"15",month:"يونيو",title:"مهرجان نهر النيل للتراث",place:"المدينة القديمة - عطبرة"},
+  ];
+  const trust=[
+    {icon:RefreshCw,title:"سهولة الاستخدام",text:"واجهة بسيطة وسهلة"},
+    {icon:BadgeCheck,title:"تحديثات مستمرة",text:"محتوى ثقافي أولاً بأول"},
+    {icon:Award,title:"محتوى موثوق",text:"معلومات دقيقة ومعتمدة"},
+    {icon:MonitorCheck,title:"منصة آمنة",text:"حماية بيانات وخصوصية"},
+    {icon:MessageCircle,title:"دعم فني متواصل",text:"فريق متخصص لمساعدتك"},
+  ];
+  return <div className="culture-redesign">
+    <section className="cul-hero">
+      <div className="cul-hero-visual motion"><img src="/assets/culture-hero-hq.webp" alt="العود والكتب وعلم السودان في مشهد يعبر عن الثقافة السودانية"/></div>
+      <div className="cul-hero-copy motion"><div><h1>الثقافة .. هوية وإبداع</h1><h2>نصون تراثنا .. ونبدع لمستقبلنا</h2><p>منصة ثقافية رقمية شاملة تهدف إلى إبراز التراث السوداني الأصيل<br/>ودعم المواهب والإبداع في جميع المجالات الثقافية والفنية.</p></div><div className="cul-hero-features">{heroFeatures.map(item=>{const Icon=item.icon;return <article key={item.title}><Icon/><b>{item.title}</b><small>{item.text}</small></article>})}</div></div>
+      <aside className="cul-hero-menu motion"><h2><Landmark/> الخدمات الثقافية</h2>{heroMenu.map((item,index)=>{const Icon=item.icon;return <a className={index===0?"active":""} href={item.href} key={item.label}><Icon/>{item.label}</a>})}</aside>
+    </section>
+
+    <div className="cul-dashboard page-width">
+      <div className="cul-main-column">
+        <section className="cul-stats motion"><h2><ChartNoAxesCombined/> أرقام وإحصائيات<br/>الثقافة</h2>{stats.map(item=>{const Icon=item.icon;return <article key={item.label}><Icon/><span><b>{item.n}</b><small>{item.label}</small></span></article>})}</section>
+
+        <section id="culture-activities" className="cul-panel cul-activities"><CulturePanelHead title="الفعاليات والأنشطة الثقافية"/><div className="cul-activity-grid">{activities.map(item=><article className="motion" key={item.title}><div><img src={item.image} alt={item.title}/><span>{item.tag}</span></div><h3>{item.title}</h3><p><CalendarDays/> {item.date}</p><p><MapPin/> {item.location}</p><a href="/contact">تفاصيل الفعالية</a></article>)}</div><small className="cul-dots">● ● ● ●</small></section>
+
+        <div className="cul-library-arts">
+          <section id="culture-library" className="cul-panel cul-library motion"><CulturePanelHead title="المكتبة الرقمية"/><div><img src="/assets/education-reference-library-books.png" alt="كتب وجهاز قراءة إلكتروني"/><article><h3>آلاف الكتب والمراجع<br/>الثقافية في متناول يدك</h3><ul><li><BookOpen/> كتب التراث السوداني</li><li><FileText/> الدراسات والبحوث</li><li><Newspaper/> المجلات الثقافية</li><li><FileImage/> الكتب المصورة</li></ul><a href="/contact">استكشف المكتبة <ChevronLeft/></a></article></div></section>
+          <section id="culture-arts" className="cul-panel cul-arts"><CulturePanelHead title="الفنون والأدب"/><div>{arts.map(item=>{const Icon=item.icon;return <a className="motion" href="/contact" key={item.title}><span><img src={item.image} alt=""/><Icon/></span><b>{item.title}</b><small>{item.text}</small></a>})}</div></section>
+        </div>
+
+        <div className="cul-assoc-initiatives">
+          <section id="culture-associations" className="cul-panel cul-associations"><CulturePanelHead title="الفرق والجمعيات الثقافية"/><div>{associations.map(item=>{const Icon=item.icon;return <a className="motion" href="/contact" key={item.title}><Icon/><b>{item.title}</b><small>{item.place}</small></a>})}</div></section>
+          <section id="culture-initiatives" className="cul-panel cul-initiatives"><CulturePanelHead title="المبادرات والمشاريع"/><div>{initiatives.map(item=><a className="motion" href="/contact" key={item.title}><img src={item.image} alt=""/><span><b>{item.title}</b><small>{item.text}</small></span><i>+</i></a>)}</div><a className="cul-panel-action" href="/contact">عرض جميع المبادرات</a></section>
+        </div>
+
+        <div className="cul-bottom-panels">
+          <section id="culture-news" className="cul-panel cul-news"><CulturePanelHead title="أحدث الأخبار الثقافية"/>{news.map(item=><a className="motion" href="/contact" key={item.title}><img src={item.image} alt=""/><span><b>{item.title}</b><small>{item.date}</small></span></a>)}</section>
+          <section className="cul-panel cul-media"><CulturePanelHead title="ميديا الثقافة"/>{media.map(item=><a className="motion" href="/contact" key={item.title}><span><img src={item.image} alt=""/><PlayCircle/></span><p><em>{item.type}</em><b>{item.title}</b><small>{item.date}</small></p></a>)}</section>
+          <section className="cul-panel cul-calendar"><CulturePanelHead title="التقويم الثقافي"/>{calendar.map(item=><a className="motion" href="/contact" key={`${item.day}-${item.title}`}><time><b>{item.day}</b><small>{item.month}</small></time><span><b>{item.title}</b><small><MapPin/> {item.place}</small></span></a>)}</section>
+        </div>
+      </div>
+
+      <aside className="cul-side-column">
+        <section className="cul-panel cul-artists motion"><CulturePanelHead title="أبرز الفنانين والأدباء"/><div>{artists.map(item=><a href="/contact" key={item.name}><img src={item.image} alt={item.name}/><span><b>{item.name}</b><small>{item.role}</small></span></a>)}</div></section>
+        <section className="cul-join motion"><h2>انضم إلى مجتمع الثقافة</h2><p>شارك في المنتديات والأنشطة<br/>الثقافية وكن جزءاً من مجتمعنا</p><a href="/membership">انضم الآن <UsersRound/></a></section>
+        <section id="culture-contests" className="cul-panel cul-contests"><CulturePanelHead title="المسابقات والجوائز"/><div>{contests.map(item=><a className="motion" href="/contact" key={item.title}><Trophy/><span><b>{item.title}</b><small>{item.date}</small></span></a>)}</div><a className="cul-panel-action" href="/contact">المزيد من المسابقات</a></section>
+        <section className="cul-share motion"><h2>شارك محتواك الثقافي</h2><p>لديك موهبة أو محتوى ثقافي؟<br/>شاركنا وكن مبدعاً</p><div><span><Feather/><b>تدوينة</b></span><span><Video/><b>فيديو</b></span><span><FileImage/><b>صورة</b></span><span><FileText/><b>مقال</b></span></div><a href="/contact">أرسل محتواك</a></section>
+      </aside>
+    </div>
+
+    <section className="cul-trust motion">{trust.map(item=>{const Icon=item.icon;return <article key={item.title}><Icon/><span><b>{item.title}</b><small>{item.text}</small></span></article>})}</section>
+  </div>
+}
+
+function CulturePanelHead({title}:{title:string}){return <header className="cul-panel-head"><a href="/contact">عرض الكل</a><h2>{title}</h2></header>}
+
 function PortalHero({type}:{type:PortalKey}){const p=info[type];return <><section className={`portal-hero portal-${type}`}><div className="portal-copy motion"><h1>{p.title}</h1><h2>{p.accent}</h2><p>{p.lead}</p></div><div className="portal-image motion"><img src={p.hero} alt={p.title}/></div>{["education","investment","culture"].includes(type)&&<aside className="portal-side motion"><h3>{p.icon}&nbsp; خدمات {p.title}</h3>{p.tabs.map((t,i)=><a key={t} className={i===0?"selected":""} href="#services">{t}<span>⌃</span></a>)}</aside>}</section><section className="portal-features motion">{(type==="health"?["في خدمتكم أينما كنتم","متاحة إلكترونياً","خدمة سريعة","موثوقة وآمنة"]:type==="social"?["حالات إنسانية","تواصل مباشر","استشارة اجتماعية","برامج ومبادرات","دعم المحتاجين"]:["جودة وتميز","دعم شامل","محتوى متخصص","تعلّم مرن"]).map((x,i)=><div key={x}><i>{["◎","▣","◷","♢","♡"][i]}</i><b>{x}</b><span>خدمة رقمية متكاملة</span></div>)}</section></>}
 
 function PortalPage({type}:{type:PortalKey}){const p=info[type];return <><PortalHero type={type}/><section className="stat-ribbon page-width motion">{p.stats.map(([n,l],i)=><div key={l}><i>{["♧","⌂","▦","↗"][i]}</i><b>{n}</b><span>{l}</span></div>)}</section><section id="services" className="section page-width"><SectionTitle mini="خدمات متكاملة بين يديك">{p.section}</SectionTitle><div className={`visual-card-grid ${type==="health"?"three-primary":""}`}>{p.cards.map((c,i)=><article className={`visual-card motion ${i===3&&type==="health"?"wide-health":""}`} key={c.title}><img src={c.image} alt={c.title}/><div><i>{c.icon}</i><h3>{c.title}</h3><p>{c.text}</p><ul><li>خدمة سهلة وسريعة</li><li>متابعة ودعم مستمر</li><li>خصوصية وأمان</li></ul><a href="/contact" className="card-action">{type==="social"?"ساهم الآن":"معرفة المزيد"} <Arrow/></a></div></article>)}</div></section>{type==="education"&&<EducationExtras/>}{type==="investment"&&<InvestmentExtras/>}{type==="culture"&&<CultureExtras/>}{type==="social"&&<SocialExtras/>}{type==="health"&&<HealthExtras/>}<SupportBar/></>}
@@ -630,4 +760,4 @@ function Success(){return <MemberStepShell className="success-step"><header clas
 
 function Contact(){const [sent,setSent]=useState(false);const submit=(e:FormEvent)=>{e.preventDefault();setSent(true)};return <><section className="contact-hero exact-hero"><div className="hero-content motion"><h1>تواصل معنا</h1><h2>نحن هنا لخدمتكم</h2><p>نسعد بتواصلكم واستقبال استفساراتكم ومقترحاتكم وشكاواكم، فريقنا جاهز للرد عليكم وتقديم الدعم في أسرع وقت ممكن.</p></div><div className="hero-photo motion"><img src="/assets/contact-hero-hq.webp" alt="تواصل معنا"/></div></section><section className="member-benefits page-width motion">{[["♧","نحن معكم","نتواصل معكم بما يسهم في تطوير خدماتنا"],["◎","خدمتكم أينما كنتم","ندعمكم من داخل وخارج الولاية"],["♢","خصوصية وأمان","نحافظ على سرية معلوماتكم"],["◷","استجابة سريعة","نرد على رسائلكم في أسرع وقت"],["☏","فريق متخصص","فريق دعم متكامل لخدمتكم"]].map(([i,t,d])=><div key={t}><i>{i}</i><h3>{t}</h3><p>{d}</p></div>)}</section><section className="contact-layout page-width"><aside><h2>طرق التواصل</h2>{[["◉","واتساب","+249 912 345 678"],["☏","اتصال هاتفي","+249 123 456 789"],["✉","البريد الإلكتروني","info@nilenile.org"],["⌖","العنوان","ولاية نهر النيل - السودان"],["◷","ساعات العمل","الأحد إلى الخميس · 9ص - 5م"]].map(([i,t,d])=><div key={t}><i>{i}</i><span><b>{t}</b>{d}</span></div>)}</aside><form onSubmit={submit}><h2>أرسل لنا رسالة</h2>{sent?<div className="sent"><i>✓</i><h2>تم إرسال رسالتك بنجاح</h2><p>سنتواصل معك في أقرب وقت.</p></div>:<><div className="form-row"><label>الاسم الكامل *<input required/></label><label>البريد الإلكتروني *<input required type="email"/></label></div><label>رقم الجوال<input type="tel"/></label><label>اختر نوع الرسالة *<select required><option>استفسار عام</option><option>شكوى</option><option>اقتراح</option><option>دعم فني</option></select></label><label>نص الرسالة *<textarea required rows={5}/></label><label className="file-field">⇧ إرفاق ملف (اختياري)<input type="file"/></label><button className="primary">إرسال الرسالة <Arrow/></button></>}</form></section><section className="section page-width"><SectionTitle>أسئلة شائعة</SectionTitle><div className="faq-cards">{[["الخدمات والبرامج","تفاصيل عن خدماتنا وبرامجنا"],["الدعم الفني","المساعدة في استخدام المنصة"],["العضوية والدفع","الاستفسار عن العضوية وطرق الدفع"],["الشكاوى والمقترحات","نستقبل شكاواكم ومقترحاتكم"],["الاستفسارات العامة","إجابات على أكثر الأسئلة الشائعة"]].map(([t,d])=><a href="#" key={t}><i>◫</i><b>{t}</b><span>{d}</span></a>)}</div></section><section className="newsletter page-width motion"><div><h2>كن على تواصل دائم</h2><p>اشترك في نشرتنا البريدية ليصلك كل جديد من أخبار الرابطة والفعاليات والخدمات.</p></div><form><input type="email" placeholder="البريد الإلكتروني"/><button className="primary">اشترك الآن</button></form></section></>}
 
-export default function NileSite({page}:{page:string}){const active=routeMap[page]||"home";const hideHeader=["membership","photo","payment","success"].includes(active);const hideFooter=["membership","photo","payment","success"].includes(active);return <div dir="rtl"><Motion/>{!hideHeader&&<Header active={active}/>}<main>{active==="home"?<Home/>:active==="social"?<SocialPage/>:active==="education"?<EducationPage/>:active==="health"?<HealthPage/>:active==="investment"?<InvestmentPage/>:active==="membership"?<Membership/>:active==="register"?<Register/>:active==="photo"?<PhotoUpload/>:active==="payment"?<Payment/>:active==="success"?<Success/>:active==="contact"?<Contact/>:<PortalPage type={active}/>}</main>{!hideFooter&&<Footer/>}</div>}
+export default function NileSite({page}:{page:string}){const active=routeMap[page]||"home";const hideHeader=["membership","photo","payment","success"].includes(active);const hideFooter=["membership","photo","payment","success"].includes(active);return <div dir="rtl"><Motion/>{!hideHeader&&<Header active={active}/>}<main>{active==="home"?<Home/>:active==="social"?<SocialPage/>:active==="education"?<EducationPage/>:active==="health"?<HealthPage/>:active==="investment"?<InvestmentPage/>:active==="culture"?<CulturePage/>:active==="membership"?<Membership/>:active==="register"?<Register/>:active==="photo"?<PhotoUpload/>:active==="payment"?<Payment/>:active==="success"?<Success/>:active==="contact"?<Contact/>:<PortalPage type={active}/>}</main>{!hideFooter&&<Footer/>}</div>}
