@@ -466,3 +466,50 @@ body:has(.social-redesign) .socials b{width:20px;height:20px;font-size:7px}
   body:has(.social-redesign) .footer-bottom{height:23px;margin-top:1px;padding-top:2px;font-size:6px}
   body:has(.social-redesign) .socials{gap:4px}body:has(.social-redesign) .socials b{width:16px;height:16px;font-size:5px}
 }
+
+/* Social page — exact extracted artwork and section-level alignment. */
+@media(min-width:701px){
+  .ss-hero{grid-template-columns:48% 52%}
+  .ss-hero-visual img{width:100%;height:100%;object-fit:fill;object-position:center}
+  .ss-hero-visual:after{display:none}
+  .ss-hero-copy{padding:0;position:relative}
+  .ss-hero-text{position:absolute;top:68px;left:45px;width:285px;text-align:right}
+  .ss-hero-text h1{width:230px;font-size:27px;line-height:1.25;font-weight:850;margin:0 0 6px;margin-left:0;margin-right:auto;white-space:nowrap}
+  .ss-hero-text h2{width:230px;font-size:21px;line-height:1.35;font-weight:850;margin:0 0 15px;margin-left:0;margin-right:auto;white-space:nowrap}
+  .ss-hero-text p{width:245px;font-size:9.5px;line-height:2.05;margin:0;margin-left:0;margin-right:auto;font-weight:600}
+  .ss-quick{margin-bottom:8px!important}
+  .ss-initiatives{padding-bottom:13px}
+}
+.ss-quick img{width:40px;height:40px;object-fit:contain;flex:none}
+.ss-service-icon:before{display:none}
+.ss-service-icon img{width:72px;height:76px;object-fit:contain}
+.ss-stats>div>img{width:40px;height:45px;object-fit:contain}
+.ss-family-art{background:none;padding:0!important}
+.ss-family-art img{width:100%;height:100%;object-fit:cover}
+.ss-stats>.ss-family-art>img{width:100%;height:100%;object-fit:cover}
+.ss-family-art:before,.ss-family-art:after{display:none}
+.ss-help-copy>img{width:131px;height:113px;object-fit:contain;flex:none}
+.ss-values article>img{width:44px;height:32px;object-fit:contain}
+
+@media(min-width:701px){
+  .ss-support{height:127px;min-height:127px;padding:7px 20px}
+  body:has(.social-redesign) .site-footer{position:relative}
+  body:has(.social-redesign) .footer-inner{height:76px;grid-template-columns:1.35fr repeat(4,1fr);gap:14px}
+  body:has(.social-redesign) .footer-brand .brand{width:145px;height:42px}
+  body:has(.social-redesign) .footer-brand .brand img{width:145px;height:42px}
+  body:has(.social-redesign) .footer-inner h4{font-size:8px;margin:0 0 2px}
+  body:has(.social-redesign) .footer-inner a,body:has(.social-redesign) .footer-inner p{font-size:6.5px;line-height:1.45;margin:0}
+  body:has(.social-redesign) .footer-bottom{position:absolute;inset:0;height:auto;border:0;margin:0;padding:0;pointer-events:none}
+  body:has(.social-redesign) .footer-bottom>span:first-child{position:absolute;right:max(16px,calc((100vw - 1180px)/2));bottom:7px;font-size:6px}
+  body:has(.social-redesign) .socials{position:absolute;left:max(16px,calc((100vw - 1180px)/2));bottom:10px;gap:5px}
+  body:has(.social-redesign) .socials:before{content:"تابعنا";position:absolute;right:0;bottom:22px;color:#fff;font-size:7px;white-space:nowrap}
+  body:has(.social-redesign) .socials b{width:18px;height:18px;font-size:6px}
+}
+
+@media(max-width:700px){
+  .ss-hero-text{position:static;width:auto}.ss-hero-text h1,.ss-hero-text h2,.ss-hero-text p{width:auto}
+  .ss-quick img{width:42px;height:42px}
+  .ss-service-icon img{width:78px;height:82px}
+  .ss-family-art img{width:190px;height:118px;object-fit:cover}
+  .ss-help-copy>img{width:110px;height:95px}
+}
