@@ -6,8 +6,9 @@ import {
   BookOpen, BriefcaseBusiness, Building2, Camera, ChartNoAxesCombined,
   Check, ChevronLeft, CircleAlert, CircleCheckBig, Clock3, CreditCard, Crown,
   Factory, FileImage, FileUp, Gem, Gift, Globe2, GraduationCap,
-  HandHeart, Handshake, HeartHandshake, HeartPulse,
+  HandHeart, Handshake, HeartHandshake, HeartPulse, Headphones,
   Landmark, LayoutGrid, Menu, Megaphone, MonitorCheck, Network,
+  MessageCircle,
   LockKeyhole, Mail, MapPin, Percent, Phone, QrCode, ReceiptText,
   ScanFace, Search, Settings2, Share2, Shield, ShieldCheck,
   ShoppingCart, Sparkles, Sprout, Store, Tags, TrendingUp, Truck,
@@ -24,6 +25,7 @@ const routeMap: Record<string, PageKey> = {
 
 const nav = [["/","الرئيسية"],["/membership","عن الرابطة"],["/social","الخدمات"],["/investment","المبادرات"],["/culture","الثقافة"],["/education","التعليم"],["/contact","تواصل معنا"]];
 const homeNav = [["/","الرئيسية"],["/membership","عن الرابطة"],["/education","التعليم"],["/social","الاجتماعية"],["/culture","الثقافية"],["#market","السوق السوداني"],["/investment","الاستثمار"],["#news","الأخبار والفعاليات"],["/contact","تواصل معنا"]];
+const socialNav = [["/","الرئيسية"],["/membership","عن الرابطة"],["/social","الخدمات"],["/investment","المبادرات"],["/culture","الأخبار والفعاليات"],["/education","المكتبة الرقمية"],["/contact","تواصل معنا"]];
 
 const info: Record<PortalKey, {title:string; accent:string; lead:string; hero:string; icon:string; tabs:string[]; stats:[string,string][]; cards:{title:string;text:string;image?:string;icon:string}[]; section:string}> = {
   social:{title:"الخدمات الاجتماعية",accent:"معاً.. نرعى ونساند",lead:"نقدم برامج ومبادرات اجتماعية وإنسانية تهدف إلى دعم أبناء مجتمعنا في مختلف الظروف، لبناء مجتمع متماسك ومتكافل.",hero:"/assets/social-hero-hq.webp",icon:"♡",tabs:["حالات إنسانية","تواصل مباشر","استشارة اجتماعية","برامج ومبادرات","دعم المحتاجين"],stats:[["12,680+","مستفيد من خدماتنا"],["3,250+","أسرة مستفيدة"],["1,850+","حالة إنسانية"],["650+","فرصة دعم"]],section:"مبادراتنا الحالية",cards:[{title:"صندوق العلاج",text:"مساعدة المرضى في تغطية تكاليف العلاج والأدوية",image:"/assets/social-medical-hq.webp",icon:"✚"},{title:"مشروع ترميم المنازل",text:"ترميم المنازل المتضررة وتحسين بيئة السكن",image:"/assets/social-renovation-hq.webp",icon:"⌂"},{title:"دعم التعليم",text:"دعم الرسوم والاحتياجات التعليمية لأبناء الأسر",image:"/assets/social-education-hq.webp",icon:"✦"},{title:"سلة الخير الرمضانية",text:"توزيع سلات غذائية على الأسر المحتاجة",image:"/assets/social-basket-hq.webp",icon:"♡"}]},
@@ -38,7 +40,7 @@ function Brand({light=false}:{light?:boolean}){return <a href="/" className={`br
 function Header({active}:{active:PageKey}){
   const [open,setOpen]=useState(false);
   const dark=active==="home"||active==="register";
-  const links=active==="home"?homeNav:nav;
+  const links=active==="home"?homeNav:active==="social"?socialNav:nav;
   return <header className={`topbar ${dark?"dark":""} ${active==="home"?"home-topbar":""}`}><div className="topbar-inner"><Brand light={dark}/><nav className={open?"open":""}>{links.map(([href,label])=><a key={`${href}-${label}`} href={href} className={(href==="/"&&active==="home")||href.includes(active)?"current":""}>{label}</a>)}</nav><div className="header-tools"><button className="search-btn" aria-label="البحث"><Search size={19}/></button><a className="primary compact" href="/membership"><UserRound size={16}/><span>تسجيل الدخول</span></a><button className="mobile-menu" onClick={()=>setOpen(!open)} aria-label="فتح القائمة">{open?<X size={21}/>:<Menu size={21}/>}</button></div></div></header>
 }
 
@@ -207,6 +209,69 @@ function Home(){
   </div>
 }
 
+function SocialPage(){
+  const quickServices=[
+    {icon:HandHeart,title:"حالات إنسانية",text:"ندعم حياة أفضل"},
+    {icon:Headphones,title:"تواصل مباشر",text:"فريق الدعم الاجتماعي"},
+    {icon:MessageCircle,title:"استشارة اجتماعية",text:"احصل على استشارة"},
+    {icon:UsersRound,title:"برامج ومبادرات",text:"مبادرات مجتمعية متنوعة"},
+    {icon:HeartHandshake,title:"دعم المحتاجين",text:"نرعى بأمان ومسؤولية"},
+  ];
+  const services=[
+    {icon:Headphones,title:"تواصل مباشر",lead:"فريق الدعم الاجتماعي جاهز لخدمتك",items:["تواصل واتساب","اتصال هاتفي","زيارة ميدانية","متابعة الطلبات"],action:"تواصل معنا"},
+    {icon:HandHeart,title:"حالات إنسانية",lead:"متابعة الحالات الإنسانية وتقديم الدعم اللازم",items:["حالات مرضية","أيتام وأرامل","ذوو الاحتياجات","كبار السن"],action:"عرض الحالات"},
+    {icon:MessageCircle,title:"استشارة اجتماعية",lead:"احصل على استشارة من اختصاصيين اجتماعيين",items:["مشكلات أسرية","دعم نفسي","إرشاد اجتماعي","توجيه وإرشاد"],action:"طلب استشارة"},
+    {icon:UsersRound,title:"برامج ومبادرات",lead:"برامج توعوية وتنموية لبناء مجتمع واعٍ ومتماسك",items:["برامج توعوية","دورات تدريبية","تنمية أسرية","لقاءات ومحاضرات"],action:"استعرض البرامج"},
+    {icon:HeartHandshake,title:"دعم المحتاجين",lead:"مساعدات مالية وعينية للأسر المحتاجة والفئات المتضررة",items:["كفالة أسر","مواد غذائية","ملابس وأثاث","مساعدات طارئة"],action:"تقديم طلب"},
+  ];
+  const initiatives=[
+    {image:"/assets/social-medical-hq.webp",title:"صندوق العلاج",text:"مساعدة المرضى في تغطية تكاليف العلاج والأدوية",progress:45,amount:"30,000 ريال",action:"ساهم الآن"},
+    {image:"/assets/social-renovation-hq.webp",title:"مشروع ترميم المنازل",text:"ترميم المنازل المتضررة وتحسين بيئة السكن للأسر المحتاجة",progress:72,amount:"60,000 ريال",action:"تبرع الآن"},
+    {image:"/assets/social-education-hq.webp",title:"دعم التعليم",text:"دعم الرسوم الدراسية والاحتياجات التعليمية لأبناء الأسر المحتاجة",progress:55,amount:"40,000 ريال",action:"ساهم الآن"},
+    {image:"/assets/social-basket-hq.webp",title:"سلة الخير الرمضانية",text:"توزيع سلات غذائية على الأسر المحتاجة خلال شهر رمضان",progress:68,amount:"25,000 ريال",action:"تبرع الآن"},
+  ];
+  const stats=[
+    {icon:UsersRound,number:"12,680+",label:"مستفيد من خدماتنا"},
+    {icon:UserCheck,number:"3,250+",label:"أسرة مستفيدة"},
+    {icon:Handshake,number:"1,850+",label:"حالة إنسانية تم دعمها"},
+    {icon:Gift,number:"650+",label:"فرصة دعم"},
+    {icon:GraduationCap,number:"320+",label:"طالب مستفيد"},
+    {icon:HandHeart,number:"120+",label:"متطوع نشط"},
+  ];
+  const contacts=[
+    {icon:MapPin,title:"زيارتنا",text:"مقر الرابطة"},
+    {icon:Mail,title:"البريد الإلكتروني",text:"social@nilenil.org"},
+    {icon:Phone,title:"اتصال هاتفي",text:"012 345 6789"},
+    {icon:MessageCircle,title:"واتساب",text:"+249 912 345 678"},
+  ];
+  const values=[
+    {icon:HandHeart,title:"المسؤولية",text:"نتحمل مسؤولياتنا تجاه مجتمعنا وأسرتنا"},
+    {icon:ShieldCheck,title:"الاحترام",text:"نحترم كرامة الجميع ونقدم الدعم باحترام وخصوصية"},
+    {icon:UserCheck,title:"الأمانة",text:"نحافظ على أمانة التبرعات والمساعدات"},
+    {icon:Aperture,title:"الشفافية",text:"نلتزم بالشفافية في جميع برامجنا ومبادراتنا"},
+    {icon:UsersRound,title:"التكافل",text:"نعمل معاً لتعزيز التكافل الاجتماعي"},
+  ];
+  return <div className="social-redesign">
+    <section className="ss-hero">
+      <div className="ss-hero-visual motion"><img src="/assets/social-hero-hq.webp" alt="أسرة في أيدٍ متكاتفة"/></div>
+      <div className="ss-hero-copy motion"><span className="ss-people-mark"><UsersRound/></span><h1>الخدمات الاجتماعية</h1><h2>معاً.. نرعى ونساند</h2><p>نقدم برامج ومبادرات اجتماعية وإنسانية تهدف إلى دعم<br/>أبناء مجتمعنا في مختلف الظروف، لبناء مجتمع متماسك<br/>ومتكافل.</p></div>
+      <span className="ss-hero-ribbons" aria-hidden="true"/>
+    </section>
+
+    <section className="ss-quick page-width motion">{quickServices.map(item=>{const Icon=item.icon;return <a href="#social-services" key={item.title}><Icon/><span><b>{item.title}</b><small>{item.text}</small></span></a>})}</section>
+
+    <section id="social-services" className="ss-services page-width"><div className="ss-title motion"><span/><h2>خدماتنا الاجتماعية</h2><span/></div><div className="ss-service-grid">{services.map(item=>{const Icon=item.icon;return <article className="ss-service-card motion" key={item.title}><div className="ss-service-icon"><Icon/></div><h3>{item.title}</h3><p>{item.lead}</p><ul>{item.items.map(line=><li key={line}>{line}</li>)}</ul><a href="/contact">{item.action}<ArrowLeft/></a></article>})}</div></section>
+
+    <section className="ss-initiatives page-width"><div className="ss-title motion"><span/><h2>مبادراتنا الحالية</h2><span/></div><div className="ss-initiative-grid">{initiatives.map(item=><article className="ss-initiative-card motion" key={item.title}><img src={item.image} alt={item.title}/><div><h3>{item.title}</h3><p>{item.text}</p><small>تم جمع {item.progress}%</small><span className="ss-progress"><i style={{width:`${item.progress}%`}}/></span><footer><b>{item.amount}</b><a href="/contact">{item.action}</a></footer></div></article>)}</div><a className="ss-all-initiatives" href="/contact">عرض جميع المبادرات <ArrowLeft/></a></section>
+
+    <section className="ss-stats page-width motion"><div className="ss-family-art"><HandHeart/><span/></div>{stats.map(item=>{const Icon=item.icon;return <div key={item.label}><Icon/><b>{item.number}</b><small>{item.label}</small></div>})}</section>
+
+    <section className="ss-support page-width motion"><div className="ss-help-copy"><Headphones/><div><h2>نحن هنا لمساعدتك</h2><p>فريق الدعم الاجتماعي جاهز للرد على استفساراتك<br/>وتقديم المساعدة التي تحتاجها</p><a href="/contact">تواصل معنا <ArrowLeft/></a></div></div><div className="ss-contact-methods"><p>تواصل معنا عبر</p><div>{contacts.map(item=>{const Icon=item.icon;return <a href="/contact" key={item.title}><Icon/><b>{item.title}</b><small>{item.text}</small></a>})}</div></div></section>
+
+    <section className="ss-values page-width motion">{values.map(item=>{const Icon=item.icon;return <article key={item.title}><Icon/><h3>{item.title}</h3><p>{item.text}</p></article>})}</section>
+  </div>
+}
+
 function PortalHero({type}:{type:PortalKey}){const p=info[type];return <><section className={`portal-hero portal-${type}`}><div className="portal-copy motion"><h1>{p.title}</h1><h2>{p.accent}</h2><p>{p.lead}</p></div><div className="portal-image motion"><img src={p.hero} alt={p.title}/></div>{["education","investment","culture"].includes(type)&&<aside className="portal-side motion"><h3>{p.icon}&nbsp; خدمات {p.title}</h3>{p.tabs.map((t,i)=><a key={t} className={i===0?"selected":""} href="#services">{t}<span>⌃</span></a>)}</aside>}</section><section className="portal-features motion">{(type==="health"?["في خدمتكم أينما كنتم","متاحة إلكترونياً","خدمة سريعة","موثوقة وآمنة"]:type==="social"?["حالات إنسانية","تواصل مباشر","استشارة اجتماعية","برامج ومبادرات","دعم المحتاجين"]:["جودة وتميز","دعم شامل","محتوى متخصص","تعلّم مرن"]).map((x,i)=><div key={x}><i>{["◎","▣","◷","♢","♡"][i]}</i><b>{x}</b><span>خدمة رقمية متكاملة</span></div>)}</section></>}
 
 function PortalPage({type}:{type:PortalKey}){const p=info[type];return <><PortalHero type={type}/><section className="stat-ribbon page-width motion">{p.stats.map(([n,l],i)=><div key={l}><i>{["♧","⌂","▦","↗"][i]}</i><b>{n}</b><span>{l}</span></div>)}</section><section id="services" className="section page-width"><SectionTitle mini="خدمات متكاملة بين يديك">{p.section}</SectionTitle><div className={`visual-card-grid ${type==="health"?"three-primary":""}`}>{p.cards.map((c,i)=><article className={`visual-card motion ${i===3&&type==="health"?"wide-health":""}`} key={c.title}><img src={c.image} alt={c.title}/><div><i>{c.icon}</i><h3>{c.title}</h3><p>{c.text}</p><ul><li>خدمة سهلة وسريعة</li><li>متابعة ودعم مستمر</li><li>خصوصية وأمان</li></ul><a href="/contact" className="card-action">{type==="social"?"ساهم الآن":"معرفة المزيد"} <Arrow/></a></div></article>)}</div></section>{type==="education"&&<EducationExtras/>}{type==="investment"&&<InvestmentExtras/>}{type==="culture"&&<CultureExtras/>}{type==="social"&&<SocialExtras/>}{type==="health"&&<HealthExtras/>}<SupportBar/></>}
@@ -339,4 +404,4 @@ function Success(){return <MemberStepShell className="success-step"><header clas
 
 function Contact(){const [sent,setSent]=useState(false);const submit=(e:FormEvent)=>{e.preventDefault();setSent(true)};return <><section className="contact-hero exact-hero"><div className="hero-content motion"><h1>تواصل معنا</h1><h2>نحن هنا لخدمتكم</h2><p>نسعد بتواصلكم واستقبال استفساراتكم ومقترحاتكم وشكاواكم، فريقنا جاهز للرد عليكم وتقديم الدعم في أسرع وقت ممكن.</p></div><div className="hero-photo motion"><img src="/assets/contact-hero-hq.webp" alt="تواصل معنا"/></div></section><section className="member-benefits page-width motion">{[["♧","نحن معكم","نتواصل معكم بما يسهم في تطوير خدماتنا"],["◎","خدمتكم أينما كنتم","ندعمكم من داخل وخارج الولاية"],["♢","خصوصية وأمان","نحافظ على سرية معلوماتكم"],["◷","استجابة سريعة","نرد على رسائلكم في أسرع وقت"],["☏","فريق متخصص","فريق دعم متكامل لخدمتكم"]].map(([i,t,d])=><div key={t}><i>{i}</i><h3>{t}</h3><p>{d}</p></div>)}</section><section className="contact-layout page-width"><aside><h2>طرق التواصل</h2>{[["◉","واتساب","+249 912 345 678"],["☏","اتصال هاتفي","+249 123 456 789"],["✉","البريد الإلكتروني","info@nilenile.org"],["⌖","العنوان","ولاية نهر النيل - السودان"],["◷","ساعات العمل","الأحد إلى الخميس · 9ص - 5م"]].map(([i,t,d])=><div key={t}><i>{i}</i><span><b>{t}</b>{d}</span></div>)}</aside><form onSubmit={submit}><h2>أرسل لنا رسالة</h2>{sent?<div className="sent"><i>✓</i><h2>تم إرسال رسالتك بنجاح</h2><p>سنتواصل معك في أقرب وقت.</p></div>:<><div className="form-row"><label>الاسم الكامل *<input required/></label><label>البريد الإلكتروني *<input required type="email"/></label></div><label>رقم الجوال<input type="tel"/></label><label>اختر نوع الرسالة *<select required><option>استفسار عام</option><option>شكوى</option><option>اقتراح</option><option>دعم فني</option></select></label><label>نص الرسالة *<textarea required rows={5}/></label><label className="file-field">⇧ إرفاق ملف (اختياري)<input type="file"/></label><button className="primary">إرسال الرسالة <Arrow/></button></>}</form></section><section className="section page-width"><SectionTitle>أسئلة شائعة</SectionTitle><div className="faq-cards">{[["الخدمات والبرامج","تفاصيل عن خدماتنا وبرامجنا"],["الدعم الفني","المساعدة في استخدام المنصة"],["العضوية والدفع","الاستفسار عن العضوية وطرق الدفع"],["الشكاوى والمقترحات","نستقبل شكاواكم ومقترحاتكم"],["الاستفسارات العامة","إجابات على أكثر الأسئلة الشائعة"]].map(([t,d])=><a href="#" key={t}><i>◫</i><b>{t}</b><span>{d}</span></a>)}</div></section><section className="newsletter page-width motion"><div><h2>كن على تواصل دائم</h2><p>اشترك في نشرتنا البريدية ليصلك كل جديد من أخبار الرابطة والفعاليات والخدمات.</p></div><form><input type="email" placeholder="البريد الإلكتروني"/><button className="primary">اشترك الآن</button></form></section></>}
 
-export default function NileSite({page}:{page:string}){const active=routeMap[page]||"home";const hideHeader=["membership","photo","payment","success"].includes(active);const hideFooter=["membership","photo","payment","success"].includes(active);return <div dir="rtl"><Motion/>{!hideHeader&&<Header active={active}/>}<main>{active==="home"?<Home/>:active==="membership"?<Membership/>:active==="register"?<Register/>:active==="photo"?<PhotoUpload/>:active==="payment"?<Payment/>:active==="success"?<Success/>:active==="contact"?<Contact/>:<PortalPage type={active}/>}</main>{!hideFooter&&<Footer/>}</div>}
+export default function NileSite({page}:{page:string}){const active=routeMap[page]||"home";const hideHeader=["membership","photo","payment","success"].includes(active);const hideFooter=["membership","photo","payment","success"].includes(active);return <div dir="rtl"><Motion/>{!hideHeader&&<Header active={active}/>}<main>{active==="home"?<Home/>:active==="social"?<SocialPage/>:active==="membership"?<Membership/>:active==="register"?<Register/>:active==="photo"?<PhotoUpload/>:active==="payment"?<Payment/>:active==="success"?<Success/>:active==="contact"?<Contact/>:<PortalPage type={active}/>}</main>{!hideFooter&&<Footer/>}</div>}
