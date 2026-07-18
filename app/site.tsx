@@ -448,23 +448,23 @@ function InvestmentPage(){
     {image:"/assets/invest-tourism-hq.webp",icon:Landmark,title:"السياحة والضيافة",text:"مواقع أثرية وطبيعية وفنادق ومنتجعات"},
   ];
   const opportunities=[
-    {image:"/assets/investment-hero-hq.webp",tag:"فرصة جديدة",title:"مشروع مزارع فواكه استوائية",location:"شندي",area:"3,000 فدان"},
-    {image:"/assets/invest-industry-hq.webp",tag:"فرصة جديدة",title:"مشروع منطقة صناعية متكاملة",location:"شندي",area:"200 فدان"},
-    {image:"/assets/invest-mining-hq.webp",tag:"فرصة جديدة",title:"مصنع الطوب الأحمر والبلوك",location:"بربر",area:"5 هكتار"},
-    {image:"/assets/home-investment-banner-v2.webp",tag:"فرصة جديدة",title:"مشروع استزراع سكني",location:"عطبرة",area:"500 فدان"},
+    {image:"/assets/investment-orange-orchard.jpg",tag:"فرصة جديدة",title:"مشروع مزرعة فواكه استوائية",location:"شندي",area:"3,000 فدان"},
+    {image:"/assets/investment-industrial-zone.jpg",tag:"فرصة جديدة",title:"مشروع منطقة صناعية متكاملة",location:"شندي",area:"200 فدان"},
+    {image:"/assets/investment-red-bricks.jpg",tag:"فرصة جديدة",title:"مصنع الطوب الأحمر والبلوك",location:"بربر",area:"5 هكتار"},
+    {image:"/assets/investment-hero-hq.webp",tag:"فرصة جديدة",title:"مشروع الاستزراع السمكي",location:"عطبرة",area:"500 فدان"},
   ];
   const benefits=[
     {icon:Clock3,title:"حوافز ضريبية وجمركية"},
     {icon:WalletCards,title:"تسهيلات في تملك الأراضي"},
-    {icon:ShieldCheck,title:"دعم فني وإداري متكامل"},
+    {icon:ShieldCheck,title:"دعم فني وإرشادي متكامل"},
     {icon:ReceiptText,title:"إجراءات سريعة وسهلة"},
-    {icon:Percent,title:"بيئة تحقق عائد استثماري مستمر"},
+    {icon:Percent,title:"بيئة تحقق نمواً مستمراً"},
   ];
   const trust=[
-    {icon:MessageCircle,title:"دعم فني متواصل",text:"فريق متخصص لمساعدة المستثمر"},
+    {icon:MessageCircle,title:"دعم فني متواصل",text:"فريق متخصص لخدمة المستثمرين"},
     {icon:ReceiptText,title:"معلومات وبيانات دقيقة",text:"تقارير وإحصائيات محدثة"},
     {icon:UserCheck,title:"الشفافية والمصداقية",text:"بيئة استثمارية موثوقة"},
-    {icon:BadgeCheck,title:"تواصل فعال",text:"استجابة سريعة لاستفساراتكم"},
+    {icon:BadgeCheck,title:"تواصل فعال",text:"نستمع لاحتياجاتك"},
     {icon:Clock3,title:"متابعة مستمرة",text:"من الفكرة وحتى التنفيذ"},
   ];
   return <div className="investment-redesign">
@@ -483,18 +483,18 @@ function InvestmentPage(){
         <section className="inv-solar motion"><img src="/assets/investment-solar-hq.webp" alt="مشروع الطاقة الشمسية"/><span>مساحة إعلانية</span><div><h2>استثمر في الطاقة الشمسية</h2><p>مشروع محطة طاقة شمسية بقدرة 50 ميجاوات</p><aside><b><Clock3/> عقد طويل الأجل</b><b><Percent/> عائد مستقر</b><b><ChartNoAxesCombined/> دعم حكومي</b></aside><a href="/contact">اعرف المزيد</a></div></section>
 
         <section id="investment-opportunities" className="inv-opportunities"><header><a href="/contact">عرض الكل</a><h2>أحدث الفرص الاستثمارية</h2></header><div>{opportunities.map(item=><article className="motion" key={item.title}><div><img src={item.image} alt={item.title}/><span>{item.tag}</span></div><h3>{item.title}</h3><p>الموقع: {item.location}<br/>المساحة: {item.area}</p><a href="/contact">عرض التفاصيل</a></article>)}</div><small>● ● ●</small></section>
+        <section className="inv-benefits motion"><h2>مزايا المستثمر</h2><div>{benefits.slice().reverse().map(item=>{const Icon=item.icon;return <article key={item.title}><Icon/><b>{item.title}</b></article>})}</div></section>
       </div>
 
       <aside className="inv-side-column">
         <section className="inv-featured motion"><header><a href="/contact">عرض الكل</a><h2>إعلانات فرص استثمارية مميزة</h2></header><img src="/assets/invest-industry-hq.webp" alt="مشروع مصنع زيوت نباتية"/><h3>مشروع مصنع زيوت نباتية</h3><p>الموقع: عطبرة<br/>المساحة: 10 هكتار<br/>العائد المتوقع: 22% سنوياً</p><a href="/contact">عرض التفاصيل</a></section>
         <section className="inv-resort motion"><img src="/assets/invest-tourism-hq.webp" alt="مشروع منتجع سياحي متكامل"/><h3>مشروع منتجع سياحي متكامل</h3><p>الموقع: المنطقة السياحية<br/>المساحة: 15 هكتار<br/>العائد المتوقع: 18% سنوياً</p><span>مساحة إعلانية</span></section>
-        <section className="inv-partner motion"><img src="/assets/home-investment-banner-v2.webp" alt="الشراكة والاستثمار"/><div><h2>شراكة .. تنمية .. ازدهار</h2><p>كن شريكاً في تطوير ولاية نهر النيل<br/>واستثمر في مستقبل واعد</p><a href="/contact">تواصل معنا</a></div><footer><b><ChartNoAxesCombined/> فرصة</b><b><Handshake/> شراكة</b><b><UsersRound/> تنمية</b></footer></section>
-        <section className="inv-story motion"><header><a href="/contact">عرض الكل</a><h2>قصص نجاح</h2></header><div><img src="/assets/invest-livestock-hq.webp" alt="مشروع دواجن الدامر"/><p><b>مشروع دواجن الدامر</b><span>بدأ المشروع بمزرعة صغيرة وأصبح اليوم من أكبر مشاريع الدواجن بالولاية.</span><a href="/contact">اقرأ القصة كاملة</a></p></div></section>
+        <section className="inv-partner motion"><img src="/assets/investment-partner-plant.jpg" alt="يدان تحتضنان نبتة ترمز للشراكة والتنمية"/><div><h2>شراكة .. تنمية .. ازدهار</h2><p>كن شريكاً في تطوير ولاية نهر النيل<br/>واستثمر في مستقبل واعد</p><a href="/contact">تواصل معنا</a></div><footer><b><ChartNoAxesCombined/> فرصة</b><b><Handshake/> شراكة</b><b><UsersRound/> تنمية</b></footer></section>
+        <section className="inv-story motion"><header><a href="/contact">عرض الكل</a><h2>قصص نجاح</h2></header><div><img src="/assets/investment-poultry.jpg" alt="مشروع دواجن الدامر"/><p><b>مشروع دواجن الدامر</b><span>بدأ المشروع بمزرعة صغيرة وأصبح اليوم من أكبر مشاريع الدواجن بالولاية.</span><a href="/contact">اقرأ القصة كاملة</a></p></div></section>
       </aside>
     </div>
 
-    <section className="inv-benefits page-width motion"><h2>مزايا المستثمر</h2><div>{benefits.map(item=>{const Icon=item.icon;return <article key={item.title}><Icon/><b>{item.title}</b></article>})}</div></section>
-    <section className="inv-trust motion">{trust.map(item=>{const Icon=item.icon;return <article key={item.title}><Icon/><span><b>{item.title}</b><small>{item.text}</small></span></article>})}</section>
+    <section className="inv-trust motion">{trust.slice().reverse().map(item=>{const Icon=item.icon;return <article key={item.title}><Icon/><span><b>{item.title}</b><small>{item.text}</small></span></article>})}</section>
   </div>
 }
 
