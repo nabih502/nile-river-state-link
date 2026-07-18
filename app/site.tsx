@@ -326,7 +326,7 @@ function EducationPage(){
           ].map(([icon,title,text])=>{const Icon=icon as typeof BookOpen;return <article key={String(title)}><Icon/><b>{String(title)}</b><small>{String(text)}</small></article>})}</div><a href="#courses">استعراض جميع المراحل <ArrowLeft/></a></div>
         </section>
 
-        <section id="courses" className="edu-courses"><header><a href="/contact">عرض الكل <ArrowLeft/></a><h2>الدورات وكورسات التقوية</h2></header><div>{courses.map(course=><article className="motion" key={course.title}><div className="edu-course-photo"><img src={course.image} alt={course.title}/><span>{course.category}</span></div><h3>{course.title}</h3><p>{course.meta}</p><footer><b>{course.price}</b><HeartHandshake/></footer></article>)}</div><span className="edu-dots">● ● ●</span></section>
+        <section id="courses" className="edu-courses"><header><a href="/contact">عرض الكل <ArrowLeft/></a><h2>الدورات وكورسات التقوية</h2></header><div>{courses.map(course=><article className="motion" key={course.title}><div className="edu-course-photo"><img src={course.image} alt={course.title}/></div><h3>{course.title}</h3><p>{course.meta}</p><footer><b>{course.price}</b><HeartHandshake/></footer></article>)}</div><span className="edu-dots">● ● ●</span></section>
       </div>
 
       <aside className="edu-side-column">
