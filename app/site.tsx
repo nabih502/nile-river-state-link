@@ -317,18 +317,18 @@ function Home(){
 
 function SocialPage(){
   const quickServices=[
-    {image:"/assets/social-reference-quick-cases.png",title:"حالات إنسانية",text:"ندعم حياة أفضل"},
-    {image:"/assets/social-reference-quick-direct.png",title:"تواصل مباشر",text:"فريق الدعم الاجتماعي"},
-    {image:"/assets/social-reference-quick-consult.png",title:"استشارة اجتماعية",text:"احصل على استشارة"},
-    {image:"/assets/social-reference-quick-programs.png",title:"برامج ومبادرات",text:"مبادرات مجتمعية متنوعة"},
-    {image:"/assets/social-reference-quick-support.png",title:"دعم المحتاجين",text:"نرعى بأمان ومسؤولية"},
+    {icon:HandHeart,title:"حالات إنسانية",text:"ندعم حياة أفضل"},
+    {icon:Headphones,title:"تواصل مباشر",text:"فريق الدعم الاجتماعي"},
+    {icon:MessageCircle,title:"استشارة اجتماعية",text:"احصل على استشارة"},
+    {icon:UsersRound,title:"برامج ومبادرات",text:"مبادرات مجتمعية متنوعة"},
+    {icon:HeartHandshake,title:"دعم المحتاجين",text:"نرعى بأمان ومسؤولية"},
   ];
   const services=[
-    {image:"/assets/social-reference-service-direct.png",title:"تواصل مباشر",lead:"فريق الدعم الاجتماعي جاهز لخدمتك",items:["تواصل واتساب","اتصال هاتفي","زيارة ميدانية","متابعة الطلبات"],action:"تواصل معنا"},
-    {image:"/assets/social-reference-service-cases.png",title:"حالات إنسانية",lead:"متابعة الحالات الإنسانية وتقديم الدعم اللازم",items:["حالات مرضية","أيتام وأرامل","ذوو الاحتياجات","كبار السن"],action:"عرض الحالات"},
-    {image:"/assets/social-reference-service-consult.png",title:"استشارة اجتماعية",lead:"احصل على استشارة من اختصاصيين اجتماعيين",items:["مشكلات أسرية","دعم نفسي","إرشاد اجتماعي","توجيه وإرشاد"],action:"طلب استشارة"},
-    {image:"/assets/social-reference-service-programs.png",title:"برامج ومبادرات",lead:"برامج توعوية وتنموية لبناء مجتمع واعٍ ومتماسك",items:["برامج توعوية","دورات تدريبية","تنمية أسرية","لقاءات ومحاضرات"],action:"استعرض البرامج"},
-    {image:"/assets/social-reference-service-support.png",title:"دعم المحتاجين",lead:"مساعدات مالية وعينية للأسر المحتاجة والفئات المتضررة",items:["كفالة أسر","مواد غذائية","ملابس وأثاث","مساعدات طارئة"],action:"تقديم طلب"},
+    {icon:Headphones,title:"تواصل مباشر",lead:"فريق الدعم الاجتماعي جاهز لخدمتك",items:["تواصل واتساب","اتصال هاتفي","زيارة ميدانية","متابعة الطلبات"],action:"تواصل معنا"},
+    {icon:HandHeart,title:"حالات إنسانية",lead:"متابعة الحالات الإنسانية وتقديم الدعم اللازم",items:["حالات مرضية","أيتام وأرامل","ذوو الاحتياجات","كبار السن"],action:"عرض الحالات"},
+    {icon:MessageCircle,title:"استشارة اجتماعية",lead:"احصل على استشارة من اختصاصيين اجتماعيين",items:["مشكلات أسرية","دعم نفسي","إرشاد اجتماعي","توجيه وإرشاد"],action:"طلب استشارة"},
+    {icon:UsersRound,title:"برامج ومبادرات",lead:"برامج توعوية وتنموية لبناء مجتمع واعٍ ومتماسك",items:["برامج توعوية","دورات تدريبية","تنمية أسرية","لقاءات ومحاضرات"],action:"استعرض البرامج"},
+    {icon:HeartHandshake,title:"دعم المحتاجين",lead:"مساعدات مالية وعينية للأسر المحتاجة والفئات المتضررة",items:["كفالة أسر","مواد غذائية","ملابس وأثاث","مساعدات طارئة"],action:"تقديم طلب"},
   ];
   const initiatives=[
     {image:"/assets/social-project-4.jpg",title:"صندوق العلاج",text:"مساعدة المرضى في تغطية تكاليف العلاج والأدوية",progress:45,amount:"30,000 ريال",action:"ساهم الآن"},
@@ -337,12 +337,12 @@ function SocialPage(){
     {image:"/assets/social-project-1.jpg",title:"سلة الخير الرمضانية",text:"توزيع سلات غذائية على الأسر المحتاجة خلال شهر رمضان",progress:68,amount:"25,000 ريال",action:"تبرع الآن"},
   ];
   const stats=[
-    {image:"/assets/social-reference-stat-beneficiaries.png",number:"12,680+",label:"مستفيد من خدماتنا"},
-    {image:"/assets/social-reference-stat-families.png",number:"3,250+",label:"أسرة مستفيدة"},
-    {image:"/assets/social-reference-stat-cases.png",number:"1,850+",label:"حالة إنسانية تم دعمها"},
-    {image:"/assets/social-reference-stat-support.png",number:"650+",label:"فرصة دعم"},
-    {image:"/assets/social-reference-stat-students.png",number:"320+",label:"طالب مستفيد"},
-    {image:"/assets/social-reference-stat-volunteers.png",number:"120+",label:"متطوع نشط"},
+    {icon:UsersRound,number:"12,680+",label:"مستفيد من خدماتنا"},
+    {icon:HeartHandshake,number:"3,250+",label:"أسرة مستفيدة"},
+    {icon:Handshake,number:"1,850+",label:"حالة إنسانية تم دعمها"},
+    {icon:GraduationCap,number:"650+",label:"فرصة دعم"},
+    {icon:BookOpen,number:"320+",label:"طالب مستفيد"},
+    {icon:UserPlus,number:"120+",label:"متطوع نشط"},
   ];
   const contacts=[
     {icon:MapPin,title:"زيارتنا",text:"مقر الرابطة"},
@@ -351,11 +351,11 @@ function SocialPage(){
     {icon:MessageCircle,title:"واتساب",text:"+249 912 345 678"},
   ];
   const values=[
-    {image:"/assets/social-reference-value-responsibility.png",title:"المسؤولية",text:"نتحمل مسؤولياتنا تجاه مجتمعنا وأسرتنا"},
-    {image:"/assets/social-reference-value-respect.png",title:"الاحترام",text:"نحترم كرامة الجميع ونقدم الدعم باحترام وخصوصية"},
-    {image:"/assets/social-reference-value-trust.png",title:"الأمانة",text:"نحافظ على أمانة التبرعات والمساعدات"},
-    {image:"/assets/social-reference-value-transparency.png",title:"الشفافية",text:"نلتزم بالشفافية في جميع برامجنا ومبادراتنا"},
-    {image:"/assets/social-reference-value-solidarity.png",title:"التكافل",text:"نعمل معاً لتعزيز التكافل الاجتماعي"},
+    {icon:HandHeart,title:"المسؤولية",text:"نتحمل مسؤولياتنا تجاه مجتمعنا وأسرتنا"},
+    {icon:UserCheck,title:"الاحترام",text:"نحترم كرامة الجميع ونقدم الدعم باحترام وخصوصية"},
+    {icon:ShieldCheck,title:"الأمانة",text:"نحافظ على أمانة التبرعات والمساعدات"},
+    {icon:Eye,title:"الشفافية",text:"نلتزم بالشفافية في جميع برامجنا ومبادراتنا"},
+    {icon:Network,title:"التكافل",text:"نعمل معاً لتعزيز التكافل الاجتماعي"},
   ];
   return <div className="social-redesign">
     <section className="ss-hero">
@@ -364,17 +364,17 @@ function SocialPage(){
       <img className="ss-hero-ribbons" src="/assets/social-hero-wave-transparent.webp" alt="" aria-hidden="true"/>
     </section>
 
-    <section className="ss-quick page-width motion">{quickServices.map(item=><a href="#social-services" key={item.title}><img src={item.image} alt=""/><span><b>{item.title}</b><small>{item.text}</small></span></a>)}</section>
+    <section className="ss-quick page-width motion">{quickServices.map(item=>{const Icon=item.icon;return <a href="#social-services" key={item.title}><span className="ss-quick-icon" aria-hidden="true"><Icon/></span><span><b>{item.title}</b><small>{item.text}</small></span></a>})}</section>
 
-    <section id="social-services" className="ss-services page-width"><div className="ss-title motion"><span/><h2>خدماتنا الاجتماعية</h2><span/></div><div className="ss-service-grid">{services.map(item=><article className="ss-service-card motion" key={item.title}><div className="ss-service-icon"><img src={item.image} alt=""/></div><h3>{item.title}</h3><p>{item.lead}</p><ul>{item.items.map(line=><li key={line}>{line}</li>)}</ul><a href="/contact">{item.action}<ArrowLeft/></a></article>)}</div></section>
+    <section id="social-services" className="ss-services page-width"><div className="ss-title motion"><span/><h2>خدماتنا الاجتماعية</h2><span/></div><div className="ss-service-grid">{services.map(item=>{const Icon=item.icon;return <article className="ss-service-card motion" key={item.title}><div className="ss-service-icon" aria-hidden="true"><Icon/></div><h3>{item.title}</h3><p>{item.lead}</p><ul>{item.items.map(line=><li key={line}>{line}</li>)}</ul><a href="/contact">{item.action}<ArrowLeft/></a></article>})}</div></section>
 
     <section className="ss-initiatives page-width"><div className="ss-title motion"><span/><h2>مبادراتنا الحالية</h2><span/></div><div className="ss-initiative-grid">{initiatives.map(item=><article className="ss-initiative-card motion" key={item.title}><img src={item.image} alt={item.title}/><div><h3>{item.title}</h3><p>{item.text}</p><small>تم جمع {item.progress}%</small><span className="ss-progress"><i style={{width:`${item.progress}%`}}/></span><footer><b>{item.amount}</b><a href="/contact">{item.action}</a></footer></div></article>)}</div><a className="ss-all-initiatives" href="/contact">عرض جميع المبادرات <ArrowLeft/></a></section>
 
-    <section className="ss-stats page-width motion"><div className="ss-family-art"><img src="/assets/social-reference-stats-art.png" alt="التكافل الأسري"/></div>{stats.map(item=><div key={item.label}><img src={item.image} alt=""/><b>{item.number}</b><small>{item.label}</small></div>)}</section>
+    <section className="ss-stats page-width motion"><div className="ss-family-art" aria-label="التكافل الأسري"><HeartHandshake/></div>{stats.map(item=>{const Icon=item.icon;return <div key={item.label}><Icon aria-hidden="true"/><b>{item.number}</b><small>{item.label}</small></div>})}</section>
 
-    <section className="ss-support page-width motion"><div className="ss-help-copy"><img src="/assets/social-reference-help-transparent.png" alt="فريق الدعم"/><div><h2>نحن هنا لمساعدتك</h2><p>فريق الدعم الاجتماعي جاهز للرد على استفساراتك<br/>وتقديم المساعدة التي تحتاجها</p><a href="/contact">تواصل معنا <ArrowLeft/></a></div></div><div className="ss-contact-methods"><p>تواصل معنا عبر</p><div>{contacts.map(item=>{const Icon=item.icon;return <a href="/contact" key={item.title}><Icon/><b>{item.title}</b><small>{item.text}</small></a>})}</div></div></section>
+    <section className="ss-support page-width motion"><div className="ss-help-copy"><Headphones aria-label="فريق الدعم"/><div><h2>نحن هنا لمساعدتك</h2><p>فريق الدعم الاجتماعي جاهز للرد على استفساراتك<br/>وتقديم المساعدة التي تحتاجها</p><a href="/contact">تواصل معنا <ArrowLeft/></a></div></div><div className="ss-contact-methods"><p>تواصل معنا عبر</p><div>{contacts.map(item=>{const Icon=item.icon;return <a href="/contact" key={item.title}><Icon/><b>{item.title}</b><small>{item.text}</small></a>})}</div></div></section>
 
-    <section className="ss-values page-width motion">{values.map(item=><article key={item.title}><img src={item.image} alt=""/><h3>{item.title}</h3><p>{item.text}</p></article>)}</section>
+    <section className="ss-values page-width motion">{values.map(item=>{const Icon=item.icon;return <article key={item.title}><Icon aria-hidden="true"/><h3>{item.title}</h3><p>{item.text}</p></article>})}</section>
   </div>
 }
 
