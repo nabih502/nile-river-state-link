@@ -639,6 +639,101 @@ function SocialExtras(){return <section className="social-counts page-width moti
 function HealthExtras(){return <><section className="health-help page-width motion"><div><h2>طلب المساعدة والتواصل مع الرابطة</h2><p>نحن معك في الحالات الصحية والإنسانية</p></div><div className="health-actions"><b>♡ رفع حالة لطلب طبي</b><b>♧ طلب مساعدة صحية عاجلة</b><b>☏ التواصل المباشر</b><b>▤ متابعة حالة</b></div><a className="primary" href="/contact">إرسال طلب المساعدة</a></section><section className="health-tips page-width"><SectionTitle>نصائح صحية</SectionTitle><div>{["متابعة دورية لحالتك المرضية","تغذية متوازنة لجسم أكثر صحة","المشي 30 دقيقة يومياً","اشرب الماء لصحة أفضل"].map((x,i)=><b className="motion" key={x}><i>{["♡","♧","♟","◉"][i]}</i>{x}</b>)}</div></section></>}
 function SupportBar(){return <section className="support-bar page-width motion"><i>☏</i><div><h2>نحن هنا لمساعدتك</h2><p>فريق الدعم جاهز للرد على استفسارك وتقديم المساعدة.</p></div><div><b>واتساب</b><span>+249 912 345 678</span></div><div><b>البريد الإلكتروني</b><span>info@nilenile.org</span></div><a className="outline light" href="/contact">تواصل معنا <Arrow/></a></section>}
 
+function AboutMotion(){
+  useEffect(()=>{
+    const root=document.querySelector<HTMLElement>(".about-redesign");
+    if(!root)return;
+    const reduced=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const reveals=Array.from(root.querySelectorAll<HTMLElement>(".ab-reveal"));
+    const settleTimers:number[]=[];
+    root.classList.add("ab-motion-ready");
+
+    if(reduced){
+      reveals.forEach(item=>item.classList.add("ab-show","ab-settled"));
+      return()=>root.classList.remove("ab-motion-ready");
+    }
+
+    const revealObserver=new IntersectionObserver(entries=>entries.forEach(entry=>{
+      if(entry.isIntersecting){
+        entry.target.classList.add("ab-show");
+        settleTimers.push(window.setTimeout(()=>entry.target.classList.add("ab-settled"),900));
+        revealObserver.unobserve(entry.target);
+      }
+    }),{threshold:.16,rootMargin:"0px 0px -7%"});
+    reveals.forEach(item=>revealObserver.observe(item));
+
+    const top=root.querySelector<HTMLElement>(".ab-top");
+    const move=(event:PointerEvent)=>{
+      if(!top)return;
+      const rect=top.getBoundingClientRect();
+      const x=((event.clientX-rect.left)/rect.width-.5)*2;
+      const y=((event.clientY-rect.top)/rect.height-.5)*2;
+      top.style.setProperty("--ab-px",`${(-x*7).toFixed(2)}px`);
+      top.style.setProperty("--ab-py",`${(-y*4).toFixed(2)}px`);
+    };
+    const reset=()=>{top?.style.setProperty("--ab-px","0px");top?.style.setProperty("--ab-py","0px")};
+    top?.addEventListener("pointermove",move);
+    top?.addEventListener("pointerleave",reset);
+
+    const cards=Array.from(root.querySelectorAll<HTMLElement>(".ab-foundations > article, .ab-values article"));
+    const interactive=Array.from(root.querySelectorAll<HTMLElement>(".ab-president, .ab-foundations > article, .ab-values article, .ab-stats article, .ab-join"));
+    const pointerEnter=(event:PointerEvent)=>{if(event.pointerType!=="touch")(event.currentTarget as HTMLElement).classList.add("ab-pointer")};
+    const pointerLeave=(event:PointerEvent)=>(event.currentTarget as HTMLElement).classList.remove("ab-pointer");
+    interactive.forEach(item=>{item.addEventListener("pointerenter",pointerEnter);item.addEventListener("pointerleave",pointerLeave)});
+    const cardMoves=new Map<HTMLElement,(event:PointerEvent)=>void>();
+    cards.forEach(card=>{
+      const handler=(event:PointerEvent)=>{
+        if(event.pointerType==="touch")return;
+        card.classList.add("ab-pointer");
+        const rect=card.getBoundingClientRect();
+        card.style.setProperty("--mx",`${event.clientX-rect.left}px`);
+        card.style.setProperty("--my",`${event.clientY-rect.top}px`);
+      };
+      cardMoves.set(card,handler);
+      card.addEventListener("pointermove",handler);
+    });
+
+    const stats=root.querySelector<HTMLElement>(".ab-stats");
+    let countFrame=0;
+    const runCounters=()=>{
+      const counters=Array.from(root.querySelectorAll<HTMLElement>("[data-ab-count]"));
+      const started=performance.now();
+      const duration=1250;
+      const tick=(now:number)=>{
+        const progress=Math.min(1,(now-started)/duration);
+        const eased=1-Math.pow(1-progress,4);
+        counters.forEach(counter=>{
+          const target=Number(counter.dataset.abCount||0);
+          const suffix=counter.dataset.abSuffix||"";
+          const value=Math.round(target*eased);
+          const formatted=counter.dataset.abGrouped==="true"?value.toLocaleString("en-US"):String(value);
+          counter.textContent=`${formatted}${suffix}`;
+        });
+        if(progress<1)countFrame=requestAnimationFrame(tick);
+      };
+      countFrame=requestAnimationFrame(tick);
+    };
+    const countObserver=new IntersectionObserver(entries=>entries.forEach(entry=>{
+      if(entry.isIntersecting){runCounters();countObserver.disconnect()}
+    }),{threshold:.45});
+    if(stats)countObserver.observe(stats);
+
+    requestAnimationFrame(()=>root.classList.add("ab-loaded"));
+    return()=>{
+      revealObserver.disconnect();
+      countObserver.disconnect();
+      cancelAnimationFrame(countFrame);
+      settleTimers.forEach(timer=>window.clearTimeout(timer));
+      top?.removeEventListener("pointermove",move);
+      top?.removeEventListener("pointerleave",reset);
+      interactive.forEach(item=>{item.removeEventListener("pointerenter",pointerEnter);item.removeEventListener("pointerleave",pointerLeave)});
+      cards.forEach(card=>{const handler=cardMoves.get(card);if(handler)card.removeEventListener("pointermove",handler)});
+      root.classList.remove("ab-motion-ready","ab-loaded");
+    };
+  },[]);
+  return null;
+}
+
 function AboutPage(){
   const foundations=[
     {tone:"orange",icon:Send,title:"الرسالة",text:"توحيد الجهود والطاقات لخدمة أبناء ولاية نهر النيل من خلال منصة رقمية متكاملة تقدم الخدمات والمبادرات النوعية، وتعمل على تمكين المجتمع وتعزيز التنمية المستدامة.",link:"تفاصيل الرسالة"},
@@ -660,15 +755,16 @@ function AboutPage(){
     {icon:ShieldCheck,title:"المصداقية",text:"نلتزم بالشفافية والمصداقية في كل ما نقدمه.",tone:"blue"},
   ];
   return <div className="about-redesign">
+    <AboutMotion/>
     <div className="ab-top">
-      <div className="ab-top-visual" aria-hidden><img src="/assets/about-top-arc-exact.webp" alt=""/></div>
+      <div className="ab-top-visual ab-hero-visual" aria-hidden><img src="/assets/about-top-arc-exact.webp" alt=""/></div>
       <section className="ab-hero">
         <div className="ab-hero-media"><picture><img src="/assets/about-hero-mobile-exact.webp" alt="جسر فوق نهر النيل والمناطق الزراعية المحيطة"/></picture></div>
-        <div className="ab-hero-copy motion"><h1>عن الرابطة</h1><h2>معاً.. من أجل ولاية مزدهرة ومجتمع متكافئ</h2><p>رابطة ولاية نهر النيل الإلكترونية هي منصة تجمع أبناء الولاية في كل مكان.<br/>نعمل بروح واحدة لخدمة أبنائها والارتقاء بولايتنا وتنميتها في شتى المجالات.</p></div>
+        <div className="ab-hero-copy motion ab-hero-intro"><h1>عن الرابطة</h1><h2>معاً.. من أجل ولاية مزدهرة ومجتمع متكافئ</h2><p>رابطة ولاية نهر النيل الإلكترونية هي منصة تجمع أبناء الولاية في كل مكان.<br/>نعمل بروح واحدة لخدمة أبنائها والارتقاء بولايتنا وتنميتها في شتى المجالات.</p></div>
         <img className="ab-hero-wave" src="/assets/about-hero-wave-exact.webp" alt="" aria-hidden/>
       </section>
 
-      <section className="ab-president page-width motion">
+      <section className="ab-president page-width motion ab-reveal ab-from-left">
         <div className="ab-president-photo"><picture><img src="/assets/about-president-mobile-exact.webp" alt="الأستاذ هشام محمد الحسن رئيس الرابطة"/></picture></div>
         <article><h2>كلمة رئيس الرابطة</h2><h3>الأستاذ / هشام محمد الحسن</h3><span className="ab-title-line"/><p>نؤمن بأن العمل المؤسسي والتخطيط الاستراتيجي هما أساس التغيير الحقيقي،<br/> وسنواصل العمل معكم بروح الفريق الواحد لتحقيق التنمية المستدامة<br/> لولاية نهر النيل وخدمة أبنائها أينما كانوا.</p><p>معاً.. نصنع مستقبلاً أفضل لولايتنا وأجيالنا القادمة.</p><strong className="ab-signature">Hisham Alhassan</strong></article>
         <aside><img src="/assets/membership-mark-transparent-v2.png" alt="شعار رابطة ولاية نهر النيل"/><b>رابطة ولاية<br/>نهر النيل<br/>الإلكترونية</b><i/><em/></aside>
@@ -676,15 +772,15 @@ function AboutPage(){
     </div>
 
     <section className="ab-foundations page-width">
-      {foundations.map(item=>{const Icon=item.icon;return <article className={`motion ${item.tone}`} key={item.title}><header><span><Icon/></span><h2>{item.title}</h2></header><p>{item.text}</p><a href="/contact"><Target/>{item.link}<ArrowLeft/></a></article>})}
-      <article className="ab-goals motion"><header><span><Target/></span><h2>الأهداف</h2></header><ul>{goals.map(goal=><li key={goal}><CircleCheckBig/>{goal}</li>)}</ul><a href="/contact">عرض جميع الأهداف <ArrowLeft/></a></article>
+      {foundations.map(item=>{const Icon=item.icon;return <article className={`motion ab-reveal ${item.tone}`} key={item.title}><header><span><Icon/></span><h2>{item.title}</h2></header><p>{item.text}</p><a href="/contact"><Target/>{item.link}<ArrowLeft/></a></article>})}
+      <article className="ab-goals motion ab-reveal"><header><span><Target/></span><h2>الأهداف</h2></header><ul>{goals.map(goal=><li key={goal}><CircleCheckBig/>{goal}</li>)}</ul><a href="/contact">عرض جميع الأهداف <ArrowLeft/></a></article>
     </section>
 
-    <section className="ab-stats page-width motion">{stats.map(item=>{const Icon=item.icon;return <article key={item.label}><Icon/><span><b>{item.value}</b><small>{item.label}</small></span></article>})}</section>
+    <section className="ab-stats page-width motion ab-reveal">{stats.map(item=>{const Icon=item.icon;const count=Number(item.value.replace(/[^0-9]/g,""));return <article key={item.label}><Icon/><span><b data-ab-count={count} data-ab-suffix={item.value.includes("+")?"+":""} data-ab-grouped={item.value.includes(",")?"true":undefined}>{item.value}</b><small>{item.label}</small></span></article>})}</section>
 
-    <section className="ab-values page-width"><header><span/><h2>قيمنا</h2><span/></header><div>{values.map(item=>{const Icon=item.icon;return <article className={`motion ${item.tone}`} key={item.title}><Icon/><h3>{item.title}</h3><p>{item.text}</p></article>})}</div></section>
+    <section className="ab-values page-width"><header className="ab-reveal"><span/><h2>قيمنا</h2><span/></header><div>{values.map(item=>{const Icon=item.icon;return <article className={`motion ab-reveal ${item.tone}`} key={item.title}><Icon/><h3>{item.title}</h3><p>{item.text}</p></article>})}</div></section>
 
-    <section className="ab-join page-width motion"><div className="ab-join-icon"><UsersRound/></div><div><h2>كن جزءاً من مسيرتنا</h2><p>انضم إلينا وساهم في بناء مستقبل أفضل لولاية نهر النيل وأبنائها</p></div><a href="/membership"><UserPlus/>سجل الآن</a></section>
+    <section className="ab-join page-width motion ab-reveal"><div className="ab-join-icon"><UsersRound/></div><div><h2>كن جزءاً من مسيرتنا</h2><p>انضم إلينا وساهم في بناء مستقبل أفضل لولاية نهر النيل وأبنائها</p></div><a href="/membership"><UserPlus/>سجل الآن</a></section>
   </div>
 }
 
