@@ -947,27 +947,47 @@ body:has(.about-redesign) .site-footer{margin-top:0}
 
 /* Site-wide motion language — shared by every page except the bespoke About sequence. */
 .external-mark{font-size:9px;margin-right:3px;color:var(--orange)}
+main.site-motion-ready{overflow-x:clip}
 main .site-hero-motion{--site-hero-x:0px;--site-hero-y:0px;isolation:isolate}
-main .site-hero-motion.site-section-in{animation:siteHeroReveal .9s cubic-bezier(.18,.78,.22,1) both}
-main .site-section-motion.site-section-in{animation:siteSectionReveal .78s cubic-bezier(.18,.78,.22,1) both}
-main .motion.in:not(.ab-reveal){animation:siteMotionReveal .68s cubic-bezier(.18,.78,.22,1) both}
+main.site-motion-ready .site-hero-motion:not(.site-section-in),main.site-motion-ready .site-section-motion:not(.site-section-in),main.site-motion-ready .motion:not(.in){opacity:0}
+main .site-hero-motion.site-section-in{animation:siteHeroReveal 1.05s cubic-bezier(.16,.84,.22,1) both}
+main .site-section-motion.site-section-in{animation:siteSectionReveal .95s cubic-bezier(.16,.84,.22,1) both}
+main .motion.in:not(.ab-reveal){animation:siteMotionDirectional .82s var(--site-item-delay,0s) cubic-bezier(.16,.84,.22,1) both}
 main .motion.in.site-settled:not(.ab-reveal),main .site-section-motion.site-section-in.site-settled,main .site-hero-motion.site-section-in.site-settled{animation:none}
-main .site-section-motion.site-section-in>:not(.motion):not(style):not(script){animation:siteChildReveal .62s cubic-bezier(.18,.78,.22,1) both}
+main .site-section-motion.site-section-in>:not(.motion):not(style):not(script){animation:siteChildReveal .72s cubic-bezier(.16,.84,.22,1) both}
 main .site-section-motion.site-section-in>:not(.motion):nth-child(2){animation-delay:.08s}
 main .site-section-motion.site-section-in>:not(.motion):nth-child(3){animation-delay:.16s}
 main .site-section-motion.site-section-in>:not(.motion):nth-child(4){animation-delay:.24s}
-main .site-hero-motion .site-hero-parallax{transform:translate3d(var(--site-hero-x),var(--site-hero-y),0) scale(1.015);transition:transform .55s cubic-bezier(.18,.78,.22,1);will-change:transform}
+main .site-hero-motion.site-section-in .site-hero-part{animation:siteHeroPartIn .98s var(--site-part-delay,0s) cubic-bezier(.16,.84,.22,1) both}
+main .site-hero-motion.site-section-in .site-text-line{animation:siteTextReveal .86s var(--site-text-delay,.18s) cubic-bezier(.16,.84,.22,1) both}
+main .site-hero-motion .site-hero-parallax{transform:translate3d(var(--site-hero-x),var(--site-hero-y),0) scale(1.018);transform-origin:center;transition:transform .65s cubic-bezier(.16,.84,.22,1);will-change:transform}
+main .site-hero-motion.site-section-in:not(.site-settled) .site-hero-parallax{animation:siteHeroImageIntro 1.45s var(--site-media-delay,0s) cubic-bezier(.16,.84,.22,1) both}
+main .site-hero-motion.site-section-in.site-settled .site-hero-parallax{animation:siteHeroBreath 8s ease-in-out infinite}
+main .site-section-motion.site-section-in .site-fly-media{animation:siteMediaFly .92s var(--site-media-delay,.08s) cubic-bezier(.16,.84,.22,1) both;will-change:transform,opacity,filter}
 main :is(article,a,button){transition:transform .28s cubic-bezier(.2,.75,.25,1),box-shadow .28s ease,border-color .28s ease,filter .28s ease,background-color .28s ease,color .28s ease}
-@keyframes siteHeroReveal{from{opacity:0;filter:blur(6px);transform:scale(1.012)}to{opacity:1;filter:none;transform:none}}
-@keyframes siteSectionReveal{from{opacity:0;filter:blur(5px);transform:translate3d(var(--site-shift,0),32px,0) scale(.988)}to{opacity:1;filter:none;transform:none}}
-@keyframes siteMotionReveal{from{opacity:0;filter:blur(4px);transform:translateY(24px) scale(.985)}to{opacity:1;filter:none;transform:none}}
-@keyframes siteChildReveal{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes siteHeroReveal{from{opacity:0;filter:blur(8px);transform:scale(1.018)}to{opacity:1;filter:none;transform:none}}
+@keyframes siteHeroPartIn{from{opacity:0;filter:blur(7px);transform:translate3d(var(--site-part-x,70px),24px,0) scale(.97)}to{opacity:1;filter:none;transform:none}}
+@keyframes siteTextReveal{0%{opacity:0;filter:blur(7px);clip-path:inset(0 0 0 100%);transform:translateY(30px) skewY(1.2deg)}100%{opacity:1;filter:none;clip-path:inset(0);transform:none}}
+@keyframes siteHeroImageIntro{0%{opacity:0;filter:blur(9px);transform:translate3d(calc(var(--site-hero-x) * .2),var(--site-hero-y),0) scale(1.12)}100%{opacity:1;filter:none;transform:translate3d(var(--site-hero-x),var(--site-hero-y),0) scale(1.018)}}
+@keyframes siteHeroBreath{0%,100%{transform:translate3d(var(--site-hero-x),var(--site-hero-y),0) scale(1.018)}50%{transform:translate3d(var(--site-hero-x),var(--site-hero-y),0) scale(1.06)}}
+@keyframes siteSectionReveal{from{opacity:0;filter:blur(7px);transform:translate3d(var(--site-shift,0),38px,0) scale(.982)}to{opacity:1;filter:none;transform:none}}
+@keyframes siteMotionDirectional{from{opacity:0;filter:blur(6px);transform:translate3d(var(--site-item-x,0),30px,0) scale(.972)}to{opacity:1;filter:none;transform:none}}
+@keyframes siteMediaFly{from{opacity:0;filter:blur(7px) saturate(.72);transform:translate3d(var(--site-media-x,70px),26px,0) scale(.94)}to{opacity:1;filter:none;transform:none}}
+@keyframes siteChildReveal{from{opacity:0;filter:blur(3px);transform:translateY(19px) scale(.985)}to{opacity:1;filter:none;transform:none}}
 @media(hover:hover) and (pointer:fine){
   main article.site-pointer{transform:translateY(-6px)!important;box-shadow:0 16px 32px rgba(20,35,54,.14);border-color:#efb168!important}
   main a.site-pointer:not(.brand):not(.topbar nav a){filter:brightness(1.06);transform:translateY(-2px)!important}
   main button.site-pointer{filter:brightness(1.06);transform:translateY(-2px)!important}
 }
-@media(prefers-reduced-motion:reduce){main :is(.site-hero-motion,.site-section-motion,.motion,.site-hero-parallax){animation:none!important;transition:none!important;transform:none!important;filter:none!important;opacity:1!important}}
+@media(max-width:760px){
+  main .site-hero-motion{--site-hero-x:0px!important;--site-hero-y:0px!important}
+  main .site-directional{--site-item-x:34px!important}
+  main .site-hero-part{--site-part-x:42px!important}
+  main .site-fly-media{--site-media-x:38px!important}
+  main .site-hero-motion.site-section-in.site-settled .site-hero-parallax{animation-duration:10s}
+  @keyframes siteHeroBreath{0%,100%{transform:scale(1.012)}50%{transform:scale(1.035)}}
+}
+@media(prefers-reduced-motion:reduce){main.site-motion-ready :is(.site-hero-motion,.site-section-motion,.motion,.site-hero-parallax,.site-hero-part,.site-text-line,.site-fly-media){animation:none!important;transition:none!important;transform:none!important;clip-path:none!important;filter:none!important;opacity:1!important}}
 
 /* Professional internal hubs: services, initiatives, news and digital library. */
 .internal-redesign{--ih-navy:#17293d;--ih-navy-2:#243d57;--ih-orange:#f68b0b;--ih-soft:#f5f7f9;--ih-line:#e0e5ea;background:#fff;color:var(--ih-navy);font-family:"Cairo",Tahoma,Arial,sans-serif;overflow:hidden;padding-bottom:24px}.internal-redesign .page-width{width:min(1240px,calc(100% - 48px))}

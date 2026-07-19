@@ -59,13 +59,51 @@ function Motion(){
     const items=Array.from(main.querySelectorAll<HTMLElement>(".motion")).filter(item=>!item.closest(".about-redesign"));
     const hero=sections[0];
     const heroImage=hero?.querySelector<HTMLElement>("img");
+    const heroParts=hero?Array.from(hero.children).filter((child):child is HTMLElement=>child instanceof HTMLElement):[];
+    const heroText=hero?Array.from(hero.querySelectorAll<HTMLElement>("h1,h2,h3,p,blockquote,.home-eyebrow")).filter(node=>node.closest("section")===hero):[];
+    const largeMedia=Array.from(main.querySelectorAll<HTMLImageElement>("section img")).filter(image=>{
+      if(image.closest(".about-redesign")||image.closest("section")===hero)return false;
+      const rect=image.getBoundingClientRect();
+      return rect.width>210&&rect.height>115;
+    });
     const settleTimers:number[]=[];
 
+    main.classList.add("site-motion-ready");
     sections.forEach((section,index)=>{
       section.classList.add(index===0?"site-hero-motion":"site-section-motion");
-      section.style.setProperty("--site-shift",`${index%2===0?28:-28}px`);
+      section.style.setProperty("--site-shift",`${index%2===0?52:-52}px`);
     });
-    if(heroImage)heroImage.classList.add("site-hero-parallax");
+    items.forEach((item,index)=>{
+      const rect=item.getBoundingClientRect();
+      const center=rect.left+rect.width/2;
+      const direction=Math.abs(center-window.innerWidth/2)<window.innerWidth*.12?(index%2===0?-1:1):(center<window.innerWidth/2?-1:1);
+      item.classList.add("site-directional");
+      item.style.setProperty("--site-item-x",`${direction*72}px`);
+      item.style.setProperty("--site-item-delay",`${Math.min(index%4,3)*.07}s`);
+    });
+    heroParts.forEach((part,index)=>{
+      const rect=part.getBoundingClientRect();
+      const center=rect.left+rect.width/2;
+      const direction=Math.abs(center-window.innerWidth/2)<window.innerWidth*.1?(index%2===0?-1:1):(center<window.innerWidth/2?-1:1);
+      part.classList.add("site-hero-part");
+      part.style.setProperty("--site-part-x",`${direction*96}px`);
+      part.style.setProperty("--site-part-delay",`${.06+index*.12}s`);
+    });
+    heroText.forEach((node,index)=>{
+      node.classList.add("site-text-line");
+      node.style.setProperty("--site-text-delay",`${.2+index*.105}s`);
+    });
+    largeMedia.forEach((image,index)=>{
+      const rect=image.getBoundingClientRect();
+      const direction=rect.left+rect.width/2<window.innerWidth/2?-1:1;
+      image.classList.add("site-fly-media");
+      image.style.setProperty("--site-media-x",`${direction*78}px`);
+      image.style.setProperty("--site-media-delay",`${.1+(index%3)*.08}s`);
+    });
+    if(heroImage){
+      heroImage.classList.add("site-hero-parallax");
+      heroImage.style.setProperty("--site-media-delay",".08s");
+    }
 
     if(reduced){
       sections.forEach(section=>section.classList.add("site-section-in","site-settled"));
@@ -76,10 +114,12 @@ function Motion(){
     const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{
       if(!entry.isIntersecting)return;
       const target=entry.target as HTMLElement;
-      target.classList.add(target.classList.contains("motion")?"in":"site-section-in");
-      settleTimers.push(window.setTimeout(()=>target.classList.add("site-settled"),850));
+      if(target.classList.contains("site-hero-motion")||target.classList.contains("site-section-motion"))target.classList.add("site-section-in");
+      if(target.classList.contains("motion"))target.classList.add("in");
+      const settleDelay=target===hero?1550:target.classList.contains("motion")?980:1150;
+      settleTimers.push(window.setTimeout(()=>target.classList.add("site-settled"),settleDelay));
       observer.unobserve(target);
-    }),{threshold:.1,rootMargin:"0px 0px -6%"});
+    }),{threshold:.055,rootMargin:"0px 0px 8%"});
     sections.forEach(section=>observer.observe(section));
     items.forEach(item=>observer.observe(item));
 
@@ -106,6 +146,7 @@ function Motion(){
       hero?.removeEventListener("pointermove",moveHero);
       hero?.removeEventListener("pointerleave",resetHero);
       interactives.forEach(item=>{item.removeEventListener("pointermove",enter);item.removeEventListener("pointerleave",leave)});
+      main.classList.remove("site-motion-ready");
       if(about)about.classList.remove("site-page-motion");
     };
   },[]);
