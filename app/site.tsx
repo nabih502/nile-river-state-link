@@ -57,6 +57,7 @@ function Motion(){
     const about=main.querySelector(".about-redesign");
     const sections=Array.from(main.querySelectorAll<HTMLElement>("section")).filter(section=>!section.closest(".about-redesign"));
     const items=Array.from(main.querySelectorAll<HTMLElement>(".motion")).filter(item=>!item.closest(".about-redesign"));
+    if(about&&sections.length===0&&items.length===0)return;
     const hero=sections[0];
     const heroImage=hero?.querySelector<HTMLElement>("img");
     const heroParts=hero?Array.from(hero.children).filter((child):child is HTMLElement=>child instanceof HTMLElement):[];

@@ -949,7 +949,7 @@ body:has(.about-redesign) .site-footer{margin-top:0}
 .external-mark{font-size:9px;margin-right:3px;color:var(--orange)}
 main.site-motion-ready{overflow-x:clip}
 main .site-hero-motion{--site-hero-x:0px;--site-hero-y:0px;isolation:isolate}
-main.site-motion-ready .site-hero-motion:not(.site-section-in),main.site-motion-ready .site-section-motion:not(.site-section-in),main.site-motion-ready .motion:not(.in){opacity:0}
+main.site-motion-ready .site-hero-motion:not(.site-section-in),main.site-motion-ready .site-section-motion:not(.site-section-in),main.site-motion-ready .site-directional:not(.in){opacity:0}
 main .site-hero-motion.site-section-in{animation:siteHeroReveal 1.05s cubic-bezier(.16,.84,.22,1) both}
 main .site-section-motion.site-section-in{animation:siteSectionReveal .95s cubic-bezier(.16,.84,.22,1) both}
 main .motion.in:not(.ab-reveal){animation:siteMotionDirectional .82s var(--site-item-delay,0s) cubic-bezier(.16,.84,.22,1) both}
