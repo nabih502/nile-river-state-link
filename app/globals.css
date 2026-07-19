@@ -548,9 +548,9 @@ body:has(.social-redesign) .topbar.home-topbar .primary.compact{height:43px!impo
 
 /* Social hero — matched to the supplied close-up: curved photo, rounded frame and overlapping quick bar. */
 @media(min-width:701px) and (max-width:1000px){
-  .ss-hero{width:calc(100% - 38px);height:264px;margin:6px auto 0;grid-template-columns:43% 57%;border-radius:20px 20px 0 0;background:#f8f9fa;overflow:hidden}
-  .ss-hero-visual img{width:100%;height:100%;object-fit:cover;object-position:center}
-  .ss-hero-visual:after{display:block;right:-95px;top:-12%;width:118px;height:128%;border-radius:50%;background:#f8f9fa;box-shadow:-18px 0 20px rgba(255,255,255,.72)}
+  .ss-hero{width:calc(100% - 38px);height:auto;aspect-ratio:756/276;margin:6px auto 0;grid-template-columns:49.6% 50.4%;border-radius:16px 16px 0 0;background:#f8f9fa;overflow:hidden}
+  .ss-hero-visual img{width:100%;height:100%;object-fit:fill;object-position:center}
+  .ss-hero-visual:after{display:none}
   .ss-hero-text{top:58px;left:76px;width:285px}
   .ss-hero-text h1{font-size:27px}.ss-hero-text h2{font-size:21px;margin-bottom:14px}.ss-hero-text p{font-size:9.5px;line-height:2}
   .ss-people-mark{right:20px;top:21px}.ss-people-mark svg{width:61px;height:61px}
@@ -561,13 +561,13 @@ body:has(.social-redesign) .topbar.home-topbar .primary.compact{height:43px!impo
 }
 
 @media(min-width:1001px){
-  .ss-hero{width:min(1440px,calc(100% - 40px));height:430px;margin:10px auto 0;grid-template-columns:43% 57%;border-radius:28px 28px 0 0}
-  .ss-hero-visual img{object-fit:cover}
-  .ss-hero-visual:after{display:block;right:-105px;top:-12%;width:190px;height:128%;border-radius:50%;background:#f8f9fa;box-shadow:-28px 0 32px rgba(255,255,255,.72)}
-  .ss-hero-text{top:112px;left:10%;width:470px}.ss-hero-text h1{width:auto;font-size:43px}.ss-hero-text h2{width:auto;font-size:34px}.ss-hero-text p{width:auto;font-size:15px}
-  .ss-people-mark{right:45px;top:42px}.ss-people-mark svg{width:96px;height:96px}
-  .ss-hero-ribbons{right:-70px;bottom:-75px;width:230px;height:185px;border-width:19px}.ss-hero-ribbons:after{width:195px;height:145px;border-width:19px}
-  .ss-quick{width:min(1180px,calc(100% - 80px))!important;height:112px;margin-top:-48px!important;margin-bottom:18px!important}
+  .ss-hero{width:min(1180px,calc(100% - 40px));height:auto;aspect-ratio:756/276;margin:0 auto;grid-template-columns:49.6% 50.4%;border-radius:22px 22px 0 0}
+  .ss-hero-visual img{width:100%;height:100%;object-fit:fill;object-position:center}
+  .ss-hero-visual:after{display:none}
+  .ss-hero-text{top:106px;left:8%;width:455px}.ss-hero-text h1{width:auto;font-size:43px}.ss-hero-text h2{width:auto;font-size:34px}.ss-hero-text p{width:auto;font-size:14px;line-height:2.05}
+  .ss-people-mark{right:31px;top:31px}.ss-people-mark svg{width:82px;height:82px}
+  .ss-hero-ribbons{right:-53px;bottom:-56px;width:178px;height:143px;border-width:15px}.ss-hero-ribbons:after{width:150px;height:112px;border-width:15px}
+  .ss-quick{width:min(1132px,calc(100% - 80px))!important;height:112px;margin-top:-45px!important;margin-bottom:18px!important}
   .ss-quick img{width:55px;height:55px}.ss-quick b{font-size:15px}.ss-quick small{font-size:10px}
 }
 
@@ -988,6 +988,10 @@ main :is(article,a,button){transition:transform .28s cubic-bezier(.2,.75,.25,1),
   @keyframes siteHeroBreath{0%,100%{transform:scale(1.012)}50%{transform:scale(1.035)}}
 }
 @media(prefers-reduced-motion:reduce){main.site-motion-ready :is(.site-hero-motion,.site-section-motion,.motion,.site-hero-parallax,.site-hero-part,.site-text-line,.site-fly-media){animation:none!important;transition:none!important;transform:none!important;clip-path:none!important;filter:none!important;opacity:1!important}}
+
+/* Preserve the Social reference crop while keeping a restrained breathing motion. */
+main .social-redesign .ss-hero.site-section-in.site-settled .site-hero-parallax{animation:ssHeroBreath 10s ease-in-out infinite}
+@keyframes ssHeroBreath{0%,100%{transform:translate3d(var(--site-hero-x),var(--site-hero-y),0) scale(1)}50%{transform:translate3d(var(--site-hero-x),var(--site-hero-y),0) scale(1.018)}}
 
 /* Professional internal hubs: services, initiatives, news and digital library. */
 .internal-redesign{--ih-navy:#17293d;--ih-navy-2:#243d57;--ih-orange:#f68b0b;--ih-soft:#f5f7f9;--ih-line:#e0e5ea;background:#fff;color:var(--ih-navy);font-family:"Cairo",Tahoma,Arial,sans-serif;overflow:hidden;padding-bottom:24px}.internal-redesign .page-width{width:min(1240px,calc(100% - 48px))}
