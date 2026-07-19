@@ -4,14 +4,14 @@ import { FormEvent, useEffect, useRef, useState } from "react";
 import {
   Aperture, ArrowLeft, Award, BadgeCheck, BadgePercent, Banknote,
   BookOpen, BriefcaseBusiness, Building2, CalendarDays, Camera, ChartNoAxesCombined, ChartPie,
-  Check, ChevronLeft, CircleAlert, CircleCheckBig, Clock3, CreditCard, Crown,
+  Check, ChevronLeft, CircleAlert, CircleCheckBig, CircleHelp, Clock3, CreditCard, Crown,
   Factory, Feather, FileImage, FileText, FileUp, Gem, Gift, Globe2, GraduationCap,
-  HandHeart, Handshake, HeartHandshake, HeartPulse,
+  HandHeart, Handshake, Headphones, HeartHandshake, HeartPulse,
   Landmark, LayoutGrid, LibraryBig, Lightbulb, Menu, Megaphone, MonitorCheck, Music2, Network, Newspaper,
   MessageCircle,
-  LockKeyhole, Mail, MapPin, Percent, Phone, QrCode, ReceiptText,
+  Info, LockKeyhole, Mail, MapPin, Paperclip, Percent, Phone, QrCode, ReceiptText,
   Palette, Pill, PlayCircle, RefreshCw, ScanFace, Search, Settings2, Share2, Shield, ShieldCheck, Stethoscope,
-  ShoppingCart, Sparkles, Sprout, Store, Tags, TrendingUp, Trophy, Truck,
+  Send, ShoppingCart, Sparkles, Sprout, Store, Tags, TrendingUp, Trophy, Truck,
   Upload, UserCheck, UserRound, UsersRound, Video, WalletCards, X,
 } from "lucide-react";
 
@@ -758,6 +758,82 @@ function Payment(){
 
 function Success(){return <MemberStepShell className="success-step"><header className="success-brand"><img src="/assets/membership-mark-transparent-v2.png" alt="شعار الرابطة"/><div><h2>رابطة ولاية نهر النيل</h2><b>الإلكترونية</b></div></header><section className="success-hero"><div className="success-check"><CircleCheckBig/></div><h1>مبروك</h1><h2>أنت الآن عضو</h2><p>في رابطة ولاية نهر النيل الإلكترونية</p></section><section className="success-member-card"><div className="success-user"><UserRound/></div><h3>رقم العضوية</h3><strong>NRN-2025-000123</strong><span/><h3>الباركود</h3><div className="success-barcode"/><small>N R N 2 0 2 5 0 0 0 1 2 3</small></section><section className="success-thanks"><ShieldCheck/><div><h2>شكراً لانضمامك إلينا</h2><p>معاً نبني مجتمعاً رقمياً قوياً ومتكافلاً لخدمة أبناء الولاية</p><b>وحدتنا .. قوتنا&nbsp;&nbsp;&nbsp; ومستقبلنا .. مسؤوليتنا</b></div></section></MemberStepShell>}
 
-function Contact(){const [sent,setSent]=useState(false);const submit=(e:FormEvent)=>{e.preventDefault();setSent(true)};return <><section className="contact-hero exact-hero"><div className="hero-content motion"><h1>تواصل معنا</h1><h2>نحن هنا لخدمتكم</h2><p>نسعد بتواصلكم واستقبال استفساراتكم ومقترحاتكم وشكاواكم، فريقنا جاهز للرد عليكم وتقديم الدعم في أسرع وقت ممكن.</p></div><div className="hero-photo motion"><img src="/assets/contact-hero-hq.webp" alt="تواصل معنا"/></div></section><section className="member-benefits page-width motion">{[["♧","نحن معكم","نتواصل معكم بما يسهم في تطوير خدماتنا"],["◎","خدمتكم أينما كنتم","ندعمكم من داخل وخارج الولاية"],["♢","خصوصية وأمان","نحافظ على سرية معلوماتكم"],["◷","استجابة سريعة","نرد على رسائلكم في أسرع وقت"],["☏","فريق متخصص","فريق دعم متكامل لخدمتكم"]].map(([i,t,d])=><div key={t}><i>{i}</i><h3>{t}</h3><p>{d}</p></div>)}</section><section className="contact-layout page-width"><aside><h2>طرق التواصل</h2>{[["◉","واتساب","+249 912 345 678"],["☏","اتصال هاتفي","+249 123 456 789"],["✉","البريد الإلكتروني","info@nilenile.org"],["⌖","العنوان","ولاية نهر النيل - السودان"],["◷","ساعات العمل","الأحد إلى الخميس · 9ص - 5م"]].map(([i,t,d])=><div key={t}><i>{i}</i><span><b>{t}</b>{d}</span></div>)}</aside><form onSubmit={submit}><h2>أرسل لنا رسالة</h2>{sent?<div className="sent"><i>✓</i><h2>تم إرسال رسالتك بنجاح</h2><p>سنتواصل معك في أقرب وقت.</p></div>:<><div className="form-row"><label>الاسم الكامل *<input required/></label><label>البريد الإلكتروني *<input required type="email"/></label></div><label>رقم الجوال<input type="tel"/></label><label>اختر نوع الرسالة *<select required><option>استفسار عام</option><option>شكوى</option><option>اقتراح</option><option>دعم فني</option></select></label><label>نص الرسالة *<textarea required rows={5}/></label><label className="file-field">⇧ إرفاق ملف (اختياري)<input type="file"/></label><button className="primary">إرسال الرسالة <Arrow/></button></>}</form></section><section className="section page-width"><SectionTitle>أسئلة شائعة</SectionTitle><div className="faq-cards">{[["الخدمات والبرامج","تفاصيل عن خدماتنا وبرامجنا"],["الدعم الفني","المساعدة في استخدام المنصة"],["العضوية والدفع","الاستفسار عن العضوية وطرق الدفع"],["الشكاوى والمقترحات","نستقبل شكاواكم ومقترحاتكم"],["الاستفسارات العامة","إجابات على أكثر الأسئلة الشائعة"]].map(([t,d])=><a href="#" key={t}><i>◫</i><b>{t}</b><span>{d}</span></a>)}</div></section><section className="newsletter page-width motion"><div><h2>كن على تواصل دائم</h2><p>اشترك في نشرتنا البريدية ليصلك كل جديد من أخبار الرابطة والفعاليات والخدمات.</p></div><form><input type="email" placeholder="البريد الإلكتروني"/><button className="primary">اشترك الآن</button></form></section></>}
+function Contact(){
+  const [sent,setSent]=useState(false);
+  const [fileName,setFileName]=useState("");
+  const submit=(event:FormEvent)=>{event.preventDefault();setSent(true)};
+  const benefits=[
+    {icon:UsersRound,title:"نحن معكم",text:"نتواصل معكم بما يسهم في تطوير خدماتنا"},
+    {icon:Globe2,title:"خدمتكم أينما كنتم",text:"ندعمكم من داخل وخارج ولاية نهر النيل"},
+    {icon:ShieldCheck,title:"خصوصية وأمان",text:"نحافظ على سرية معلوماتكم"},
+    {icon:Clock3,title:"استجابة سريعة",text:"نرد على رسائلكم في أسرع وقت"},
+    {icon:Headphones,title:"فريق متخصص",text:"فريق دعم متكامل لخدمتكم"},
+  ];
+  const methods=[
+    {icon:MessageCircle,title:"واتساب",lines:["+249 912 345 678"]},
+    {icon:Phone,title:"اتصال هاتفي",lines:["+249 123 456 789"]},
+    {icon:Mail,title:"البريد الإلكتروني",lines:["info@nilelink.org"]},
+    {icon:MapPin,title:"العنوان",lines:["المملكة العربية السعودية - جدة"]},
+    {icon:Clock3,title:"ساعات العمل",lines:["من الأحد إلى الخميس","9:00 صباحاً - 5:00 مساءً"]},
+  ];
+  const questions=[
+    {icon:Info,title:"الخدمات والبرامج",text:"تفاصيل عن خدماتنا وبرامجنا"},
+    {icon:Headphones,title:"الدعم الفني",text:"المساعدة في استخدام المنصة والتطبيق"},
+    {icon:CreditCard,title:"العضوية والدفع",text:"الاستفسار عن العضوية وطرق الدفع"},
+    {icon:FileText,title:"الشكاوى والمقترحات",text:"نستقبل شكاواكم ومقترحاتكم"},
+    {icon:CircleHelp,title:"الاستفسارات العامة",text:"إجابات على أكثر الأسئلة الشائعة"},
+  ];
+  return <div className="contact-redesign">
+    <section className="ct-hero">
+      <div className="ct-hero-media">
+        <img src="/assets/contact-hero-hq.webp" alt="حاسوب محمول يعرض وسائل التواصل"/>
+        <strong className="ct-screen-title">تواصل معنا</strong>
+        <img className="ct-mug-logo" src="/assets/logo.jpeg" alt="" aria-hidden/>
+      </div>
+      <div className="ct-hero-copy motion">
+        <MessageCircle className="ct-hero-watermark" aria-hidden/>
+        <h1>تواصل معنا</h1>
+        <h2>نحن هنا لخدمتكم</h2>
+        <p>نسعد بتواصلكم واستقبال استفساراتكم ومقترحاتكم<br/>وشكاواكم، فريقنا جاهز للرد عليكم وتقديم الدعم<br/>في أسرع وقت ممكن.</p>
+      </div>
+      <i className="ct-hero-wave" aria-hidden/>
+    </section>
+
+    <section className="ct-benefits page-width motion">
+      {benefits.map(item=>{const Icon=item.icon;return <article key={item.title}><Icon/><h3>{item.title}</h3><p>{item.text}</p></article>})}
+    </section>
+
+    <section className="ct-contact-panel page-width" id="contact-form">
+      <aside className="ct-methods motion">
+        <h2>طرق التواصل</h2>
+        <span className="ct-title-line"/>
+        <div>{methods.map(item=>{const Icon=item.icon;return <a href={item.title==="البريد الإلكتروني"?"mailto:info@nilelink.org":item.title==="واتساب"?"https://wa.me/249912345678":item.title==="اتصال هاتفي"?"tel:+249123456789":"#contact-form"} key={item.title}><i><Icon/></i><span><b>{item.title}</b>{item.lines.map(line=><small key={line}>{line}</small>)}</span></a>})}</div>
+      </aside>
+      <form className="ct-form motion" onSubmit={submit}>
+        <h2>أرسل لنا رسالة</h2>
+        <span className="ct-title-line"/>
+        {sent?<div className="ct-sent"><CircleCheckBig/><h2>تم إرسال رسالتك بنجاح</h2><p>سنتواصل معك في أقرب وقت.</p><button type="button" onClick={()=>setSent(false)}>إرسال رسالة أخرى</button></div>:<div className="ct-form-fields">
+          <label className="ct-control"><UserRound/><input required aria-label="الاسم الكامل" placeholder="الاسم الكامل *"/></label>
+          <label className="ct-control"><Mail/><input required type="email" aria-label="البريد الإلكتروني" placeholder="البريد الإلكتروني *"/></label>
+          <label className="ct-control wide"><Phone/><input type="tel" aria-label="رقم الجوال" placeholder="رقم الجوال"/></label>
+          <label className="ct-control wide select"><select required aria-label="اختر نوع الرسالة" defaultValue=""><option value="" disabled>اختر نوع الرسالة *</option><option>استفسار عام</option><option>شكوى</option><option>اقتراح</option><option>دعم فني</option></select></label>
+          <label className="ct-control wide message"><FileText/><textarea required rows={5} aria-label="نص الرسالة" placeholder="نص الرسالة *"/></label>
+          <label className="ct-attachment wide"><Paperclip/><span><b>{fileName||"إرفاق ملف (اختياري)"}</b><small>ارفق الملفات بصيغة (PDF, JPG, PNG) وبحجم لا يتجاوز 5MB</small></span><input type="file" accept="image/jpeg,image/png,application/pdf" onChange={event=>setFileName(event.target.files?.[0]?.name||"")}/></label>
+          <button className="ct-submit wide" type="submit"><Send/>إرسال الرسالة</button>
+        </div>}
+      </form>
+    </section>
+
+    <section className="ct-faq page-width motion">
+      <header><span/><h2>أسئلة شائعة</h2><span/></header>
+      <div>{questions.map(item=>{const Icon=item.icon;return <a href="#contact-form" key={item.title}><Icon/><b>{item.title}</b><small>{item.text}</small></a>})}</div>
+    </section>
+
+    <section className="ct-newsletter page-width motion">
+      <div className="ct-news-copy"><Mail/><span><h2>كن على تواصل دائم</h2><p>اشترك في نشرتنا البريدية ليصلك كل جديد<br/>عن أخبار الرابطة والفعاليات والخدمات</p></span></div>
+      <form onSubmit={event=>event.preventDefault()}><input type="email" required aria-label="البريد الإلكتروني للاشتراك" placeholder="البريد الإلكتروني"/><button type="submit"><Send/>اشترك الآن</button></form>
+    </section>
+  </div>
+}
 
 export default function NileSite({page}:{page:string}){const active=routeMap[page]||"home";const hideHeader=["membership","photo","payment","success"].includes(active);const hideFooter=["membership","photo","payment","success"].includes(active);return <div dir="rtl"><Motion/>{!hideHeader&&<Header active={active}/>}<main>{active==="home"?<Home/>:active==="social"?<SocialPage/>:active==="education"?<EducationPage/>:active==="health"?<HealthPage/>:active==="investment"?<InvestmentPage/>:active==="culture"?<CulturePage/>:active==="membership"?<Membership/>:active==="register"?<Register/>:active==="photo"?<PhotoUpload/>:active==="payment"?<Payment/>:active==="success"?<Success/>:active==="contact"?<Contact/>:<PortalPage type={active}/>}</main>{!hideFooter&&<Footer/>}</div>}
