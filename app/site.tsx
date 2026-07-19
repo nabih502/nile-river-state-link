@@ -361,7 +361,7 @@ function SocialPage(){
     <section className="ss-hero">
       <div className="ss-hero-visual motion"><img src="/assets/social-hero.jpg" alt="أسرة في أيدٍ متكاتفة"/></div>
       <div className="ss-hero-copy motion"><span className="ss-people-mark"><UsersRound/></span><div className="ss-hero-text"><h1>الخدمات الاجتماعية</h1><h2>معاً.. نرعى ونساند</h2><p>نقدم برامج ومبادرات اجتماعية وإنسانية تهدف إلى دعم<br/>أبناء مجتمعنا في مختلف الظروف، لبناء مجتمع متماسك<br/>ومتكافل.</p></div></div>
-      <span className="ss-hero-ribbons" aria-hidden="true"/>
+      <img className="ss-hero-ribbons" src="/assets/about-hero-wave-exact.webp" alt="" aria-hidden="true"/>
     </section>
 
     <section className="ss-quick page-width motion">{quickServices.map(item=><a href="#social-services" key={item.title}><img src={item.image} alt=""/><span><b>{item.title}</b><small>{item.text}</small></span></a>)}</section>
