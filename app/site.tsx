@@ -15,16 +15,21 @@ import {
   Upload, UserCheck, UserPlus, UserRound, UsersRound, Video, WalletCards, X,
 } from "lucide-react";
 
-type PageKey = "home" | "about" | "social" | "education" | "health" | "investment" | "culture" | "membership" | "register" | "photo" | "payment" | "success" | "contact";
+type InternalKey = "services" | "initiatives" | "news" | "library";
+type PageKey = "home" | "about" | "social" | "education" | "health" | "investment" | "culture" | InternalKey | "membership" | "register" | "photo" | "payment" | "success" | "contact";
 type PortalKey = "social" | "education" | "health" | "investment" | "culture";
+
+const MARKET_URL="https://sudan-market.com/";
+const TRAINING_URL="https://ebhar-dvvm.bolt.host/";
 
 const routeMap: Record<string, PageKey> = {
   home:"home", about:"about", social:"social", education:"education", health:"health", investment:"investment", culture:"culture",
+  services:"services", initiatives:"initiatives", news:"news", library:"library",
   membership:"membership", register:"register", photo:"photo", payment:"payment", success:"success", contact:"contact",
 };
 
 const nav = [["/","الرئيسية"],["/about","عن الرابطة"],["/social","الخدمات"],["/investment","المبادرات"],["/culture","الثقافة"],["/education","التعليم"],["/contact","تواصل معنا"]];
-const homeNav = [["/","الرئيسية"],["/about","عن الرابطة"],["/education","التعليم"],["/health","الصحة"],["/social","الاجتماعية"],["/culture","الثقافية"],["#market","السوق السوداني"],["/investment","الاستثمار"],["#news","الأخبار والفعاليات"],["/contact","تواصل معنا"]];
+const homeNav = [["/","الرئيسية"],["/about","عن الرابطة"],["/education","التعليم"],["/health","الصحة"],["/social","الاجتماعية"],["/culture","الثقافية"],[MARKET_URL,"السوق السوداني"],["/investment","الاستثمار"],["/news","الأخبار والفعاليات"],["/contact","تواصل معنا"]];
 const socialNav = [["/","الرئيسية"],["/about","عن الرابطة"],["/social","الخدمات"],["/investment","المبادرات"],["/culture","الأخبار والفعاليات"],["/education","المكتبة الرقمية"],["/contact","تواصل معنا"]];
 
 const info: Record<PortalKey, {title:string; accent:string; lead:string; hero:string; icon:string; tabs:string[]; stats:[string,string][]; cards:{title:string;text:string;image?:string;icon:string}[]; section:string}> = {
@@ -39,12 +44,73 @@ function Brand({light=false}:{light?:boolean}){return <a href="/" className={`br
 
 function Header({active}:{active:PageKey}){
   const [open,setOpen]=useState(false);
-  return <header className="topbar dark home-topbar"><div className="topbar-inner"><Brand light/><nav className={open?"open":""}>{homeNav.map(([href,label])=><a key={`${href}-${label}`} href={href} className={(href==="/"&&active==="home")||(href.startsWith("/")&&href.slice(1)===active)?"current":""}>{label}</a>)}</nav><div className="header-tools"><button className="search-btn" aria-label="البحث"><Search size={19}/></button><a className="primary compact" href="/membership"><UserRound size={16}/><span>تسجيل الدخول</span></a><button className="mobile-menu" onClick={()=>setOpen(!open)} aria-label="فتح القائمة">{open?<X size={21}/>:<Menu size={21}/>}</button></div></div></header>
+  return <header className="topbar dark home-topbar"><div className="topbar-inner"><Brand light/><nav className={open?"open":""}>{homeNav.map(([href,label])=>{const external=href.startsWith("http");return <a key={`${href}-${label}`} href={href} target={external?"_blank":undefined} rel={external?"noopener noreferrer":undefined} className={(href==="/"&&active==="home")||(href.startsWith("/")&&href.slice(1)===active)?"current":""}>{label}{external&&<span className="external-mark" aria-hidden>↗</span>}</a>})}</nav><div className="header-tools"><button className="search-btn" aria-label="البحث"><Search size={19}/></button><a className="primary compact" href="/membership"><UserRound size={16}/><span>تسجيل الدخول</span></a><button className="mobile-menu" onClick={()=>setOpen(!open)} aria-label="فتح القائمة">{open?<X size={21}/>:<Menu size={21}/>}</button></div></div></header>
 }
 
-function Footer(){return <footer className="site-footer"><div className="footer-inner"><div className="footer-brand"><Brand light/><p>منصة رقمية شاملة لخدمة أبناء ولاية نهر النيل في الداخل والخارج.</p></div><div><h4>تواصل معنا</h4><p>☎ +249 912 345 678</p><p>✉ info@nilenile.org</p><p>⌖ ولاية نهر النيل - السودان</p></div><div><h4>الدعم والمساعدة</h4><a href="/contact">الأسئلة الشائعة</a><a href="/contact">سياسة الخصوصية</a><a href="/contact">الشروط والأحكام</a></div><div><h4>خدمات الرابطة</h4><a href="/education">التعليم</a><a href="/health">الصحة</a><a href="/investment">الاستثمار</a><a href="/culture">الثقافة</a></div><div><h4>روابط سريعة</h4><a href="/">الرئيسية</a><a href="/about">عن الرابطة</a><a href="/contact">تواصل معنا</a></div></div><div className="footer-bottom"><span>جميع الحقوق محفوظة © 2026</span><span className="socials"><b>f</b><b>𝕏</b><b>▶</b><b>◎</b><b>in</b></span></div></footer>}
+function Footer(){return <footer className="site-footer"><div className="footer-inner"><div className="footer-brand"><Brand light/><p>منصة رقمية شاملة لخدمة أبناء ولاية نهر النيل في الداخل والخارج.</p></div><div><h4>تواصل معنا</h4><p>☎ +249 912 345 678</p><p>✉ info@nilenile.org</p><p>⌖ ولاية نهر النيل - السودان</p></div><div><h4>الدعم والمساعدة</h4><a href="/contact">الأسئلة الشائعة</a><a href="/contact">سياسة الخصوصية</a><a href="/contact">الشروط والأحكام</a><a href="/news">الأخبار والفعاليات</a></div><div><h4>خدمات الرابطة</h4><a href="/services">جميع الخدمات</a><a href="/education">التعليم</a><a href="/health">الصحة</a><a href="/investment">الاستثمار</a><a href="/culture">الثقافة</a></div><div><h4>روابط سريعة</h4><a href="/">الرئيسية</a><a href="/about">عن الرابطة</a><a href="/initiatives">المبادرات</a><a href="/library">المكتبة الرقمية</a><a href={TRAINING_URL} target="_blank" rel="noopener noreferrer">مركز التدريب ↗</a><a href={MARKET_URL} target="_blank" rel="noopener noreferrer">السوق السوداني ↗</a></div></div><div className="footer-bottom"><span>جميع الحقوق محفوظة © 2026</span><span className="socials"><b>f</b><b>𝕏</b><b>▶</b><b>◎</b><b>in</b></span></div></footer>}
 
-function Motion(){useEffect(()=>{const obs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add("in")}),{threshold:.08});document.querySelectorAll(".motion").forEach(el=>obs.observe(el));return()=>obs.disconnect()},[]);return null}
+function Motion(){
+  useEffect(()=>{
+    const reduced=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const main=document.querySelector("main");
+    if(!main)return;
+    const about=main.querySelector(".about-redesign");
+    const sections=Array.from(main.querySelectorAll<HTMLElement>("section")).filter(section=>!section.closest(".about-redesign"));
+    const items=Array.from(main.querySelectorAll<HTMLElement>(".motion")).filter(item=>!item.closest(".about-redesign"));
+    const hero=sections[0];
+    const heroImage=hero?.querySelector<HTMLElement>("img");
+    const settleTimers:number[]=[];
+
+    sections.forEach((section,index)=>{
+      section.classList.add(index===0?"site-hero-motion":"site-section-motion");
+      section.style.setProperty("--site-shift",`${index%2===0?28:-28}px`);
+    });
+    if(heroImage)heroImage.classList.add("site-hero-parallax");
+
+    if(reduced){
+      sections.forEach(section=>section.classList.add("site-section-in","site-settled"));
+      items.forEach(item=>item.classList.add("in","site-settled"));
+      return;
+    }
+
+    const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{
+      if(!entry.isIntersecting)return;
+      const target=entry.target as HTMLElement;
+      target.classList.add(target.classList.contains("motion")?"in":"site-section-in");
+      settleTimers.push(window.setTimeout(()=>target.classList.add("site-settled"),850));
+      observer.unobserve(target);
+    }),{threshold:.1,rootMargin:"0px 0px -6%"});
+    sections.forEach(section=>observer.observe(section));
+    items.forEach(item=>observer.observe(item));
+
+    const moveHero=(event:PointerEvent)=>{
+      if(!hero||event.pointerType==="touch")return;
+      const rect=hero.getBoundingClientRect();
+      const x=((event.clientX-rect.left)/rect.width-.5)*-10;
+      const y=((event.clientY-rect.top)/rect.height-.5)*-6;
+      hero.style.setProperty("--site-hero-x",`${x.toFixed(2)}px`);
+      hero.style.setProperty("--site-hero-y",`${y.toFixed(2)}px`);
+    };
+    const resetHero=()=>{hero?.style.setProperty("--site-hero-x","0px");hero?.style.setProperty("--site-hero-y","0px")};
+    hero?.addEventListener("pointermove",moveHero);
+    hero?.addEventListener("pointerleave",resetHero);
+
+    const interactives=Array.from(main.querySelectorAll<HTMLElement>("article, a, button")).filter(item=>!item.closest(".about-redesign"));
+    const enter=(event:PointerEvent)=>{if(event.pointerType!=="touch")(event.currentTarget as HTMLElement).classList.add("site-pointer")};
+    const leave=(event:PointerEvent)=>(event.currentTarget as HTMLElement).classList.remove("site-pointer");
+    interactives.forEach(item=>{item.addEventListener("pointermove",enter);item.addEventListener("pointerleave",leave)});
+
+    return()=>{
+      observer.disconnect();
+      settleTimers.forEach(timer=>window.clearTimeout(timer));
+      hero?.removeEventListener("pointermove",moveHero);
+      hero?.removeEventListener("pointerleave",resetHero);
+      interactives.forEach(item=>{item.removeEventListener("pointermove",enter);item.removeEventListener("pointerleave",leave)});
+      if(about)about.classList.remove("site-page-motion");
+    };
+  },[]);
+  return null;
+}
 function SectionTitle({children,mini}:{children:React.ReactNode;mini?:string}){return <div className="section-heading motion">{mini&&<span>{mini}</span>}<h2>{children}</h2></div>}
 function Arrow(){return <ArrowLeft size={15} aria-hidden/>}
 
@@ -66,7 +132,7 @@ function Home(){
     {title:"الثقافة",icon:Landmark,items:["التراث","الفعاليات الثقافية","الشخصيات","الإعلام"],href:"/culture",tone:"cyan",button:"الدخول للثقافة"},
     {title:"التعليم",icon:GraduationCap,items:["مدرسة نهر النيل الإلكترونية","المنح الدراسية","الدورات التدريبية","المكتبة الرقمية"],href:"/education",tone:"blue",button:"الدخول للتعليم"},
     {title:"الاستثمار",icon:ChartNoAxesCombined,items:["الفرص الاستثمارية","المشروعات التنموية","الاستثمار الزراعي","دليل المستثمر"],href:"/investment",tone:"orange",button:"الدخول للاستثمار"},
-    {title:"السوق السوداني الإلكتروني",icon:ShoppingCart,items:["المنتجات","الخدمات","الوظائف","الشركات"],href:"#market",tone:"purple",button:"الدخول للسوق"},
+    {title:"السوق السوداني الإلكتروني",icon:ShoppingCart,items:["المنتجات","الخدمات","الوظائف","الشركات"],href:MARKET_URL,tone:"purple",button:"الدخول للسوق"},
     {title:"الخدمات الاجتماعية",icon:HandHeart,items:["طلب المساعدة","التكافل الاجتماعي","دعم المرضى","رعاية الأيتام والأرامل"],href:"/social",tone:"green",button:"الدخول للخدمة"},
   ];
   const news=[
@@ -90,7 +156,7 @@ function Home(){
         </div>
         <div className="home-hero-actions">
           <a className="home-primary" href="#services">استكشف المنصة <ChevronLeft/></a>
-          <a className="home-outline" href="#services">تعرّف على خدماتنا <LayoutGrid/></a>
+          <a className="home-outline" href="/services">تعرّف على خدماتنا <LayoutGrid/></a>
         </div>
       </div>
       <div className="home-hero-stage motion">
@@ -127,7 +193,7 @@ function Home(){
           <div className="service-icon"><Icon/></div>
           <h3>{service.title}</h3>
           <ul>{service.items.map(item=><li key={item}>{item}</li>)}</ul>
-          <a href={service.href}>{service.button}<ArrowLeft/></a>
+          <a href={service.href} target={service.href.startsWith("http")?"_blank":undefined} rel={service.href.startsWith("http")?"noopener noreferrer":undefined}>{service.button}{service.href.startsWith("http")?<span aria-hidden>↗</span>:<ArrowLeft/>}</a>
         </article>})}
       </div>
     </section>
@@ -165,7 +231,7 @@ function Home(){
           <h2>معهد نهر النيل الإلكتروني</h2>
           <h4>التدريب المهني والتطوير المستمر</h4>
           <ul><li>دورات مهنية معتمدة</li><li>شهادات احترافية</li><li>لقاءات وتدريب مباشر</li><li>زيادة المهارات</li><li>تعلم في أي وقت ومن أي مكان</li></ul>
-          <a href="/education">الدخول إلى المعهد <ArrowLeft/></a>
+          <a href={TRAINING_URL} target="_blank" rel="noopener noreferrer">الدخول إلى مركز التدريب <span aria-hidden>↗</span></a>
         </div>
         <img src="/assets/home-training-hq.webp" alt="التدريب في معهد نهر النيل الإلكتروني"/>
         <div className="program-features">
@@ -188,7 +254,7 @@ function Home(){
         <p>ادعم المنتج السوداني وكن جزءاً من تنمية الاقتصاد الوطني.</p>
         <div><b><Tags/><small>عروض وخصومات مميزة</small></b><b><Truck/><small>توصيل سريع داخل السودان وخارجه</small></b><b><ShieldCheck/><small>دفع آمن وسهل</small></b><b><Store/><small>منتجات موثوقة من تجار سودانيين</small></b></div>
       </div>
-      <a href="#"><ShoppingCart/> تصفح السوق الآن</a>
+      <a href={MARKET_URL} target="_blank" rel="noopener noreferrer"><ShoppingCart/> تصفح السوق الآن <span aria-hidden>↗</span></a>
     </section>
 
     <section id="news" className="home-news page-width">
@@ -199,10 +265,10 @@ function Home(){
           <h3>{item.title}</h3>
           <p>{item.text}</p>
           <img src={item.image} alt={item.title}/>
-          <a href="/culture">اقرأ المزيد <ArrowLeft/></a>
+          <a href="/news">اقرأ المزيد <ArrowLeft/></a>
         </article>)}
       </div>
-      <a className="all-news-link" href="/culture">عرض المزيد من الأخبار والفعاليات</a>
+      <a className="all-news-link" href="/news">عرض المزيد من الأخبار والفعاليات</a>
     </section>
   </div>
 }
@@ -308,7 +374,7 @@ function EducationPage(){
     <section className="edu-hero">
       <div className="edu-hero-photo motion"><img src="/assets/education-hero-hq.webp" alt="منصة التعليم الإلكتروني"/></div>
       <div className="edu-hero-copy motion"><h1><span>التعليم</span> .. استثمار في المستقبل</h1><p>نقدم بيئة تعليمية رقمية متكاملة تدعم الطلاب والمعلمين<br/>وتوفر محتوى تعليمي متطوراً لتلبية احتياجات التعليم<br/>في مكان وزمان يناسب الجميع.</p></div>
-      <aside className="edu-hero-menu motion"><h2><GraduationCap/> خدمات التعليم</h2>{heroMenu.map((item,index)=><a href="#edu-school" className={index===0?"active":""} key={item}><BookOpen/>{item}</a>)}</aside>
+      <aside className="edu-hero-menu motion"><h2><GraduationCap/> خدمات التعليم</h2>{heroMenu.map((item,index)=>{const href=index===1?TRAINING_URL:index===3?"/library":index===7?"/news":"#edu-school";const external=href.startsWith("http");return <a href={href} target={external?"_blank":undefined} rel={external?"noopener noreferrer":undefined} className={index===0?"active":""} key={item}><BookOpen/>{item}{external&&<small aria-hidden>↗</small>}</a>})}</aside>
       <div className="edu-hero-features motion">{heroFeatures.map(item=>{const Icon=item.icon;return <article key={item.title}><Icon/><b>{item.title}</b><small>{item.text}</small></article>})}</div>
     </section>
 
@@ -326,7 +392,7 @@ function EducationPage(){
           ].map(([icon,title,text])=>{const Icon=icon as typeof BookOpen;return <article key={String(title)}><Icon/><b>{String(title)}</b><small>{String(text)}</small></article>})}</div><a href="#courses">استعراض جميع المراحل <ArrowLeft/></a></div>
         </section>
 
-        <section id="courses" className="edu-courses"><header><a href="/contact">عرض الكل <ArrowLeft/></a><h2>الدورات وكورسات التقوية</h2></header><div>{courses.map(course=><article className="motion" key={course.title}><div className="edu-course-photo"><img src={course.image} alt={course.title}/><span className="edu-course-badge">{course.category}</span></div><h3>{course.title}</h3><p>{course.meta}</p><footer><b>{course.price}</b><HeartHandshake/></footer></article>)}</div><span className="edu-dots">● ● ●</span></section>
+        <section id="courses" className="edu-courses"><header><a href={TRAINING_URL} target="_blank" rel="noopener noreferrer">عرض الكل ↗</a><h2>الدورات وكورسات التقوية</h2></header><div>{courses.map(course=><article className="motion" key={course.title}><div className="edu-course-photo"><img src={course.image} alt={course.title}/><span className="edu-course-badge">{course.category}</span></div><h3>{course.title}</h3><p>{course.meta}</p><footer><b>{course.price}</b><a href={TRAINING_URL} target="_blank" rel="noopener noreferrer" aria-label={`فتح دورة ${course.title} في مركز التدريب`}>ابدأ الآن <ArrowLeft/></a></footer></article>)}</div><span className="edu-dots">● ● ●</span></section>
       </div>
 
       <aside className="edu-side-column">
@@ -336,11 +402,11 @@ function EducationPage(){
       </aside>
     </div>
 
-    <section className="edu-library page-width motion"><div className="edu-library-promo"><img src="/assets/education-reference-library-books.png" alt="كتب المكتبة الرقمية"/><div><h3>محتوى تعليمي ثري ومتجدد</h3><p>مصادر متنوعة تدعم تعلمك<br/>وتجعل المعرفة أقرب إليك</p><a href="/contact">تصفح مكتبة <ArrowLeft/></a></div></div><div className="edu-library-items">{library.map(item=>{const Icon=item.icon;return <article key={item.label}><Icon/><b>{item.label}</b><small>{item.n}</small></article>})}</div><h2>المكتبة الرقمية</h2></section>
+    <section className="edu-library page-width motion"><div className="edu-library-promo"><img src="/assets/education-reference-library-books.png" alt="كتب المكتبة الرقمية"/><div><h3>محتوى تعليمي ثري ومتجدد</h3><p>مصادر متنوعة تدعم تعلمك<br/>وتجعل المعرفة أقرب إليك</p><a href="/library">تصفح المكتبة <ArrowLeft/></a></div></div><div className="edu-library-items">{library.map(item=>{const Icon=item.icon;return <article key={item.label}><Icon/><b>{item.label}</b><small>{item.n}</small></article>})}</div><h2>المكتبة الرقمية</h2></section>
 
     <section className="edu-information page-width">
-      <article className="edu-news motion"><header><a href="/contact">عرض الكل <ArrowLeft/></a><h2>الأخبار التعليمية</h2></header>{news.map(item=><div key={item.title}><img src={item.image} alt=""/><p><b>{item.title}</b><small>{item.date}</small></p></div>)}</article>
-      <article className="edu-events motion"><header><a href="/contact">عرض الكل <ArrowLeft/></a><h2>الفعاليات القادمة</h2></header>{[["28","مايو","ورشة استراتيجيات التعليم الحديثة"],["05","يونيو","ندوة مستجدات التعليم في السودان"],["15","يونيو","ملتقى الطلاب والمعلمين"]].map(([day,month,title])=><div key={title}><time><b>{day}</b>{month}</time><p>{title}<small>قاعة التدريب الافتراضية</small></p></div>)}<a href="/contact">اعرض كل الفعاليات</a></article>
+      <article className="edu-news motion"><header><a href="/news">عرض الكل <ArrowLeft/></a><h2>الأخبار التعليمية</h2></header>{news.map(item=><div key={item.title}><img src={item.image} alt=""/><p><b>{item.title}</b><small>{item.date}</small></p></div>)}</article>
+      <article className="edu-events motion"><header><a href="/news">عرض الكل <ArrowLeft/></a><h2>الفعاليات القادمة</h2></header>{[["28","مايو","ورشة استراتيجيات التعليم الحديثة"],["05","يونيو","ندوة مستجدات التعليم في السودان"],["15","يونيو","ملتقى الطلاب والمعلمين"]].map(([day,month,title])=><div key={title}><time><b>{day}</b>{month}</time><p>{title}<small>قاعة التدريب الافتراضية</small></p></div>)}<a href="/news">اعرض كل الفعاليات</a></article>
       <article className="edu-consult motion"><img src="/assets/social-reference-help-transparent.png" alt="الدعم التعليمي"/><h2>هل لديك استفسار؟</h2><p>فريقنا التعليمي جاهز<br/>لمساعدتك</p><a href="/contact">تواصل معنا</a></article>
     </section>
 
@@ -634,10 +700,88 @@ function PortalPage({type}:{type:PortalKey}){const p=info[type];return <><Portal
 
 function EducationExtras(){return <><section className="library-band page-width motion"><div><span>المكتبة الرقمية</span><h2>مصادر تعليمية موثوقة ومتنوعة</h2><div className="library-items"><b>▥ 2,500+ كتاب</b><b>▣ 1,200+ بحث ومقال</b><b>▶ 800+ فيديو</b><b>▤ 3,000+ ملف</b></div></div><img src="/assets/education-hero-hq.webp" alt="المكتبة الرقمية"/></section><section className="compact-panels page-width"><article><h3>الأخبار التعليمية</h3>{["إطلاق منصة مدرسة نهر النيل","بدء التسجيل في المنح","نتائج الاختبارات الفصلية"].map(x=><p key={x}>◫ {x}<small>مايو 2025</small></p>)}</article><article><h3>الفعاليات القادمة</h3>{["ورشة مهارات المستقبل","ندوة التعليم الرقمي","ملتقى الطلاب والمعلمين"].map(x=><p key={x}>◷ {x}<small>قريباً</small></p>)}</article></section></>}
 function InvestmentExtras(){return <><section className="solar-banner page-width motion"><img src="/assets/investment-solar-hq.webp" alt="الطاقة الشمسية"/><div><h2>استثمر في الطاقة الشمسية</h2><p>مشروع محطة طاقة شمسية بقدرة 50 ميجاوات</p><a className="primary" href="/contact">اعرف المزيد</a></div></section><section className="compact-panels page-width"><article><h3>مزايا المستثمر</h3><div className="icon-row"><b>شبكة بنية تحتية</b><b>إجراءات ميسرة</b><b>دعم فني وإداري</b><b>تسويق مضمون</b></div></article><article><h3>قصة نجاح</h3><img className="mini-story" src="/assets/invest-industry-hq.webp" alt="مشروع استثماري ناجح"/><p>مشروع دواجن الدامر.. من فكرة صغيرة إلى قصة نجاح كبيرة.</p></article></section></>}
-function CultureExtras(){return <><section className="compact-panels page-width"><article><h3>المكتبة الرقمية</h3><div className="culture-library"><img src="/assets/culture-hero-hq.webp" alt="كتب وتراث"/><div><h2>آلاف الكتب والمراجع الثقافية</h2><p>كتب التراث السوداني، الدراسات والبحوث، المجلات الثقافية والكتب المصورة.</p><a className="primary" href="#">استكشف المكتبة</a></div></div></article><article><h3>المسابقات والجوائز</h3>{["مسابقة الشعر السنوية","جائزة الإبداع الفني","جائزة التصوير الضوئي"].map(x=><p key={x}>♕ {x}<small>مايو 2025</small></p>)}</article></section><section className="compact-panels page-width"><article><h3>الفرق والجمعيات الثقافية</h3><div className="icon-row"><b>جمعية الخط العربي</b><b>جمعية المسرح</b><b>نادي الأدب</b><b>فرقة نهر النيل</b></div></article><article><h3>شارك محتواك الثقافي</h3><p>لديك موهبة أو محتوى ثقافي؟ شاركه مع مجتمعنا.</p><a className="primary" href="/contact">أرسل محتواك</a></article></section></>}
+function CultureExtras(){return <><section className="compact-panels page-width"><article><h3>المكتبة الرقمية</h3><div className="culture-library"><img src="/assets/culture-hero-hq.webp" alt="كتب وتراث"/><div><h2>آلاف الكتب والمراجع الثقافية</h2><p>كتب التراث السوداني، الدراسات والبحوث، المجلات الثقافية والكتب المصورة.</p><a className="primary" href="/library">استكشف المكتبة</a></div></div></article><article><h3>المسابقات والجوائز</h3>{["مسابقة الشعر السنوية","جائزة الإبداع الفني","جائزة التصوير الضوئي"].map(x=><p key={x}>♕ {x}<small>مايو 2025</small></p>)}</article></section><section className="compact-panels page-width"><article><h3>الفرق والجمعيات الثقافية</h3><div className="icon-row"><b>جمعية الخط العربي</b><b>جمعية المسرح</b><b>نادي الأدب</b><b>فرقة نهر النيل</b></div></article><article><h3>شارك محتواك الثقافي</h3><p>لديك موهبة أو محتوى ثقافي؟ شاركه مع مجتمعنا.</p><a className="primary" href="/contact">أرسل محتواك</a></article></section></>}
 function SocialExtras(){return <section className="social-counts page-width motion">{[["120+","متطوع نشط"],["320+","طالب مستفيد"],["650+","فرصة دعم"],["1,850+","حالة إنسانية"],["3,250+","أسرة مستفيدة"],["12,680+","مستفيد"]].map(([n,l])=><div key={l}><i>♧</i><b>{n}</b><span>{l}</span></div>)}</section>}
 function HealthExtras(){return <><section className="health-help page-width motion"><div><h2>طلب المساعدة والتواصل مع الرابطة</h2><p>نحن معك في الحالات الصحية والإنسانية</p></div><div className="health-actions"><b>♡ رفع حالة لطلب طبي</b><b>♧ طلب مساعدة صحية عاجلة</b><b>☏ التواصل المباشر</b><b>▤ متابعة حالة</b></div><a className="primary" href="/contact">إرسال طلب المساعدة</a></section><section className="health-tips page-width"><SectionTitle>نصائح صحية</SectionTitle><div>{["متابعة دورية لحالتك المرضية","تغذية متوازنة لجسم أكثر صحة","المشي 30 دقيقة يومياً","اشرب الماء لصحة أفضل"].map((x,i)=><b className="motion" key={x}><i>{["♡","♧","♟","◉"][i]}</i>{x}</b>)}</div></section></>}
 function SupportBar(){return <section className="support-bar page-width motion"><i>☏</i><div><h2>نحن هنا لمساعدتك</h2><p>فريق الدعم جاهز للرد على استفسارك وتقديم المساعدة.</p></div><div><b>واتساب</b><span>+249 912 345 678</span></div><div><b>البريد الإلكتروني</b><span>info@nilenile.org</span></div><a className="outline light" href="/contact">تواصل معنا <Arrow/></a></section>}
+
+function InternalPage({type}:{type:InternalKey}){
+  const configs={
+    services:{
+      badge:"بوابتك الرقمية",title:"كل خدمات الرابطة",accent:"في مكان واحد",lead:"اكتشف منظومة متكاملة من الخدمات الرقمية المصممة لخدمة أبناء ولاية نهر النيل في الداخل والخارج.",hero:"/assets/home-hero-reference-v2.webp",icon:LayoutGrid,
+      stats:[["7","مسارات خدمية"],["24/7","وصول مستمر"],["35K+","مستفيد"],["98%","رضا المستخدمين"]],sectionTitle:"اختر الخدمة التي تحتاجها",sectionLead:"انتقل مباشرة إلى المجال المناسب واستفد من خدمات موثوقة وسريعة.",
+      featuredImage:"/assets/home-training-hq.webp",featuredTitle:"تعلّم وتطوّر من أي مكان",featuredText:"مركز التدريب بوابتك للدورات المهنية والبرامج العملية التي تساعدك على تطوير مهاراتك.",featuredHref:TRAINING_URL,featuredLabel:"زيارة مركز التدريب",
+      ctaTitle:"لم تجد الخدمة التي تبحث عنها؟",ctaText:"فريق الرابطة جاهز لمساعدتك وتوجيهك إلى المسار الصحيح.",ctaHref:"/contact",ctaLabel:"تواصل مع فريق الدعم",
+      items:[
+        {icon:GraduationCap,tag:"تعليم",title:"التعليم والتدريب",text:"مدرسة إلكترونية ومصادر تعليمية وبرامج تدريب مهني.",image:"/assets/education-hero-hq.webp",href:"/education"},
+        {icon:Stethoscope,tag:"صحة",title:"الخدمات الصحية",text:"استشارات ورعاية صحية ومساندة للحالات الطبية.",image:"/assets/health-hero-hq.webp",href:"/health"},
+        {icon:HandHeart,tag:"مجتمع",title:"الخدمات الاجتماعية",text:"دعم اجتماعي وحالات إنسانية ومبادرات للتكافل.",image:"/assets/social-hero-hq.webp",href:"/social"},
+        {icon:ChartNoAxesCombined,tag:"فرص",title:"الاستثمار",text:"فرص استثمارية وقطاعات واعدة ودليل للمستثمر.",image:"/assets/investment-hero-hq.webp",href:"/investment"},
+        {icon:Landmark,tag:"هوية",title:"الثقافة والتراث",text:"فعاليات ومحتوى ثقافي يحفظ تراث الولاية وإبداعها.",image:"/assets/culture-hero-hq.webp",href:"/culture"},
+        {icon:ShoppingCart,tag:"خارجي",title:"السوق السوداني",text:"منصة للمنتجات والخدمات والفرص التجارية السودانية.",image:"/assets/home-market-hq.webp",href:MARKET_URL},
+      ]
+    },
+    initiatives:{
+      badge:"أثر يمتد",title:"مبادرات تصنع الفرق",accent:"معاً نحو تنمية مستدامة",lead:"مشروعات حقيقية تجمع أبناء الولاية حول التعليم والصحة والتكافل والتنمية الاقتصادية.",hero:"/assets/investment-solar-hq.webp",icon:HeartHandshake,
+      stats:[["120+","مبادرة مكتملة"],["60+","شريك نجاح"],["12,680+","مستفيد"],["18","مشروعاً نشطاً"]],sectionTitle:"مبادراتنا الحالية",sectionLead:"ساهم بخبرتك أو وقتك أو دعمك، وكل مشاركة تصنع أثراً قابلاً للقياس.",
+      featuredImage:"/assets/social-education-hq.webp",featuredTitle:"مبادرة دعم المدارس",featuredText:"تطوير البيئة التعليمية وتوفير الأدوات الأساسية للطلاب والمعلمين في المناطق الأكثر احتياجاً.",featuredHref:"/contact",featuredLabel:"شارك في المبادرة",
+      ctaTitle:"لديك فكرة مبادرة؟",ctaText:"شاركنا فكرتك وسنساعدك على تحويلها إلى مشروع يخدم مجتمع الولاية.",ctaHref:"/contact",ctaLabel:"أرسل فكرتك الآن",
+      items:[
+        {icon:BookOpen,tag:"تعليم",title:"دعم المدارس",text:"تجهيز الفصول وتوفير الأدوات والمواد التعليمية.",image:"/assets/social-education-hq.webp",href:"/contact"},
+        {icon:HeartPulse,tag:"صحة",title:"صندوق العلاج",text:"مساندة المرضى وتوفير العلاج والأدوية للحالات المحتاجة.",image:"/assets/social-medical-hq.webp",href:"/contact"},
+        {icon:Building2,tag:"إعمار",title:"ترميم المنازل",text:"تحسين السكن للأسر المتضررة ورفع جودة الحياة.",image:"/assets/social-renovation-hq.webp",href:"/contact"},
+        {icon:Sprout,tag:"تنمية",title:"الزراعة المستدامة",text:"دعم المشروعات الزراعية الصغيرة ورفع الإنتاجية.",image:"/assets/invest-livestock-hq.webp",href:"/contact"},
+        {icon:Lightbulb,tag:"طاقة",title:"الطاقة الشمسية",text:"حلول طاقة نظيفة للمرافق والمجتمعات المحلية.",image:"/assets/investment-solar-hq.webp",href:"/contact"},
+        {icon:UsersRound,tag:"شباب",title:"تمكين الشباب",text:"تدريب وتأهيل مهني يفتح أبواب العمل وريادة الأعمال.",image:"/assets/home-training-hq.webp",href:TRAINING_URL},
+      ]
+    },
+    news:{
+      badge:"نبض الولاية",title:"الأخبار والفعاليات",accent:"كل جديد في مكان واحد",lead:"تابع أخبار الرابطة ومشروعاتها وفعالياتها التعليمية والثقافية والاجتماعية.",hero:"/assets/culture-seminar-hq.webp",icon:Newspaper,
+      stats:[["85+","فعالية سنوية"],["200+","خبر وتحديث"],["12","مجالاً مجتمعياً"],["25+","دولة مشاركة"]],sectionTitle:"أحدث الأخبار والتحديثات",sectionLead:"قصص ومبادرات وفعاليات تعكس حيوية مجتمع نهر النيل وتنوعه.",
+      featuredImage:"/assets/investment-hero-hq.webp",featuredTitle:"ملتقى الاستثمار والتنمية",featuredText:"لقاء يجمع الخبرات والمستثمرين وأبناء الولاية لمناقشة الفرص الواعدة ومشروعات التنمية.",featuredHref:"/contact",featuredLabel:"تفاصيل الفعالية",
+      ctaTitle:"لديك خبر أو فعالية؟",ctaText:"أرسل التفاصيل إلى فريق التحرير للمراجعة والنشر عبر منصات الرابطة.",ctaHref:"/contact",ctaLabel:"أرسل المحتوى",
+      items:[
+        {icon:GraduationCap,tag:"تعليم",title:"إطلاق منصة المدرسة الإلكترونية",text:"بيئة رقمية متكاملة للطلاب والمعلمين وأولياء الأمور.",image:"/assets/education-reference-news-1.png",href:"/contact"},
+        {icon:UsersRound,tag:"فعالية",title:"ملتقى شباب نهر النيل",text:"مساحة للحوار وتبادل الخبرات وصناعة المبادرات.",image:"/assets/culture-seminar-hq.webp",href:"/contact"},
+        {icon:Palette,tag:"ثقافة",title:"معرض الفنون السنوي",text:"احتفاء بإبداعات الفنانين والمواهب الشابة في الولاية.",image:"/assets/culture-gallery-hq.webp",href:"/contact"},
+        {icon:Stethoscope,tag:"صحة",title:"أسبوع الاستشارات الطبية",text:"استشارات مجانية عن بُعد في مجموعة من التخصصات.",image:"/assets/health-consult-hq.webp",href:"/contact"},
+        {icon:Sprout,tag:"استثمار",title:"فرص جديدة في القطاع الزراعي",text:"مشروعات واعدة للاستثمار الزراعي والصناعات المرتبطة.",image:"/assets/investment-orange-orchard.jpg",href:"/contact"},
+        {icon:Award,tag:"تدريب",title:"بدء التسجيل في البرامج المهنية",text:"مسارات عملية في الإدارة والتقنية واللغات والتصميم.",image:"/assets/course-project-hq.webp",href:TRAINING_URL},
+      ]
+    },
+    library:{
+      badge:"معرفة بلا حدود",title:"المكتبة الرقمية",accent:"مصادر موثوقة بين يديك",lead:"بوابة معرفية تجمع الكتب والأبحاث والمرئيات والملفات التعليمية والثقافية في تجربة بحث سهلة.",hero:"/assets/education-reference-library-books.png",icon:LibraryBig,
+      stats:[["2,500+","كتاب رقمي"],["1,200+","بحث ومقال"],["800+","فيديو تعليمي"],["3,000+","ملف ومصدر"]],sectionTitle:"استكشف أقسام المكتبة",sectionLead:"محتوى منظم يدعم الطلاب والباحثين والمهتمين بتاريخ وثقافة ولاية نهر النيل.",
+      featuredImage:"/assets/culture-hero-hq.webp",featuredTitle:"ذاكرة نهر النيل",featuredText:"مجموعة مختارة من الوثائق والصور والحكايات التي تحفظ هوية الولاية وتاريخها للأجيال القادمة.",featuredHref:"/contact",featuredLabel:"ساهم بمادة أرشيفية",
+      ctaTitle:"هل لديك كتاب أو بحث مفيد؟",ctaText:"ساهم في إثراء المكتبة وارسل مصدرك ليتم توثيقه ومراجعته قبل النشر.",ctaHref:"/contact",ctaLabel:"أضف مصدراً",
+      items:[
+        {icon:BookOpen,tag:"كتب",title:"الكتب الإلكترونية",text:"مراجع وكتب تعليمية وثقافية متاحة بطريقة منظمة.",image:"/assets/education-reference-library-books.png",href:"/contact"},
+        {icon:FileText,tag:"أبحاث",title:"الدراسات والمقالات",text:"أبحاث ومقالات متخصصة حول الولاية ومجالات التنمية.",image:"/assets/course-project-hq.webp",href:"/contact"},
+        {icon:Video,tag:"مرئيات",title:"الفيديوهات التعليمية",text:"محاضرات ودروس ولقاءات مسجلة يمكن الرجوع إليها.",image:"/assets/education-hero-hq.webp",href:TRAINING_URL},
+        {icon:Landmark,tag:"تراث",title:"التراث والتاريخ",text:"محتوى يوثق تاريخ المنطقة وعاداتها وشخصياتها المؤثرة.",image:"/assets/culture-folk-hq.webp",href:"/culture"},
+        {icon:FileImage,tag:"وسائط",title:"الصور والوثائق",text:"أرشيف بصري للمعالم والفعاليات والوثائق التاريخية.",image:"/assets/culture-gallery-hq.webp",href:"/contact"},
+        {icon:GraduationCap,tag:"تعلّم",title:"المصادر التدريبية",text:"ملفات عملية وأدلة مساعدة لتطوير المهارات المهنية.",image:"/assets/course-design-hq.webp",href:TRAINING_URL},
+      ]
+    }
+  };
+  const config=configs[type];
+  const HeroIcon=config.icon;
+  return <div className={`internal-redesign internal-${type}`}>
+    <section className="internal-hero">
+      <div className="internal-hero-media"><img src={config.hero} alt={config.title}/><span aria-hidden/></div>
+      <div className="internal-hero-copy motion"><small><HeroIcon/>{config.badge}</small><h1>{config.title}</h1><h2>{config.accent}</h2><p>{config.lead}</p><div><a href="#internal-content">استكشف الآن <ArrowLeft/></a><a href="/contact">تواصل معنا</a></div></div>
+      <div className="internal-orbits" aria-hidden><i/><i/><i/></div>
+    </section>
+
+    <section className="internal-kpis page-width motion">{config.stats.map(([value,label])=><article key={label}><b>{value}</b><small>{label}</small></article>)}</section>
+
+    <section id="internal-content" className="internal-content page-width"><header className="motion"><span/><div><small>اكتشف المزيد</small><h2>{config.sectionTitle}</h2><p>{config.sectionLead}</p></div><span/></header><div className="internal-card-grid">{config.items.map((item,index)=>{const Icon=item.icon;const external=item.href.startsWith("http");return <article className="motion" id={`internal-${type}-${index}`} key={item.title}><div className="internal-card-media"><img src={item.image} alt={item.title}/><span>{item.tag}</span></div><div><i><Icon/></i><h3>{item.title}</h3><p>{item.text}</p><a href={item.href} target={external?"_blank":undefined} rel={external?"noopener noreferrer":undefined}>{external?"فتح المنصة":"معرفة المزيد"}{external?<span aria-hidden>↗</span>:<ArrowLeft/>}</a></div></article>})}</div></section>
+
+    <section className="internal-featured page-width motion"><img src={config.featuredImage} alt={config.featuredTitle}/><div><small>اختيار مميز</small><h2>{config.featuredTitle}</h2><p>{config.featuredText}</p><a href={config.featuredHref} target={config.featuredHref.startsWith("http")?"_blank":undefined} rel={config.featuredHref.startsWith("http")?"noopener noreferrer":undefined}>{config.featuredLabel}{config.featuredHref.startsWith("http")?<span aria-hidden>↗</span>:<ArrowLeft/>}</a></div></section>
+
+    <section className="internal-cta page-width motion"><div><Sparkles/><span><h2>{config.ctaTitle}</h2><p>{config.ctaText}</p></span></div><a href={config.ctaHref}>{config.ctaLabel}<ArrowLeft/></a></section>
+  </div>;
+}
 
 function AboutMotion(){
   useEffect(()=>{
@@ -871,7 +1015,7 @@ function Register(){
       <button className="reg-hidden-submit" aria-label="إكمال التسجيل">إكمال التسجيل</button>
     </form></section>
     <section className="reg-join-banner"><div><h2>كن جزءاً من التغيير .. <span>انضم اليوم!</span></h2><p>عضويتك تساهم في بناء مجتمع رقمي قوي ومتكامل يخدم أبناء الولاية أينما كانوا</p><div><b><UsersRound/>تواصل فعال</b><b><MapPin/>فرص أكثر</b><b><Gift/>امتيازات أعمق</b></div></div><button onClick={()=>{location.href="/photo"}}>سجل الآن <ArrowLeft/></button><MemberCardArt compact/></section>
-    <section className="reg-dashboard"><h2><span/>لوحة الإحصائيات والتقارير<span/></h2><div className="reg-dash-grid"><article className="reg-bars"><h3>توزيع الأعضاء حسب الولايات</h3>{[["الخرطوم","22%"],["نهر النيل","18%"],["القاهرة","15%"],["كسلا","12%"],["أخرى","23%"]].map(([name,value],i)=><p key={name}><b style={{width:value}}/><span>{name}</span><small>{value}</small><i data-tone={i}/></p>)}</article><article><h3>توزيع الأعضاء حسب الجنس</h3><div className="donut purple"/><p>ذكور 62% &nbsp; إناث 38%</p></article><article className="reg-total"><h3>إجمالي الأعضاء</h3><strong>12,850</strong><b>مدن <em>320</em></b><b>دول <em>48</em></b><small>+245 عضو هذا الشهر</small></article><article><h3>توزيع الأعضاء حسب الفئة العمرية</h3><div className="donut multi"/><p>أقل من 20 حتى 60 فأكثر</p></article><article className="reg-map"><h3>توزيع الأعضاء حسب الدول</h3><Globe2/><a href="#">عرض الخريطة التفاعلية</a></article></div></section>
+    <section className="reg-dashboard"><h2><span/>لوحة الإحصائيات والتقارير<span/></h2><div className="reg-dash-grid"><article className="reg-bars"><h3>توزيع الأعضاء حسب الولايات</h3>{[["الخرطوم","22%"],["نهر النيل","18%"],["القاهرة","15%"],["كسلا","12%"],["أخرى","23%"]].map(([name,value],i)=><p key={name}><b style={{width:value}}/><span>{name}</span><small>{value}</small><i data-tone={i}/></p>)}</article><article><h3>توزيع الأعضاء حسب الجنس</h3><div className="donut purple"/><p>ذكور 62% &nbsp; إناث 38%</p></article><article className="reg-total"><h3>إجمالي الأعضاء</h3><strong>12,850</strong><b>مدن <em>320</em></b><b>دول <em>48</em></b><small>+245 عضو هذا الشهر</small></article><article><h3>توزيع الأعضاء حسب الفئة العمرية</h3><div className="donut multi"/><p>أقل من 20 حتى 60 فأكثر</p></article><article className="reg-map"><h3>توزيع الأعضاء حسب الدول</h3><Globe2/><a href="/contact">طلب عرض الخريطة التفاعلية</a></article></div></section>
     <section className="reg-bottom"><div className="reg-partners"><h3>شركاؤنا في النجاح</h3>{["اتحاد الجاليات السوداني","برنامج الأمم المتحدة","منظمة الصحة العالمية","البنك الزراعي السوداني","جامعة الخرطوم","وزارة التربية والتعليم"].map((name,index)=><b key={name}>{index%2?<Landmark/>:<Globe2/>}<small>{name}</small></b>)}</div><form className="reg-newsletter"><h3>اشترك في نشرتنا الإخبارية</h3><p>احصل على آخر أخبارنا وفعالياتنا</p><input type="email" placeholder="أدخل بريدك الإلكتروني"/><button>اشترك الآن</button></form></section>
   </div>
 }
@@ -981,4 +1125,4 @@ function Contact(){
   </div>
 }
 
-export default function NileSite({page}:{page:string}){const active=routeMap[page]||"home";const hideHeader=["membership","photo","payment","success"].includes(active);const hideFooter=["membership","photo","payment","success"].includes(active);return <div dir="rtl"><Motion/>{!hideHeader&&<Header active={active}/>}<main>{active==="home"?<Home/>:active==="about"?<AboutPage/>:active==="social"?<SocialPage/>:active==="education"?<EducationPage/>:active==="health"?<HealthPage/>:active==="investment"?<InvestmentPage/>:active==="culture"?<CulturePage/>:active==="membership"?<Membership/>:active==="register"?<Register/>:active==="photo"?<PhotoUpload/>:active==="payment"?<Payment/>:active==="success"?<Success/>:active==="contact"?<Contact/>:<PortalPage type={active}/>}</main>{!hideFooter&&<Footer/>}</div>}
+export default function NileSite({page}:{page:string}){const active=routeMap[page]||"home";const hideHeader=["membership","photo","payment","success"].includes(active);const hideFooter=["membership","photo","payment","success"].includes(active);return <div dir="rtl"><Motion/>{!hideHeader&&<Header active={active}/>}<main>{active==="home"?<Home/>:active==="about"?<AboutPage/>:active==="social"?<SocialPage/>:active==="education"?<EducationPage/>:active==="health"?<HealthPage/>:active==="investment"?<InvestmentPage/>:active==="culture"?<CulturePage/>:["services","initiatives","news","library"].includes(active)?<InternalPage type={active as InternalKey}/>:active==="membership"?<Membership/>:active==="register"?<Register/>:active==="photo"?<PhotoUpload/>:active==="payment"?<Payment/>:active==="success"?<Success/>:active==="contact"?<Contact/>:<Home/>}</main>{!hideFooter&&<Footer/>}</div>}
