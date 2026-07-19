@@ -661,13 +661,13 @@ function AboutPage(){
   ];
   return <div className="about-redesign">
     <section className="ab-hero">
-      <div className="ab-hero-media"><img src="/assets/about-hero-v2.webp" alt="جسر فوق نهر النيل والمناطق الزراعية المحيطة"/></div>
+      <div className="ab-hero-media"><picture><source media="(max-width: 760px)" srcSet="/assets/about-hero-mobile-exact.webp"/><img src="/assets/about-hero-exact.webp" alt="جسر فوق نهر النيل والمناطق الزراعية المحيطة"/></picture></div>
       <div className="ab-hero-copy motion"><h1>عن الرابطة</h1><h2>معاً.. من أجل ولاية مزدهرة ومجتمع متكافئ</h2><p>رابطة ولاية نهر النيل الإلكترونية هي منصة تجمع أبناء الولاية في كل مكان.<br/>نعمل بروح واحدة لخدمة أبنائها والارتقاء بولايتنا وتنميتها في شتى المجالات.</p></div>
-      <i className="ab-hero-wave" aria-hidden/>
+      <img className="ab-hero-wave" src="/assets/about-hero-wave-exact.webp" alt="" aria-hidden/>
     </section>
 
     <section className="ab-president page-width motion">
-      <div className="ab-president-photo"><img src="/assets/about-president-v2.webp" alt="الأستاذ هشام محمد الحسن رئيس الرابطة"/></div>
+      <div className="ab-president-photo"><picture><source media="(max-width: 760px)" srcSet="/assets/about-president-mobile-exact.webp"/><img src="/assets/about-president-exact.webp" alt="الأستاذ هشام محمد الحسن رئيس الرابطة"/></picture></div>
       <article><h2>كلمة رئيس الرابطة</h2><h3>الأستاذ / هشام محمد الحسن</h3><span className="ab-title-line"/><p>نؤمن بأن العمل المؤسسي والتخطيط الاستراتيجي هما أساس التغيير الحقيقي،<br/>وسنواصل العمل معكم بروح الفريق الواحد لتحقيق التنمية المستدامة<br/>لولاية نهر النيل وخدمة أبنائها أينما كانوا.</p><p>معاً.. نصنع مستقبلاً أفضل لولايتنا وأجيالنا القادمة.</p><strong className="ab-signature">Hisham Alhassan</strong></article>
       <aside><img src="/assets/membership-mark-transparent-v2.png" alt="شعار رابطة ولاية نهر النيل"/><b>رابطة ولاية<br/>نهر النيل<br/>الإلكترونية</b><i/><em/></aside>
     </section>
