@@ -661,7 +661,7 @@ function AboutPage(){
   ];
   return <div className="about-redesign">
     <div className="ab-top">
-      <picture className="ab-top-visual" aria-hidden><img src="/assets/about-top-arc-exact.webp" alt=""/></picture>
+      <div className="ab-top-visual" aria-hidden><img src="/assets/about-top-arc-exact.webp" alt=""/><i className="ab-top-clean-president"/></div>
       <section className="ab-hero">
         <div className="ab-hero-media"><picture><img src="/assets/about-hero-mobile-exact.webp" alt="جسر فوق نهر النيل والمناطق الزراعية المحيطة"/></picture></div>
         <div className="ab-hero-copy motion"><h1>عن الرابطة</h1><h2>معاً.. من أجل ولاية مزدهرة ومجتمع متكافئ</h2><p>رابطة ولاية نهر النيل الإلكترونية هي منصة تجمع أبناء الولاية في كل مكان.<br/>نعمل بروح واحدة لخدمة أبنائها والارتقاء بولايتنا وتنميتها في شتى المجالات.</p></div>
