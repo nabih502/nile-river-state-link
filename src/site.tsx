@@ -110,6 +110,16 @@ function Motion(){
     sections.forEach(section=>observer.observe(section));
     items.forEach(item=>observer.observe(item));
 
+    requestAnimationFrame(()=>{
+      if(hero&&!hero.classList.contains("site-section-in")){
+        hero.classList.add("site-section-in");
+        settleTimers.push(window.setTimeout(()=>hero.classList.add("site-settled"),1550));
+      }
+      heroParts.forEach(part=>{if(!part.classList.contains("in"))part.classList.add("in")});
+      heroText.forEach(node=>{if(!node.classList.contains("in"))node.classList.add("in")});
+      if(heroImage&&!heroImage.classList.contains("in"))heroImage.classList.add("in");
+    });
+
     const fallbackTimer=window.setTimeout(()=>{
       sections.forEach(section=>{if(!section.classList.contains("site-section-in"))section.classList.add("site-section-in","site-settled")});
       items.forEach(item=>{if(!item.classList.contains("in"))item.classList.add("in","site-settled")});
