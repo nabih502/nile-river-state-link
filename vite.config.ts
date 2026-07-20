@@ -6,4 +6,8 @@ export default defineConfig({
   server: {
     watch: { useFsEvents: false, usePolling: true },
   },
+  preview: {
+    port: 3000,
+    host: true,
+  },
 });
