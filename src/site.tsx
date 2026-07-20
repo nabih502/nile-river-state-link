@@ -110,6 +110,11 @@ function Motion(){
     sections.forEach(section=>observer.observe(section));
     items.forEach(item=>observer.observe(item));
 
+    const fallbackTimer=window.setTimeout(()=>{
+      sections.forEach(section=>{if(!section.classList.contains("site-section-in"))section.classList.add("site-section-in","site-settled")});
+      items.forEach(item=>{if(!item.classList.contains("in"))item.classList.add("in","site-settled")});
+    },300);
+
     const moveHero=(event:PointerEvent)=>{
       if(!hero||event.pointerType==="touch")return;
       const rect=hero.getBoundingClientRect();
@@ -130,6 +135,7 @@ function Motion(){
     return()=>{
       observer.disconnect();
       settleTimers.forEach(timer=>window.clearTimeout(timer));
+      window.clearTimeout(fallbackTimer);
       hero?.removeEventListener("pointermove",moveHero);
       hero?.removeEventListener("pointerleave",resetHero);
       interactives.forEach(item=>{item.removeEventListener("pointermove",enter);item.removeEventListener("pointerleave",leave)});
