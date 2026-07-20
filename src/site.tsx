@@ -1,19 +1,5 @@
-"use client";
-
 import { FormEvent, useEffect, useRef, useState } from "react";
-import {
-  Aperture, ArrowLeft, Award, BadgeCheck, BadgePercent, Banknote,
-  BookOpen, BriefcaseBusiness, Building2, CalendarDays, Camera, ChartNoAxesCombined, ChartPie,
-  Check, ChevronLeft, CircleAlert, CircleCheckBig, CircleHelp, Clock3, CreditCard, Crown,
-  Eye, Factory, Feather, FileImage, FileText, FileUp, Gem, Gift, Globe2, GraduationCap,
-  HandHeart, Handshake, Headphones, HeartHandshake, HeartPulse,
-  Landmark, LayoutGrid, LibraryBig, Lightbulb, Menu, Megaphone, MonitorCheck, Music2, Network, Newspaper,
-  MessageCircle,
-  Info, LockKeyhole, Mail, MapPin, Paperclip, Percent, Phone, QrCode, ReceiptText,
-  Palette, Pill, PlayCircle, RefreshCw, ScanFace, Search, Settings2, Share2, Shield, ShieldCheck, Stethoscope,
-  Send, ShoppingCart, Sparkles, Sprout, Store, Tags, Target, TrendingUp, Trophy, Truck,
-  Upload, UserCheck, UserPlus, UserRound, UsersRound, Video, WalletCards, X,
-} from "lucide-react";
+import { Aperture, ArrowLeft, Award, BadgeCheck, BadgePercent, Banknote, BookOpen, BriefcaseBusiness, Building2, CalendarDays, Camera, ChartNoAxesCombined, ChartPie, Check, ChevronLeft, CircleAlert, CircleCheckBig, Circle as CircleHelp, Clock3, CreditCard, Crown, Eye, Factory, Feather, FileImage, FileText, FileUp, Gem, Gift, Globe as Globe2, GraduationCap, HandHeart, Handshake, Headphones, HeartHandshake, HeartPulse, Landmark, LayoutGrid, LibraryBig, Lightbulb, Menu, Megaphone, MonitorCheck, Music2, Network, Newspaper, MessageCircle, Info, LockKeyhole, Mail, MapPin, Paperclip, Percent, Phone, QrCode, ReceiptText, Palette, Pill, CirclePlay as PlayCircle, RefreshCw, ScanFace, Search, Settings2, Share2, Shield, ShieldCheck, Stethoscope, Send, ShoppingCart, Sparkles, Sprout, Store, Tags, Target, TrendingUp, Trophy, Truck, Upload, UserCheck, UserPlus, UserRound, UsersRound, Video, WalletCards, X } from "lucide-react";
 
 type InternalKey = "services" | "initiatives" | "news" | "library";
 type PageKey = "home" | "about" | "social" | "education" | "health" | "investment" | "culture" | InternalKey | "membership" | "register" | "photo" | "payment" | "success" | "contact";
