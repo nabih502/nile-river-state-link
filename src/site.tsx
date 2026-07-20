@@ -204,7 +204,7 @@ function Home(){
         </div>
       </div>
       <div className="home-hero-stage motion">
-        <img src="/assets/home-hero-reference-v2.webp" alt="نهر النيل والجسور في ولاية نهر النيل"/>
+        <img src="/assets/home-hero-reference-v2%20copy.webp" alt="نهر النيل والجسور في ولاية نهر النيل"/>
         <div className="home-image-fade" aria-hidden/>
         <aside className="home-benefit-panel">
           {heroBenefits.map(item=>{const Icon=item.icon;return <div key={item.title}><Icon/><span><b>{item.title}</b><small>{item.text}</small></span></div>})}
