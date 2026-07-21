@@ -302,7 +302,7 @@ body{font-family:"Cairo",Tahoma,Arial,sans-serif}
   .home-programs{grid-template-columns:1fr}.home-program{height:420px;grid-template-columns:1fr 1fr;grid-template-rows:1fr 64px}.program-copy{padding:16px 13px!important}.program-copy h2{font-size:16px}.program-copy ul{font-size:9px}.home-program>img{min-width:0}
   .home-opportunity{height:auto;min-height:190px;grid-template-columns:58px 1fr;padding:18px}.home-opportunity>svg{width:52px}.home-opportunity h2{font-size:16px}.home-opportunity>a{grid-column:1/-1;justify-content:center}
   .home-market{grid-template-columns:1fr;padding:16px;text-align:center}.home-market>img{width:100%;height:200px}.market-copy>div{grid-template-columns:1fr 1fr}.home-market>a{width:100%}
-  .home-health-cards{grid-template-columns:1fr}.hhc-pharmacy-top{flex-direction:column}.hhc-pharmacy-img{width:100%;height:180px}
+  .home-health-cards{grid-template-columns:1fr}
   .home-news-grid{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:12px}.home-news-card{min-width:78vw;scroll-snap-align:center}
   .site-footer{padding-inline:20px}.footer-brand .brand{width:170px}.footer-brand .brand img{width:170px}
 }
@@ -745,36 +745,27 @@ body:has(.health-redesign) .site-footer{margin-top:0}
 .home-health-cards{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px;direction:rtl}
 .hhc-card{border-radius:12px;overflow:hidden;border:1px solid #e4e7ea;background:#fff;display:flex;flex-direction:column;transition:transform .22s,box-shadow .22s}
 .hhc-card:hover{transform:translateY(-4px);box-shadow:0 14px 32px rgba(20,35,54,.12)}
-.hhc-clinic{position:relative}
-.hhc-badge{position:absolute;top:14px;right:14px;z-index:2;background:#0c7e4a;color:#fff;font-size:10px;font-weight:800;padding:3px 10px;border-radius:20px;letter-spacing:.3px}
-.hhc-img-wrap{width:100%;height:195px;overflow:hidden;flex-shrink:0}
+.hhc-img-wrap{width:100%;height:200px;overflow:hidden;flex-shrink:0;position:relative}
 .hhc-img-wrap img{width:100%;height:100%;object-fit:cover;object-position:center;transition:transform .4s}
 .hhc-card:hover .hhc-img-wrap img{transform:scale(1.04)}
-.hhc-body{padding:20px 22px 22px;display:flex;flex-direction:column;gap:10px;flex:1}
-.hhc-title-row{display:flex;align-items:center;justify-content:space-between}
-.hhc-title-row h3{font-size:19px;font-weight:800;color:#14263a;margin:0}
-.hhc-icon-wrap{width:40px;height:40px;border-radius:9px;background:#e8f4f0;color:#0c7e4a;display:flex;align-items:center;justify-content:center}
+.hhc-badge{position:absolute;top:12px;right:12px;z-index:2;display:flex;align-items:center;gap:5px;background:#0c7e4a;color:#fff;font-size:10px;font-weight:800;padding:4px 11px;border-radius:20px}
+.hhc-body{padding:18px 20px 20px;display:flex;flex-direction:column;gap:11px;flex:1}
+.hhc-title-row{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.hhc-title-row h3{font-size:18px;font-weight:800;color:#14263a;margin:0;display:flex;align-items:center;gap:7px}
+.hhc-icon-circle{width:38px;height:38px;border-radius:50%;background:#e8f4f0;color:#0c7e4a;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .hhc-body>p{font-size:13px;color:#5a6a7a;line-height:1.6;margin:0}
-.hhc-features{display:flex;gap:10px;flex-wrap:wrap}
-.hhc-features span{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:#0c7e4a;background:#e8f4f0;padding:4px 10px;border-radius:20px}
-.hhc-cta{margin-top:auto;display:flex;align-items:center;justify-content:center;gap:7px;height:46px;border-radius:8px;background:#0c7e4a;color:#fff;font-size:13px;font-weight:800;text-decoration:none;transition:filter .18s,transform .18s}
-.hhc-cta:hover{filter:brightness(1.1);transform:translateY(-2px)}
-.hhc-pharmacy{background:linear-gradient(145deg,#0f2a3e 0,#163348 100%);color:#fff;border-color:#1e3f56}
-.hhc-pharmacy-top{display:flex;gap:0;flex:1}
-.hhc-pharmacy-img{width:45%;overflow:hidden;flex-shrink:0}
-.hhc-pharmacy-img img{width:100%;height:100%;object-fit:cover;object-position:center;transition:transform .4s}
-.hhc-card:hover .hhc-pharmacy-img img{transform:scale(1.04)}
-.hhc-pharmacy-info{padding:22px 20px;display:flex;flex-direction:column;gap:12px;flex:1}
-.hhc-pharmacy-info h3{font-size:18px;font-weight:800;color:#fff;margin:0;display:flex;align-items:center;gap:8px}
-.hhc-pharmacy-info>p{font-size:12px;color:#a8c4d8;line-height:1.55;margin:0}
+.hhc-tags{display:flex;gap:8px;flex-wrap:wrap}
+.hhc-tags span{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:#0c7e4a;background:#e8f4f0;padding:4px 11px;border-radius:20px}
 .hhc-checklist{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:7px}
-.hhc-checklist li{display:flex;align-items:center;gap:7px;font-size:11.5px;color:#cde0ed;font-weight:600}
-.hhc-checklist li svg{color:#4fb58a;flex-shrink:0}
-.hhc-pharmacy-actions{padding:0 20px 16px;display:flex;gap:10px}
-.hhc-action-btn{display:flex;align-items:center;gap:6px;padding:9px 18px;border-radius:7px;background:#1a6e4a;color:#fff;font-size:12px;font-weight:800;text-decoration:none;transition:background .18s}
-.hhc-action-btn:hover{background:#22885c}
-.hhc-more{display:flex;align-items:center;justify-content:flex-end;gap:4px;padding:10px 20px 16px;font-size:12px;color:#a8c4d8;font-weight:700;text-decoration:none;border-top:1px solid rgba(255,255,255,.08)}
-.hhc-more:hover{color:#fff}
+.hhc-checklist li{display:flex;align-items:center;gap:7px;font-size:12px;color:#3a5068;font-weight:600}
+.hhc-checklist li svg{color:#0c7e4a;flex-shrink:0}
+.hhc-cta-primary{margin-top:auto;display:flex;align-items:center;justify-content:center;gap:7px;height:46px;border-radius:8px;background:#0c7e4a;color:#fff;font-size:13px;font-weight:800;text-decoration:none;transition:filter .18s,transform .18s}
+.hhc-cta-primary:hover{filter:brightness(1.1);transform:translateY(-2px)}
+.hhc-cta-outline{display:flex;align-items:center;justify-content:center;gap:7px;height:44px;border-radius:8px;border:2px solid #0c7e4a;color:#0c7e4a;font-size:13px;font-weight:800;text-decoration:none;transition:background .18s,color .18s}
+.hhc-cta-outline:hover{background:#0c7e4a;color:#fff}
+.hhc-more-link{display:flex;align-items:center;justify-content:center;gap:4px;font-size:12px;color:#8a9aaa;font-weight:700;text-decoration:none;padding-top:4px}
+.hhc-more-link:hover{color:#0c7e4a}
+.hhc-img-wrap--pharmacy .hhc-badge{background:#1d5a8a}
   .home-program:hover{transform:translateY(-6px);box-shadow:0 15px 29px rgba(23,38,54,.14);border-color:#d9a566}.home-program:hover>img{transform:scale(1.055)}.program-features>b:hover{background:#fff5e9;color:#d87500}.program-features>b:hover svg{transform:scale(1.14)}
   .home-news-card:hover{transform:translateY(-6px);box-shadow:0 14px 28px rgba(23,38,54,.14);border-color:#efb168}.home-news-card:hover>img{transform:scale(1.07)}.all-news-link:hover{color:#d87500;transform:translateX(-5px)}
 

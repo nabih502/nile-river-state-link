@@ -302,46 +302,44 @@ function Home(){
     </section>
 
     <section className="home-health-cards page-width">
-      <div className="hhc-card hhc-clinic motion">
-        <div className="hhc-badge">الأكثر استفداماً</div>
+      {/* بطاقة العيادة أونلاين */}
+      <div className="hhc-card motion">
         <div className="hhc-img-wrap">
+          <span className="hhc-badge"><Stethoscope size={13}/> الأكثر استخداماً</span>
           <img src="/assets/WhatsApp_Image_2026-07-21_at_16.29.04.jpeg" alt="عيادة أونلاين"/>
         </div>
         <div className="hhc-body">
           <div className="hhc-title-row">
             <h3>عيادة أونلاين</h3>
-            <span className="hhc-icon-wrap"><MonitorCheck size={22}/></span>
+            <span className="hhc-icon-circle"><MonitorCheck size={20}/></span>
           </div>
           <p>استشر الأطباء المختصين عبر الإنترنت من أي مكان وفي أي وقت</p>
-          <div className="hhc-features">
-            <span><CalendarDays size={15}/> مواعيد إلكترونية</span>
-            <span><Video size={15}/> كشف عن بعد</span>
+          <div className="hhc-tags">
+            <span><CalendarDays size={13}/> مواعيد إلكترونية</span>
+            <span><Video size={13}/> كشف عن بعد</span>
           </div>
-          <a className="hhc-cta" href="/health"><MonitorCheck size={16}/> ابدأ الاستشارة الآن <ChevronLeft size={14}/></a>
+          <a className="hhc-cta-primary" href="/health"><MonitorCheck size={15}/> ابدأ الاستشارة الآن <ChevronLeft size={13}/></a>
         </div>
       </div>
 
-      <div className="hhc-card hhc-pharmacy motion">
-        <div className="hhc-pharmacy-top">
-          <div className="hhc-pharmacy-img">
-            <img src="/assets/health-pharmacy-hq.webp" alt="الصيدلية الخيرية"/>
-          </div>
-          <div className="hhc-pharmacy-info">
-            <div className="hhc-title-row">
-              <h3><Pill size={18}/> الصيدلية الخيرية</h3>
-            </div>
-            <p>توفير الأدوية للمحتاجين وأسر الأعضاء</p>
-            <ul className="hhc-checklist">
-              <li><Check size={14}/> أدوية أساسية ومزمنة</li>
-              <li><Check size={14}/> دعم الحالات الطارئة</li>
-              <li><Check size={14}/> شراكات مع صيدليات معتمدة</li>
-            </ul>
-          </div>
+      {/* بطاقة الصيدلية الخيرية */}
+      <div className="hhc-card motion">
+        <div className="hhc-img-wrap hhc-img-wrap--pharmacy">
+          <img src="/assets/health-pharmacy-hq.webp" alt="الصيدلية الخيرية"/>
         </div>
-        <div className="hhc-pharmacy-actions">
-          <a href="/health" className="hhc-action-btn"><HeartPulse size={15}/> طلب دواء <ChevronLeft size={13}/></a>
+        <div className="hhc-body">
+          <div className="hhc-title-row">
+            <h3><Pill size={17}/> الصيدلية الخيرية</h3>
+          </div>
+          <p>توفير الأدوية للمحتاجين وأسر الأعضاء</p>
+          <ul className="hhc-checklist">
+            <li><Check size={13}/> أدوية أساسية ومزمنة</li>
+            <li><Check size={13}/> دعم الحالات الطارئة</li>
+            <li><Check size={13}/> شراكات مع صيدليات معتمدة</li>
+          </ul>
+          <a className="hhc-cta-outline" href="/health"><HeartHandshake size={15}/> طلب دواء <ChevronLeft size={13}/></a>
+          <a className="hhc-more-link" href="/health">عرض المزيد <ChevronLeft size={12}/></a>
         </div>
-        <a className="hhc-more" href="/health">عرض المزيد <ChevronLeft size={13}/></a>
       </div>
     </section>
 
