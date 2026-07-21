@@ -8,17 +8,29 @@ import "@fontsource/cairo/800.css";
 import "@fontsource/cairo/900.css";
 import "./globals.css";
 import NileSite from "./site";
+import AdminApp from "./admin";
 
-function getPathPage(): string {
-  const path = window.location.pathname.replace(/^\/+|\/+$/g, "");
-  return path || "home";
+function parseRoute(): { page: string; slug?: string } {
+  const raw = window.location.pathname.replace(/^\/+|\/+$/g, "") || "home";
+  const parts = raw.split("/");
+  if (parts.length >= 2 && ["news", "events"].includes(parts[0])) {
+    return { page: `${parts[0]}-detail`, slug: parts[1] };
+  }
+  return { page: parts[0] };
+}
+
+function navigate(href: string, setter: (r: { page: string; slug?: string }) => void) {
+  const url = href.startsWith("/") ? href : "/" + href;
+  window.history.pushState({}, "", url);
+  setter(parseRoute());
+  window.scrollTo(0, 0);
 }
 
 function App() {
-  const [page, setPage] = useState(getPathPage);
+  const [route, setRoute] = useState(parseRoute);
 
   useEffect(() => {
-    const onPop = () => setPage(getPathPage());
+    const onPop = () => setRoute(parseRoute());
     window.addEventListener("popstate", onPop);
     return () => window.removeEventListener("popstate", onPop);
   }, []);
@@ -32,17 +44,14 @@ function App() {
       if (anchor.target === "_blank") return;
       if (href.startsWith("#")) return;
       event.preventDefault();
-      const target = href.replace(/^\/+|\/+$/g, "") || "home";
-      const url = href.startsWith("/") ? href : "/" + href;
-      window.history.pushState({}, "", url);
-      setPage(target);
-      window.scrollTo(0, 0);
+      navigate(href, setRoute);
     };
     document.addEventListener("click", onClick);
     return () => document.removeEventListener("click", onClick);
   }, []);
 
-  return <NileSite page={page} />;
+  if (route.page === "admin") return <AdminApp />;
+  return <NileSite page={route.page} slug={route.slug} />;
 }
 
 createRoot(document.getElementById("root")!).render(

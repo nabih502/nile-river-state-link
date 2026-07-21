@@ -1,8 +1,9 @@
 import { FormEvent, useEffect, useRef, useState } from "react";
+import { supabase } from "./supabase";
 import { Aperture, ArrowLeft, Award, BadgeCheck, BadgePercent, Banknote, BookOpen, BriefcaseBusiness, Building2, CalendarDays, Camera, ChartNoAxesCombined, ChartPie, Check, ChevronLeft, CircleAlert, CircleCheckBig, Circle as CircleHelp, Clock3, CreditCard, Crown, Eye, Factory, Feather, FileImage, FileText, FileUp, Gem, Gift, Globe as Globe2, GraduationCap, HandHeart, Handshake, Headphones, HeartHandshake, HeartPulse, Landmark, LayoutGrid, LibraryBig, Lightbulb, Menu, Megaphone, MonitorCheck, Music2, Network, Newspaper, MessageCircle, Info, LockKeyhole, Mail, MapPin, Paperclip, Percent, Phone, QrCode, ReceiptText, Palette, Pill, CirclePlay as PlayCircle, RefreshCw, ScanFace, Search, Settings2, Share2, Shield, ShieldCheck, Stethoscope, Send, ShoppingCart, Sparkles, Sprout, Store, Tags, Target, TrendingUp, Trophy, Truck, Upload, UserCheck, UserPlus, UserRound, UsersRound, Video, WalletCards, X } from "lucide-react";
 
 type InternalKey = "services" | "initiatives" | "news" | "library";
-type PageKey = "home" | "about" | "social" | "education" | "health" | "investment" | "culture" | InternalKey | "membership" | "register" | "photo" | "payment" | "success" | "contact";
+type PageKey = "home" | "about" | "social" | "education" | "health" | "investment" | "culture" | InternalKey | "membership" | "register" | "photo" | "payment" | "success" | "contact" | "events" | "news-detail" | "events-detail";
 type PortalKey = "social" | "education" | "health" | "investment" | "culture";
 
 const MARKET_URL="https://sudan-market.com/";
@@ -12,10 +13,11 @@ const routeMap: Record<string, PageKey> = {
   home:"home", about:"about", social:"social", education:"education", health:"health", investment:"investment", culture:"culture",
   services:"services", initiatives:"initiatives", news:"news", library:"library",
   membership:"membership", register:"register", photo:"photo", payment:"payment", success:"success", contact:"contact",
+  events:"events", "news-detail":"news-detail", "events-detail":"events-detail",
 };
 
 const nav = [["/","الرئيسية"],["/about","عن الرابطة"],["/social","الخدمات"],["/investment","المبادرات"],["/culture","الثقافة"],["/education","التعليم"],["/contact","تواصل معنا"]];
-const homeNav = [["/","الرئيسية"],["/about","عن الرابطة"],["/education","التعليم"],["/health","الصحة"],["/social","الاجتماعية"],["/culture","الثقافية"],[MARKET_URL,"السوق السوداني"],["/investment","الاستثمار"],["/news","الأخبار والفعاليات"],["/contact","تواصل معنا"]];
+const homeNav = [["/","الرئيسية"],["/about","عن الرابطة"],["/education","التعليم"],["/health","الصحة"],["/social","الاجتماعية"],["/culture","الثقافية"],[MARKET_URL,"السوق السوداني"],["/investment","الاستثمار"],["/news","الأخبار"],["/events","الفعاليات"],["/contact","تواصل معنا"]];
 const socialNav = [["/","الرئيسية"],["/about","عن الرابطة"],["/social","الخدمات"],["/investment","المبادرات"],["/culture","الأخبار والفعاليات"],["/education","المكتبة الرقمية"],["/contact","تواصل معنا"]];
 
 const info: Record<PortalKey, {title:string; accent:string; lead:string; hero:string; icon:string; tabs:string[]; stats:[string,string][]; cards:{title:string;text:string;image?:string;icon:string}[]; section:string}> = {
@@ -1161,7 +1163,13 @@ function Success(){return <MemberStepShell className="success-step"><header clas
 function Contact(){
   const [sent,setSent]=useState(false);
   const [fileName,setFileName]=useState("");
-  const submit=(event:FormEvent)=>{event.preventDefault();setSent(true)};
+  const [name,setName]=useState("");
+  const [email,setEmail]=useState("");
+  const [phone,setPhone]=useState("");
+  const [subject,setSubject]=useState("");
+  const [message,setMessage]=useState("");
+  const [submitting,setSubmitting]=useState(false);
+  const submit=async(event:FormEvent)=>{event.preventDefault();setSubmitting(true);await supabase.from("contact_messages").insert({name,email,phone,subject,message});setSubmitting(false);setSent(true)};
   const benefits=[
     {icon:UsersRound,title:"نحن معكم",text:"نتواصل معكم بما يسهم في تطوير خدماتنا"},
     {icon:Globe2,title:"خدمتكم أينما كنتم",text:"ندعمكم من داخل وخارج ولاية نهر النيل"},
@@ -1213,13 +1221,13 @@ function Contact(){
         <h2>أرسل لنا رسالة</h2>
         <span className="ct-title-line"/>
         {sent?<div className="ct-sent"><CircleCheckBig/><h2>تم إرسال رسالتك بنجاح</h2><p>سنتواصل معك في أقرب وقت.</p><button type="button" onClick={()=>setSent(false)}>إرسال رسالة أخرى</button></div>:<div className="ct-form-fields">
-          <label className="ct-control"><UserRound/><input required aria-label="الاسم الكامل" placeholder="الاسم الكامل *"/></label>
-          <label className="ct-control"><Mail/><input required type="email" aria-label="البريد الإلكتروني" placeholder="البريد الإلكتروني *"/></label>
-          <label className="ct-control wide"><Phone/><input type="tel" aria-label="رقم الجوال" placeholder="رقم الجوال"/></label>
-          <label className="ct-control wide select"><select required aria-label="اختر نوع الرسالة" defaultValue=""><option value="" disabled>اختر نوع الرسالة *</option><option>استفسار عام</option><option>شكوى</option><option>اقتراح</option><option>دعم فني</option></select></label>
-          <label className="ct-control wide message"><FileText/><textarea required rows={5} aria-label="نص الرسالة" placeholder="نص الرسالة *"/></label>
+          <label className="ct-control"><UserRound/><input required value={name} onChange={e=>setName(e.target.value)} aria-label="الاسم الكامل" placeholder="الاسم الكامل *"/></label>
+          <label className="ct-control"><Mail/><input required type="email" value={email} onChange={e=>setEmail(e.target.value)} aria-label="البريد الإلكتروني" placeholder="البريد الإلكتروني *"/></label>
+          <label className="ct-control wide"><Phone/><input type="tel" value={phone} onChange={e=>setPhone(e.target.value)} aria-label="رقم الجوال" placeholder="رقم الجوال"/></label>
+          <label className="ct-control wide select"><select required value={subject} onChange={e=>setSubject(e.target.value)} aria-label="اختر نوع الرسالة"><option value="" disabled>اختر نوع الرسالة *</option><option>استفسار عام</option><option>شكوى</option><option>اقتراح</option><option>دعم فني</option></select></label>
+          <label className="ct-control wide message"><FileText/><textarea required rows={5} value={message} onChange={e=>setMessage(e.target.value)} aria-label="نص الرسالة" placeholder="نص الرسالة *"/></label>
           <label className="ct-attachment wide"><Paperclip/><span><b>{fileName||"إرفاق ملف (اختياري)"}</b><small>ارفق الملفات بصيغة (PDF, JPG, PNG) وبحجم لا يتجاوز 5MB</small></span><input type="file" accept="image/jpeg,image/png,application/pdf" onChange={event=>setFileName(event.target.files?.[0]?.name||"")}/></label>
-          <button className="ct-submit wide" type="submit"><Send/>إرسال الرسالة</button>
+          <button className="ct-submit wide" type="submit" disabled={submitting}><Send/>{submitting?"جاري الإرسال...":"إرسال الرسالة"}</button>
         </div>}
       </form>
     </section>
@@ -1236,4 +1244,134 @@ function Contact(){
   </div>
 }
 
-export default function NileSite({page}:{page:string}){const active=routeMap[page]||"home";const hideHeader=["membership","photo","payment","success"].includes(active);const hideFooter=["membership","photo","payment","success"].includes(active);return <div dir="rtl"><Motion/>{!hideHeader&&<Header active={active}/>}<main>{active==="home"?<Home/>:active==="about"?<AboutPage/>:active==="social"?<SocialPage/>:active==="education"?<EducationPage/>:active==="health"?<HealthPage/>:active==="investment"?<InvestmentPage/>:active==="culture"?<CulturePage/>:["services","initiatives","news","library"].includes(active)?<InternalPage type={active as InternalKey}/>:active==="membership"?<Membership/>:active==="register"?<Register/>:active==="photo"?<PhotoUpload/>:active==="payment"?<Payment/>:active==="success"?<Success/>:active==="contact"?<Contact/>:<Home/>}</main>{!hideFooter&&<Footer/>}</div>}
+// ─── News list page ──────────────────────────────────────────────────────────
+function NewsListPage() {
+  const [items, setItems] = useState<{id:string;title:string;slug:string;excerpt:string;image_url:string;category:string;published_at:string|null;created_at:string}[]>([]);
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    supabase.from("news").select("id,title,slug,excerpt,image_url,category,published_at,created_at").eq("published",true).order("published_at",{ascending:false}).then(({data})=>{setItems(data??[]);setLoading(false);});
+  }, []);
+  return (
+    <div dir="rtl">
+      <section className="inner-hero" style={{background:"linear-gradient(135deg,#1e3a5f 0%,#2563eb 100%)"}}>
+        <div className="page-width"><h1>الأخبار</h1><p>آخر الأخبار والمستجدات من رابطة ولاية نهر النيل</p></div>
+      </section>
+      <section className="page-width" style={{padding:"3rem 1rem"}}>
+        {loading && <p style={{textAlign:"center",color:"#64748b"}}>جاري التحميل...</p>}
+        {!loading && items.length === 0 && <p style={{textAlign:"center",color:"#64748b"}}>لا توجد أخبار منشورة حالياً</p>}
+        <div className="news-grid">
+          {items.map(item => (
+            <a key={item.id} href={`/news/${item.slug}`} className="news-card">
+              {item.image_url ? <img src={item.image_url} alt={item.title} /> : <div className="news-card-placeholder" />}
+              <div className="news-card-body">
+                <span className="news-cat">{item.category}</span>
+                <h3>{item.title}</h3>
+                {item.excerpt && <p>{item.excerpt}</p>}
+                <small>{item.published_at ? new Date(item.published_at).toLocaleDateString("ar-SA") : new Date(item.created_at).toLocaleDateString("ar-SA")}</small>
+              </div>
+            </a>
+          ))}
+        </div>
+      </section>
+    </div>
+  );
+}
+
+// ─── News detail page ─────────────────────────────────────────────────────────
+function NewsDetailPage({slug}:{slug?:string}) {
+  const [item, setItem] = useState<{title:string;body:string;excerpt:string;image_url:string;category:string;published_at:string|null;created_at:string}|null>(null);
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    if (!slug) return;
+    supabase.from("news").select("*").eq("slug",slug).eq("published",true).maybeSingle().then(({data})=>{setItem(data);setLoading(false);});
+  }, [slug]);
+  if (loading) return <div style={{padding:"6rem 1rem",textAlign:"center",color:"#64748b"}}>جاري التحميل...</div>;
+  if (!item) return (
+    <div style={{padding:"6rem 1rem",textAlign:"center"}}>
+      <h2 style={{color:"#dc2626"}}>الخبر غير موجود</h2>
+      <a href="/news" style={{color:"#2563eb"}}>العودة للأخبار</a>
+    </div>
+  );
+  return (
+    <div dir="rtl">
+      {item.image_url && <div className="detail-hero-img"><img src={item.image_url} alt={item.title} /></div>}
+      <article className="detail-article page-width">
+        <span className="news-cat">{item.category}</span>
+        <h1>{item.title}</h1>
+        <small className="detail-date">{item.published_at ? new Date(item.published_at).toLocaleDateString("ar-SA",{year:"numeric",month:"long",day:"numeric"}) : new Date(item.created_at).toLocaleDateString("ar-SA",{year:"numeric",month:"long",day:"numeric"})}</small>
+        {item.excerpt && <p className="detail-excerpt">{item.excerpt}</p>}
+        <div className="detail-body" dangerouslySetInnerHTML={{__html: item.body.replace(/\n/g,"<br/>")}} />
+        <a href="/news" className="detail-back">← العودة للأخبار</a>
+      </article>
+    </div>
+  );
+}
+
+// ─── Events list page ─────────────────────────────────────────────────────────
+function EventsListPage() {
+  const [items, setItems] = useState<{id:string;title:string;slug:string;excerpt:string;image_url:string;location:string;event_date:string}[]>([]);
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    supabase.from("events").select("id,title,slug,excerpt,image_url,location,event_date").eq("published",true).order("event_date",{ascending:false}).then(({data})=>{setItems(data??[]);setLoading(false);});
+  }, []);
+  return (
+    <div dir="rtl">
+      <section className="inner-hero" style={{background:"linear-gradient(135deg,#14532d 0%,#16a34a 100%)"}}>
+        <div className="page-width"><h1>الفعاليات</h1><p>فعاليات وأنشطة رابطة ولاية نهر النيل</p></div>
+      </section>
+      <section className="page-width" style={{padding:"3rem 1rem"}}>
+        {loading && <p style={{textAlign:"center",color:"#64748b"}}>جاري التحميل...</p>}
+        {!loading && items.length === 0 && <p style={{textAlign:"center",color:"#64748b"}}>لا توجد فعاليات منشورة حالياً</p>}
+        <div className="news-grid">
+          {items.map(item => (
+            <a key={item.id} href={`/events/${item.slug}`} className="news-card">
+              {item.image_url ? <img src={item.image_url} alt={item.title} /> : <div className="news-card-placeholder" style={{background:"linear-gradient(135deg,#14532d,#16a34a)"}} />}
+              <div className="news-card-body">
+                {item.location && <span className="news-cat" style={{background:"#16a34a"}}>{item.location}</span>}
+                <h3>{item.title}</h3>
+                {item.excerpt && <p>{item.excerpt}</p>}
+                <small>{new Date(item.event_date).toLocaleDateString("ar-SA",{year:"numeric",month:"long",day:"numeric"})}</small>
+              </div>
+            </a>
+          ))}
+        </div>
+      </section>
+    </div>
+  );
+}
+
+// ─── Event detail page ────────────────────────────────────────────────────────
+function EventDetailPage({slug}:{slug?:string}) {
+  const [item, setItem] = useState<{title:string;body:string;excerpt:string;image_url:string;location:string;event_date:string;event_end_date:string|null}|null>(null);
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    if (!slug) return;
+    supabase.from("events").select("*").eq("slug",slug).eq("published",true).maybeSingle().then(({data})=>{setItem(data);setLoading(false);});
+  }, [slug]);
+  if (loading) return <div style={{padding:"6rem 1rem",textAlign:"center",color:"#64748b"}}>جاري التحميل...</div>;
+  if (!item) return (
+    <div style={{padding:"6rem 1rem",textAlign:"center"}}>
+      <h2 style={{color:"#dc2626"}}>الفعالية غير موجودة</h2>
+      <a href="/events" style={{color:"#2563eb"}}>العودة للفعاليات</a>
+    </div>
+  );
+  return (
+    <div dir="rtl">
+      {item.image_url && <div className="detail-hero-img"><img src={item.image_url} alt={item.title} /></div>}
+      <article className="detail-article page-width">
+        <span className="news-cat" style={{background:"#16a34a"}}>فعالية</span>
+        <h1>{item.title}</h1>
+        <div className="detail-meta">
+          {item.location && <span>📍 {item.location}</span>}
+          <span>📅 {new Date(item.event_date).toLocaleDateString("ar-SA",{year:"numeric",month:"long",day:"numeric",hour:"2-digit",minute:"2-digit"})}</span>
+          {item.event_end_date && <span>🏁 {new Date(item.event_end_date).toLocaleDateString("ar-SA",{year:"numeric",month:"long",day:"numeric",hour:"2-digit",minute:"2-digit"})}</span>}
+        </div>
+        {item.excerpt && <p className="detail-excerpt">{item.excerpt}</p>}
+        <div className="detail-body" dangerouslySetInnerHTML={{__html: item.body.replace(/\n/g,"<br/>")}} />
+        <a href="/events" className="detail-back">← العودة للفعاليات</a>
+      </article>
+    </div>
+  );
+}
+
+export default function NileSite({page,slug}:{page:string;slug?:string}){const active=routeMap[page]||"home";const hideHeader=["membership","photo","payment","success"].includes(active);const hideFooter=["membership","photo","payment","success"].includes(active);return <div dir="rtl"><Motion/>{!hideHeader&&<Header active={active}/>}<main>{active==="home"?<Home/>:active==="about"?<AboutPage/>:active==="social"?<SocialPage/>:active==="education"?<EducationPage/>:active==="health"?<HealthPage/>:active==="investment"?<InvestmentPage/>:active==="culture"?<CulturePage/>:["services","initiatives","library"].includes(active)?<InternalPage type={active as InternalKey}/>:active==="news"?<NewsListPage/>:active==="news-detail"?<NewsDetailPage slug={slug}/>:active==="events"?<EventsListPage/>:active==="events-detail"?<EventDetailPage slug={slug}/>:active==="membership"?<Membership/>:active==="register"?<Register/>:active==="photo"?<PhotoUpload/>:active==="payment"?<Payment/>:active==="success"?<Success/>:active==="contact"?<Contact/>:<Home/>}</main>{!hideFooter&&<Footer/>}</div>}
