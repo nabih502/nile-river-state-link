@@ -301,6 +301,50 @@ function Home(){
       <a href={MARKET_URL} target="_blank" rel="noopener noreferrer"><ShoppingCart/> تصفح السوق الآن <span aria-hidden>↗</span></a>
     </section>
 
+    <section className="home-health-cards page-width">
+      <div className="hhc-card hhc-clinic motion">
+        <div className="hhc-badge">الأكثر استفداماً</div>
+        <div className="hhc-img-wrap">
+          <img src="/assets/WhatsApp_Image_2026-07-21_at_16.29.04.jpeg" alt="عيادة أونلاين"/>
+        </div>
+        <div className="hhc-body">
+          <div className="hhc-title-row">
+            <h3>عيادة أونلاين</h3>
+            <span className="hhc-icon-wrap"><MonitorCheck size={22}/></span>
+          </div>
+          <p>استشر الأطباء المختصين عبر الإنترنت من أي مكان وفي أي وقت</p>
+          <div className="hhc-features">
+            <span><CalendarDays size={15}/> مواعيد إلكترونية</span>
+            <span><Video size={15}/> كشف عن بعد</span>
+          </div>
+          <a className="hhc-cta" href="/health"><MonitorCheck size={16}/> ابدأ الاستشارة الآن <ChevronLeft size={14}/></a>
+        </div>
+      </div>
+
+      <div className="hhc-card hhc-pharmacy motion">
+        <div className="hhc-pharmacy-top">
+          <div className="hhc-pharmacy-img">
+            <img src="/assets/health-pharmacy-hq.webp" alt="الصيدلية الخيرية"/>
+          </div>
+          <div className="hhc-pharmacy-info">
+            <div className="hhc-title-row">
+              <h3><Pill size={18}/> الصيدلية الخيرية</h3>
+            </div>
+            <p>توفير الأدوية للمحتاجين وأسر الأعضاء</p>
+            <ul className="hhc-checklist">
+              <li><Check size={14}/> أدوية أساسية ومزمنة</li>
+              <li><Check size={14}/> دعم الحالات الطارئة</li>
+              <li><Check size={14}/> شراكات مع صيدليات معتمدة</li>
+            </ul>
+          </div>
+        </div>
+        <div className="hhc-pharmacy-actions">
+          <a href="/health" className="hhc-action-btn"><HeartPulse size={15}/> طلب دواء <ChevronLeft size={13}/></a>
+        </div>
+        <a className="hhc-more" href="/health">عرض المزيد <ChevronLeft size={13}/></a>
+      </div>
+    </section>
+
     <section id="news" className="home-news page-width">
       <div className="home-section-title motion"><span/><h2>آخر الأخبار والمبادرات</h2><span/></div>
       <div className="home-news-grid">
