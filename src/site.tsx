@@ -1102,7 +1102,60 @@ function MemberField({field}:{field:MemberFieldSpec}){
 }
 
 function Register(){
-  const onSubmit=(event:FormEvent)=>{event.preventDefault();location.href="/photo"};
+  const params=new URLSearchParams(window.location.search);
+  const planIndex=Number(params.get("plan")||"1");
+  const planNames=["basic","premium","supporter"];
+  const [submitting,setSubmitting]=useState(false);
+  const [submitError,setSubmitError]=useState("");
+
+  const onSubmit=async(event:FormEvent)=>{
+    event.preventDefault();
+    setSubmitting(true);
+    setSubmitError("");
+    const form=event.target as HTMLFormElement;
+    const get=(label:string)=>{
+      const el=form.querySelector<HTMLInputElement|HTMLSelectElement|HTMLTextAreaElement>(`[aria-label="${label}"]`);
+      return el?.value||"";
+    };
+    const getRadio=(name:string)=>{
+      const el=form.querySelector<HTMLInputElement>(`input[name="${name}"]:checked`);
+      return el?.value||"";
+    };
+    const fullName=get("الاسم الرباعي");
+    const email=get("البريد الإلكتروني");
+    const phone=get("رقم الجوال");
+    const gender=getRadio("الجنس");
+    const birthDate=get("تاريخ الميلاد");
+    const country=get("الدولة");
+    const city=get("المدينة");
+    const state=get("الولاية");
+    const locality=get("المحلية");
+    const maritalStatus=getRadio("الحالة");
+    const specialization=get("التخصص");
+    const jobTitle=get("المسمى الوظيفي");
+    // Use phone last 6 digits as default password
+    const defaultPassword=phone.replace(/\D/g,"").slice(-6)||"123456";
+    const {error}=await supabase.from("members").insert({
+      full_name:fullName,
+      email,
+      phone,
+      gender:gender==="أنثى"?"female":"male",
+      birth_date:birthDate||null,
+      country,
+      city,
+      state,
+      locality,
+      marital_status:maritalStatus,
+      specialization,
+      job_title:jobTitle,
+      membership_type:planNames[planIndex]||"basic",
+      status:"pending",
+      password_hash:defaultPassword,
+    });
+    setSubmitting(false);
+    if(error){setSubmitError("حدث خطأ أثناء التسجيل: "+error.message);return;}
+    location.href="/photo";
+  };
   const groups:MemberGroupSpec[]=[
     {title:"البيانات الشخصية",icon:UserRound,fields:[{label:"الاسم الرباعي",required:true},{label:"الاسم وفق الجواز",required:true},{label:"الجنس",required:true,kind:"radio",options:["ذكر","أنثى"]},{label:"تاريخ الميلاد",required:true,kind:"date"},{label:"الجنسية",required:true,kind:"select",options:["سوداني","سودانية","أخرى"]},{label:"الحالة الاجتماعية",required:true,kind:"select",options:["أعزب","متزوج","أخرى"]},{label:"صورة شخصية حديثة",kind:"file"}]},
     {title:"بيانات الإقامة",icon:MapPin,fields:[{label:"الدولة",required:true,kind:"select",options:["السودان","السعودية","الإمارات","قطر","مصر","أخرى"]},{label:"المدينة",required:true,kind:"select",options:["الخرطوم","الرياض","جدة","دبي","الدوحة","القاهرة"]},{label:"الحي"},{label:"العنوان بالتفصيل"},{label:"الرمز البريدي"},{label:"رقم الجوال",required:true},{label:"البريد الإلكتروني",required:true,kind:"email",placeholder:"example@mail.com"}]},
@@ -1125,7 +1178,8 @@ function Register(){
       {groups.map(group=>{const Icon=group.icon;return <fieldset key={group.title}><legend><Icon/>{group.title}</legend>{group.fields.map(field=><MemberField key={field.label} field={field}/>)}</fieldset>})}
       <fieldset className="reg-interests"><legend>الاهتمامات</legend><p>اختر المجالات التي تهتم بها للمشاركة في المبادرات والأنشطة</p><div>{interests.map(item=>{const Icon=item.icon;return <label key={item.label}><input type="checkbox"/><Icon/><b>{item.label}</b></label>})}</div></fieldset>
       <label className="reg-privacy"><Shield/><span><b>سياسة الخصوصية</b><small>أتعهد بصحة جميع البيانات المدخلة، وأوافق على استخدامها وفق شروط وأحكام وسياسة الخصوصية للرابطة.</small></span><input required type="checkbox" aria-label="الموافقة على سياسة الخصوصية"/></label>
-      <button className="reg-hidden-submit" aria-label="إكمال التسجيل">إكمال التسجيل</button>
+      {submitError&&<p style={{color:"#dc2626",textAlign:"center",padding:"0.75rem",background:"#fef2f2",borderRadius:"0.5rem",margin:"0 0 1rem"}}>{submitError}</p>}
+      <button className="reg-hidden-submit" aria-label="إكمال التسجيل" disabled={submitting}>{submitting?"جاري التسجيل...":"إكمال التسجيل"}</button>
     </form></section>
     <section className="reg-join-banner"><div><h2>كن جزءاً من التغيير .. <span>انضم اليوم!</span></h2><p>عضويتك تساهم في بناء مجتمع رقمي قوي ومتكامل يخدم أبناء الولاية أينما كانوا</p><div><b><UsersRound/>تواصل فعال</b><b><MapPin/>فرص أكثر</b><b><Gift/>امتيازات أعمق</b></div></div><button onClick={()=>{location.href="/photo"}}>سجل الآن <ArrowLeft/></button><MemberCardArt compact/></section>
     <section className="reg-dashboard"><h2><span/>لوحة الإحصائيات والتقارير<span/></h2><div className="reg-dash-grid"><article className="reg-bars"><h3>توزيع الأعضاء حسب الولايات</h3>{[["الخرطوم","22%"],["نهر النيل","18%"],["القاهرة","15%"],["كسلا","12%"],["أخرى","23%"]].map(([name,value],i)=><p key={name}><b style={{width:value}}/><span>{name}</span><small>{value}</small><i data-tone={i}/></p>)}</article><article><h3>توزيع الأعضاء حسب الجنس</h3><div className="donut purple"/><p>ذكور 62% &nbsp; إناث 38%</p></article><article className="reg-total"><h3>إجمالي الأعضاء</h3><strong>12,850</strong><b>مدن <em>320</em></b><b>دول <em>48</em></b><small>+245 عضو هذا الشهر</small></article><article><h3>توزيع الأعضاء حسب الفئة العمرية</h3><div className="donut multi"/><p>أقل من 20 حتى 60 فأكثر</p></article><article className="reg-map"><h3>توزيع الأعضاء حسب الدول</h3><Globe2/><a href="/contact">طلب عرض الخريطة التفاعلية</a></article></div></section>

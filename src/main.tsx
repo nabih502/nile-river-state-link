@@ -9,6 +9,7 @@ import "@fontsource/cairo/900.css";
 import "./globals.css";
 import NileSite from "./site";
 import AdminApp from "./admin";
+import MemberPortal from "./portal";
 
 function parseRoute(): { page: string; slug?: string } {
   const raw = window.location.pathname.replace(/^\/+|\/+$/g, "") || "home";
@@ -51,6 +52,7 @@ function App() {
   }, []);
 
   if (route.page === "admin") return <AdminApp />;
+  if (route.page === "portal") return <MemberPortal />;
   return <NileSite page={route.page} slug={route.slug} />;
 }
 
