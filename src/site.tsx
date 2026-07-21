@@ -158,6 +158,30 @@ function Motion(){
 function SectionTitle({children,mini}:{children:React.ReactNode;mini?:string}){return <div className="section-heading motion">{mini&&<span>{mini}</span>}<h2>{children}</h2></div>}
 function Arrow(){return <ArrowLeft size={15} aria-hidden/>}
 
+declare global { interface Window { __hhcOpenModal?: (name: string) => void } }
+
+function HhcComingSoonModal() {
+  const [open, setOpen] = useState(false);
+  const [svc, setSvc] = useState("");
+  useEffect(() => {
+    window.__hhcOpenModal = (name: string) => { setSvc(name); setOpen(true); };
+    return () => { delete window.__hhcOpenModal; };
+  }, []);
+  if (!open) return null;
+  return (
+    <div className="hhc-modal-overlay" onClick={() => setOpen(false)}>
+      <div className="hhc-modal" onClick={e => e.stopPropagation()}>
+        <button className="hhc-modal-close" onClick={() => setOpen(false)}><X size={20}/></button>
+        <div className="hhc-modal-icon"><Clock3 size={36}/></div>
+        <h2>قريباً</h2>
+        <p>خدمة <strong>{svc}</strong> قيد الإعداد وستكون متاحة قريباً.</p>
+        <p className="hhc-modal-sub">نعمل على إطلاق هذه الخدمة في أقرب وقت ممكن، ترقّبونا!</p>
+        <button className="hhc-modal-btn" onClick={() => setOpen(false)}>حسناً</button>
+      </div>
+    </div>
+  );
+}
+
 function Home(){
   const heroBenefits=[
     {title:"منصة رقمية واحدة",text:"لكل أبناء الولاية",icon:UsersRound},
@@ -301,12 +325,13 @@ function Home(){
       <a href={MARKET_URL} target="_blank" rel="noopener noreferrer"><ShoppingCart/> تصفح السوق الآن <span aria-hidden>↗</span></a>
     </section>
 
+    <HhcComingSoonModal/>
     <section className="home-health-cards page-width">
       {/* بطاقة العيادة أونلاين */}
-      <div className="hhc-card motion">
+      <div className="hhc-card motion" onClick={()=>window.__hhcOpenModal?.("عيادة أونلاين")} style={{cursor:"pointer"}}>
         <div className="hhc-img-wrap">
           <span className="hhc-badge"><Stethoscope size={13}/> الأكثر استخداماً</span>
-          <img src="/assets/WhatsApp_Image_2026-07-21_at_16.29.04.jpeg" alt="عيادة أونلاين"/>
+          <img src="/assets/ChatGPT_Image_Jul_21,_2026,_05_47_35_PM.png" alt="عيادة أونلاين"/>
         </div>
         <div className="hhc-body">
           <div className="hhc-title-row">
@@ -318,14 +343,14 @@ function Home(){
             <span><CalendarDays size={13}/> مواعيد إلكترونية</span>
             <span><Video size={13}/> كشف عن بعد</span>
           </div>
-          <a className="hhc-cta-primary" href="/health"><MonitorCheck size={15}/> ابدأ الاستشارة الآن <ChevronLeft size={13}/></a>
+          <button className="hhc-cta-primary" type="button"><MonitorCheck size={15}/> ابدأ الاستشارة الآن <ChevronLeft size={13}/></button>
         </div>
       </div>
 
       {/* بطاقة الصيدلية الخيرية */}
-      <div className="hhc-card motion">
-        <div className="hhc-img-wrap hhc-img-wrap--pharmacy">
-          <img src="/assets/health-pharmacy-hq.webp" alt="الصيدلية الخيرية"/>
+      <div className="hhc-card motion" onClick={()=>window.__hhcOpenModal?.("الصيدلية الخيرية")} style={{cursor:"pointer"}}>
+        <div className="hhc-img-wrap">
+          <img src="/assets/ChatGPT_Image_Jul_21,_2026,_05_47_44_PM.png" alt="الصيدلية الخيرية"/>
         </div>
         <div className="hhc-body">
           <div className="hhc-title-row">
@@ -337,8 +362,8 @@ function Home(){
             <li><Check size={13}/> دعم الحالات الطارئة</li>
             <li><Check size={13}/> شراكات مع صيدليات معتمدة</li>
           </ul>
-          <a className="hhc-cta-outline" href="/health"><HeartHandshake size={15}/> طلب دواء <ChevronLeft size={13}/></a>
-          <a className="hhc-more-link" href="/health">عرض المزيد <ChevronLeft size={12}/></a>
+          <button className="hhc-cta-outline" type="button"><HeartHandshake size={15}/> طلب دواء <ChevronLeft size={13}/></button>
+          <span className="hhc-more-link">عرض المزيد <ChevronLeft size={12}/></span>
         </div>
       </div>
     </section>

@@ -766,6 +766,19 @@ body:has(.health-redesign) .site-footer{margin-top:0}
 .hhc-more-link{display:flex;align-items:center;justify-content:center;gap:4px;font-size:12px;color:#8a9aaa;font-weight:700;text-decoration:none;padding-top:4px}
 .hhc-more-link:hover{color:#0c7e4a}
 .hhc-img-wrap--pharmacy .hhc-badge{background:#1d5a8a}
+/* hhc coming soon modal */
+.hhc-modal-overlay{position:fixed;inset:0;z-index:9000;background:rgba(10,20,35,.55);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:20px;animation:hhcFadeIn .2s ease}
+@keyframes hhcFadeIn{from{opacity:0}to{opacity:1}}
+.hhc-modal{background:#fff;border-radius:16px;padding:40px 36px 32px;max-width:400px;width:100%;text-align:center;position:relative;direction:rtl;animation:hhcSlideUp .25s ease}
+@keyframes hhcSlideUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+.hhc-modal-close{position:absolute;top:14px;left:14px;background:none;border:none;cursor:pointer;color:#8a9aaa;padding:4px;border-radius:6px;display:flex;align-items:center;justify-content:center;transition:color .15s}
+.hhc-modal-close:hover{color:#14263a}
+.hhc-modal-icon{width:72px;height:72px;border-radius:50%;background:#e8f4f0;color:#0c7e4a;display:flex;align-items:center;justify-content:center;margin:0 auto 18px}
+.hhc-modal h2{font-size:26px;font-weight:900;color:#14263a;margin:0 0 10px}
+.hhc-modal p{font-size:14px;color:#4a5a6a;line-height:1.65;margin:0 0 6px}
+.hhc-modal-sub{font-size:12px;color:#8a9aaa;margin-bottom:24px!important}
+.hhc-modal-btn{width:100%;height:46px;border:none;border-radius:8px;background:#0c7e4a;color:#fff;font-size:14px;font-weight:800;cursor:pointer;transition:filter .18s}
+.hhc-modal-btn:hover{filter:brightness(1.1)}
   .home-program:hover{transform:translateY(-6px);box-shadow:0 15px 29px rgba(23,38,54,.14);border-color:#d9a566}.home-program:hover>img{transform:scale(1.055)}.program-features>b:hover{background:#fff5e9;color:#d87500}.program-features>b:hover svg{transform:scale(1.14)}
   .home-news-card:hover{transform:translateY(-6px);box-shadow:0 14px 28px rgba(23,38,54,.14);border-color:#efb168}.home-news-card:hover>img{transform:scale(1.07)}.all-news-link:hover{color:#d87500;transform:translateX(-5px)}
 
