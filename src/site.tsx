@@ -26,7 +26,7 @@ const info: Record<PortalKey, {title:string; accent:string; lead:string; hero:st
   culture:{title:"الثقافة",accent:"هوية وإبداع.. نصون تراثنا ونبدع لمستقبلنا",lead:"منصة ثقافية رقمية شاملة تهدف إلى إبراز التراث السوداني الأصيل ودعم المواهب والإبداع في جميع المجالات الثقافية والفنية.",hero:"/assets/culture-hero-hq.webp",icon:"◈",tabs:["الفعاليات والأنشطة","الأخبار الثقافية","المكتبة الرقمية","الفنون والأدب","التراث والتاريخ"],stats:[["35","فرقة وجمعية"],["650+","عضو فني"],["120","مبادرة ثقافية"],["85","فعالية ثقافية"]],section:"الفعاليات والأنشطة الثقافية",cards:[{title:"ندوة دور الثقافة",text:"ندوة حول الثقافة في بناء المجتمع",image:"/assets/culture-seminar-hq.webp",icon:"♙"},{title:"معرض الفنون",text:"معرض الفنون التشكيلية السنوي",image:"/assets/culture-gallery-hq.webp",icon:"▥"},{title:"أمسية شعرية",text:"أمسية للشعراء والشباب",image:"/assets/culture-poetry-hq.webp",icon:"♩"},{title:"مهرجان تراث النيل",text:"مهرجان تراثي يحتفي بالهوية",image:"/assets/culture-folk-hq.webp",icon:"◈"}]},
 };
 
-function Brand({light=false}:{light?:boolean}){return <a href="/" className={`brand ${light?"light":""}`} aria-label="رابطة ولاية نهر النيل الرقمية"><img src={light?"/assets/home-logo-dark.jpg":"/assets/logo.jpeg"} alt="رابطة ولاية نهر النيل الرقمية"/></a>}
+function Brand({light=false}:{light?:boolean}){return <a href="/" className={`brand ${light?"light":""}`} aria-label="رابطة ولاية نهر النيل الرقمية"><img src="/assets/ChatGPT_Image_Jul_21,_2026,_05_25_20_PM.png" alt="رابطة ولاية نهر النيل الرقمية"/></a>}
 
 function Header({active}:{active:PageKey}){
   const [open,setOpen]=useState(false);
@@ -218,7 +218,7 @@ function Home(){
 
     <section className="home-join page-width motion">
       <div className="home-member-card">
-        <img src="/assets/home-logo-dark.jpg" alt="رابطة ولاية نهر النيل الرقمية"/>
+        <img src="/assets/ChatGPT_Image_Jul_21,_2026,_05_25_20_PM.png" alt="رابطة ولاية نهر النيل الرقمية"/>
         <div><span>عضو في</span><strong>رابطة ولاية نهر النيل الرقمية</strong><small>معاً.. لنبني المستقبل</small></div>
         <footer><b>0001</b><span>عضوية</span></footer>
       </div>
@@ -1001,7 +1001,7 @@ function Membership(){
   ];
   return <main className="member-pricing-page">
     <section className="mp-hero">
-      <div className="mp-brand"><img src="/assets/membership-logo-v2.jpg" alt="رابطة ولاية نهر النيل الرقمية"/></div>
+      <div className="mp-brand"><img src="/assets/ChatGPT_Image_Jul_21,_2026,_05_25_20_PM.png" alt="رابطة ولاية نهر النيل الرقمية"/></div>
       <div className="mp-photo"><img src="/assets/membership-hero-hq.webp" alt="معلم ولاية نهر النيل عند الغروب"/></div>
       <div className="mp-copy motion"><h1>باقات العضوية</h1><h2>الاشتراكات السنوية</h2><p>اختر الباقة التي تناسبك واستمتع بمزايا حصرية<br/>تدعمك وتخدمك وتخدم أبناء ولايتك</p></div>
       <div className="mp-card-wrap motion"><MemberCardArt/></div>
@@ -1083,7 +1083,7 @@ function Payment(){
   const [receipts,setReceipts]=useState<Record<string,string>>({});
   const options=[{n:"01",icon:Landmark,title:"إرفاق ما يعادلها ببنكك",text:"قم بإيداع المبلغ في حساب الرابطة وارفع ما يعادلها من كشف الحساب"},{n:"02",icon:ReceiptText,title:"إرفاق سند السداد",text:"قم برفع صورة أو ملف سند السداد الرسمي الصادر من الجهة"},{n:"03",icon:Banknote,title:"إرفاق التحويل البنكي",text:"قم برفع صورة أو ملف إثبات التحويل البنكي"}];
   const setFile=(key:string,file?:File)=>{if(file)setReceipts(current=>({...current,[key]:file.name}))};
-  return <MemberStepShell className="payment-step"><div className="payment-brand"><img src="/assets/membership-logo-v2.jpg" alt="رابطة ولاية نهر النيل الرقمية"/></div><header className="step-heading payment-title"><h1><span/>خيارات السداد<span/></h1><p>اختر طريقة السداد المناسبة لك وارفع المستندات المطلوبة</p></header><section className="payment-cards">
+  return <MemberStepShell className="payment-step"><div className="payment-brand"><img src="/assets/ChatGPT_Image_Jul_21,_2026,_05_25_20_PM.png" alt="رابطة ولاية نهر النيل الرقمية"/></div><header className="step-heading payment-title"><h1><span/>خيارات السداد<span/></h1><p>اختر طريقة السداد المناسبة لك وارفع المستندات المطلوبة</p></header><section className="payment-cards">
     {options.map(option=>{const Icon=option.icon;return <article key={option.n}><label><FileUp/><strong>{receipts[option.n]||"اختر ملف أو اسحب وأفلت"}</strong><small>JPG, PNG, PDF (الحد الأقصى 5MB)</small><input type="file" accept="image/jpeg,image/png,application/pdf" onChange={event=>setFile(option.n,event.target.files?.[0])}/></label><div><h2>{option.title}</h2><p>{option.text}</p>{option.n==="01"&&<button type="button">عرض بيانات الحساب <ChevronLeft/></button>}</div><aside><b>{option.n}</b><Icon/></aside></article>})}
     <article className="visa-card"><a href="/success"><CreditCard/><span>ادفع عبر فيزا</span><strong>VISA</strong></a><div><h2>السداد فيزا</h2><p>ادفع الآن مباشرة باستخدام بطاقتك البنكية عبر فيزا</p></div><aside><b>04</b><em>VISA</em></aside><footer><ShieldCheck/>دفع آمن <LockKeyhole/>تشفير SSL <BadgeCheck/>معتمد وآمن</footer></article>
   </section><section className="payment-notice"><CircleAlert/><p>سيتم التحقق من مستندات السداد وتأكيدها خلال 24 ساعة عمل<br/>وسيصل إشعار بعد اعتماد السداد وتفعيل عضويتك</p></section><p className="payment-help"><Phone/> تحتاج مساعدة؟ تواصل معنا</p>{Object.keys(receipts).length>0&&<a className="step-continue" href="/success">إرسال المستندات <ArrowLeft/></a>}</MemberStepShell>
@@ -1121,7 +1121,7 @@ function Contact(){
       <div className="ct-hero-media">
         <img src="/assets/contact-hero-hq.webp" alt="حاسوب محمول يعرض وسائل التواصل"/>
         <strong className="ct-screen-title">تواصل معنا</strong>
-        <img className="ct-mug-logo" src="/assets/logo.jpeg" alt="" aria-hidden/>
+        <img className="ct-mug-logo" src="/assets/ChatGPT_Image_Jul_21,_2026,_05_25_20_PM.png" alt="" aria-hidden/>
       </div>
       <div className="ct-hero-copy motion">
         <MessageCircle className="ct-hero-watermark" aria-hidden/>
