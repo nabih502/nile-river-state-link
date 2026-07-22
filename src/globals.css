@@ -163,6 +163,21 @@ body{font-family:"Cairo",Tahoma,Arial,sans-serif}
 .home-topbar .search-btn{width:45px;height:45px;border-color:#85909a;background:transparent;color:#fff}
 .home-topbar .primary.compact{height:43px;min-width:145px;border-radius:5px;font-size:12px;box-shadow:none;direction:rtl}
 
+/* Dashboard access button */
+.hdr-dash-wrap{position:relative}
+.hdr-dash-btn{width:45px;height:45px;border-radius:50%;border:1px solid #85909a;background:transparent;color:#fff;display:grid;place-items:center;transition:.2s}
+.hdr-dash-btn:hover{background:rgba(255,255,255,.12);border-color:#fff}
+.home-topbar .hdr-dash-btn{color:#fff;border-color:#85909a}
+.hdr-panel-backdrop{position:fixed;inset:0;z-index:199}
+.hdr-panel{position:absolute;top:calc(100% + 8px);left:0;z-index:200;background:#fff;border-radius:12px;box-shadow:0 8px 32px rgba(20,34,51,.18);border:1px solid #e4e8ee;min-width:250px;overflow:hidden;display:flex;flex-direction:column}
+.hdr-panel-link{display:flex;align-items:center;gap:12px;padding:14px 18px;color:#1b2735;transition:.15s;border-bottom:1px solid #f1f3f6}
+.hdr-panel-link:last-child{border-bottom:none}
+.hdr-panel-link:hover{background:#f8f9fb}
+.hdr-panel-link svg{flex-shrink:0;color:#c27a00}
+.hdr-panel-link b{display:block;font-size:14px;font-weight:700;margin-bottom:2px}
+.hdr-panel-link small{font-size:11px;color:#6b7480}
+.hdr-panel-link code{font-family:monospace;background:#fef3c7;padding:1px 5px;border-radius:3px;color:#92400e;font-size:11px}
+
 .home-redesign{--home-max:1280px;background:#fff;color:#1b2735;overflow:hidden}
 .home-redesign .page-width{width:min(var(--home-max),calc(100% - 56px))}
 .home-master-hero{height:440px;display:grid;grid-template-columns:56% 44%;position:relative;background:#fff;overflow:hidden;direction:ltr}

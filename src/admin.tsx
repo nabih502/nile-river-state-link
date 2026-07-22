@@ -26,7 +26,7 @@ function slugify(text: string) {
 
 // ─── Login ────────────────────────────────────────────────────────────────────
 function Login({ onLogin }: { onLogin: () => void }) {
-  const [pw, setPw] = useState("");
+  const [pw, setPw] = useState("admin2024");
   const [err, setErr] = useState(false);
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
