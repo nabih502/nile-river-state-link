@@ -32,8 +32,32 @@ function Brand({light=false}:{light?:boolean}){return <a href="/" className={`br
 
 function Header({active}:{active:PageKey}){
   const [open,setOpen]=useState(false);
-  const [showPanel,setShowPanel]=useState(false);
-  return <header className="topbar dark home-topbar"><div className="topbar-inner"><Brand light/><nav className={open?"open":""}>{homeNav.map(([href,label])=>{const external=href.startsWith("http");return <a key={`${href}-${label}`} href={href} target={external?"_blank":undefined} rel={external?"noopener noreferrer":undefined} className={(href==="/"&&active==="home")||(href.startsWith("/")&&href.slice(1)===active)?"current":""}>{label}{external&&<span className="external-mark" aria-hidden>↗</span>}</a>})}</nav><div className="header-tools"><button className="search-btn" aria-label="البحث"><Search size={19}/></button><div className="hdr-dash-wrap"><button className="hdr-dash-btn" onClick={()=>setShowPanel(v=>!v)} title="لوحات التحكم"><LayoutDashboard size={20}/></button>{showPanel&&<><div className="hdr-panel-backdrop" onClick={()=>setShowPanel(false)}/><div className="hdr-panel"><a href="/admin" className="hdr-panel-link" onClick={()=>setShowPanel(false)}><Settings2 size={18}/><div><b>لوحة الإدارة</b><small>كلمة السر: <code>admin2024</code></small></div></a><a href="/portal" className="hdr-panel-link" onClick={()=>setShowPanel(false)}><UserRound size={18}/><div><b>بوابة الأعضاء</b><small>رقم العضوية أو الهاتف + كلمة السر</small></div></a></div></>}</div><a className="primary compact" href="/membership"><UserRound size={16}/><span>انضم الآن</span></a><button className="mobile-menu" onClick={()=>setOpen(!open)} aria-label="فتح القائمة">{open?<X size={21}/>:<Menu size={21}/>}</button></div></div></header>
+  return (
+    <header className="topbar dark home-topbar">
+      <div className="topbar-inner">
+        <Brand light/>
+        <nav className={open?"open":""}>
+          {homeNav.map(([href,label])=>{const external=href.startsWith("http");return <a key={`${href}-${label}`} href={href} target={external?"_blank":undefined} rel={external?"noopener noreferrer":undefined} className={(href==="/"&&active==="home")||(href.startsWith("/")&&href.slice(1)===active)?"current":""}>{label}{external&&<span className="external-mark" aria-hidden>↗</span>}</a>})}
+        </nav>
+        <div className="header-tools">
+          <button className="search-btn" aria-label="البحث"><Search size={19}/></button>
+          <a className="hdr-access-btn admin-btn" href="/admin">
+            <Settings2 size={15}/>
+            <span>لوحة الإدارة</span>
+          </a>
+          <a className="hdr-access-btn portal-btn" href="/portal">
+            <UserRound size={15}/>
+            <span>بوابة الأعضاء</span>
+          </a>
+          <a className="primary compact" href="/membership">
+            <UserRound size={16}/>
+            <span>انضم الآن</span>
+          </a>
+          <button className="mobile-menu" onClick={()=>setOpen(!open)} aria-label="فتح القائمة">{open?<X size={21}/>:<Menu size={21}/>}</button>
+        </div>
+      </div>
+    </header>
+  );
 }
 
 function Footer(){return <footer className="site-footer"><div className="footer-inner"><div className="footer-brand"><Brand light/><p>منصة رقمية شاملة لخدمة أبناء ولاية نهر النيل في الداخل والخارج.</p></div><div><h4>تواصل معنا</h4><p>☎ +249 912 345 678</p><p>✉ info@nilenile.org</p><p>⌖ ولاية نهر النيل - السودان</p></div><div><h4>الدعم والمساعدة</h4><a href="/contact">الأسئلة الشائعة</a><a href="/contact">سياسة الخصوصية</a><a href="/contact">الشروط والأحكام</a><a href="/news">الأخبار والفعاليات</a></div><div><h4>خدمات الرابطة</h4><a href="/services">جميع الخدمات</a><a href="/education">التعليم</a><a href="/health">الصحة</a><a href="/investment">الاستثمار</a><a href="/culture">الثقافة</a></div><div><h4>روابط سريعة</h4><a href="/">الرئيسية</a><a href="/about">عن الرابطة</a><a href="/initiatives">المبادرات</a><a href="/library">المكتبة الرقمية</a><a href={TRAINING_URL} target="_blank" rel="noopener noreferrer">مركز التدريب ↗</a><a href={MARKET_URL} target="_blank" rel="noopener noreferrer">السوق السوداني ↗</a></div></div><div className="footer-bottom"><span>جميع الحقوق محفوظة © 2026</span><span className="socials"><b>f</b><b>𝕏</b><b>▶</b><b>◎</b><b>in</b></span></div></footer>}
