@@ -58,3 +58,78 @@ export type ContactMessage = {
   read: boolean;
   created_at: string;
 };
+
+export type InvestmentSector = {
+  id: string;
+  name: string;
+  slug: string;
+  description: string;
+  image_url: string;
+  icon: string;
+  highlight: string;
+  sort_order: number;
+  published: boolean;
+  created_at: string;
+};
+
+export type InvestmentOpportunity = {
+  id: string;
+  title: string;
+  slug: string;
+  sector_id: string | null;
+  description: string;
+  details: string;
+  image_url: string;
+  min_investment: string;
+  expected_return: string;
+  duration: string;
+  location: string;
+  status: string;
+  published: boolean;
+  created_at: string;
+};
+
+export type InvestmentIncentive = {
+  id: string;
+  title: string;
+  description: string;
+  icon: string;
+  category: string;
+  sort_order: number;
+  published: boolean;
+  created_at: string;
+};
+
+export type InvestmentSuccessStory = {
+  id: string;
+  name: string;
+  title: string;
+  story: string;
+  quote: string;
+  image_url: string;
+  sector: string;
+  location: string;
+  published: boolean;
+  created_at: string;
+};
+
+export type InvestmentPartner = {
+  id: string;
+  name: string;
+  logo_url: string;
+  website: string;
+  description: string;
+  category: string;
+  sort_order: number;
+  published: boolean;
+  created_at: string;
+};
+
+export type InvestmentStat = {
+  id: string;
+  label: string;
+  value: string;
+  icon: string;
+  sort_order: number;
+  created_at: string;
+};
