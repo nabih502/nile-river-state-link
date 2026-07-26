@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { supabase } from "./supabase";
+import InvestmentPanel from "./admin-investment";
 
-type Section = "dashboard" | "news" | "events" | "members" | "messages" | "settings";
+type Section = "dashboard" | "news" | "events" | "members" | "messages" | "investment" | "settings";
 
 interface NewsRow { id: string; title: string; slug: string; excerpt: string; body: string; image_url: string; category: string; published: boolean; published_at: string | null; created_at: string; }
 interface EventRow { id: string; title: string; slug: string; excerpt: string; body: string; image_url: string; location: string; event_date: string; event_end_date: string | null; published: boolean; created_at: string; }
@@ -329,6 +330,7 @@ export default function AdminApp() {
     { key: "events", label: "الفعاليات", badge: stats.events },
     { key: "members", label: "الأعضاء", badge: stats.members },
     { key: "messages", label: "الرسائل", badge: stats.unread || undefined },
+    { key: "investment", label: "الاستثمار" },
     { key: "settings", label: "الإعدادات" },
   ];
 
@@ -336,6 +338,7 @@ export default function AdminApp() {
   const filteredEvents = events.filter(e => e.title.includes(search) || e.location.includes(search));
   const filteredMembers = members.filter(m => m.full_name.includes(search) || m.email.includes(search));
   const filteredMessages = messages.filter(m => m.name.includes(search) || m.subject.includes(search));
+
 
   return (
     <div className="adm-app" dir="rtl">
@@ -368,7 +371,7 @@ export default function AdminApp() {
         <header className="adm-topbar">
           <button className="adm-hamburger" onClick={() => setSideOpen(!sideOpen)}>☰</button>
           <h1>{navItems.find(x => x.key === section)?.label}</h1>
-          {["news", "events", "members", "messages"].includes(section) && (
+          {["news", "events", "members", "messages", "investment"].includes(section) && (
             <input className="adm-search" placeholder="بحث..." value={search} onChange={e => setSearch(e.target.value)} />
           )}
         </header>
@@ -518,6 +521,9 @@ export default function AdminApp() {
               </div>
             </div>
           )}
+
+          {/* ── Investment ── */}
+          {section === "investment" && <InvestmentPanel />}
 
           {/* ── Settings ── */}
           {section === "settings" && <SettingsPanel />}
