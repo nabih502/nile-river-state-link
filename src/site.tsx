@@ -252,21 +252,39 @@ function Home(){
     {title:"ملتقى شباب نهر النيل 2025",date:"25 مايو",image:"/assets/culture-seminar-hq.webp",text:"ملتقى شبابي يجمع أبناء الولاية للحوار وتبادل الخبرات"},
   ];
   const [dbNews, setDbNews] = useState<{title:string;date:string;image:string;text:string}[]>([]);
+  const [dbEvents, setDbEvents] = useState<{title:string;date:string;month:string;excerpt:string}[]>([]);
   const [dbSectors, setDbSectors] = useState<{icon:string;name:string}[]>([]);
   useEffect(()=>{
-    supabase.from("news").select("title,excerpt,image_url,published_at,category").eq("published",true).order("published_at",{ascending:false}).limit(4).then(({data})=>{
+    supabase.from("news").select("title,excerpt,image_url,published_at").eq("published",true).order("published_at",{ascending:false}).limit(4).then(({data})=>{
       if(data&&data.length>0) setDbNews(data.map(n=>({
         title:n.title,
-        date:n.published_at?new Date(n.published_at).toLocaleDateString("ar-SA",{day:"2-digit",month:"long"}):"",
+        date:n.published_at?new Date(n.published_at).getDate().toString().padStart(2,"0"):"",
+        month:n.published_at?new Date(n.published_at).toLocaleDateString("ar-EG",{month:"short"}):"",
         image:n.image_url||"/assets/investment-hero-hq.webp",
         text:n.excerpt||n.title,
+      })));
+    });
+    supabase.from("events").select("title,excerpt,event_date").eq("published",true).order("event_date",{ascending:true}).limit(4).then(({data})=>{
+      if(data&&data.length>0) setDbEvents(data.map(e=>({
+        title:e.title,
+        date:e.event_date?new Date(e.event_date).getDate().toString().padStart(2,"0"):"",
+        month:e.event_date?new Date(e.event_date).toLocaleDateString("ar-EG",{month:"short"}):"",
+        excerpt:e.excerpt||e.title,
       })));
     });
     supabase.from("investment_sectors").select("icon,name").eq("published",true).order("sort_order").limit(4).then(({data})=>{
       if(data&&data.length>0) setDbSectors(data);
     });
   },[]);
-  const news = dbNews.length > 0 ? dbNews : staticNews;
+  const news = dbNews.length > 0
+    ? dbNews.map(n=>({...n, date:`${n.date} ${(n as {month?:string}).month||""}`}))
+    : staticNews;
+  const staticEvents=[
+    {title:"ملتقى شباب نهر النيل",date:"05",month:"أغس",excerpt:"ملتقى شبابي سنوي يجمع أبناء الولاية"},
+    {title:"ورشة ريادة الأعمال",date:"20",month:"أغس",excerpt:"ورشة تدريبية في الاستثمار والأعمال"},
+    {title:"مباراة خيرية",date:"15",month:"أغس",excerpt:"مباراة كرة القدم الخيرية لدعم المحتاجين"},
+  ];
+  const homeEvents = dbEvents.length > 0 ? dbEvents : staticEvents;
   const sectors4 = dbSectors.length > 0
     ? dbSectors.map(s=>({icon:s.icon, label:s.name.split(" ")[0]}))
     : [{icon:"Building2",label:"سكني"},{icon:"Sprout",label:"زراعي"},{icon:"Factory",label:"صناعي"},{icon:"Gem",label:"تعديني"}];
@@ -429,7 +447,7 @@ function Home(){
     <section id="news" className="home-news page-width">
       <div className="home-section-title motion"><span/><h2>آخر الأخبار والمبادرات</h2><span/></div>
       <div className="home-news-grid">
-        {news.map(item=><article className="home-news-card motion" key={item.title}>
+        {news.map((item,i)=><article className="home-news-card home-news-reveal" key={item.title} style={{"--ni":i} as React.CSSProperties}>
           <div className="news-date"><b>{item.date.split(" ")[0]}</b><small>{item.date.split(" ")[1]}</small></div>
           <h3>{item.title}</h3>
           <p>{item.text}</p>
@@ -437,7 +455,14 @@ function Home(){
           <a href="/news">اقرأ المزيد <ArrowLeft/></a>
         </article>)}
       </div>
-      <a className="all-news-link" href="/news">عرض المزيد من الأخبار والفعاليات</a>
+      <div className="home-section-title motion" style={{marginTop:"2rem"}}><span/><h2>الفعاليات القادمة</h2><span/></div>
+      <div className="home-events-grid">
+        {homeEvents.map((ev,i)=><article className="home-event-card home-news-reveal" key={ev.title} style={{"--ni":i} as React.CSSProperties}>
+          <div className="home-event-date"><b>{ev.date}</b><small>{ev.month}</small></div>
+          <div className="home-event-body"><h4>{ev.title}</h4><p>{ev.excerpt}</p></div>
+        </article>)}
+      </div>
+      <a className="all-news-link" href="/events">عرض كل الفعاليات <ArrowLeft size={13}/></a>
     </section>
   </div>
 }
