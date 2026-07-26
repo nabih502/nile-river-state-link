@@ -244,12 +244,31 @@ function Home(){
     {title:"السوق السوداني الإلكتروني",icon:ShoppingCart,items:["المنتجات","الخدمات","الوظائف","الشركات"],href:MARKET_URL,tone:"purple",button:"الدخول للسوق"},
     {title:"الخدمات الاجتماعية",icon:HandHeart,items:["طلب المساعدة","التكافل الاجتماعي","دعم المرضى","رعاية الأيتام والأرامل"],href:"/social",tone:"green",button:"الدخول للخدمة"},
   ];
-  const news=[
+  const staticNews=[
     {title:"مشروع التنمية المستدامة",date:"02 مايو",image:"/assets/investment-hero-hq.webp",text:"مشروع رائد للتنمية المستدامة في الولاية"},
     {title:"دورات تدريبية متخصصة",date:"10 مايو",image:"/assets/course-project-hq.webp",text:"دورات للشباب في مجالات متعددة داخل الولاية"},
     {title:"مبادرة دعم المدارس",date:"18 مايو",image:"/assets/social-education-hq.webp",text:"مبادرة لدعم وتطوير المدارس وبيئة التعليم"},
     {title:"ملتقى شباب نهر النيل 2025",date:"25 مايو",image:"/assets/culture-seminar-hq.webp",text:"ملتقى شبابي يجمع أبناء الولاية للحوار وتبادل الخبرات"},
   ];
+  const [dbNews, setDbNews] = useState<{title:string;date:string;image:string;text:string}[]>([]);
+  const [dbSectors, setDbSectors] = useState<{icon:string;name:string}[]>([]);
+  useEffect(()=>{
+    supabase.from("news").select("title,excerpt,image_url,published_at,category").eq("published",true).order("published_at",{ascending:false}).limit(4).then(({data})=>{
+      if(data&&data.length>0) setDbNews(data.map(n=>({
+        title:n.title,
+        date:n.published_at?new Date(n.published_at).toLocaleDateString("ar-SA",{day:"2-digit",month:"long"}):"",
+        image:n.image_url||"/assets/investment-hero-hq.webp",
+        text:n.excerpt||n.title,
+      })));
+    });
+    supabase.from("investment_sectors").select("icon,name").eq("published",true).order("sort_order").limit(4).then(({data})=>{
+      if(data&&data.length>0) setDbSectors(data);
+    });
+  },[]);
+  const news = dbNews.length > 0 ? dbNews : staticNews;
+  const sectors4 = dbSectors.length > 0
+    ? dbSectors.map(s=>({icon:s.icon, label:s.name.split(" ")[0]}))
+    : [{icon:"Building2",label:"سكني"},{icon:"Sprout",label:"زراعي"},{icon:"Factory",label:"صناعي"},{icon:"Gem",label:"تعديني"}];
   return <div className="home-redesign">
     <section className="home-master-hero">
       <div className="home-hero-copy motion">
@@ -313,10 +332,7 @@ function Home(){
         <h2>الاستثمار في ولاية نهر النيل</h2>
         <p>فرص استثمارية واعدة في القطاعات الصناعية والزراعية والسكنية</p>
         <div>
-          <b><Building2/><small>سكني</small></b>
-          <b><Sprout/><small>زراعي</small></b>
-          <b><Sprout/><small>زراعي</small></b>
-          <b><Factory/><small>صناعي</small></b>
+          {sectors4.map(s=><b key={s.icon+s.label}><DynIcon name={s.icon} fallback={Sprout}/><small>{s.label}</small></b>)}
         </div>
       </div>
       <a href="/investment">استكشف الفرص الاستثمارية <ArrowLeft/></a>
