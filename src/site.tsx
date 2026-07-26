@@ -816,58 +816,12 @@ function CulturePage(){
     {icon:UsersRound,n:"650+",label:"مبدع وفنان"},
     {icon:Landmark,n:"35",label:"فرقة وجمعية"},
   ];
-  const activities=[
-    {image:"/assets/culture-folk-hq.webp",tag:"مهرجان تراثي",title:"مهرجان نهر النيل للتراث",date:"18 مايو 2025",location:"المدينة القديمة - عطبرة"},
-    {image:"/assets/culture-seminar-hq.webp",tag:"ندوة ثقافية",title:"ندوة دور الثقافة في بناء المجتمع",date:"22 مايو 2025",location:"قاعة المؤتمرات"},
-    {image:"/assets/culture-gallery-hq.webp",tag:"معرض فني",title:"معرض الفنون التشكيلية",date:"23 مايو 2025",location:"مركز الفنون"},
-    {image:"/assets/culture-poetry-hq.webp",tag:"أمسية شعرية",title:"أمسية شعرية لشعراء الشباب",date:"25 مايو 2025",location:"قاعة بيت الثقافة"},
-  ];
-  const artists=[
-    {image:"/assets/culture-tayeb.jpg",name:"د. الطيب صالح",role:"أديب وروائي سوداني"},
-    {image:"/assets/culture-ahmed.jpg",name:"أحمد المصطفى",role:"شاعر سوداني"},
-    {image:"/assets/culture-taj.jpg",name:"تاج السر الحسن",role:"كاتب وإعلامي"},
-    {image:"/assets/culture-wardi.gif",name:"محمد وردي",role:"فنان ومطرب"},
-  ];
   const arts=[
     {image:"/assets/culture-hero-hq.webp",icon:Feather,title:"القصة والشعر",text:"قصائد وأعمال أدبية"},
     {image:"/assets/culture-gallery-hq.webp",icon:Palette,title:"الفنون التشكيلية",text:"رسم وفنون بصرية"},
     {image:"/assets/culture-poetry-hq.webp",icon:Music2,title:"الموسيقى والغناء",text:"إبداع موسيقي"},
     {image:"/assets/culture-seminar-hq.webp",icon:UsersRound,title:"المسرح والدراما",text:"عروض وتمثيل"},
     {image:"/assets/culture-folk-hq.webp",icon:Camera,title:"التصوير الفوتوغرافي",text:"صور وحكايات"},
-  ];
-  const associations=[
-    {icon:Feather,title:"جمعية الخط العربي",place:"شندي"},
-    {icon:Aperture,title:"فرقة المسرح الشبابي",place:"المتمة"},
-    {icon:Globe2,title:"نادي الأدب والفنون",place:"عطبرة"},
-    {icon:RefreshCw,title:"جمعية التراث السوداني",place:"بربر"},
-    {icon:Landmark,title:"فرقة نهر النيل التقليدية",place:"الدامر"},
-  ];
-  const initiatives=[
-    {image:"/assets/culture-folk-hq.webp",title:"مشروع توثيق التراث الشفهي",text:"جمع وتوثيق الحكايات والأغاني الشعبية"},
-    {image:"/assets/culture-seminar-hq.webp",title:"مبادرة دعم المواهب الشابة",text:"احتضان وتنمية المبدعين في السودان"},
-    {image:"/assets/culture-gallery-hq.webp",title:"مشروع المتاحف المتنقلة",text:"نشر الثقافة في المناطق المختلفة"},
-  ];
-  const contests=[
-    {title:"مسابقة الشعر السنوية",date:"آخر موعد: 30 مايو 2025"},
-    {title:"جائزة الإبداع الفني",date:"آخر موعد: 15 يونيو 2025"},
-    {title:"مسابقة التصوير الضوئي",date:"آخر موعد: 1 يوليو 2025"},
-  ];
-  const news=[
-    {image:"/assets/culture-seminar-hq.webp",title:"إطلاق مبادرة إحياء التراث السوداني",date:"20 مايو 2025"},
-    {image:"/assets/culture-gallery-hq.webp",title:"نجاح معرض الفنون التشكيلية الأول",date:"18 مايو 2025"},
-    {image:"/assets/culture-poetry-hq.webp",title:"ندوة حول دور الشباب في الثقافة",date:"15 مايو 2025"},
-    {image:"/assets/culture-folk-hq.webp",title:"توقيع اتفاقية شراكة ثقافية جديدة",date:"10 مايو 2025"},
-  ];
-  const media=[
-    {image:"/assets/culture-folk-hq.webp",type:"فيديو",title:"مهرجان التراث السوداني 2025",date:"12 مايو 2025"},
-    {image:"/assets/culture-poetry-hq.webp",type:"بودكاست",title:"أمسية شعرية رائعة",date:"8 مايو 2025"},
-    {image:"/assets/culture-gallery-hq.webp",type:"فيديو",title:"معرض الفنون التشكيلية",date:"5 مايو 2025"},
-  ];
-  const calendar=[
-    {day:"25",month:"مايو",title:"أمسية شعرية للشباب",place:"قاعة بيت الثقافة - عطبرة"},
-    {day:"30",month:"مايو",title:"معرض الفنون التشكيلية",place:"مركز الفنون - بربر"},
-    {day:"5",month:"يونيو",title:"ندوة الثقافة والمجتمع",place:"قاعة المؤتمرات - شندي"},
-    {day:"15",month:"يونيو",title:"مهرجان نهر النيل للتراث",place:"المدينة القديمة - عطبرة"},
   ];
   const trust=[
     {icon:RefreshCw,title:"سهولة الاستخدام",text:"واجهة بسيطة وسهلة"},
@@ -876,6 +830,91 @@ function CulturePage(){
     {icon:MonitorCheck,title:"منصة آمنة",text:"حماية بيانات وخصوصية"},
     {icon:MessageCircle,title:"دعم فني متواصل",text:"فريق متخصص لمساعدتك"},
   ];
+
+  type ActivityItem = {image:string;tag:string;title:string;date:string;location:string};
+  type ArtistItem   = {image:string;name:string;role:string};
+  type AssocItem    = {icon:React.ElementType;title:string;place:string};
+  type InitItem     = {image:string;title:string;text:string};
+  type ContestItem  = {title:string;date:string};
+  type NewsItem     = {image:string;title:string;date:string};
+  type MediaItem    = {image:string;type:string;title:string;date:string};
+
+  const [activities, setActivities] = useState<ActivityItem[]>([
+    {image:"/assets/culture-folk-hq.webp",tag:"مهرجان تراثي",title:"مهرجان نهر النيل للتراث",date:"18 مايو 2025",location:"المدينة القديمة - عطبرة"},
+    {image:"/assets/culture-seminar-hq.webp",tag:"ندوة ثقافية",title:"ندوة دور الثقافة في بناء المجتمع",date:"22 مايو 2025",location:"قاعة المؤتمرات"},
+    {image:"/assets/culture-gallery-hq.webp",tag:"معرض فني",title:"معرض الفنون التشكيلية",date:"23 مايو 2025",location:"مركز الفنون"},
+    {image:"/assets/culture-poetry-hq.webp",tag:"أمسية شعرية",title:"أمسية شعرية لشعراء الشباب",date:"25 مايو 2025",location:"قاعة بيت الثقافة"},
+  ]);
+  const [artists, setArtists] = useState<ArtistItem[]>([
+    {image:"/assets/culture-tayeb.jpg",name:"د. الطيب صالح",role:"أديب وروائي سوداني"},
+    {image:"/assets/culture-ahmed.jpg",name:"أحمد المصطفى",role:"شاعر سوداني"},
+    {image:"/assets/culture-taj.jpg",name:"تاج السر الحسن",role:"كاتب وإعلامي"},
+    {image:"/assets/culture-wardi.gif",name:"محمد وردي",role:"فنان ومطرب"},
+  ]);
+  const [associations, setAssociations] = useState<AssocItem[]>([
+    {icon:Feather,title:"جمعية الخط العربي",place:"شندي"},
+    {icon:Aperture,title:"فرقة المسرح الشبابي",place:"المتمة"},
+    {icon:Globe2,title:"نادي الأدب والفنون",place:"عطبرة"},
+    {icon:RefreshCw,title:"جمعية التراث السوداني",place:"بربر"},
+    {icon:Landmark,title:"فرقة نهر النيل التقليدية",place:"الدامر"},
+  ]);
+  const [initiatives, setInitiatives] = useState<InitItem[]>([
+    {image:"/assets/culture-folk-hq.webp",title:"مشروع توثيق التراث الشفهي",text:"جمع وتوثيق الحكايات والأغاني الشعبية"},
+    {image:"/assets/culture-seminar-hq.webp",title:"مبادرة دعم المواهب الشابة",text:"احتضان وتنمية المبدعين في السودان"},
+    {image:"/assets/culture-gallery-hq.webp",title:"مشروع المتاحف المتنقلة",text:"نشر الثقافة في المناطق المختلفة"},
+  ]);
+  const [contests, setContests] = useState<ContestItem[]>([
+    {title:"مسابقة الشعر السنوية",date:"آخر موعد: 30 مايو 2025"},
+    {title:"جائزة الإبداع الفني",date:"آخر موعد: 15 يونيو 2025"},
+    {title:"مسابقة التصوير الضوئي",date:"آخر موعد: 1 يوليو 2025"},
+  ]);
+  const [news, setNews] = useState<NewsItem[]>([
+    {image:"/assets/culture-seminar-hq.webp",title:"إطلاق مبادرة إحياء التراث السوداني",date:"20 مايو 2025"},
+    {image:"/assets/culture-gallery-hq.webp",title:"نجاح معرض الفنون التشكيلية الأول",date:"18 مايو 2025"},
+    {image:"/assets/culture-poetry-hq.webp",title:"ندوة حول دور الشباب في الثقافة",date:"15 مايو 2025"},
+    {image:"/assets/culture-folk-hq.webp",title:"توقيع اتفاقية شراكة ثقافية جديدة",date:"10 مايو 2025"},
+  ]);
+  const [media, setMedia] = useState<MediaItem[]>([
+    {image:"/assets/culture-folk-hq.webp",type:"فيديو",title:"مهرجان التراث السوداني 2025",date:"12 مايو 2025"},
+    {image:"/assets/culture-poetry-hq.webp",type:"بودكاست",title:"أمسية شعرية رائعة",date:"8 مايو 2025"},
+    {image:"/assets/culture-gallery-hq.webp",type:"فيديو",title:"معرض الفنون التشكيلية",date:"5 مايو 2025"},
+  ]);
+
+  const iconMap: Record<string, React.ElementType> = {
+    BookOpen, Landmark, Palette, Music2, UsersRound, Feather, Aperture,
+    Globe2, RefreshCw, Trophy, Building: Building2, Music: Music2,
+  };
+
+  const calendar=[
+    {day:"25",month:"مايو",title:"أمسية شعرية للشباب",place:"قاعة بيت الثقافة - عطبرة"},
+    {day:"30",month:"مايو",title:"معرض الفنون التشكيلية",place:"مركز الفنون - بربر"},
+    {day:"5",month:"يونيو",title:"ندوة الثقافة والمجتمع",place:"قاعة المؤتمرات - شندي"},
+    {day:"15",month:"يونيو",title:"مهرجان نهر النيل للتراث",place:"المدينة القديمة - عطبرة"},
+  ];
+
+  useEffect(()=>{
+    supabase.from("culture_events").select("*").eq("published",true).order("sort_order").then(({data})=>{
+      if(data&&data.length>0) setActivities(data.map(r=>({image:r.image_url||"/assets/culture-folk-hq.webp",tag:r.tag,title:r.title,date:r.event_date,location:r.location})));
+    });
+    supabase.from("culture_artists").select("*").eq("published",true).order("sort_order").then(({data})=>{
+      if(data&&data.length>0) setArtists(data.map(r=>({image:r.image_url||"/assets/culture-tayeb.jpg",name:r.name,role:r.role})));
+    });
+    supabase.from("culture_associations").select("*").eq("published",true).order("sort_order").then(({data})=>{
+      if(data&&data.length>0) setAssociations(data.map(r=>({icon:iconMap[r.icon]||UsersRound,title:r.title,place:r.place})));
+    });
+    supabase.from("culture_initiatives").select("*").eq("published",true).order("sort_order").then(({data})=>{
+      if(data&&data.length>0) setInitiatives(data.map(r=>({image:r.image_url||"/assets/culture-folk-hq.webp",title:r.title,text:r.text})));
+    });
+    supabase.from("culture_contests").select("*").eq("published",true).order("sort_order").then(({data})=>{
+      if(data&&data.length>0) setContests(data.map(r=>({title:r.title,date:r.deadline})));
+    });
+    supabase.from("culture_news").select("*").eq("published",true).order("sort_order").then(({data})=>{
+      if(data&&data.length>0) setNews(data.map(r=>({image:r.image_url||"/assets/culture-seminar-hq.webp",title:r.title,date:r.published_at?new Date(r.published_at).toLocaleDateString("ar-EG",{day:"2-digit",month:"long"}):""})));
+    });
+    supabase.from("culture_media").select("*").eq("published",true).order("sort_order").then(({data})=>{
+      if(data&&data.length>0) setMedia(data.map(r=>({image:r.image_url||"/assets/culture-folk-hq.webp",type:r.type,title:r.title,date:r.media_date})));
+    });
+  },[]);
   return <div className="culture-redesign">
     <section className="cul-hero">
       <div className="cul-hero-visual motion"><img src="/assets/culture-hero-hq.webp" alt="العود والكتب وعلم السودان في مشهد يعبر عن الثقافة السودانية"/></div>

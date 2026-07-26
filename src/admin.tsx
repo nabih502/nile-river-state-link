@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { supabase } from "./supabase";
 import InvestmentPanel from "./admin-investment";
+import CulturePanel from "./admin-culture";
 
-type Section = "dashboard" | "news" | "events" | "members" | "messages" | "investment" | "settings";
+type Section = "dashboard" | "news" | "events" | "members" | "messages" | "investment" | "culture" | "settings";
 
 interface NewsRow { id: string; title: string; slug: string; excerpt: string; body: string; image_url: string; category: string; published: boolean; published_at: string | null; created_at: string; }
 interface EventRow { id: string; title: string; slug: string; excerpt: string; body: string; image_url: string; location: string; event_date: string; event_end_date: string | null; published: boolean; created_at: string; }
@@ -333,6 +334,7 @@ export default function AdminApp() {
     { key: "members", label: "الأعضاء", badge: stats.members },
     { key: "messages", label: "الرسائل", badge: stats.unread || undefined },
     { key: "investment", label: "الاستثمار", badge: stats.newInquiries || undefined },
+    { key: "culture", label: "الثقافة" },
     { key: "settings", label: "الإعدادات" },
   ];
 
@@ -528,6 +530,7 @@ export default function AdminApp() {
 
           {/* ── Investment ── */}
           {section === "investment" && <InvestmentPanel />}
+          {section === "culture" && <CulturePanel />}
 
           {/* ── Settings ── */}
           {section === "settings" && <SettingsPanel />}

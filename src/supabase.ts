@@ -149,3 +149,80 @@ export type InvestmentInquiry = {
   status: string;
   created_at: string;
 };
+
+export type CultureEvent = {
+  id: string;
+  title: string;
+  image_url: string;
+  tag: string;
+  event_date: string;
+  location: string;
+  published: boolean;
+  sort_order: number;
+  created_at: string;
+};
+
+export type CultureNews = {
+  id: string;
+  title: string;
+  image_url: string;
+  excerpt: string;
+  body: string;
+  published_at: string;
+  published: boolean;
+  sort_order: number;
+  created_at: string;
+};
+
+export type CultureArtist = {
+  id: string;
+  name: string;
+  image_url: string;
+  role: string;
+  bio: string;
+  published: boolean;
+  sort_order: number;
+  created_at: string;
+};
+
+export type CultureAssociation = {
+  id: string;
+  title: string;
+  place: string;
+  icon: string;
+  published: boolean;
+  sort_order: number;
+  created_at: string;
+};
+
+export type CultureInitiative = {
+  id: string;
+  title: string;
+  image_url: string;
+  text: string;
+  published: boolean;
+  sort_order: number;
+  created_at: string;
+};
+
+export type CultureContest = {
+  id: string;
+  title: string;
+  deadline: string;
+  prize: string;
+  published: boolean;
+  sort_order: number;
+  created_at: string;
+};
+
+export type CultureMedia = {
+  id: string;
+  title: string;
+  image_url: string;
+  type: string;
+  media_date: string;
+  link_url: string;
+  published: boolean;
+  sort_order: number;
+  created_at: string;
+};
