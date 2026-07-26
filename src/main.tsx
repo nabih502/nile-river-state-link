@@ -17,8 +17,8 @@ function parseRoute(): { page: string; slug?: string } {
   if (parts.length >= 2 && ["news", "events"].includes(parts[0])) {
     return { page: `${parts[0]}-detail`, slug: parts[1] };
   }
-  if (parts[0] === "investment" && parts.length >= 2) {
-    return { page: "investment-detail", slug: parts[1] };
+  if (parts[0] === "investment" && parts.length >= 3 && ["sector","opportunity"].includes(parts[1])) {
+    return { page: `inv-${parts[1]}`, slug: parts[2] };
   }
   return { page: parts[0] };
 }

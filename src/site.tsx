@@ -3,7 +3,7 @@ import { supabase } from "./supabase";
 import { Aperture, ArrowLeft, Award, BadgeCheck, BadgePercent, Banknote, BookOpen, BriefcaseBusiness, Building2, CalendarDays, Camera, ChartNoAxesCombined, ChartPie, Check, ChevronLeft, CircleAlert, CircleCheckBig, Circle as CircleHelp, Clock3, CreditCard, Crown, Eye, Factory, Feather, FileImage, FileText, FileUp, Gem, Gift, Globe as Globe2, GraduationCap, HandHeart, Handshake, Headphones, HeartHandshake, HeartPulse, Landmark, LayoutDashboard, LayoutGrid, LibraryBig, Lightbulb, Menu, Megaphone, MonitorCheck, Music2, Network, Newspaper, MessageCircle, Info, LockKeyhole, Mail, MapPin, Paperclip, Percent, Phone, QrCode, ReceiptText, Palette, Pill, CirclePlay as PlayCircle, RefreshCw, ScanFace, Search, Settings2, Share2, Shield, ShieldCheck, Stethoscope, Send, ShoppingCart, Sparkles, Sprout, Store, Tags, Target, TrendingUp, Trophy, Truck, Upload, UserCheck, UserPlus, UserRound, UsersRound, Video, WalletCards, X } from "lucide-react";
 
 type InternalKey = "services" | "initiatives" | "news" | "library";
-type PageKey = "home" | "about" | "social" | "education" | "health" | "investment" | "culture" | InternalKey | "membership" | "register" | "photo" | "payment" | "success" | "contact" | "events" | "news-detail" | "events-detail";
+type PageKey = "home" | "about" | "social" | "education" | "health" | "investment" | "culture" | InternalKey | "membership" | "register" | "photo" | "payment" | "success" | "contact" | "events" | "news-detail" | "events-detail" | "inv-sector" | "inv-opportunity";
 type PortalKey = "social" | "education" | "health" | "investment" | "culture";
 
 const MARKET_URL="https://sudan-market.com/";
@@ -14,6 +14,7 @@ const routeMap: Record<string, PageKey> = {
   services:"services", initiatives:"initiatives", news:"news", library:"library",
   membership:"membership", register:"register", photo:"photo", payment:"payment", success:"success", contact:"contact",
   events:"events", "news-detail":"news-detail", "events-detail":"events-detail",
+  "inv-sector":"inv-sector", "inv-opportunity":"inv-opportunity",
 };
 
 const nav = [["/","الرئيسية"],["/about","عن الرابطة"],["/social","الخدمات"],["/investment","المبادرات"],["/culture","الثقافة"],["/education","التعليم"],["/contact","تواصل معنا"]];
@@ -743,11 +744,11 @@ function InvestmentPage(){
 
     <div className="inv-dashboard page-width">
       <div className="inv-main-column">
-        <section id="inv-sectors" className="inv-sectors"><header><a href="#inv-sectors">عرض الكل</a><h2>القطاعات الاستثمارية</h2></header><div className="inv-sector-grid">{sectors.map(item=><article className="motion" key={item.name}><div><img src={item.image_url||"/assets/investment-hero-hq.webp"} alt={item.name}/><span><DynIcon name={item.icon} fallback={Sprout}/></span></div><h3>{item.name}</h3><p>{item.description}</p><a href="/contact">استعرض الفرص</a></article>)}</div></section>
+        <section id="inv-sectors" className="inv-sectors"><header><a href="#inv-sectors">عرض الكل</a><h2>القطاعات الاستثمارية</h2></header><div className="inv-sector-grid">{sectors.map(item=><article className="motion" key={item.name}><div><img src={item.image_url||"/assets/investment-hero-hq.webp"} alt={item.name}/><span><DynIcon name={item.icon} fallback={Sprout}/></span></div><h3>{item.name}</h3><p>{item.description}</p><a href={`/investment/sector/${item.slug}`}>استعرض الفرص</a></article>)}</div></section>
 
         <section className="inv-solar motion"><img src="/assets/investment-solar-hq.webp" alt="مشروع الطاقة الشمسية"/><span>مساحة إعلانية</span><div><h2>استثمر في الطاقة الشمسية</h2><p>مشروع محطة طاقة شمسية بقدرة 50 ميجاوات</p><aside><b><Clock3/> عقد طويل الأجل</b><b><Percent/> عائد مستقر</b><b><ChartNoAxesCombined/> دعم حكومي</b></aside><a href="/contact">اعرف المزيد</a></div></section>
 
-        <section id="investment-opportunities" className="inv-opportunities"><header><a href="#investment-opportunities">عرض الكل</a><h2>أحدث الفرص الاستثمارية</h2></header><div>{opps.map(item=><article className="motion" key={item.title}><div><img src={item.image_url||"/assets/investment-hero-hq.webp"} alt={item.title}/><span>{item.status==="available"?"فرصة جديدة":item.status==="in_progress"?"قيد التنفيذ":"مغلقة"}</span></div><h3>{item.title}</h3><p>الموقع: {item.location||"—"}<br/>الحد الأدنى: {item.min_investment||"—"}</p><a href="/contact">عرض التفاصيل</a></article>)}</div><small>● ● ●</small></section>
+        <section id="investment-opportunities" className="inv-opportunities"><header><a href="#investment-opportunities">عرض الكل</a><h2>أحدث الفرص الاستثمارية</h2></header><div>{opps.map(item=><article className="motion" key={item.title}><div><img src={item.image_url||"/assets/investment-hero-hq.webp"} alt={item.title}/><span>{item.status==="available"?"فرصة جديدة":item.status==="in_progress"?"قيد التنفيذ":"مغلقة"}</span></div><h3>{item.title}</h3><p>الموقع: {item.location||"—"}<br/>الحد الأدنى: {item.min_investment||"—"}</p><a href={`/investment/opportunity/${item.slug}`}>عرض التفاصيل</a></article>)}</div><small>● ● ●</small></section>
 
         <section id="inv-incentives" className="inv-benefits motion"><h2>مزايا المستثمر</h2><div>{incentives.slice().reverse().map(item=><a className="inv-benefit-link" href="/contact" key={item.title}><DynIcon name={item.icon} fallback={ShieldCheck}/><b>{item.title}</b></a>)}</div></section>
       </div>
@@ -1538,6 +1539,168 @@ function NewsListPage() {
   );
 }
 
+// ─── Investment Sector Detail Page ───────────────────────────────────────────
+type InquiryForm = {name:string;email:string;phone:string;message:string};
+const emptyForm:InquiryForm = {name:"",email:"",phone:"",message:""};
+
+function InvestmentInquiryForm({type,slug,title}:{type:"sector"|"opportunity";slug:string;title:string}){
+  const [form,setForm] = useState<InquiryForm>(emptyForm);
+  const [status,setStatus] = useState<"idle"|"sending"|"sent"|"error">("idle");
+  const set = (k:keyof InquiryForm) => (e:React.ChangeEvent<HTMLInputElement|HTMLTextAreaElement>) => setForm(f=>({...f,[k]:e.target.value}));
+  const submit = async (e:React.FormEvent) => {
+    e.preventDefault();
+    if(!form.name.trim()||(!form.email.trim()&&!form.phone.trim())) return;
+    setStatus("sending");
+    const {error} = await supabase.from("investment_inquiries").insert({
+      type, reference_slug:slug, reference_title:title,
+      name:form.name, email:form.email, phone:form.phone, message:form.message,
+    });
+    setStatus(error?"error":"sent");
+  };
+  if(status==="sent") return (
+    <div className="inquiry-success">
+      <ShieldCheck size={40}/>
+      <h3>تم استلام طلبك بنجاح</h3>
+      <p>سيتواصل معك فريق الاستثمار في أقرب وقت ممكن على البريد الإلكتروني أو رقم الهاتف الذي أدخلته.</p>
+      <button onClick={()=>setStatus("idle")}>إرسال طلب آخر</button>
+    </div>
+  );
+  return (
+    <form className="inquiry-form" onSubmit={submit} noValidate>
+      <h3><MessageCircle/> أرسل طلب استثمار</h3>
+      <div className="inquiry-row">
+        <label>الاسم الكامل <span>*</span><input value={form.name} onChange={set("name")} placeholder="محمد أحمد" required/></label>
+        <label>رقم الهاتف<input value={form.phone} onChange={set("phone")} placeholder="+249 9XX XXX XXX" type="tel"/></label>
+      </div>
+      <label>البريد الإلكتروني<input value={form.email} onChange={set("email")} placeholder="email@example.com" type="email"/></label>
+      <label>رسالة أو ملاحظات<textarea value={form.message} onChange={set("message")} rows={4} placeholder="اكتب تفاصيل إضافية أو أسئلتك هنا..."/></label>
+      {status==="error"&&<p className="inquiry-error">حدث خطأ، يرجى المحاولة مرة أخرى.</p>}
+      <button type="submit" disabled={status==="sending"}>{status==="sending"?"جاري الإرسال...":"إرسال الطلب"}</button>
+    </form>
+  );
+}
+
+function InvestmentSectorDetailPage({slug}:{slug?:string}){
+  type Sector = {id:string;name:string;slug:string;description:string;highlight:string;icon:string;image_url:string};
+  type Opp = {id:string;title:string;slug:string;image_url:string;min_investment:string;expected_return:string;duration:string;location:string;status:string};
+  const [sector,setSector] = useState<Sector|null>(null);
+  const [opps,setOpps] = useState<Opp[]>([]);
+  const [loading,setLoading] = useState(true);
+  useEffect(()=>{
+    if(!slug){setLoading(false);return;}
+    supabase.from("investment_sectors").select("*").eq("slug",slug).eq("published",true).maybeSingle().then(({data})=>{
+      setSector(data);
+      if(data){
+        supabase.from("investment_opportunities").select("id,title,slug,image_url,min_investment,expected_return,duration,location,status").eq("published",true).order("created_at",{ascending:false}).limit(6).then(({data:od})=>setOpps(od||[]));
+      }
+      setLoading(false);
+    });
+  },[slug]);
+  if(loading) return <div className="inv-detail-loading"><div className="inv-detail-spinner"/></div>;
+  if(!sector) return <div className="inv-detail-empty"><h2>القطاع غير موجود</h2><a href="/investment">العودة للاستثمار</a></div>;
+  return (
+    <div className="inv-detail-page" dir="rtl">
+      <div className="inv-detail-hero" style={{backgroundImage:`url(${sector.image_url||"/assets/investment-hero-hq.webp"})`}}>
+        <div className="inv-detail-hero-overlay"/>
+        <div className="inv-detail-hero-content page-width">
+          <a href="/investment" className="inv-detail-back"><ChevronLeft/> القطاعات الاستثمارية</a>
+          <span className="inv-detail-badge"><DynIcon name={sector.icon} fallback={Sprout}/> قطاع استثماري</span>
+          <h1>{sector.name}</h1>
+          {sector.highlight&&<p className="inv-detail-highlight"><Gem/> {sector.highlight}</p>}
+        </div>
+      </div>
+      <div className="inv-detail-body page-width">
+        <div className="inv-detail-main">
+          <section className="inv-detail-description">
+            <h2>عن هذا القطاع</h2>
+            <p>{sector.description}</p>
+          </section>
+          {opps.length>0&&(
+            <section className="inv-detail-opps">
+              <h2>الفرص الاستثمارية في هذا القطاع</h2>
+              <div className="inv-detail-opps-grid">
+                {opps.map(o=>(
+                  <a href={`/investment/opportunity/${o.slug}`} key={o.id} className="inv-opp-card">
+                    <img src={o.image_url||"/assets/investment-hero-hq.webp"} alt={o.title}/>
+                    <div>
+                      <span className="inv-opp-tag">{o.status==="available"?"فرصة متاحة":o.status==="in_progress"?"قيد التنفيذ":"مغلقة"}</span>
+                      <h3>{o.title}</h3>
+                      <p><MapPin size={14}/> {o.location||"ولاية نهر النيل"}</p>
+                      {o.min_investment&&<p><WalletCards size={14}/> الحد الأدنى: {o.min_investment}</p>}
+                      {o.expected_return&&<p><ChartNoAxesCombined size={14}/> العائد: {o.expected_return}</p>}
+                      <span className="inv-opp-cta">عرض التفاصيل <ChevronLeft size={14}/></span>
+                    </div>
+                  </a>
+                ))}
+              </div>
+            </section>
+          )}
+        </div>
+        <aside className="inv-detail-aside">
+          <InvestmentInquiryForm type="sector" slug={sector.slug} title={sector.name}/>
+          <div className="inv-detail-meta">
+            <h3><Info/> معلومات القطاع</h3>
+            {sector.highlight&&<p><Gem/> {sector.highlight}</p>}
+            <p><MapPin/> ولاية نهر النيل — السودان</p>
+            <p><ShieldCheck/> بيئة استثمارية آمنة</p>
+          </div>
+        </aside>
+      </div>
+    </div>
+  );
+}
+
+// ─── Investment Opportunity Detail Page ───────────────────────────────────────
+function InvestmentOpportunityDetailPage({slug}:{slug?:string}){
+  type Opp = {id:string;title:string;slug:string;description:string;details:string;image_url:string;min_investment:string;expected_return:string;duration:string;location:string;status:string};
+  const [opp,setOpp] = useState<Opp|null>(null);
+  const [loading,setLoading] = useState(true);
+  useEffect(()=>{
+    if(!slug){setLoading(false);return;}
+    supabase.from("investment_opportunities").select("*").eq("slug",slug).eq("published",true).maybeSingle().then(({data})=>{setOpp(data);setLoading(false);});
+  },[slug]);
+  if(loading) return <div className="inv-detail-loading"><div className="inv-detail-spinner"/></div>;
+  if(!opp) return <div className="inv-detail-empty"><h2>الفرصة غير موجودة</h2><a href="/investment">العودة للاستثمار</a></div>;
+  return (
+    <div className="inv-detail-page" dir="rtl">
+      <div className="inv-detail-hero" style={{backgroundImage:`url(${opp.image_url||"/assets/investment-hero-hq.webp"})`}}>
+        <div className="inv-detail-hero-overlay"/>
+        <div className="inv-detail-hero-content page-width">
+          <a href="/investment" className="inv-detail-back"><ChevronLeft/> الفرص الاستثمارية</a>
+          <span className="inv-detail-badge"><ChartNoAxesCombined/> {opp.status==="available"?"فرصة متاحة":opp.status==="in_progress"?"قيد التنفيذ":"مغلقة"}</span>
+          <h1>{opp.title}</h1>
+          {opp.location&&<p className="inv-detail-highlight"><MapPin/> {opp.location}</p>}
+        </div>
+      </div>
+      <div className="inv-detail-body page-width">
+        <div className="inv-detail-main">
+          <section className="inv-detail-description">
+            <h2>تفاصيل الفرصة الاستثمارية</h2>
+            <p>{opp.description}</p>
+            {opp.details&&<p>{opp.details}</p>}
+          </section>
+          <div className="inv-detail-specs">
+            {opp.min_investment&&<div><WalletCards/><b>الحد الأدنى للاستثمار</b><span>{opp.min_investment}</span></div>}
+            {opp.expected_return&&<div><ChartNoAxesCombined/><b>العائد المتوقع</b><span>{opp.expected_return} سنوياً</span></div>}
+            {opp.duration&&<div><Clock3/><b>مدة المشروع</b><span>{opp.duration}</span></div>}
+            {opp.location&&<div><MapPin/><b>الموقع</b><span>{opp.location}</span></div>}
+          </div>
+        </div>
+        <aside className="inv-detail-aside">
+          <InvestmentInquiryForm type="opportunity" slug={opp.slug} title={opp.title}/>
+          <div className="inv-detail-meta">
+            <h3><Info/> ملخص الفرصة</h3>
+            {opp.min_investment&&<p><WalletCards/> الحد الأدنى: {opp.min_investment}</p>}
+            {opp.expected_return&&<p><Percent/> العائد: {opp.expected_return}</p>}
+            {opp.duration&&<p><Clock3/> المدة: {opp.duration}</p>}
+            <p><ShieldCheck/> فرصة مدعومة من الولاية</p>
+          </div>
+        </aside>
+      </div>
+    </div>
+  );
+}
+
 // ─── News detail page ─────────────────────────────────────────────────────────
 function NewsDetailPage({slug}:{slug?:string}) {
   const [item, setItem] = useState<{title:string;body:string;excerpt:string;image_url:string;category:string;published_at:string|null;created_at:string}|null>(null);
@@ -1635,4 +1798,4 @@ function EventDetailPage({slug}:{slug?:string}) {
   );
 }
 
-export default function NileSite({page,slug}:{page:string;slug?:string}){const active=routeMap[page]||"home";const hideHeader=["membership","photo","payment","success"].includes(active);const hideFooter=["membership","photo","payment","success"].includes(active);return <div dir="rtl"><Motion/>{!hideHeader&&<Header active={active}/>}<main>{active==="home"?<Home/>:active==="about"?<AboutPage/>:active==="social"?<SocialPage/>:active==="education"?<EducationPage/>:active==="health"?<HealthPage/>:active==="investment"?<InvestmentPage/>:active==="culture"?<CulturePage/>:["services","initiatives","library"].includes(active)?<InternalPage type={active as InternalKey}/>:active==="news"?<NewsListPage/>:active==="news-detail"?<NewsDetailPage slug={slug}/>:active==="events"?<EventsListPage/>:active==="events-detail"?<EventDetailPage slug={slug}/>:active==="membership"?<Membership/>:active==="register"?<Register/>:active==="photo"?<PhotoUpload/>:active==="payment"?<Payment/>:active==="success"?<Success/>:active==="contact"?<Contact/>:<Home/>}</main>{!hideFooter&&<Footer/>}</div>}
+export default function NileSite({page,slug}:{page:string;slug?:string}){const active=routeMap[page]||"home";const hideHeader=["membership","photo","payment","success"].includes(active);const hideFooter=["membership","photo","payment","success"].includes(active);return <div dir="rtl"><Motion/>{!hideHeader&&<Header active={active}/>}<main>{active==="home"?<Home/>:active==="about"?<AboutPage/>:active==="social"?<SocialPage/>:active==="education"?<EducationPage/>:active==="health"?<HealthPage/>:active==="investment"?<InvestmentPage/>:active==="inv-sector"?<InvestmentSectorDetailPage slug={slug}/>:active==="inv-opportunity"?<InvestmentOpportunityDetailPage slug={slug}/>:active==="culture"?<CulturePage/>:["services","initiatives","library"].includes(active)?<InternalPage type={active as InternalKey}/>:active==="news"?<NewsListPage/>:active==="news-detail"?<NewsDetailPage slug={slug}/>:active==="events"?<EventsListPage/>:active==="events-detail"?<EventDetailPage slug={slug}/>:active==="membership"?<Membership/>:active==="register"?<Register/>:active==="photo"?<PhotoUpload/>:active==="payment"?<Payment/>:active==="success"?<Success/>:active==="contact"?<Contact/>:<Home/>}</main>{!hideFooter&&<Footer/>}</div>}
