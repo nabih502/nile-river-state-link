@@ -522,6 +522,7 @@ export function OpportunityEditor({
       duration: "",
       location: "",
       status: "available",
+      show_specs: true,
       published: true,
     }
   );
@@ -549,6 +550,7 @@ export function OpportunityEditor({
       duration: form.duration,
       location: form.location,
       status: form.status,
+      show_specs: form.show_specs,
       published: form.published,
     };
     const { error: err } = form.id
@@ -704,6 +706,16 @@ export function OpportunityEditor({
               />
             </label>
           </div>
+          <label className="inv-toggle-row">
+            <span className="inv-toggle-label">إظهار بطاقة المواصفات المالية في الصفحة</span>
+            <div
+              className={`inv-toggle-track${form.show_specs ? " on" : ""}`}
+              onClick={() => set("show_specs", !form.show_specs)}
+              style={{ cursor: "pointer" }}
+            >
+              <div className="inv-toggle-thumb" />
+            </div>
+          </label>
         </FormSection>
       </form>
     </Drawer>

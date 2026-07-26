@@ -85,6 +85,7 @@ export type InvestmentOpportunity = {
   duration: string;
   location: string;
   status: string;
+  show_specs: boolean;
   published: boolean;
   created_at: string;
 };

@@ -1679,22 +1679,22 @@ function InvestmentOpportunityDetailPage({slug}:{slug?:string}){
             <p>{opp.description}</p>
             {opp.details&&<p>{opp.details}</p>}
           </section>
-          <div className="inv-detail-specs">
+          {opp.show_specs!==false&&<div className="inv-detail-specs">
             {opp.min_investment&&<div><WalletCards/><b>الحد الأدنى للاستثمار</b><span>{opp.min_investment}</span></div>}
             {opp.expected_return&&<div><ChartNoAxesCombined/><b>العائد المتوقع</b><span>{opp.expected_return} سنوياً</span></div>}
             {opp.duration&&<div><Clock3/><b>مدة المشروع</b><span>{opp.duration}</span></div>}
             {opp.location&&<div><MapPin/><b>الموقع</b><span>{opp.location}</span></div>}
-          </div>
+          </div>}
         </div>
         <aside className="inv-detail-aside">
           <InvestmentInquiryForm type="opportunity" slug={opp.slug} title={opp.title}/>
-          <div className="inv-detail-meta">
+          {opp.show_specs!==false&&<div className="inv-detail-meta">
             <h3><Info/> ملخص الفرصة</h3>
             {opp.min_investment&&<p><WalletCards/> الحد الأدنى: {opp.min_investment}</p>}
             {opp.expected_return&&<p><Percent/> العائد: {opp.expected_return}</p>}
             {opp.duration&&<p><Clock3/> المدة: {opp.duration}</p>}
             <p><ShieldCheck/> فرصة مدعومة من الولاية</p>
-          </div>
+          </div>}
         </aside>
       </div>
     </div>
