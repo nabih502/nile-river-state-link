@@ -635,48 +635,30 @@ function HealthPage(){
   </div>
 }
 
+// icon name → lucide component lookup for dynamic DB icons
+const ICON_MAP: Record<string, React.ComponentType<{size?:number|string}>> = {
+  Sprout, Landmark, Building2, UsersRound, Gem, Factory, ChartNoAxesCombined,
+  MapPin, ShieldCheck, Clock3, WalletCards, ReceiptText, Percent, MessageCircle,
+  UserCheck, BadgeCheck, Handshake, TrendingUp, Award, Globe2, BookOpen,
+  HandHeart, HeartPulse, GraduationCap, Target, Info, Lightbulb, Banknote,
+};
+function DynIcon({name,fallback:Fallback}:{name:string;fallback:React.ComponentType<{size?:number|string}>}){const C=ICON_MAP[name]||Fallback;return <C/>;}
+
 function InvestmentPage(){
   const heroMenu=[
-    {icon:ChartNoAxesCombined,label:"فرص الاستثمار",href:"/investment/opportunities"},
-    {icon:LayoutGrid,label:"القطاعات الاستثمارية",href:"/investment/sectors"},
-    {icon:Gift,label:"الحوافز والتسهيلات",href:"/investment/benefits"},
-    {icon:BookOpen,label:"دليل المستثمر",href:"/investment/guide"},
-    {icon:Award,label:"قصص نجاح",href:"/investment/success-stories"},
-    {icon:UsersRound,label:"شركاؤنا",href:"/investment/partners"},
+    {icon:ChartNoAxesCombined,label:"فرص الاستثمار",href:"#investment-opportunities"},
+    {icon:LayoutGrid,label:"القطاعات الاستثمارية",href:"#inv-sectors"},
+    {icon:Gift,label:"الحوافز والتسهيلات",href:"#inv-incentives"},
+    {icon:BookOpen,label:"دليل المستثمر",href:"/contact"},
+    {icon:Award,label:"قصص نجاح",href:"#inv-stories"},
+    {icon:UsersRound,label:"شركاؤنا",href:"#inv-partners"},
     {icon:MessageCircle,label:"تواصل مع إدارة الاستثمار",href:"/contact"},
   ];
   const features=[
-    {icon:ChartNoAxesCombined,title:"عائد استثماري مجزٍ",text:"فرص متنوعة بعوائد مرتفعة ومستدامة",href:"/investment/returns"},
-    {icon:Sprout,title:"موارد طبيعية غنية",text:"أراضٍ زراعية واسعة وثروات معدنية ومائية",href:"/investment/resources"},
-    {icon:MapPin,title:"موقع استراتيجي",text:"يربط بين السودان ودول الجوار والأسواق العالمية",href:"/investment/location"},
-    {icon:ShieldCheck,title:"بيئة استثمارية آمنة",text:"تسهيلات وحوافز وتشريعات داعمة للمستثمرين",href:"/investment/environment"},
-  ];
-  const stats=[
-    {icon:Sprout,n:"2.9+ مليون",label:"هكتار أراضٍ زراعية"},
-    {icon:Landmark,n:"500 ألف",label:"هكتار نيلية وشبكة مائية"},
-    {icon:Building2,n:"11+",label:"مجمعات ذات مقومات متنوعة"},
-    {icon:UsersRound,n:"850 كم",label:"من نهر النيل والسواقي"},
-    {icon:Gem,n:"3 مليون",label:"نسمة قوة بشرية شابة"},
-  ];
-  const sectors=[
-    {image:"/assets/investment-hero-hq.webp",icon:Sprout,title:"الزراعة والإنتاج النباتي",text:"أراضٍ خصبة ومياه وفيرة ومحاصيل استراتيجية",href:"/investment/sector-agriculture"},
-    {image:"/assets/invest-livestock-hq.webp",icon:UsersRound,title:"الثروة الحيوانية",text:"ثروة حيوانية كبيرة ومراعي طبيعية واسعة",href:"/investment/sector-livestock"},
-    {image:"/assets/invest-industry-hq.webp",icon:Factory,title:"الصناعة التحويلية",text:"مواد خام متوفرة وبنية صناعية متكاملة",href:"/investment/sector-industry"},
-    {image:"/assets/invest-mining-hq.webp",icon:Gem,title:"التعدين والمحاجر",text:"ذهب، معادن، حجر جيري وموارد طبيعية",href:"/investment/sector-mining"},
-    {image:"/assets/invest-tourism-hq.webp",icon:Landmark,title:"السياحة والضيافة",text:"مواقع أثرية وطبيعية وفنادق ومنتجعات",href:"/investment/sector-tourism"},
-  ];
-  const opportunities=[
-    {image:"/assets/investment-orange-orchard.jpg",tag:"فرصة جديدة",title:"مشروع مزرعة فواكه استوائية",location:"شندي",area:"3,000 فدان",href:"/investment/opp-fruits"},
-    {image:"/assets/investment-industrial-zone.jpg",tag:"فرصة جديدة",title:"مشروع منطقة صناعية متكاملة",location:"شندي",area:"200 فدان",href:"/investment/opp-industrial"},
-    {image:"/assets/investment-red-bricks.jpg",tag:"فرصة جديدة",title:"مصنع الطوب الأحمر والبلوك",location:"بربر",area:"5 هكتار",href:"/investment/opp-bricks"},
-    {image:"/assets/investment-hero-hq.webp",tag:"فرصة جديدة",title:"مشروع الاستزراع السمكي",location:"عطبرة",area:"500 فدان",href:"/investment/opp-fish"},
-  ];
-  const benefits=[
-    {icon:Clock3,title:"حوافز ضريبية وجمركية",href:"/investment/benefits"},
-    {icon:WalletCards,title:"تسهيلات في تملك الأراضي",href:"/investment/benefits"},
-    {icon:ShieldCheck,title:"دعم فني وإرشادي متكامل",href:"/investment/benefits"},
-    {icon:ReceiptText,title:"إجراءات سريعة وسهلة",href:"/investment/benefits"},
-    {icon:Percent,title:"بيئة تحقق نمواً مستمراً",href:"/investment/benefits"},
+    {icon:ChartNoAxesCombined,title:"عائد استثماري مجزٍ",text:"فرص متنوعة بعوائد مرتفعة ومستدامة",href:"#investment-opportunities"},
+    {icon:Sprout,title:"موارد طبيعية غنية",text:"أراضٍ زراعية واسعة وثروات معدنية ومائية",href:"#inv-sectors"},
+    {icon:MapPin,title:"موقع استراتيجي",text:"يربط بين السودان ودول الجوار والأسواق العالمية",href:"/contact"},
+    {icon:ShieldCheck,title:"بيئة استثمارية آمنة",text:"تسهيلات وحوافز وتشريعات داعمة للمستثمرين",href:"#inv-incentives"},
   ];
   const trust=[
     {icon:MessageCircle,title:"دعم فني متواصل",text:"فريق متخصص لخدمة المستثمرين"},
@@ -685,30 +667,80 @@ function InvestmentPage(){
     {icon:BadgeCheck,title:"تواصل فعال",text:"نستمع لاحتياجاتك"},
     {icon:Clock3,title:"متابعة مستمرة",text:"من الفكرة وحتى التنفيذ"},
   ];
+
+  // static fallbacks
+  const staticStats=[
+    {icon:"Sprout",value:"2.9+ مليون",label:"هكتار أراضٍ زراعية"},
+    {icon:"Landmark",value:"500 ألف",label:"هكتار نيلية وشبكة مائية"},
+    {icon:"Building2",value:"11+",label:"مجمعات ذات مقومات متنوعة"},
+    {icon:"UsersRound",value:"850 كم",label:"من نهر النيل والسواقي"},
+    {icon:"Gem",value:"3 مليون",label:"نسمة قوة بشرية شابة"},
+  ];
+  const staticSectors=[
+    {image_url:"/assets/investment-hero-hq.webp",icon:"Sprout",name:"الزراعة والإنتاج النباتي",description:"أراضٍ خصبة ومياه وفيرة ومحاصيل استراتيجية",slug:"sector-agriculture"},
+    {image_url:"/assets/invest-livestock-hq.webp",icon:"UsersRound",name:"الثروة الحيوانية",description:"ثروة حيوانية كبيرة ومراعي طبيعية واسعة",slug:"sector-livestock"},
+    {image_url:"/assets/invest-industry-hq.webp",icon:"Factory",name:"الصناعة التحويلية",description:"مواد خام متوفرة وبنية صناعية متكاملة",slug:"sector-industry"},
+    {image_url:"/assets/invest-mining-hq.webp",icon:"Gem",name:"التعدين والمحاجر",description:"ذهب، معادن، حجر جيري وموارد طبيعية",slug:"sector-mining"},
+    {image_url:"/assets/invest-tourism-hq.webp",icon:"Landmark",name:"السياحة والضيافة",description:"مواقع أثرية وطبيعية وفنادق ومنتجعات",slug:"sector-tourism"},
+  ];
+  const staticOpps=[
+    {image_url:"/assets/investment-orange-orchard.jpg",status:"available",title:"مشروع مزرعة فواكه استوائية",location:"شندي",min_investment:"3,000 فدان",slug:"opp-fruits"},
+    {image_url:"/assets/investment-industrial-zone.jpg",status:"available",title:"مشروع منطقة صناعية متكاملة",location:"شندي",min_investment:"200 فدان",slug:"opp-industrial"},
+    {image_url:"/assets/investment-red-bricks.jpg",status:"available",title:"مصنع الطوب الأحمر والبلوك",location:"بربر",min_investment:"5 هكتار",slug:"opp-bricks"},
+    {image_url:"/assets/investment-hero-hq.webp",status:"available",title:"مشروع الاستزراع السمكي",location:"عطبرة",min_investment:"500 فدان",slug:"opp-fish"},
+  ];
+  const staticIncentives=[
+    {icon:"Clock3",title:"حوافز ضريبية وجمركية"},
+    {icon:"WalletCards",title:"تسهيلات في تملك الأراضي"},
+    {icon:"ShieldCheck",title:"دعم فني وإرشادي متكامل"},
+    {icon:"ReceiptText",title:"إجراءات سريعة وسهلة"},
+    {icon:"Percent",title:"بيئة تحقق نمواً مستمراً"},
+  ];
+
+  const [dbStats, setDbStats] = useState<{icon:string;value:string;label:string}[]>([]);
+  const [dbSectors, setDbSectors] = useState<{image_url:string;icon:string;name:string;description:string;slug:string}[]>([]);
+  const [dbOpps, setDbOpps] = useState<{image_url:string;status:string;title:string;location:string;min_investment:string;slug:string}[]>([]);
+  const [dbIncentives, setDbIncentives] = useState<{icon:string;title:string}[]>([]);
+  const [dbStory, setDbStory] = useState<{name:string;title:string;story:string;image_url:string}|null>(null);
+
+  useEffect(()=>{
+    supabase.from("investment_stats").select("icon,value,label,sort_order").order("sort_order").then(({data})=>{if(data&&data.length>0)setDbStats(data)});
+    supabase.from("investment_sectors").select("image_url,icon,name,description,slug").eq("published",true).order("sort_order").then(({data})=>{if(data&&data.length>0)setDbSectors(data)});
+    supabase.from("investment_opportunities").select("image_url,status,title,location,min_investment,slug").eq("published",true).order("created_at",{ascending:false}).limit(4).then(({data})=>{if(data&&data.length>0)setDbOpps(data)});
+    supabase.from("investment_incentives").select("icon,title").eq("published",true).order("sort_order").then(({data})=>{if(data&&data.length>0)setDbIncentives(data)});
+    supabase.from("investment_success_stories").select("name,title,story,image_url").eq("published",true).order("created_at",{ascending:false}).limit(1).maybeSingle().then(({data})=>{if(data)setDbStory(data)});
+  },[]);
+
+  const stats     = dbStats.length     ? dbStats     : staticStats;
+  const sectors   = dbSectors.length   ? dbSectors   : staticSectors;
+  const opps      = dbOpps.length      ? dbOpps      : staticOpps;
+  const incentives= dbIncentives.length? dbIncentives: staticIncentives;
+
   return <div className="investment-redesign">
     <section className="inv-hero">
-      <div className="inv-hero-visual motion"><img src="/assets/investment-hero-hq.webp" alt="نهر النيل والأراضي الزراعية"/><article className="inv-hero-opportunity"><span>فرصة استثمارية مميزة</span><img src="/assets/investment-hero-hq.webp" alt="مشروع زراعة محورية متكامل"/><h3>مشروع زراعة محورية متكامل</h3><p>المساحة: 5,000 هكتار<br/>العائد المتوقع: 25% سنوياً</p><a href="/investment/opp-fruits">عرض التفاصيل <ChevronLeft/></a></article></div>
+      <div className="inv-hero-visual motion"><img src="/assets/investment-hero-hq.webp" alt="نهر النيل والأراضي الزراعية"/><article className="inv-hero-opportunity"><span>فرصة استثمارية مميزة</span><img src="/assets/investment-hero-hq.webp" alt="مشروع زراعة محورية متكامل"/><h3>مشروع زراعة محورية متكامل</h3><p>المساحة: 5,000 هكتار<br/>العائد المتوقع: 25% سنوياً</p><a href="#investment-opportunities">عرض التفاصيل <ChevronLeft/></a></article></div>
       <div className="inv-hero-copy motion"><h1>الاستثمار في<br/><span>ولاية نهر النيل</span></h1><h2>فرص واعدة .. مستقبل مستدام</h2><p>بيئة استثمارية جاذبة بموارد طبيعية غنية، موقع استراتيجي<br/>يدعم التنمية ويحقق عوائد مجزية للمستثمرين.</p><div className="inv-hero-features">{features.map(item=>{const Icon=item.icon;return <a className="inv-feature-link" href={item.href} key={item.title}><Icon/><b>{item.title}</b><small>{item.text}</small></a>})}</div></div>
       <aside className="inv-hero-menu motion"><h2><ChartNoAxesCombined/> خدمات الاستثمار</h2>{heroMenu.map((item,index)=>{const Icon=item.icon;return <a className={index===0?"active":""} href={item.href} key={item.label}><Icon/>{item.label}</a>})}</aside>
     </section>
 
-    <section className="inv-stats page-width motion"><div className="inv-map"><svg viewBox="0 0 1653.539 1450.11" role="img" aria-label="خريطة السودان موضحاً عليها موقع ولاية نهر النيل"><use href="/assets/investment-river-nile-map.svg#States"/><use href="/assets/investment-river-nile-map.svg#Borders"/></svg></div>{stats.slice().reverse().map(item=>{const Icon=item.icon;return <article key={item.label}><Icon/><b>{item.n}</b><small>{item.label}</small></article>})}<h2>أرقام الاستثمار في ولاية نهر النيل</h2></section>
+    <section className="inv-stats page-width motion"><div className="inv-map"><svg viewBox="0 0 1653.539 1450.11" role="img" aria-label="خريطة السودان موضحاً عليها موقع ولاية نهر النيل"><use href="/assets/investment-river-nile-map.svg#States"/><use href="/assets/investment-river-nile-map.svg#Borders"/></svg></div>{stats.slice().reverse().map(item=><article key={item.label}><DynIcon name={item.icon} fallback={Sprout}/><b>{item.value}</b><small>{item.label}</small></article>)}<h2>أرقام الاستثمار في ولاية نهر النيل</h2></section>
 
     <div className="inv-dashboard page-width">
       <div className="inv-main-column">
-        <section className="inv-sectors"><header><a href="/investment/sectors">عرض الكل</a><h2>القطاعات الاستثمارية</h2></header><div className="inv-sector-grid">{sectors.map(item=>{const Icon=item.icon;return <article className="motion" key={item.title}><div><img src={item.image} alt={item.title}/><span><Icon/></span></div><h3>{item.title}</h3><p>{item.text}</p><a href={item.href}>استعرض الفرص</a></article>})}</div></section>
+        <section id="inv-sectors" className="inv-sectors"><header><a href="#inv-sectors">عرض الكل</a><h2>القطاعات الاستثمارية</h2></header><div className="inv-sector-grid">{sectors.map(item=><article className="motion" key={item.name}><div><img src={item.image_url||"/assets/investment-hero-hq.webp"} alt={item.name}/><span><DynIcon name={item.icon} fallback={Sprout}/></span></div><h3>{item.name}</h3><p>{item.description}</p><a href="/contact">استعرض الفرص</a></article>)}</div></section>
 
-        <section className="inv-solar motion"><img src="/assets/investment-solar-hq.webp" alt="مشروع الطاقة الشمسية"/><span>مساحة إعلانية</span><div><h2>استثمر في الطاقة الشمسية</h2><p>مشروع محطة طاقة شمسية بقدرة 50 ميجاوات</p><aside><b><Clock3/> عقد طويل الأجل</b><b><Percent/> عائد مستقر</b><b><ChartNoAxesCombined/> دعم حكومي</b></aside><a href="/investment/opp-solar">اعرف المزيد</a></div></section>
+        <section className="inv-solar motion"><img src="/assets/investment-solar-hq.webp" alt="مشروع الطاقة الشمسية"/><span>مساحة إعلانية</span><div><h2>استثمر في الطاقة الشمسية</h2><p>مشروع محطة طاقة شمسية بقدرة 50 ميجاوات</p><aside><b><Clock3/> عقد طويل الأجل</b><b><Percent/> عائد مستقر</b><b><ChartNoAxesCombined/> دعم حكومي</b></aside><a href="/contact">اعرف المزيد</a></div></section>
 
-        <section id="investment-opportunities" className="inv-opportunities"><header><a href="/investment/opportunities">عرض الكل</a><h2>أحدث الفرص الاستثمارية</h2></header><div>{opportunities.map(item=><article className="motion" key={item.title}><div><img src={item.image} alt={item.title}/><span>{item.tag}</span></div><h3>{item.title}</h3><p>الموقع: {item.location}<br/>المساحة: {item.area}</p><a href={item.href}>عرض التفاصيل</a></article>)}</div><small>● ● ●</small></section>
-        <section className="inv-benefits motion"><h2>مزايا المستثمر</h2><div>{benefits.slice().reverse().map(item=>{const Icon=item.icon;return <a className="inv-benefit-link" href={item.href} key={item.title}><Icon/><b>{item.title}</b></a>})}</div></section>
+        <section id="investment-opportunities" className="inv-opportunities"><header><a href="#investment-opportunities">عرض الكل</a><h2>أحدث الفرص الاستثمارية</h2></header><div>{opps.map(item=><article className="motion" key={item.title}><div><img src={item.image_url||"/assets/investment-hero-hq.webp"} alt={item.title}/><span>{item.status==="available"?"فرصة جديدة":item.status==="in_progress"?"قيد التنفيذ":"مغلقة"}</span></div><h3>{item.title}</h3><p>الموقع: {item.location||"—"}<br/>الحد الأدنى: {item.min_investment||"—"}</p><a href="/contact">عرض التفاصيل</a></article>)}</div><small>● ● ●</small></section>
+
+        <section id="inv-incentives" className="inv-benefits motion"><h2>مزايا المستثمر</h2><div>{incentives.slice().reverse().map(item=><a className="inv-benefit-link" href="/contact" key={item.title}><DynIcon name={item.icon} fallback={ShieldCheck}/><b>{item.title}</b></a>)}</div></section>
       </div>
 
       <aside className="inv-side-column">
-        <section className="inv-featured motion"><header><a href="/investment/opportunities">عرض الكل</a><h2>إعلانات فرص استثمارية مميزة</h2></header><img src="/assets/invest-industry-hq.webp" alt="مشروع مصنع زيوت نباتية"/><h3>مشروع مصنع زيوت نباتية</h3><p>الموقع: عطبرة<br/>المساحة: 10 هكتار<br/>العائد المتوقع: 22% سنوياً</p><a href="/investment/opp-industrial">عرض التفاصيل</a></section>
-        <section className="inv-resort motion"><img src="/assets/invest-tourism-hq.webp" alt="مشروع منتجع سياحي متكامل"/><h3>مشروع منتجع سياحي متكامل</h3><p>الموقع: المنطقة السياحية<br/>المساحة: 15 هكتار<br/>العائد المتوقع: 18% سنوياً</p><a href="/investment/sector-tourism" className="inv-resort-link">استعرض القطاع السياحي</a><span>مساحة إعلانية</span></section>
-        <section className="inv-partner motion"><img src="/assets/investment-partner-plant.jpg" alt="يدان تحتضنان نبتة ترمز للشراكة والتنمية"/><div><h2>شراكة .. تنمية .. ازدهار</h2><p>كن شريكاً في تطوير ولاية نهر النيل<br/>واستثمر في مستقبل واعد</p><a href="/investment/partners">تواصل معنا</a></div><footer><b><ChartNoAxesCombined/> فرصة</b><b><Handshake/> شراكة</b><b><UsersRound/> تنمية</b></footer></section>
-        <section className="inv-story motion"><header><a href="/investment/success-stories">عرض الكل</a><h2>قصص نجاح</h2></header><div><img src="/assets/investment-poultry.jpg" alt="مشروع دواجن الدامر"/><p><b>مشروع دواجن الدامر</b><span>بدأ المشروع بمزرعة صغيرة وأصبح اليوم من أكبر مشاريع الدواجن بالولاية.</span><a href="/investment/success-stories">اقرأ القصة كاملة</a></p></div></section>
+        <section className="inv-featured motion"><header><a href="#investment-opportunities">عرض الكل</a><h2>إعلانات فرص استثمارية مميزة</h2></header><img src="/assets/invest-industry-hq.webp" alt="مشروع مصنع زيوت نباتية"/><h3>مشروع مصنع زيوت نباتية</h3><p>الموقع: عطبرة<br/>المساحة: 10 هكتار<br/>العائد المتوقع: 22% سنوياً</p><a href="/contact">عرض التفاصيل</a></section>
+        <section className="inv-resort motion"><img src="/assets/invest-tourism-hq.webp" alt="مشروع منتجع سياحي متكامل"/><h3>مشروع منتجع سياحي متكامل</h3><p>الموقع: المنطقة السياحية<br/>المساحة: 15 هكتار<br/>العائد المتوقع: 18% سنوياً</p><a href="#inv-sectors" className="inv-resort-link">استعرض القطاع السياحي</a><span>مساحة إعلانية</span></section>
+        <section className="inv-partner motion"><img src="/assets/investment-partner-plant.jpg" alt="يدان تحتضنان نبتة ترمز للشراكة والتنمية"/><div><h2>شراكة .. تنمية .. ازدهار</h2><p>كن شريكاً في تطوير ولاية نهر النيل<br/>واستثمر في مستقبل واعد</p><a href="/contact">تواصل معنا</a></div><footer><b><ChartNoAxesCombined/> فرصة</b><b><Handshake/> شراكة</b><b><UsersRound/> تنمية</b></footer></section>
+        <section id="inv-stories" className="inv-story motion"><header><a href="#inv-stories">عرض الكل</a><h2>قصص نجاح</h2></header><div><img src={dbStory?.image_url||"/assets/investment-poultry.jpg"} alt={dbStory?.name||"مشروع دواجن الدامر"}/><p><b>{dbStory?.name||"مشروع دواجن الدامر"}</b><span>{dbStory?.story||"بدأ المشروع بمزرعة صغيرة وأصبح اليوم من أكبر مشاريع الدواجن بالولاية."}</span><a href="/contact">اقرأ القصة كاملة</a></p></div></section>
       </aside>
     </div>
 
