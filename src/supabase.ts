@@ -67,6 +67,8 @@ export type InvestmentSector = {
   image_url: string;
   icon: string;
   highlight: string;
+  highlight2: string;
+  highlight3: string;
   sort_order: number;
   published: boolean;
   created_at: string;

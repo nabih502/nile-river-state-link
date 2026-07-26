@@ -1641,8 +1641,8 @@ function InvestmentSectorDetailPage({slug}:{slug?:string}){
           <div className="inv-detail-meta">
             <h3><Info/> معلومات القطاع</h3>
             {sector.highlight&&<p><Gem/> {sector.highlight}</p>}
-            <p><MapPin/> ولاية نهر النيل — السودان</p>
-            <p><ShieldCheck/> بيئة استثمارية آمنة</p>
+            {sector.highlight2&&<p><MapPin/> {sector.highlight2}</p>}
+            {sector.highlight3&&<p><ShieldCheck/> {sector.highlight3}</p>}
           </div>
         </aside>
       </div>

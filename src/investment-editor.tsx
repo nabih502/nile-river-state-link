@@ -378,6 +378,8 @@ export function SectorEditor({
       image_url: "",
       icon: "",
       highlight: "",
+      highlight2: "ولاية نهر النيل — السودان",
+      highlight3: "بيئة استثمارية آمنة",
       sort_order: 0,
       published: true,
     }
@@ -399,6 +401,8 @@ export function SectorEditor({
       image_url: form.image_url,
       icon: form.icon,
       highlight: form.highlight,
+      highlight2: form.highlight2 ?? "ولاية نهر النيل — السودان",
+      highlight3: form.highlight3 ?? "بيئة استثمارية آمنة",
       sort_order: Number(form.sort_order) || 0,
       published: form.published,
     };
@@ -431,7 +435,12 @@ export function SectorEditor({
       }
     >
       <form id="sector-form" onSubmit={save}>
-        <FormSection title="المعلومات الأساسية">
+        <SectionNav sections={[
+          { id: "sector-basics", label: "المعلومات الأساسية" },
+          { id: "sector-card", label: "بطاقة معلومات القطاع" },
+          { id: "sector-media", label: "الصورة والمحتوى" },
+        ]} />
+        <FormSection title="المعلومات الأساسية" id="sector-basics">
           <div className="inv-form-row">
             <label className="inv-label">
               <span>اسم القطاع <span className="inv-req">*</span></span>
@@ -457,7 +466,50 @@ export function SectorEditor({
           </div>
         </FormSection>
 
-        <FormSection title="الصورة والمحتوى">
+        <FormSection title="بطاقة معلومات القطاع" id="sector-card">
+          <p style={{ fontSize: ".82rem", color: "#64748b", margin: 0 }}>
+            هذه البيانات تظهر في البطاقة الصفراء على يمين صفحة القطاع.
+          </p>
+          <label className="inv-label">
+            السطر الأول — ميزة مميزة للقطاع
+            <input
+              value={form.highlight || ""}
+              className="inv-input"
+              placeholder="مثال: معدل إشعاع شمسي يتجاوز 2,500 ساعة سنوياً"
+              onChange={(e) => set("highlight", e.target.value)}
+            />
+          </label>
+          <label className="inv-label">
+            السطر الثاني
+            <input
+              value={form.highlight2 || ""}
+              className="inv-input"
+              placeholder="مثال: ولاية نهر النيل — السودان"
+              onChange={(e) => set("highlight2", e.target.value)}
+            />
+          </label>
+          <label className="inv-label">
+            السطر الثالث
+            <input
+              value={form.highlight3 || ""}
+              className="inv-input"
+              placeholder="مثال: بيئة استثمارية آمنة"
+              onChange={(e) => set("highlight3", e.target.value)}
+            />
+          </label>
+          <label className="inv-label inv-label-sm">
+            ترتيب العرض
+            <input
+              type="number"
+              value={form.sort_order ?? 0}
+              className="inv-input"
+              dir="ltr"
+              onChange={(e) => set("sort_order", Number(e.target.value))}
+            />
+          </label>
+        </FormSection>
+
+        <FormSection title="الصورة والمحتوى" id="sector-media">
           <ImageUpload
             value={form.image_url || ""}
             onChange={(url) => set("image_url", url)}
@@ -471,40 +523,6 @@ export function SectorEditor({
               rows={5}
               max={800}
               placeholder="اكتب وصفاً شاملاً للقطاع..."
-            />
-          </label>
-        </FormSection>
-
-        <FormSection title="إعدادات العرض">
-          <div className="inv-form-row">
-            <label className="inv-label">
-              الأيقونة (Lucide)
-              <input
-                value={form.icon || ""}
-                className="inv-input"
-                dir="ltr"
-                placeholder="TrendingUp"
-                onChange={(e) => set("icon", e.target.value)}
-              />
-            </label>
-            <label className="inv-label">
-              الرقم المميز
-              <input
-                value={form.highlight || ""}
-                className="inv-input"
-                placeholder="+200 مشروع"
-                onChange={(e) => set("highlight", e.target.value)}
-              />
-            </label>
-          </div>
-          <label className="inv-label inv-label-sm">
-            ترتيب العرض
-            <input
-              type="number"
-              value={form.sort_order ?? 0}
-              className="inv-input"
-              dir="ltr"
-              onChange={(e) => set("sort_order", Number(e.target.value))}
             />
           </label>
         </FormSection>
