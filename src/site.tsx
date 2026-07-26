@@ -184,6 +184,34 @@ function HhcComingSoonModal() {
   );
 }
 
+function CountUp({raw}:{raw:string}){
+  const ref=useRef<HTMLElement>(null);
+  const [val,setVal]=useState("0");
+  useEffect(()=>{
+    const m=raw.match(/^([\d.]+)([A-Za-z]*)([+]?)$/);
+    if(!m){setVal(raw);return;}
+    const target=parseFloat(m[1]),unit=m[2]||"",plus=m[3]||"";
+    let active=true;
+    const obs=new IntersectionObserver(entries=>{
+      if(!entries[0].isIntersecting)return;
+      obs.disconnect();
+      const dur=1700;
+      const t0=performance.now();
+      const tick=(now:number)=>{
+        if(!active)return;
+        const p=Math.min((now-t0)/dur,1);
+        const e=p===1?1:(1-Math.pow(2,-10*p));
+        setVal((p<1?Math.floor(e*target):target)+unit+plus);
+        if(p<1)requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    },{threshold:.25});
+    if(ref.current)obs.observe(ref.current);
+    return()=>{active=false;obs.disconnect();};
+  },[raw]);
+  return <b ref={ref}>{val}</b>;
+}
+
 function Home(){
   const heroBenefits=[
     {title:"منصة رقمية واحدة",text:"لكل أبناء الولاية",icon:UsersRound},
@@ -239,7 +267,7 @@ function Home(){
     </section>
 
     <section className="home-metrics page-width motion">
-      {metrics.map(item=>{const Icon=item.icon;return <div key={item.label}><Icon/><span><b>{item.number}</b><small>{item.label}</small></span></div>})}
+      {metrics.map(item=>{const Icon=item.icon;return <div key={item.label}><Icon/><span><CountUp raw={item.number}/><small>{item.label}</small></span></div>})}
     </section>
 
     <section className="home-join page-width motion">

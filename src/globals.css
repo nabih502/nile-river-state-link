@@ -321,135 +321,148 @@ body{font-family:"Cairo",Tahoma,Arial,sans-serif}
    HOME PAGE — PREMIUM ANIMATIONS & VISUAL ENHANCEMENTS
    ═══════════════════════════════════════════════════════════════ */
 
-/* 1 ── Keyframes ────────────────────────────────────────────── */
-@keyframes hp-rise{from{opacity:0;transform:translateY(44px)}to{opacity:1;transform:none}}
-@keyframes hp-slide-r{from{opacity:0;transform:translateX(-52px)}to{opacity:1;transform:none}}
-@keyframes hp-slide-l{from{opacity:0;transform:translateX(52px)}to{opacity:1;transform:none}}
-@keyframes hp-scale{from{opacity:0;transform:scale(.86)}to{opacity:1;transform:scale(1)}}
-@keyframes hp-pop{from{opacity:0;transform:scale(.82) translateY(18px)}to{opacity:1;transform:none}}
-@keyframes hp-fade{from{opacity:0}to{opacity:1}}
-@keyframes hp-count{0%{transform:translateY(110%)}100%{transform:none}}
-@keyframes hp-shine{0%{background-position:200% center}100%{background-position:-200% center}}
+/* ── 1. Keyframes ─────────────────────────────────────────────────────────── */
+@keyframes hp-rise{0%{opacity:0;transform:translateY(50px)}60%{transform:translateY(-6px)}100%{opacity:1;transform:none}}
+@keyframes hp-slide-r{0%{opacity:0;transform:translateX(-60px)}60%{transform:translateX(6px)}100%{opacity:1;transform:none}}
+@keyframes hp-slide-l{0%{opacity:0;transform:translateX(60px)}60%{transform:translateX(-6px)}100%{opacity:1;transform:none}}
+@keyframes hp-3d-card{0%{opacity:0;transform:perspective(600px) rotateX(24deg) translateY(36px) scale(.96)}60%{transform:perspective(600px) rotateX(-3deg) translateY(-4px) scale(1.01)}100%{opacity:1;transform:perspective(600px) rotateX(0deg) translateY(0) scale(1)}}
+@keyframes hp-elastic-pop{0%{opacity:0;transform:scale(.55)}55%{transform:scale(1.12)}75%{transform:scale(.95)}90%{transform:scale(1.03)}100%{opacity:1;transform:scale(1)}}
+@keyframes hp-clip-reveal{0%{clip-path:inset(0 0 100% 0);transform:translateY(18px);opacity:0}15%{opacity:1}100%{clip-path:inset(0 0 0% 0);transform:none;opacity:1}}
+@keyframes hp-deal{0%{opacity:0;transform:rotate(var(--deal-rot,4deg)) translateY(50px) scale(.88)}60%{transform:rotate(calc(var(--deal-rot,4deg)*-.3)) translateY(-5px) scale(1.02)}100%{opacity:1;transform:none}}
 @keyframes hp-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
-@keyframes hp-pulse-ring{0%{box-shadow:0 0 0 0 rgba(194,122,0,.35)}70%{box-shadow:0 0 0 14px rgba(194,122,0,0)}100%{box-shadow:0 0 0 0 rgba(194,122,0,0)}}
-@keyframes hp-gradient-x{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+@keyframes hp-float-sm{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes hp-pulse-ring{0%{box-shadow:0 0 0 0 rgba(194,122,0,.4)}70%{box-shadow:0 0 0 16px rgba(194,122,0,0)}100%{box-shadow:0 0 0 0 rgba(194,122,0,0)}}
+@keyframes hp-icon-orbit{0%,100%{transform:translateY(0) scale(1)}30%{transform:translateY(-6px) scale(1.12)}60%{transform:translateY(-3px) scale(1.05)}}
+@keyframes hp-icon-wave{0%,100%{transform:rotate(0deg) scale(1)}25%{transform:rotate(-12deg) scale(1.1)}50%{transform:rotate(8deg) scale(1.05)}75%{transform:rotate(-5deg) scale(1.08)}}
+@keyframes hp-shimmer{0%{background-position:200% center}100%{background-position:-200% center}}
+@keyframes hp-count-blur{0%{filter:blur(8px);transform:scale(1.3)}100%{filter:blur(0);transform:scale(1)}}
 
-/* 2 ── Activate fade-in on home motion elements ─────────────── */
+/* ── 2. Base: home motion elements start invisible ─────────────────────────── */
 .home-redesign .motion{opacity:0}
 .home-redesign .motion.in{opacity:1}
 
-/* 3 ── Hero ─────────────────────────────────────────────────── */
-.home-redesign .home-hero-copy.motion.in{animation:hp-slide-r .8s cubic-bezier(.22,.68,0,1.2) both}
-.home-redesign .home-hero-stage.motion.in{animation:hp-slide-l .8s cubic-bezier(.22,.68,0,1.2) .12s both}
-.home-redesign .home-hero-copy h1{background:linear-gradient(120deg,#1b2735 30%,#c27a00 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+/* ── 3. Hero ──────────────────────────────────────────────────────────────── */
+.home-redesign .home-hero-copy.motion.in{animation:hp-slide-r .85s cubic-bezier(.2,.68,0,1.12) both}
+.home-redesign .home-hero-stage.motion.in{animation:hp-slide-l .85s cubic-bezier(.2,.68,0,1.12) .15s both}
+.home-redesign .home-hero-copy h1{background:linear-gradient(120deg,#1b2735 20%,#8a5500 60%,#c27a00 100%);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:hp-shimmer 6s linear 1s infinite}
+.home-redesign .home-hero-copy.motion.in h2{animation:hp-clip-reveal .7s cubic-bezier(.2,.68,0,1.12) .45s both}
 .home-redesign .home-hero-copy h2{position:relative;display:inline-block}
 .home-redesign .home-hero-copy h2::after{content:"";position:absolute;bottom:-4px;right:0;left:0;height:3px;background:linear-gradient(90deg,transparent,#ef8610,transparent);border-radius:2px}
-.home-redesign .home-benefit-panel{backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
-.home-redesign .home-primary{animation:hp-pulse-ring 2.6s cubic-bezier(.455,.03,.515,.955) 1.4s infinite}
+.home-redesign .home-values,.home-redesign .home-hero-actions{opacity:0}
+.home-redesign .home-hero-copy.motion.in .home-values{animation:hp-rise .6s cubic-bezier(.2,.68,0,1.12) .6s both;opacity:1}
+.home-redesign .home-hero-copy.motion.in .home-hero-actions{animation:hp-rise .6s cubic-bezier(.2,.68,0,1.12) .75s both;opacity:1}
+.home-redesign .home-primary{animation:hp-pulse-ring 2.8s cubic-bezier(.455,.03,.515,.955) 2s infinite}
+.home-redesign .home-benefit-panel{backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);animation:hp-float-sm 4s ease-in-out infinite}
 
-/* 4 ── Metrics ───────────────────────────────────────────────── */
-.home-redesign .home-metrics.motion.in{animation:hp-rise .6s cubic-bezier(.22,.68,0,1.2) both}
-.home-redesign .home-metrics{background:linear-gradient(135deg,#fff 0%,#fffdf5 60%,#fff8ed 100%);border-top:3px solid transparent;border-image:linear-gradient(90deg,#c27a00,#e8950a,#c27a00) 1}
-.home-redesign .home-metrics>div{position:relative;overflow:hidden}
-.home-redesign .home-metrics>div::before{content:"";position:absolute;bottom:0;right:0;width:1px;height:50%;background:linear-gradient(transparent,#e4ddd0)}
-.home-redesign .home-metrics b{background:linear-gradient(135deg,#c27a00,#e8950a);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-size:28px!important;overflow:hidden;display:block}
-.home-redesign .home-metrics.motion.in b{animation:hp-count .5s cubic-bezier(.22,.68,0,1.2) both}
+/* ── 4. Metrics bar ────────────────────────────────────────────────────────── */
+.home-redesign .home-metrics.motion.in{animation:hp-rise .65s cubic-bezier(.2,.68,0,1.12) both}
+.home-redesign .home-metrics{background:linear-gradient(135deg,#fff 0%,#fffdf5 50%,#fff8ed 100%);border-top:3px solid transparent;border-image:linear-gradient(90deg,transparent,#c27a00 20%,#e8950a 50%,#c27a00 80%,transparent) 1}
+.home-redesign .home-metrics>div{position:relative;overflow:hidden;transition:transform .3s cubic-bezier(.2,.68,0,1.12)}
+.home-redesign .home-metrics>div:hover{transform:translateY(-4px)}
+.home-redesign .home-metrics>div::after{content:"";position:absolute;bottom:0;right:0;width:1px;height:60%;background:linear-gradient(transparent,#d9cfc4)}
+.home-redesign .home-metrics.motion.in>div svg{animation:hp-icon-orbit 3.5s ease-in-out infinite}
+.home-redesign .home-metrics.motion.in>div:nth-child(1) svg{animation-delay:.0s}
+.home-redesign .home-metrics.motion.in>div:nth-child(2) svg{animation-delay:.5s}
+.home-redesign .home-metrics.motion.in>div:nth-child(3) svg{animation-delay:1s}
+.home-redesign .home-metrics.motion.in>div:nth-child(4) svg{animation-delay:1.5s}
+.home-redesign .home-metrics.motion.in>div:nth-child(5) svg{animation-delay:2s}
+.home-redesign .home-metrics.motion.in b{animation:hp-count-blur .6s ease both}
 .home-redesign .home-metrics.motion.in>div:nth-child(1) b{animation-delay:.05s}
-.home-redesign .home-metrics.motion.in>div:nth-child(2) b{animation-delay:.12s}
-.home-redesign .home-metrics.motion.in>div:nth-child(3) b{animation-delay:.19s}
-.home-redesign .home-metrics.motion.in>div:nth-child(4) b{animation-delay:.26s}
-.home-redesign .home-metrics.motion.in>div:nth-child(5) b{animation-delay:.33s}
+.home-redesign .home-metrics.motion.in>div:nth-child(2) b{animation-delay:.15s}
+.home-redesign .home-metrics.motion.in>div:nth-child(3) b{animation-delay:.25s}
+.home-redesign .home-metrics.motion.in>div:nth-child(4) b{animation-delay:.35s}
+.home-redesign .home-metrics.motion.in>div:nth-child(5) b{animation-delay:.45s}
+.home-redesign .home-metrics b{background:linear-gradient(135deg,#c27a00,#e8950a);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-size:28px!important;display:block}
 .home-redesign .home-metrics small{font-size:13px!important;color:#5a4a2a;letter-spacing:.01em}
 
-/* 5 ── Join section ─────────────────────────────────────────── */
-.home-redesign .home-join.motion.in{animation:hp-rise .65s cubic-bezier(.22,.68,0,1.2) both}
+/* ── 5. Join section ──────────────────────────────────────────────────────── */
+.home-redesign .home-join.motion.in{animation:hp-rise .7s cubic-bezier(.2,.68,0,1.12) both}
 .home-redesign .home-join{position:relative;overflow:hidden}
-.home-redesign .home-join::before{content:"";position:absolute;top:-40px;left:-40px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(194,122,0,.06) 0%,transparent 70%);pointer-events:none}
+.home-redesign .home-join::before{content:"";position:absolute;top:-60px;left:-60px;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle,rgba(194,122,0,.07) 0%,transparent 70%);pointer-events:none;animation:hp-float 6s ease-in-out infinite}
 .home-redesign .home-join-copy h2{font-size:30px!important;font-weight:900;letter-spacing:-.5px}
-.home-redesign .home-join-cta{animation:hp-float 3.2s ease-in-out 1.5s infinite}
+.home-redesign .home-join-cta{animation:hp-float 3.5s ease-in-out 1s infinite}
 
-/* 6 ── Section titles ───────────────────────────────────────── */
-.home-redesign .home-section-title{position:relative}
-.home-redesign .home-section-title h2{font-size:27px!important;font-weight:900;background:linear-gradient(135deg,#1b2735,#384d64);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+/* ── 6. Section titles ─────────────────────────────────────────────────────── */
+.home-redesign .home-section-title h2{font-size:27px!important;font-weight:900;letter-spacing:-.3px;background:linear-gradient(135deg,#1b2735,#384d64);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .home-redesign .home-section-title span{height:3px!important;border-radius:2px}
 
-/* 7 ── Service cards ─────────────────────────────────────────── */
-.home-redesign .home-services{position:relative;padding-top:4px}
-.home-redesign .home-services::before{content:"";position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,transparent,#c27a00 30%,#e8950a 50%,#c27a00 70%,transparent);border-radius:2px}
-.home-redesign .home-service-card.motion.in{animation:hp-rise .55s cubic-bezier(.22,.68,0,1.2) both}
+/* ── 7. Service cards — 3-D perspective entrance ─────────────────────────── */
+.home-redesign .home-services{position:relative;padding-top:6px}
+.home-redesign .home-services::before{content:"";position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,transparent,#c27a00 30%,#e8950a 50%,#c27a00 70%,transparent)}
+.home-redesign .home-service-card.motion{transform-origin:bottom center}
+.home-redesign .home-service-card.motion.in{animation:hp-3d-card .65s cubic-bezier(.2,.68,0,1.12) both}
 .home-redesign .home-service-card.motion.in:nth-child(1){animation-delay:.0s}
-.home-redesign .home-service-card.motion.in:nth-child(2){animation-delay:.07s}
-.home-redesign .home-service-card.motion.in:nth-child(3){animation-delay:.14s}
-.home-redesign .home-service-card.motion.in:nth-child(4){animation-delay:.21s}
-.home-redesign .home-service-card.motion.in:nth-child(5){animation-delay:.28s}
-.home-redesign .home-service-card{transition:transform .32s cubic-bezier(.22,.68,0,1.2),box-shadow .32s ease}
-.home-redesign .home-service-card:hover{transform:translateY(-10px);box-shadow:0 22px 44px rgba(27,39,53,.13)}
+.home-redesign .home-service-card.motion.in:nth-child(2){animation-delay:.08s}
+.home-redesign .home-service-card.motion.in:nth-child(3){animation-delay:.16s}
+.home-redesign .home-service-card.motion.in:nth-child(4){animation-delay:.24s}
+.home-redesign .home-service-card.motion.in:nth-child(5){animation-delay:.32s}
+.home-redesign .home-service-card{transition:transform .35s cubic-bezier(.2,.68,0,1.12),box-shadow .35s ease}
+.home-redesign .home-service-card:hover{transform:translateY(-12px) scale(1.02);box-shadow:0 24px 48px rgba(27,39,53,.14)}
 .home-redesign .home-service-card h3{font-size:17px!important;font-weight:900}
 .home-redesign .home-service-card ul{font-size:13px!important;line-height:2.1}
-.home-redesign .home-service-card ul li::before{content:"›";color:#c27a00;margin-left:6px;font-weight:900}
-.home-redesign .home-service-card .service-icon{transition:transform .3s cubic-bezier(.22,.68,0,1.2)}
-.home-redesign .home-service-card:hover .service-icon{transform:scale(1.15) rotate(-5deg)}
+.home-redesign .home-service-card ul li{position:relative;padding-right:14px}
+.home-redesign .home-service-card ul li::before{content:"›";color:#c27a00;position:absolute;right:0;font-weight:900}
+.home-redesign .home-service-card .service-icon{transition:transform .4s cubic-bezier(.2,.68,0,1.12)}
+.home-redesign .home-service-card:hover .service-icon{animation:hp-icon-wave .6s ease both}
 
-/* 8 ── Investment banner ─────────────────────────────────────── */
-.home-redesign .home-investment.motion.in{animation:hp-fade .9s ease both}
+/* ── 8. Investment ─────────────────────────────────────────────────────────── */
+.home-redesign .home-investment.motion.in{animation:hp-rise .8s ease both}
 .home-redesign .home-investment{position:relative;overflow:hidden}
-.home-redesign .home-investment::after{content:"";position:absolute;inset:0;background:linear-gradient(120deg,rgba(0,0,0,.55) 0%,rgba(0,0,0,.25) 50%,rgba(0,0,0,.55) 100%);pointer-events:none}
+.home-redesign .home-investment::after{content:"";position:absolute;inset:0;background:linear-gradient(120deg,rgba(0,0,0,.6) 0%,rgba(0,0,0,.2) 50%,rgba(0,0,0,.55) 100%);pointer-events:none}
 .home-redesign .investment-center{position:relative;z-index:2}
-.home-redesign .investment-center h2{font-size:30px!important;font-weight:900;text-shadow:0 2px 8px rgba(0,0,0,.4)}
+.home-redesign .investment-center h2{font-size:30px!important;font-weight:900;text-shadow:0 2px 10px rgba(0,0,0,.5)}
+.home-redesign .home-investment.motion.in .investment-center h2{animation:hp-clip-reveal .7s cubic-bezier(.2,.68,0,1.12) .2s both}
+.home-redesign .home-investment.motion.in .investment-center p{animation:hp-clip-reveal .6s cubic-bezier(.2,.68,0,1.12) .4s both}
 
-/* 9 ── Programs ──────────────────────────────────────────────── */
-.home-redesign .home-program.school.motion.in{animation:hp-slide-r .7s cubic-bezier(.22,.68,0,1.2) both}
-.home-redesign .home-program.institute.motion.in{animation:hp-slide-l .7s cubic-bezier(.22,.68,0,1.2) .1s both}
-.home-redesign .home-program{transition:transform .32s cubic-bezier(.22,.68,0,1.2),box-shadow .32s ease}
-.home-redesign .home-program:hover{transform:translateY(-6px);box-shadow:0 18px 36px rgba(27,39,53,.12)}
+/* ── 9. Programs ───────────────────────────────────────────────────────────── */
+.home-redesign .home-program.school.motion.in{animation:hp-slide-r .75s cubic-bezier(.2,.68,0,1.12) both}
+.home-redesign .home-program.institute.motion.in{animation:hp-slide-l .75s cubic-bezier(.2,.68,0,1.12) .12s both}
+.home-redesign .home-program{transition:transform .35s cubic-bezier(.2,.68,0,1.12),box-shadow .35s ease}
+.home-redesign .home-program:hover{transform:translateY(-7px);box-shadow:0 20px 40px rgba(27,39,53,.13)}
 .home-redesign .home-program img{transition:transform .5s ease}
-.home-redesign .home-program:hover img{transform:scale(1.04)}
+.home-redesign .home-program:hover img{transform:scale(1.05)}
 .home-redesign .program-copy h2{font-size:22px!important;font-weight:900}
 
-/* 10 ── Opportunity strip ────────────────────────────────────── */
-.home-redesign .home-opportunity.motion.in{animation:hp-rise .55s cubic-bezier(.22,.68,0,1.2) both}
+/* ── 10. Opportunity strip ──────────────────────────────────────────────────── */
+.home-redesign .home-opportunity.motion.in{animation:hp-rise .55s cubic-bezier(.2,.68,0,1.12) both}
 .home-redesign .home-opportunity{position:relative;overflow:hidden}
-.home-redesign .home-opportunity::before{content:"";position:absolute;top:-30px;right:-30px;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,.04);pointer-events:none}
+.home-redesign .home-opportunity::before{content:"";position:absolute;top:-40px;right:-40px;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,.04);pointer-events:none}
 .home-redesign .home-opportunity h2{font-size:24px!important;font-weight:900}
+.home-redesign .home-opportunity.motion.in>svg{animation:hp-icon-wave 1.2s ease .3s both}
 
-/* 11 ── Market ───────────────────────────────────────────────── */
-.home-redesign .home-market.motion.in{animation:hp-rise .7s cubic-bezier(.22,.68,0,1.2) both}
-.home-redesign .home-market img{transition:transform .5s ease}
-.home-redesign .home-market:hover img{transform:scale(1.03)}
+/* ── 11. Market ────────────────────────────────────────────────────────────── */
+.home-redesign .home-market.motion.in{animation:hp-rise .7s cubic-bezier(.2,.68,0,1.12) both}
+.home-redesign .home-market img{transition:transform .55s ease}
+.home-redesign .home-market:hover img{transform:scale(1.04)}
 .home-redesign .market-copy h2{font-size:20px!important;font-weight:900}
 
-/* 12 ── Health cards ─────────────────────────────────────────── */
-.home-redesign .hhc-card.motion.in{animation:hp-scale .6s cubic-bezier(.22,.68,0,1.2) both}
+/* ── 12. Health cards — elastic pop ────────────────────────────────────────── */
+.home-redesign .hhc-card.motion.in{animation:hp-elastic-pop .7s cubic-bezier(.2,.68,0,1.12) both}
 .home-redesign .hhc-card.motion.in:nth-child(1){animation-delay:.0s}
-.home-redesign .hhc-card.motion.in:nth-child(2){animation-delay:.12s}
-.home-redesign .hhc-card{transition:transform .32s cubic-bezier(.22,.68,0,1.2),box-shadow .32s ease}
-.home-redesign .hhc-card:hover{transform:translateY(-8px);box-shadow:0 20px 40px rgba(27,39,53,.13)}
+.home-redesign .hhc-card.motion.in:nth-child(2){animation-delay:.14s}
+.home-redesign .hhc-card{transition:transform .35s cubic-bezier(.2,.68,0,1.12),box-shadow .35s ease}
+.home-redesign .hhc-card:hover{transform:translateY(-9px) scale(1.01);box-shadow:0 22px 44px rgba(27,39,53,.14)}
 
-/* 13 ── News cards ───────────────────────────────────────────── */
-.home-redesign .home-news-card.motion.in{animation:hp-rise .52s cubic-bezier(.22,.68,0,1.2) both}
-.home-redesign .home-news-card.motion.in:nth-child(1){animation-delay:.0s}
-.home-redesign .home-news-card.motion.in:nth-child(2){animation-delay:.08s}
-.home-redesign .home-news-card.motion.in:nth-child(3){animation-delay:.16s}
-.home-redesign .home-news-card.motion.in:nth-child(4){animation-delay:.24s}
-.home-redesign .home-news-card{transition:transform .3s cubic-bezier(.22,.68,0,1.2),box-shadow .3s ease;overflow:hidden}
-.home-redesign .home-news-card:hover{transform:translateY(-6px);box-shadow:0 16px 32px rgba(27,39,53,.11)}
+/* ── 13. News cards — stagger deal ─────────────────────────────────────────── */
+.home-redesign .home-news-card.motion.in{animation:hp-deal .6s cubic-bezier(.2,.68,0,1.12) both}
+.home-redesign .home-news-card.motion.in:nth-child(1){animation-delay:.0s;--deal-rot:-2deg}
+.home-redesign .home-news-card.motion.in:nth-child(2){animation-delay:.1s;--deal-rot:-1deg}
+.home-redesign .home-news-card.motion.in:nth-child(3){animation-delay:.2s;--deal-rot:1deg}
+.home-redesign .home-news-card.motion.in:nth-child(4){animation-delay:.3s;--deal-rot:2deg}
+.home-redesign .home-news-card{transition:transform .3s cubic-bezier(.2,.68,0,1.12),box-shadow .3s ease;overflow:hidden}
+.home-redesign .home-news-card:hover{transform:translateY(-7px);box-shadow:0 18px 36px rgba(27,39,53,.12)}
 .home-redesign .home-news-card img{transition:transform .5s ease}
-.home-redesign .home-news-card:hover img{transform:scale(1.06)}
+.home-redesign .home-news-card:hover img{transform:scale(1.07)}
 .home-redesign .home-news-card h3{font-size:15px!important;font-weight:800;line-height:1.5}
 .home-redesign .home-news-card p{font-size:13px!important;line-height:1.6}
 
-/* 14 ── Page-wide polish ─────────────────────────────────────── */
-.home-redesign .page-width{position:relative}
-.home-redesign a.home-primary,.home-redesign a.home-outline{transition:transform .28s cubic-bezier(.22,.68,0,1.2),box-shadow .28s ease,background .2s}
-.home-redesign a.home-primary:hover{transform:translateY(-3px);box-shadow:0 10px 24px rgba(194,122,0,.35)}
-.home-redesign a.home-outline:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(27,39,53,.18)}
+/* ── 14. CTA buttons ────────────────────────────────────────────────────────── */
+.home-redesign a.home-primary,.home-redesign a.home-outline{transition:transform .28s cubic-bezier(.2,.68,0,1.12),box-shadow .28s ease}
+.home-redesign a.home-primary:hover{transform:translateY(-3px) scale(1.03);box-shadow:0 12px 28px rgba(194,122,0,.38)}
+.home-redesign a.home-outline:hover{transform:translateY(-3px) scale(1.03);box-shadow:0 10px 22px rgba(27,39,53,.2)}
 
-/* 15 ── Reduced motion override ─────────────────────────────── */
-@media(prefers-reduced-motion:reduce){
-  .home-redesign .motion{opacity:1!important}
-  .home-redesign .motion.in *{animation:none!important}
-}
-
+/* ── 15. Reduced motion ──────────────────────────────────────────────────────── */
+@media(prefers-reduced-motion:reduce){.home-redesign .motion{opacity:1!important}.home-redesign *{animation:none!important;transition:none!important}}
 /* ══════════ END HOME ENHANCEMENTS ══════════════════════════════ */
 
 /* Membership journey — rebuilt from the five supplied membership references. */
