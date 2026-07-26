@@ -133,3 +133,16 @@ export type InvestmentStat = {
   sort_order: number;
   created_at: string;
 };
+
+export type InvestmentInquiry = {
+  id: string;
+  type: string;
+  reference_slug: string;
+  reference_title: string;
+  name: string;
+  email: string;
+  phone: string;
+  message: string;
+  status: string;
+  created_at: string;
+};

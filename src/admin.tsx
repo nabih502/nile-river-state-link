@@ -8,7 +8,7 @@ interface NewsRow { id: string; title: string; slug: string; excerpt: string; bo
 interface EventRow { id: string; title: string; slug: string; excerpt: string; body: string; image_url: string; location: string; event_date: string; event_end_date: string | null; published: boolean; created_at: string; }
 interface MemberRow { id: string; full_name: string; email: string; phone: string; national_id: string; gender: string; country: string; state: string; membership_type: string; status: string; created_at: string; }
 interface MessageRow { id: string; name: string; email: string; phone: string; subject: string; message: string; read: boolean; created_at: string; }
-interface Stats { news: number; events: number; members: number; messages: number; unread: number; }
+interface Stats { news: number; events: number; members: number; messages: number; unread: number; inquiries: number; newInquiries: number; }
 
 const ADMIN_PASSWORD = "admin2024";
 
@@ -249,7 +249,7 @@ function SettingsPanel() {
 export default function AdminApp() {
   const [authed, setAuthed] = useState(() => sessionStorage.getItem("admin_auth") === "1");
   const [section, setSection] = useState<Section>("dashboard");
-  const [stats, setStats] = useState<Stats>({ news: 0, events: 0, members: 0, messages: 0, unread: 0 });
+  const [stats, setStats] = useState<Stats>({ news: 0, events: 0, members: 0, messages: 0, unread: 0, inquiries: 0, newInquiries: 0 });
   const [news, setNews] = useState<NewsRow[]>([]);
   const [events, setEvents] = useState<EventRow[]>([]);
   const [members, setMembers] = useState<MemberRow[]>([]);
@@ -261,14 +261,16 @@ export default function AdminApp() {
   const [search, setSearch] = useState("");
 
   const loadStats = async () => {
-    const [n, ev, m, msg] = await Promise.all([
+    const [n, ev, m, msg, inq] = await Promise.all([
       supabase.from("news").select("id", { count: "exact", head: true }),
       supabase.from("events").select("id", { count: "exact", head: true }),
       supabase.from("members").select("id", { count: "exact", head: true }),
       supabase.from("contact_messages").select("id,read"),
+      supabase.from("investment_inquiries").select("id,status"),
     ]);
     const unread = (msg.data ?? []).filter(x => !x.read).length;
-    setStats({ news: n.count ?? 0, events: ev.count ?? 0, members: m.count ?? 0, messages: msg.data?.length ?? 0, unread });
+    const newInquiries = (inq.data ?? []).filter(x => x.status === "new").length;
+    setStats({ news: n.count ?? 0, events: ev.count ?? 0, members: m.count ?? 0, messages: msg.data?.length ?? 0, unread, inquiries: inq.data?.length ?? 0, newInquiries });
   };
 
   const loadNews = async () => {
@@ -330,7 +332,7 @@ export default function AdminApp() {
     { key: "events", label: "الفعاليات", badge: stats.events },
     { key: "members", label: "الأعضاء", badge: stats.members },
     { key: "messages", label: "الرسائل", badge: stats.unread || undefined },
-    { key: "investment", label: "الاستثمار" },
+    { key: "investment", label: "الاستثمار", badge: stats.newInquiries || undefined },
     { key: "settings", label: "الإعدادات" },
   ];
 
@@ -384,8 +386,10 @@ export default function AdminApp() {
                 <StatCard label="الأخبار" value={stats.news} color="#2563eb" />
                 <StatCard label="الفعاليات" value={stats.events} color="#16a34a" />
                 <StatCard label="الأعضاء" value={stats.members} color="#9333ea" />
-                <StatCard label="الرسائل" value={stats.messages} color="#d97706" />
+                <StatCard label="رسائل التواصل" value={stats.messages} color="#d97706" />
                 <StatCard label="رسائل غير مقروءة" value={stats.unread} color="#dc2626" />
+                <StatCard label="طلبات الاستثمار" value={stats.inquiries} color="#0891b2" />
+                <StatCard label="طلبات جديدة" value={stats.newInquiries} color="#ea580c" />
               </div>
               <div className="adm-quick-links">
                 {[

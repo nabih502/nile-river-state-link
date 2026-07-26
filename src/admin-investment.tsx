@@ -7,9 +7,10 @@ import type {
   InvestmentSuccessStory,
   InvestmentPartner,
   InvestmentStat,
+  InvestmentInquiry,
 } from "./supabase";
 
-type InvTab = "sectors" | "opportunities" | "incentives" | "stories" | "partners" | "stats";
+type InvTab = "sectors" | "opportunities" | "incentives" | "stories" | "partners" | "stats" | "inquiries";
 
 function formatDate(d: string | null) {
   if (!d) return "-";
@@ -365,6 +366,8 @@ export default function InvestmentPanel() {
   const [stories, setStories] = useState<InvestmentSuccessStory[]>([]);
   const [partners, setPartners] = useState<InvestmentPartner[]>([]);
   const [stats, setStats] = useState<InvestmentStat[]>([]);
+  const [inquiries, setInquiries] = useState<InvestmentInquiry[]>([]);
+  const [inquiryFilter, setInquiryFilter] = useState<"all" | "new" | "contacted" | "closed">("all");
 
   const [editSector, setEditSector] = useState<Partial<InvestmentSector> | null | undefined>(undefined);
   const [editOpp, setEditOpp] = useState<Partial<InvestmentOpportunity> | null | undefined>(undefined);
@@ -381,6 +384,7 @@ export default function InvestmentPanel() {
     if (t === "stories") { const { data } = await supabase.from("investment_success_stories").select("*").order("created_at", { ascending: false }); setStories(data ?? []); }
     if (t === "partners") { const { data } = await supabase.from("investment_partners").select("*").order("sort_order"); setPartners(data ?? []); }
     if (t === "stats") { const { data } = await supabase.from("investment_stats").select("*").order("sort_order"); setStats(data ?? []); }
+    if (t === "inquiries") { const { data } = await supabase.from("investment_inquiries").select("*").order("created_at", { ascending: false }); setInquiries(data ?? []); }
   };
 
   useEffect(() => { load(tab); }, [tab]);
@@ -396,13 +400,21 @@ export default function InvestmentPanel() {
     load(tab);
   };
 
-  const tabs: { key: InvTab; label: string }[] = [
+  const updateInquiryStatus = async (id: string, status: string) => {
+    await supabase.from("investment_inquiries").update({ status }).eq("id", id);
+    load("inquiries");
+  };
+
+  const newInquiriesCount = inquiries.filter(i => i.status === "new").length;
+
+  const tabs: { key: InvTab; label: string; badge?: number }[] = [
     { key: "sectors", label: "القطاعات" },
     { key: "opportunities", label: "الفرص" },
     { key: "incentives", label: "الحوافز" },
     { key: "stories", label: "قصص النجاح" },
     { key: "partners", label: "الشركاء" },
     { key: "stats", label: "الإحصاءات" },
+    { key: "inquiries", label: "الطلبات", badge: tab !== "inquiries" ? newInquiriesCount : undefined },
   ];
 
   return (
@@ -410,7 +422,10 @@ export default function InvestmentPanel() {
       {/* Sub-tabs */}
       <div className="adm-inv-tabs">
         {tabs.map(t => (
-          <button key={t.key} className={tab === t.key ? "active" : ""} onClick={() => setTab(t.key)}>{t.label}</button>
+          <button key={t.key} className={tab === t.key ? "active" : ""} onClick={() => setTab(t.key)}>
+            {t.label}
+            {t.badge ? <em>{t.badge}</em> : null}
+          </button>
         ))}
       </div>
 
@@ -607,6 +622,56 @@ export default function InvestmentPanel() {
           {editStat !== undefined && <StatEditor item={editStat} onSave={() => { setEditStat(undefined); load("stats"); }} onCancel={() => setEditStat(undefined)} />}
         </>
       )}
+
+      {/* ── Inquiries ── */}
+      {tab === "inquiries" && (() => {
+        const filtered = inquiries.filter(i => inquiryFilter === "all" || i.status === inquiryFilter);
+        return (
+          <>
+            <div className="adm-section-head">
+              <h2>طلبات الاستثمار ({inquiries.length})</h2>
+              <div className="adm-inv-filter">
+                {(["all", "new", "contacted", "closed"] as const).map(f => (
+                  <button key={f} className={inquiryFilter === f ? "active" : ""} onClick={() => setInquiryFilter(f)}>
+                    {f === "all" ? `الكل (${inquiries.length})` : f === "new" ? `جديد (${inquiries.filter(i => i.status === "new").length})` : f === "contacted" ? `تم التواصل (${inquiries.filter(i => i.status === "contacted").length})` : `مغلق (${inquiries.filter(i => i.status === "closed").length})`}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div className="adm-inquiries-list">
+              {filtered.map(row => (
+                <div key={row.id} className={`adm-inquiry-card status-${row.status}`}>
+                  <div className="adm-inquiry-top">
+                    <div className="adm-inquiry-ref">
+                      <span className="adm-inquiry-type">{row.type === "sector" ? "قطاع" : "فرصة"}</span>
+                      <strong>{row.reference_title || row.reference_slug}</strong>
+                    </div>
+                    <div className="adm-inquiry-meta">
+                      <span className={`adm-inq-badge ${row.status}`}>{row.status === "new" ? "جديد" : row.status === "contacted" ? "تم التواصل" : "مغلق"}</span>
+                      <small>{formatDate(row.created_at)}</small>
+                    </div>
+                  </div>
+                  <div className="adm-inquiry-body">
+                    <div className="adm-inquiry-contact">
+                      <b>{row.name}</b>
+                      {row.phone && <a href={`tel:${row.phone}`} dir="ltr">{row.phone}</a>}
+                      {row.email && <a href={`mailto:${row.email}`} dir="ltr">{row.email}</a>}
+                    </div>
+                    {row.message && <p className="adm-inquiry-msg">{row.message}</p>}
+                  </div>
+                  <div className="adm-inquiry-actions">
+                    {row.status !== "contacted" && <button className="adm-btn-edit" onClick={() => updateInquiryStatus(row.id, "contacted")}>تم التواصل</button>}
+                    {row.status !== "closed" && <button className="adm-btn-secondary" onClick={() => updateInquiryStatus(row.id, "closed")}>إغلاق</button>}
+                    {row.status !== "new" && <button onClick={() => updateInquiryStatus(row.id, "new")}>إعادة فتح</button>}
+                    <button className="adm-btn-danger" onClick={() => setConfirmId({ table: "investment_inquiries", id: row.id })}>حذف</button>
+                  </div>
+                </div>
+              ))}
+              {filtered.length === 0 && <p className="adm-empty">لا توجد طلبات</p>}
+            </div>
+          </>
+        );
+      })()}
 
       {confirmId && (
         <Confirm

@@ -1625,9 +1625,44 @@ main .social-redesign .ss-hero.site-section-in.site-settled .site-hero-parallax{
 
 /* ─── Investment Admin Sub-tabs ─── */
 .adm-inv-tabs{display:flex;flex-wrap:wrap;gap:.5rem;padding:.75rem 1.5rem;background:#f8fafc;border-bottom:1px solid #e2e8f0}
-.adm-inv-tabs button{padding:.4rem 1rem;border-radius:8px;border:1.5px solid #e2e8f0;background:#fff;font-family:Cairo,sans-serif;font-size:.85rem;font-weight:600;color:#475569;cursor:pointer;transition:all .15s}
+.adm-inv-tabs button{padding:.4rem 1rem;border-radius:8px;border:1.5px solid #e2e8f0;background:#fff;font-family:Cairo,sans-serif;font-size:.85rem;font-weight:600;color:#475569;cursor:pointer;transition:all .15s;display:inline-flex;align-items:center;gap:.35rem}
+.adm-inv-tabs button em{background:#dc2626;color:#fff;font-style:normal;font-size:.68rem;font-weight:700;padding:.1rem .4rem;border-radius:999px;line-height:1.2}
 .adm-inv-tabs button:hover{border-color:#2563eb;color:#2563eb;background:#eff6ff}
 .adm-inv-tabs button.active{background:#2563eb;color:#fff;border-color:#2563eb}
+/* ─── Investment Inquiries ─── */
+.adm-inv-filter{display:flex;flex-wrap:wrap;gap:.4rem}
+.adm-inv-filter button{padding:.3rem .85rem;border-radius:6px;border:1.5px solid #e2e8f0;background:#fff;font-family:Cairo,sans-serif;font-size:.8rem;font-weight:600;color:#64748b;cursor:pointer;transition:all .15s}
+.adm-inv-filter button.active{background:#0891b2;color:#fff;border-color:#0891b2}
+.adm-inquiries-list{display:flex;flex-direction:column;gap:1rem}
+.adm-inquiry-card{background:#fff;border:1.5px solid #e2e8f0;border-radius:14px;padding:1.25rem 1.5rem;transition:box-shadow .2s}
+.adm-inquiry-card:hover{box-shadow:0 4px 20px rgba(0,0,0,.07)}
+.adm-inquiry-card.status-new{border-right:4px solid #f97316}
+.adm-inquiry-card.status-contacted{border-right:4px solid #2563eb}
+.adm-inquiry-card.status-closed{border-right:4px solid #94a3b8;opacity:.75}
+.adm-inquiry-top{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;margin-bottom:.85rem}
+.adm-inquiry-ref{display:flex;flex-direction:column;gap:.25rem}
+.adm-inquiry-type{font-size:.72rem;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.05em}
+.adm-inquiry-ref strong{font-size:1rem;color:#1e293b;font-weight:700}
+.adm-inquiry-meta{display:flex;flex-direction:column;align-items:flex-end;gap:.3rem}
+.adm-inquiry-meta small{color:#94a3b8;font-size:.78rem}
+.adm-inq-badge{padding:.2rem .75rem;border-radius:6px;font-size:.75rem;font-weight:700}
+.adm-inq-badge.new{background:#fff7ed;color:#ea580c}
+.adm-inq-badge.contacted{background:#eff6ff;color:#2563eb}
+.adm-inq-badge.closed{background:#f1f5f9;color:#64748b}
+.adm-inquiry-body{margin-bottom:.85rem}
+.adm-inquiry-contact{display:flex;flex-wrap:wrap;align-items:center;gap:.75rem 1.25rem;margin-bottom:.5rem}
+.adm-inquiry-contact b{font-size:.95rem;color:#1e293b}
+.adm-inquiry-contact a{font-size:.85rem;color:#2563eb;text-decoration:none}
+.adm-inquiry-contact a:hover{text-decoration:underline}
+.adm-inquiry-msg{font-size:.88rem;color:#475569;line-height:1.65;background:#f8fafc;border-radius:8px;padding:.65rem .9rem;margin:0}
+.adm-inquiry-actions{display:flex;flex-wrap:wrap;gap:.4rem;padding-top:.75rem;border-top:1px solid #f1f5f9}
+.adm-inquiry-actions button{padding:.3rem .85rem;border-radius:7px;border:none;font-family:Cairo,sans-serif;font-size:.8rem;font-weight:600;cursor:pointer;background:#f1f5f9;color:#475569;transition:all .15s}
+.adm-inquiry-actions button:hover{filter:brightness(.95)}
+.adm-inquiry-actions .adm-btn-edit{background:#eff6ff;color:#2563eb}
+.adm-inquiry-actions .adm-btn-secondary{background:#f0fdf4;color:#16a34a}
+.adm-inquiry-actions .adm-btn-danger{background:#fef2f2;color:#dc2626}
+/* ─── Nav badge ─── */
+.adm-nav-badge{background:#dc2626;color:#fff;font-size:.68rem;font-weight:700;padding:.1rem .4rem;border-radius:999px;margin-right:.25rem}
 
 /* ─── Investment Detail Pages ─── */
 .inv-detail-loading{display:flex;align-items:center;justify-content:center;min-height:60vh}
