@@ -318,7 +318,7 @@ export function SectorEditor({
         <FormSection title="المعلومات الأساسية">
           <div className="inv-form-row">
             <label className="inv-label">
-              اسم القطاع <span className="inv-req">*</span>
+              <span>اسم القطاع <span className="inv-req">*</span></span>
               <input
                 required
                 value={form.name || ""}
@@ -491,7 +491,7 @@ export function OpportunityEditor({
         <FormSection title="المعلومات الأساسية">
           <div className="inv-form-row">
             <label className="inv-label">
-              العنوان <span className="inv-req">*</span>
+              <span>العنوان <span className="inv-req">*</span></span>
               <input
                 required
                 value={form.title || ""}
@@ -707,7 +707,7 @@ export function IncentiveEditor({
         <FormSection title="المعلومات الأساسية">
           <div className="inv-form-row">
             <label className="inv-label">
-              عنوان الحافز <span className="inv-req">*</span>
+              <span>عنوان الحافز <span className="inv-req">*</span></span>
               <input
                 required
                 value={form.title || ""}
@@ -849,7 +849,7 @@ export function StoryEditor({
         <FormSection title="معلومات المستثمر">
           <div className="inv-form-row">
             <label className="inv-label">
-              اسم المستثمر <span className="inv-req">*</span>
+              <span>اسم المستثمر <span className="inv-req">*</span></span>
               <input
                 required
                 value={form.name || ""}
@@ -1012,7 +1012,7 @@ export function PartnerEditor({
         <FormSection title="معلومات الجهة">
           <div className="inv-form-row">
             <label className="inv-label">
-              اسم الجهة <span className="inv-req">*</span>
+              <span>اسم الجهة <span className="inv-req">*</span></span>
               <input
                 required
                 value={form.name || ""}
@@ -1161,7 +1161,7 @@ export function StatEditor({
         <FormSection title="بيانات الإحصاء">
           <div className="inv-form-row">
             <label className="inv-label">
-              التسمية <span className="inv-req">*</span>
+              <span>التسمية <span className="inv-req">*</span></span>
               <input
                 required
                 value={form.label || ""}
@@ -1171,7 +1171,7 @@ export function StatEditor({
               />
             </label>
             <label className="inv-label">
-              القيمة <span className="inv-req">*</span>
+              <span>القيمة <span className="inv-req">*</span></span>
               <input
                 required
                 value={form.value || ""}

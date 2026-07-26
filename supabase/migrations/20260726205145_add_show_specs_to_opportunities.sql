@@ -1,0 +1,1 @@
+ALTER TABLE investment_opportunities ADD COLUMN IF NOT EXISTS show_specs boolean NOT NULL DEFAULT true;
