@@ -156,15 +156,33 @@ export function PublishToggle({
 // ── Form Section ──────────────────────────────────────────────────────────────
 function FormSection({
   title,
+  id,
   children,
 }: {
   title: string;
+  id?: string;
   children: React.ReactNode;
 }) {
   return (
-    <div className="inv-form-section">
+    <div className="inv-form-section" id={id}>
       <div className="inv-form-section-header">{title}</div>
       <div className="inv-form-section-body">{children}</div>
+    </div>
+  );
+}
+
+// ── Section Quick-Nav ────────────────────────────────────────────────────────
+function SectionNav({ sections }: { sections: { id: string; label: string }[] }) {
+  const scrollTo = (id: string) => {
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+  return (
+    <div className="inv-section-nav">
+      {sections.map((s) => (
+        <button key={s.id} type="button" className="inv-section-pill" onClick={() => scrollTo(s.id)}>
+          {s.label}
+        </button>
+      ))}
     </div>
   );
 }
@@ -582,7 +600,12 @@ export function OpportunityEditor({
       }
     >
       <form id="opp-form" onSubmit={save}>
-        <FormSection title="المعلومات الأساسية">
+        <SectionNav sections={[
+          { id: "opp-basics", label: "المعلومات الأساسية" },
+          { id: "opp-specs", label: "المواصفات المالية" },
+          { id: "opp-media", label: "الصورة والمحتوى" },
+        ]} />
+        <FormSection title="المعلومات الأساسية" id="opp-basics">
           <div className="inv-form-row">
             <label className="inv-label">
               <span>العنوان <span className="inv-req">*</span></span>
@@ -637,7 +660,7 @@ export function OpportunityEditor({
           </div>
         </FormSection>
 
-        <FormSection title="الصورة والمحتوى">
+        <FormSection title="الصورة والمحتوى" id="opp-media">
           <ImageUpload
             value={form.image_url || ""}
             onChange={(url) => set("image_url", url)}
@@ -665,7 +688,7 @@ export function OpportunityEditor({
           </label>
         </FormSection>
 
-        <FormSection title="المواصفات المالية">
+        <FormSection title="المواصفات المالية" id="opp-specs">
           <div className="inv-form-row">
             <label className="inv-label">
               الحد الأدنى للاستثمار

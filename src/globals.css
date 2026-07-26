@@ -1784,6 +1784,9 @@ select.inv-input{cursor:pointer}
 
 /* ── Publish toggle ──────────────────────────────────── */
 .inv-pub-toggle{display:inline-flex;align-items:center;gap:.65rem;cursor:pointer;user-select:none}
+.inv-section-nav{display:flex;gap:.4rem;flex-wrap:wrap;padding:.75rem 0 .25rem;border-bottom:1.5px solid #f1f5f9;margin-bottom:.25rem}
+.inv-section-pill{background:#f1f5f9;border:1.5px solid #e2e8f0;border-radius:20px;padding:.3rem .9rem;font-size:.8rem;font-weight:600;color:#475569;cursor:pointer;transition:all .15s;white-space:nowrap}
+.inv-section-pill:hover{background:#dbeafe;border-color:#3b82f6;color:#1d4ed8}
 .inv-toggle-row{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.75rem 1rem;background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:10px}
 .inv-toggle-label{font-size:.875rem;font-weight:600;color:#374151}
 .inv-toggle-track{width:44px;height:24px;border-radius:12px;background:#cbd5e1;position:relative;transition:background .22s;flex-shrink:0}
