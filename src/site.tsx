@@ -123,8 +123,19 @@ function Motion(){
     });
 
     const fallbackTimer=window.setTimeout(()=>{
-      sections.forEach(section=>{if(!section.classList.contains("site-section-in"))section.classList.add("site-section-in","site-settled")});
-      items.forEach(item=>{if(!item.classList.contains("in"))item.classList.add("in","site-settled")});
+      const vh=window.innerHeight;
+      sections.forEach(section=>{
+        if(!section.classList.contains("site-section-in")){
+          const r=section.getBoundingClientRect();
+          if(r.top<vh+100&&r.bottom>-100)section.classList.add("site-section-in","site-settled");
+        }
+      });
+      items.forEach(item=>{
+        if(!item.classList.contains("in")){
+          const r=item.getBoundingClientRect();
+          if(r.top<vh+100&&r.bottom>-100)item.classList.add("in","site-settled");
+        }
+      });
     },300);
 
     const moveHero=(event:PointerEvent)=>{

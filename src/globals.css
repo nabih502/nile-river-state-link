@@ -318,150 +318,181 @@ body{font-family:"Cairo",Tahoma,Arial,sans-serif}
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   HOME PAGE — PREMIUM ANIMATIONS & VISUAL ENHANCEMENTS
+   HOME PAGE — SCROLL-TRIGGERED PER-ELEMENT ANIMATIONS
    ═══════════════════════════════════════════════════════════════ */
 
 /* ── 1. Keyframes ─────────────────────────────────────────────────────────── */
-@keyframes hp-rise{0%{opacity:0;transform:translateY(50px)}60%{transform:translateY(-6px)}100%{opacity:1;transform:none}}
-@keyframes hp-slide-r{0%{opacity:0;transform:translateX(-60px)}60%{transform:translateX(6px)}100%{opacity:1;transform:none}}
-@keyframes hp-slide-l{0%{opacity:0;transform:translateX(60px)}60%{transform:translateX(-6px)}100%{opacity:1;transform:none}}
-@keyframes hp-3d-card{0%{opacity:0;transform:perspective(600px) rotateX(24deg) translateY(36px) scale(.96)}60%{transform:perspective(600px) rotateX(-3deg) translateY(-4px) scale(1.01)}100%{opacity:1;transform:perspective(600px) rotateX(0deg) translateY(0) scale(1)}}
-@keyframes hp-elastic-pop{0%{opacity:0;transform:scale(.55)}55%{transform:scale(1.12)}75%{transform:scale(.95)}90%{transform:scale(1.03)}100%{opacity:1;transform:scale(1)}}
-@keyframes hp-clip-reveal{0%{clip-path:inset(0 0 100% 0);transform:translateY(18px);opacity:0}15%{opacity:1}100%{clip-path:inset(0 0 0% 0);transform:none;opacity:1}}
-@keyframes hp-deal{0%{opacity:0;transform:rotate(var(--deal-rot,4deg)) translateY(50px) scale(.88)}60%{transform:rotate(calc(var(--deal-rot,4deg)*-.3)) translateY(-5px) scale(1.02)}100%{opacity:1;transform:none}}
+/* Entrance */
+@keyframes hp-rise{0%{opacity:0;transform:translateY(48px)}60%{transform:translateY(-5px)}100%{opacity:1;transform:none}}
+@keyframes hp-slide-r{0%{opacity:0;transform:translateX(-56px)}60%{transform:translateX(5px)}100%{opacity:1;transform:none}}
+@keyframes hp-slide-l{0%{opacity:0;transform:translateX(56px)}60%{transform:translateX(-5px)}100%{opacity:1;transform:none}}
+@keyframes hp-3d-card{0%{opacity:0;transform:perspective(600px) rotateX(26deg) translateY(38px) scale(.96)}60%{transform:perspective(600px) rotateX(-3deg) translateY(-4px) scale(1.01)}100%{opacity:1;transform:none}}
+@keyframes hp-elastic{0%{opacity:0;transform:scale(.52)}55%{transform:scale(1.13)}78%{transform:scale(.94)}92%{transform:scale(1.04)}100%{opacity:1;transform:scale(1)}}
+@keyframes hp-clip{0%{clip-path:inset(0 0 100% 0);transform:translateY(14px);opacity:.6}100%{clip-path:inset(0 0 0% 0);transform:none;opacity:1}}
+@keyframes hp-deal{0%{opacity:0;transform:rotate(var(--dr,3deg)) translateY(44px) scale(.9)}60%{transform:rotate(calc(var(--dr,3deg)*-.25)) translateY(-4px)}100%{opacity:1;transform:none}}
+@keyframes hp-fade-in{from{opacity:0}to{opacity:1}}
+/* Continuous */
 @keyframes hp-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
 @keyframes hp-float-sm{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
-@keyframes hp-pulse-ring{0%{box-shadow:0 0 0 0 rgba(194,122,0,.4)}70%{box-shadow:0 0 0 16px rgba(194,122,0,0)}100%{box-shadow:0 0 0 0 rgba(194,122,0,0)}}
-@keyframes hp-icon-orbit{0%,100%{transform:translateY(0) scale(1)}30%{transform:translateY(-6px) scale(1.12)}60%{transform:translateY(-3px) scale(1.05)}}
-@keyframes hp-icon-wave{0%,100%{transform:rotate(0deg) scale(1)}25%{transform:rotate(-12deg) scale(1.1)}50%{transform:rotate(8deg) scale(1.05)}75%{transform:rotate(-5deg) scale(1.08)}}
+@keyframes hp-pulse-ring{0%{box-shadow:0 0 0 0 rgba(194,122,0,.42)}70%{box-shadow:0 0 0 16px rgba(194,122,0,0)}100%{box-shadow:0 0 0 0 rgba(194,122,0,0)}}
+@keyframes hp-orbit{0%,100%{transform:translateY(0) scale(1)}30%{transform:translateY(-6px) scale(1.12)}60%{transform:translateY(-3px) scale(1.05)}}
+@keyframes hp-wave{0%,100%{transform:rotate(0) scale(1)}25%{transform:rotate(-14deg) scale(1.1)}55%{transform:rotate(9deg) scale(1.06)}80%{transform:rotate(-5deg) scale(1.08)}}
 @keyframes hp-shimmer{0%{background-position:200% center}100%{background-position:-200% center}}
-@keyframes hp-count-blur{0%{filter:blur(8px);transform:scale(1.3)}100%{filter:blur(0);transform:scale(1)}}
+@keyframes hp-count-in{0%{filter:blur(9px);transform:scale(1.35)}100%{filter:blur(0);transform:scale(1)}}
 
-/* ── 2. Base: home motion elements start invisible ─────────────────────────── */
+/* ── 2. Home motion elements start invisible until scrolled-to ──────────────── */
 .home-redesign .motion{opacity:0}
 .home-redesign .motion.in{opacity:1}
 
-/* ── 3. Hero ──────────────────────────────────────────────────────────────── */
+/* ── 3. HERO — fires immediately on page load ──────────────────────────────── */
 .home-redesign .home-hero-copy.motion.in{animation:hp-slide-r .85s cubic-bezier(.2,.68,0,1.12) both}
 .home-redesign .home-hero-stage.motion.in{animation:hp-slide-l .85s cubic-bezier(.2,.68,0,1.12) .15s both}
-.home-redesign .home-hero-copy h1{background:linear-gradient(120deg,#1b2735 20%,#8a5500 60%,#c27a00 100%);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:hp-shimmer 6s linear 1s infinite}
-.home-redesign .home-hero-copy.motion.in h2{animation:hp-clip-reveal .7s cubic-bezier(.2,.68,0,1.12) .45s both}
+/* Hero h1: gradient shimmer (runs on h1, no .motion → never killed by site-settled) */
+.home-redesign .home-hero-copy h1{background:linear-gradient(120deg,#1b2735 20%,#8a5500 60%,#c27a00 100%);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:hp-shimmer 5s linear 1.2s infinite}
+/* h2 clip reveal */
 .home-redesign .home-hero-copy h2{position:relative;display:inline-block}
+.home-redesign .home-hero-copy.motion.in h2{animation:hp-clip .65s cubic-bezier(.2,.68,0,1.12) .42s both}
 .home-redesign .home-hero-copy h2::after{content:"";position:absolute;bottom:-4px;right:0;left:0;height:3px;background:linear-gradient(90deg,transparent,#ef8610,transparent);border-radius:2px}
+/* Values + actions stagger in */
 .home-redesign .home-values,.home-redesign .home-hero-actions{opacity:0}
-.home-redesign .home-hero-copy.motion.in .home-values{animation:hp-rise .6s cubic-bezier(.2,.68,0,1.12) .6s both;opacity:1}
-.home-redesign .home-hero-copy.motion.in .home-hero-actions{animation:hp-rise .6s cubic-bezier(.2,.68,0,1.12) .75s both;opacity:1}
-.home-redesign .home-primary{animation:hp-pulse-ring 2.8s cubic-bezier(.455,.03,.515,.955) 2s infinite}
+.home-redesign .home-hero-copy.motion.in .home-values{opacity:1;animation:hp-rise .55s cubic-bezier(.2,.68,0,1.12) .62s both}
+.home-redesign .home-hero-copy.motion.in .home-hero-actions{opacity:1;animation:hp-rise .55s cubic-bezier(.2,.68,0,1.12) .78s both}
+/* Continuous: floating benefit panel + pulsing CTA (neither has .motion) */
 .home-redesign .home-benefit-panel{backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);animation:hp-float-sm 4s ease-in-out infinite}
+.home-redesign .home-primary{animation:hp-pulse-ring 2.8s cubic-bezier(.455,.03,.515,.955) 2.2s infinite}
 
-/* ── 4. Metrics bar ────────────────────────────────────────────────────────── */
-.home-redesign .home-metrics.motion.in{animation:hp-rise .65s cubic-bezier(.2,.68,0,1.12) both}
-.home-redesign .home-metrics{background:linear-gradient(135deg,#fff 0%,#fffdf5 50%,#fff8ed 100%);border-top:3px solid transparent;border-image:linear-gradient(90deg,transparent,#c27a00 20%,#e8950a 50%,#c27a00 80%,transparent) 1}
-.home-redesign .home-metrics>div{position:relative;overflow:hidden;transition:transform .3s cubic-bezier(.2,.68,0,1.12)}
-.home-redesign .home-metrics>div:hover{transform:translateY(-4px)}
-.home-redesign .home-metrics>div::after{content:"";position:absolute;bottom:0;right:0;width:1px;height:60%;background:linear-gradient(transparent,#d9cfc4)}
-.home-redesign .home-metrics.motion.in>div svg{animation:hp-icon-orbit 3.5s ease-in-out infinite}
+/* ── 4. METRICS — container instant-reveal, each item rises individually ─── */
+.home-redesign .home-metrics.motion.in{animation:none!important;opacity:1!important}
+.home-redesign .home-metrics{background:linear-gradient(135deg,#fff 0%,#fffdf5 50%,#fff8ed 100%);border-top:3px solid transparent;border-image:linear-gradient(90deg,transparent,#c27a00 25%,#e8950a 50%,#c27a00 75%,transparent) 1}
+/* Each metric item rises with stagger */
+.home-redesign .home-metrics.motion.in>div{animation:hp-rise .55s cubic-bezier(.2,.68,0,1.12) both}
+.home-redesign .home-metrics.motion.in>div:nth-child(1){animation-delay:.0s}
+.home-redesign .home-metrics.motion.in>div:nth-child(2){animation-delay:.09s}
+.home-redesign .home-metrics.motion.in>div:nth-child(3){animation-delay:.18s}
+.home-redesign .home-metrics.motion.in>div:nth-child(4){animation-delay:.27s}
+.home-redesign .home-metrics.motion.in>div:nth-child(5){animation-delay:.36s}
+/* Number blur-in (child of div, no .motion → never killed) */
+.home-redesign .home-metrics.motion.in>div:nth-child(1) b{animation:hp-count-in .5s ease .05s both}
+.home-redesign .home-metrics.motion.in>div:nth-child(2) b{animation:hp-count-in .5s ease .14s both}
+.home-redesign .home-metrics.motion.in>div:nth-child(3) b{animation:hp-count-in .5s ease .23s both}
+.home-redesign .home-metrics.motion.in>div:nth-child(4) b{animation:hp-count-in .5s ease .32s both}
+.home-redesign .home-metrics.motion.in>div:nth-child(5) b{animation:hp-count-in .5s ease .41s both}
+/* Icon orbit (continuous, no .motion) */
+.home-redesign .home-metrics.motion.in>div svg{animation:hp-orbit 3.5s ease-in-out infinite}
 .home-redesign .home-metrics.motion.in>div:nth-child(1) svg{animation-delay:.0s}
-.home-redesign .home-metrics.motion.in>div:nth-child(2) svg{animation-delay:.5s}
-.home-redesign .home-metrics.motion.in>div:nth-child(3) svg{animation-delay:1s}
-.home-redesign .home-metrics.motion.in>div:nth-child(4) svg{animation-delay:1.5s}
-.home-redesign .home-metrics.motion.in>div:nth-child(5) svg{animation-delay:2s}
-.home-redesign .home-metrics.motion.in b{animation:hp-count-blur .6s ease both}
-.home-redesign .home-metrics.motion.in>div:nth-child(1) b{animation-delay:.05s}
-.home-redesign .home-metrics.motion.in>div:nth-child(2) b{animation-delay:.15s}
-.home-redesign .home-metrics.motion.in>div:nth-child(3) b{animation-delay:.25s}
-.home-redesign .home-metrics.motion.in>div:nth-child(4) b{animation-delay:.35s}
-.home-redesign .home-metrics.motion.in>div:nth-child(5) b{animation-delay:.45s}
+.home-redesign .home-metrics.motion.in>div:nth-child(2) svg{animation-delay:.6s}
+.home-redesign .home-metrics.motion.in>div:nth-child(3) svg{animation-delay:1.2s}
+.home-redesign .home-metrics.motion.in>div:nth-child(4) svg{animation-delay:1.8s}
+.home-redesign .home-metrics.motion.in>div:nth-child(5) svg{animation-delay:2.4s}
+/* Styling */
 .home-redesign .home-metrics b{background:linear-gradient(135deg,#c27a00,#e8950a);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-size:28px!important;display:block}
 .home-redesign .home-metrics small{font-size:13px!important;color:#5a4a2a;letter-spacing:.01em}
+.home-redesign .home-metrics>div{position:relative;transition:transform .3s cubic-bezier(.2,.68,0,1.12)}
+.home-redesign .home-metrics>div:hover{transform:translateY(-4px)}
+.home-redesign .home-metrics>div::after{content:"";position:absolute;bottom:0;right:0;width:1px;height:60%;background:linear-gradient(transparent,#d9cfc4)}
 
-/* ── 5. Join section ──────────────────────────────────────────────────────── */
-.home-redesign .home-join.motion.in{animation:hp-rise .7s cubic-bezier(.2,.68,0,1.12) both}
+/* ── 5. JOIN — card slides, copy elements cascade, CTA bounces ──────────────── */
+.home-redesign .home-join.motion.in{animation:hp-fade-in .18s ease both}
 .home-redesign .home-join{position:relative;overflow:hidden}
 .home-redesign .home-join::before{content:"";position:absolute;top:-60px;left:-60px;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle,rgba(194,122,0,.07) 0%,transparent 70%);pointer-events:none;animation:hp-float 6s ease-in-out infinite}
-.home-redesign .home-join-copy h2{font-size:30px!important;font-weight:900;letter-spacing:-.5px}
-.home-redesign .home-join-cta{animation:hp-float 3.5s ease-in-out 1s infinite}
+.home-redesign .home-join.motion.in .home-member-card{animation:hp-slide-l .7s cubic-bezier(.2,.68,0,1.12) .12s both}
+.home-redesign .home-join.motion.in .home-join-copy>span{animation:hp-clip .55s cubic-bezier(.2,.68,0,1.12) .2s both}
+.home-redesign .home-join.motion.in .home-join-copy h2{animation:hp-rise .6s cubic-bezier(.2,.68,0,1.12) .32s both;font-size:30px!important;font-weight:900;letter-spacing:-.5px}
+.home-redesign .home-join.motion.in .home-join-copy p{animation:hp-rise .5s cubic-bezier(.2,.68,0,1.12) .44s both}
+/* CTA: elastic pop, then float (chained animation — no .motion so float never killed) */
+.home-redesign .home-join-cta{animation:hp-float 3.5s ease-in-out 1.2s infinite}
+.home-redesign .home-join.motion.in .home-join-cta{animation:hp-elastic .65s cubic-bezier(.2,.68,0,1.12) .6s both,hp-float 3.5s ease-in-out 1.3s infinite}
 
-/* ── 6. Section titles ─────────────────────────────────────────────────────── */
+/* ── 6. SECTION TITLES — clip-reveal ────────────────────────────────────────── */
+.home-redesign .home-section-title.motion.in{animation:hp-clip .7s cubic-bezier(.2,.68,0,1.12) both}
 .home-redesign .home-section-title h2{font-size:27px!important;font-weight:900;letter-spacing:-.3px;background:linear-gradient(135deg,#1b2735,#384d64);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .home-redesign .home-section-title span{height:3px!important;border-radius:2px}
+.home-redesign .home-section-title.motion.in span:first-child{animation:hp-slide-r .5s cubic-bezier(.2,.68,0,1.12) .3s both}
+.home-redesign .home-section-title.motion.in span:last-child{animation:hp-slide-l .5s cubic-bezier(.2,.68,0,1.12) .3s both}
 
-/* ── 7. Service cards — 3-D perspective entrance ─────────────────────────── */
+/* ── 7. SERVICE CARDS — 3-D perspective entrance with stagger ───────────────── */
 .home-redesign .home-services{position:relative;padding-top:6px}
 .home-redesign .home-services::before{content:"";position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,transparent,#c27a00 30%,#e8950a 50%,#c27a00 70%,transparent)}
 .home-redesign .home-service-card.motion{transform-origin:bottom center}
-.home-redesign .home-service-card.motion.in{animation:hp-3d-card .65s cubic-bezier(.2,.68,0,1.12) both}
+.home-redesign .home-service-card.motion.in{animation:hp-3d-card .7s cubic-bezier(.2,.68,0,1.12) both}
 .home-redesign .home-service-card.motion.in:nth-child(1){animation-delay:.0s}
-.home-redesign .home-service-card.motion.in:nth-child(2){animation-delay:.08s}
-.home-redesign .home-service-card.motion.in:nth-child(3){animation-delay:.16s}
-.home-redesign .home-service-card.motion.in:nth-child(4){animation-delay:.24s}
-.home-redesign .home-service-card.motion.in:nth-child(5){animation-delay:.32s}
+.home-redesign .home-service-card.motion.in:nth-child(2){animation-delay:.09s}
+.home-redesign .home-service-card.motion.in:nth-child(3){animation-delay:.18s}
+.home-redesign .home-service-card.motion.in:nth-child(4){animation-delay:.27s}
+.home-redesign .home-service-card.motion.in:nth-child(5){animation-delay:.36s}
 .home-redesign .home-service-card{transition:transform .35s cubic-bezier(.2,.68,0,1.12),box-shadow .35s ease}
-.home-redesign .home-service-card:hover{transform:translateY(-12px) scale(1.02);box-shadow:0 24px 48px rgba(27,39,53,.14)}
+.home-redesign .home-service-card:hover{transform:translateY(-12px) scale(1.02);box-shadow:0 26px 52px rgba(27,39,53,.14)}
 .home-redesign .home-service-card h3{font-size:17px!important;font-weight:900}
 .home-redesign .home-service-card ul{font-size:13px!important;line-height:2.1}
 .home-redesign .home-service-card ul li{position:relative;padding-right:14px}
 .home-redesign .home-service-card ul li::before{content:"›";color:#c27a00;position:absolute;right:0;font-weight:900}
 .home-redesign .home-service-card .service-icon{transition:transform .4s cubic-bezier(.2,.68,0,1.12)}
-.home-redesign .home-service-card:hover .service-icon{animation:hp-icon-wave .6s ease both}
+.home-redesign .home-service-card:hover .service-icon{animation:hp-wave .65s ease both}
 
-/* ── 8. Investment ─────────────────────────────────────────────────────────── */
-.home-redesign .home-investment.motion.in{animation:hp-rise .8s ease both}
+/* ── 8. INVESTMENT — overlay reveals title then copy ────────────────────────── */
+.home-redesign .home-investment.motion.in{animation:hp-fade-in .25s ease both}
 .home-redesign .home-investment{position:relative;overflow:hidden}
-.home-redesign .home-investment::after{content:"";position:absolute;inset:0;background:linear-gradient(120deg,rgba(0,0,0,.6) 0%,rgba(0,0,0,.2) 50%,rgba(0,0,0,.55) 100%);pointer-events:none}
+.home-redesign .home-investment::after{content:"";position:absolute;inset:0;background:linear-gradient(120deg,rgba(0,0,0,.62) 0%,rgba(0,0,0,.2) 50%,rgba(0,0,0,.58) 100%);pointer-events:none}
 .home-redesign .investment-center{position:relative;z-index:2}
-.home-redesign .investment-center h2{font-size:30px!important;font-weight:900;text-shadow:0 2px 10px rgba(0,0,0,.5)}
-.home-redesign .home-investment.motion.in .investment-center h2{animation:hp-clip-reveal .7s cubic-bezier(.2,.68,0,1.12) .2s both}
-.home-redesign .home-investment.motion.in .investment-center p{animation:hp-clip-reveal .6s cubic-bezier(.2,.68,0,1.12) .4s both}
+.home-redesign .investment-center h2{font-size:30px!important;font-weight:900;text-shadow:0 2px 12px rgba(0,0,0,.55)}
+.home-redesign .home-investment.motion.in .investment-center h2{animation:hp-clip .72s cubic-bezier(.2,.68,0,1.12) .18s both}
+.home-redesign .home-investment.motion.in .investment-center p{animation:hp-rise .6s cubic-bezier(.2,.68,0,1.12) .4s both}
+.home-redesign .home-investment.motion.in .investment-center>div{animation:hp-rise .55s cubic-bezier(.2,.68,0,1.12) .58s both}
 
-/* ── 9. Programs ───────────────────────────────────────────────────────────── */
-.home-redesign .home-program.school.motion.in{animation:hp-slide-r .75s cubic-bezier(.2,.68,0,1.12) both}
-.home-redesign .home-program.institute.motion.in{animation:hp-slide-l .75s cubic-bezier(.2,.68,0,1.12) .12s both}
+/* ── 9. PROGRAMS — slide from opposite sides ──────────────────────────────── */
+.home-redesign .home-program.school.motion.in{animation:hp-slide-r .78s cubic-bezier(.2,.68,0,1.12) both}
+.home-redesign .home-program.institute.motion.in{animation:hp-slide-l .78s cubic-bezier(.2,.68,0,1.12) .12s both}
 .home-redesign .home-program{transition:transform .35s cubic-bezier(.2,.68,0,1.12),box-shadow .35s ease}
-.home-redesign .home-program:hover{transform:translateY(-7px);box-shadow:0 20px 40px rgba(27,39,53,.13)}
+.home-redesign .home-program:hover{transform:translateY(-7px);box-shadow:0 22px 44px rgba(27,39,53,.13)}
 .home-redesign .home-program img{transition:transform .5s ease}
 .home-redesign .home-program:hover img{transform:scale(1.05)}
 .home-redesign .program-copy h2{font-size:22px!important;font-weight:900}
 
-/* ── 10. Opportunity strip ──────────────────────────────────────────────────── */
-.home-redesign .home-opportunity.motion.in{animation:hp-rise .55s cubic-bezier(.2,.68,0,1.12) both}
+/* ── 10. OPPORTUNITY — icon waves first, copy cascades in ───────────────────── */
+.home-redesign .home-opportunity.motion.in{animation:hp-fade-in .18s ease both}
 .home-redesign .home-opportunity{position:relative;overflow:hidden}
 .home-redesign .home-opportunity::before{content:"";position:absolute;top:-40px;right:-40px;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,.04);pointer-events:none}
-.home-redesign .home-opportunity h2{font-size:24px!important;font-weight:900}
-.home-redesign .home-opportunity.motion.in>svg{animation:hp-icon-wave 1.2s ease .3s both}
+.home-redesign .home-opportunity.motion.in>svg{animation:hp-wave 1.1s cubic-bezier(.2,.68,0,1.12) .08s both}
+.home-redesign .home-opportunity.motion.in>div>h2{animation:hp-clip .65s cubic-bezier(.2,.68,0,1.12) .22s both;font-size:24px!important;font-weight:900}
+.home-redesign .home-opportunity.motion.in>div>p{animation:hp-rise .5s cubic-bezier(.2,.68,0,1.12) .42s both}
+.home-redesign .home-opportunity.motion.in>a{animation:hp-elastic .55s cubic-bezier(.2,.68,0,1.12) .6s both}
 
-/* ── 11. Market ────────────────────────────────────────────────────────────── */
-.home-redesign .home-market.motion.in{animation:hp-rise .7s cubic-bezier(.2,.68,0,1.12) both}
-.home-redesign .home-market img{transition:transform .55s ease}
+/* ── 11. MARKET — image and copy slide in from opposite directions ──────────── */
+.home-redesign .home-market.motion.in{animation:hp-fade-in .18s ease both}
+.home-redesign .home-market.motion.in>img{animation:hp-rise .72s cubic-bezier(.2,.68,0,1.12) .1s both;transition:transform .55s ease}
 .home-redesign .home-market:hover img{transform:scale(1.04)}
-.home-redesign .market-copy h2{font-size:20px!important;font-weight:900}
+.home-redesign .home-market.motion.in>.market-copy>span{animation:hp-clip .55s cubic-bezier(.2,.68,0,1.12) .2s both}
+.home-redesign .home-market.motion.in>.market-copy>h2{animation:hp-rise .6s cubic-bezier(.2,.68,0,1.12) .32s both;font-size:20px!important;font-weight:900}
+.home-redesign .home-market.motion.in>.market-copy>p{animation:hp-rise .52s cubic-bezier(.2,.68,0,1.12) .46s both}
+.home-redesign .home-market.motion.in>.market-copy>div{animation:hp-rise .5s cubic-bezier(.2,.68,0,1.12) .6s both}
+.home-redesign .home-market.motion.in>a{animation:hp-elastic .55s cubic-bezier(.2,.68,0,1.12) .78s both}
 
-/* ── 12. Health cards — elastic pop ────────────────────────────────────────── */
-.home-redesign .hhc-card.motion.in{animation:hp-elastic-pop .7s cubic-bezier(.2,.68,0,1.12) both}
+/* ── 12. HEALTH CARDS — elastic pop with stagger ──────────────────────────── */
+.home-redesign .hhc-card.motion.in{animation:hp-elastic .72s cubic-bezier(.2,.68,0,1.12) both}
 .home-redesign .hhc-card.motion.in:nth-child(1){animation-delay:.0s}
 .home-redesign .hhc-card.motion.in:nth-child(2){animation-delay:.14s}
 .home-redesign .hhc-card{transition:transform .35s cubic-bezier(.2,.68,0,1.12),box-shadow .35s ease}
-.home-redesign .hhc-card:hover{transform:translateY(-9px) scale(1.01);box-shadow:0 22px 44px rgba(27,39,53,.14)}
+.home-redesign .hhc-card:hover{transform:translateY(-9px) scale(1.015);box-shadow:0 24px 48px rgba(27,39,53,.14)}
 
-/* ── 13. News cards — stagger deal ─────────────────────────────────────────── */
-.home-redesign .home-news-card.motion.in{animation:hp-deal .6s cubic-bezier(.2,.68,0,1.12) both}
-.home-redesign .home-news-card.motion.in:nth-child(1){animation-delay:.0s;--deal-rot:-2deg}
-.home-redesign .home-news-card.motion.in:nth-child(2){animation-delay:.1s;--deal-rot:-1deg}
-.home-redesign .home-news-card.motion.in:nth-child(3){animation-delay:.2s;--deal-rot:1deg}
-.home-redesign .home-news-card.motion.in:nth-child(4){animation-delay:.3s;--deal-rot:2deg}
-.home-redesign .home-news-card{transition:transform .3s cubic-bezier(.2,.68,0,1.12),box-shadow .3s ease;overflow:hidden}
+/* ── 13. NEWS CARDS — deal stagger (like playing cards) ──────────────────── */
+.home-redesign .home-news-card.motion.in{animation:hp-deal .62s cubic-bezier(.2,.68,0,1.12) both}
+.home-redesign .home-news-card.motion.in:nth-child(1){animation-delay:.0s;--dr:-2.5deg}
+.home-redesign .home-news-card.motion.in:nth-child(2){animation-delay:.1s;--dr:-1deg}
+.home-redesign .home-news-card.motion.in:nth-child(3){animation-delay:.2s;--dr:1deg}
+.home-redesign .home-news-card.motion.in:nth-child(4){animation-delay:.3s;--dr:2.5deg}
+.home-redesign .home-news-card{transition:transform .32s cubic-bezier(.2,.68,0,1.12),box-shadow .32s ease;overflow:hidden}
 .home-redesign .home-news-card:hover{transform:translateY(-7px);box-shadow:0 18px 36px rgba(27,39,53,.12)}
 .home-redesign .home-news-card img{transition:transform .5s ease}
 .home-redesign .home-news-card:hover img{transform:scale(1.07)}
 .home-redesign .home-news-card h3{font-size:15px!important;font-weight:800;line-height:1.5}
 .home-redesign .home-news-card p{font-size:13px!important;line-height:1.6}
 
-/* ── 14. CTA buttons ────────────────────────────────────────────────────────── */
+/* ── 14. CTA BUTTONS ──────────────────────────────────────────────────────── */
 .home-redesign a.home-primary,.home-redesign a.home-outline{transition:transform .28s cubic-bezier(.2,.68,0,1.12),box-shadow .28s ease}
 .home-redesign a.home-primary:hover{transform:translateY(-3px) scale(1.03);box-shadow:0 12px 28px rgba(194,122,0,.38)}
 .home-redesign a.home-outline:hover{transform:translateY(-3px) scale(1.03);box-shadow:0 10px 22px rgba(27,39,53,.2)}
 
-/* ── 15. Reduced motion ──────────────────────────────────────────────────────── */
+/* ── 15. Reduced motion ─────────────────────────────────────────────────── */
 @media(prefers-reduced-motion:reduce){.home-redesign .motion{opacity:1!important}.home-redesign *{animation:none!important;transition:none!important}}
 /* ══════════ END HOME ENHANCEMENTS ══════════════════════════════ */
 
