@@ -1680,9 +1680,10 @@ main .social-redesign .ss-hero.site-section-in.site-settled .site-hero-parallax{
 .inquiry-form h3 svg{color:#b45309}
 .inquiry-row{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
 @media(max-width:500px){.inquiry-row{grid-template-columns:1fr}}
+.inquiry-row label{min-width:0}
 .inquiry-form label{display:flex;flex-direction:column;gap:.35rem;font-size:.82rem;font-weight:700;color:#475569}
 .inquiry-form label span{color:#dc2626}
-.inquiry-form input,.inquiry-form textarea{padding:.7rem .9rem;border:1.5px solid #e2e8f0;border-radius:10px;font-family:Cairo,sans-serif;font-size:.9rem;color:#1e293b;outline:none;transition:border-color .2s;background:#f8fafc}
+.inquiry-form input,.inquiry-form textarea{padding:.7rem .9rem;border:1.5px solid #e2e8f0;border-radius:10px;font-family:Cairo,sans-serif;font-size:.9rem;color:#1e293b;outline:none;transition:border-color .2s;background:#f8fafc;width:100%;box-sizing:border-box}
 .inquiry-form input:focus,.inquiry-form textarea:focus{border-color:#b45309;background:#fff}
 .inquiry-form textarea{resize:vertical;min-height:100px}
 .inquiry-form button[type=submit]{padding:.85rem;background:linear-gradient(135deg,#d97706,#b45309);color:#fff;border:none;border-radius:12px;font-family:Cairo,sans-serif;font-size:1rem;font-weight:800;cursor:pointer;transition:all .2s;box-shadow:0 2px 8px rgba(180,83,9,.25)}
