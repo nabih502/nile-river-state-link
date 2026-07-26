@@ -1101,6 +1101,57 @@ function MemberField({field}:{field:MemberFieldSpec}){
     <input {...common} type={field.kind==="email"?"email":field.kind==="date"?"date":field.kind==="number"?"number":"text"} placeholder={field.placeholder||`أدخل ${field.label}`}/>}</label>
 }
 
+function WizardField({field}:{field:MemberFieldSpec}){
+  const common={required:field.required,"aria-label":field.label};
+  if(field.kind==="radio") return(
+    <div className="wf">
+      <label className="wf-label">{field.label}{field.required&&<em>*</em>}</label>
+      <div className="wf-radios">
+        {field.options?.map(opt=>(
+          <label key={opt} className="wf-radio-opt">
+            <input name={field.label} type="radio" required={field.required} value={opt}/>
+            <span>{opt}</span>
+          </label>
+        ))}
+      </div>
+    </div>
+  );
+  if(field.kind==="toggle") return(
+    <div className="wf">
+      <label className="wf-toggle-row">
+        <span className="wf-toggle-track"><input type="checkbox"/><i/></span>
+        <span className="wf-toggle-text">{field.placeholder||field.label}</span>
+      </label>
+    </div>
+  );
+  if(field.kind==="file") return(
+    <div className="wf wf-full">
+      <label className="wf-label">{field.label}</label>
+      <label className="wf-file">
+        <Upload size={28}/>
+        <b>اختر صورة أو اسحبها هنا</b>
+        <small>JPG, PNG — الحجم الأقصى 2MB</small>
+        <input {...common} type="file" accept="image/*"/>
+      </label>
+    </div>
+  );
+  if(field.kind==="textarea") return(
+    <div className="wf wf-full">
+      <label className="wf-label">{field.label}{field.required&&<em>*</em>}</label>
+      <textarea className="wf-input" {...common} placeholder={field.placeholder||"أدخل التفاصيل"} rows={4}/>
+    </div>
+  );
+  return(
+    <div className="wf">
+      <label className="wf-label">{field.label}{field.required&&<em>*</em>}</label>
+      {field.kind==="select"
+        ?<select className="wf-input" {...common} defaultValue=""><option value="" disabled>اختر {field.label}</option>{field.options?.map(o=><option key={o}>{o}</option>)}</select>
+        :<input className="wf-input" {...common} type={field.kind==="email"?"email":field.kind==="date"?"date":field.kind==="number"?"number":"text"} placeholder={field.placeholder||`أدخل ${field.label}`}/>
+      }
+    </div>
+  );
+}
+
 function Register(){
   const params=new URLSearchParams(window.location.search);
   const planIndex=Number(params.get("plan")||"1");
@@ -1223,7 +1274,7 @@ function Register(){
                 const group=groups[gi];const GIcon=group.icon;
                 return <fieldset key={group.title} className="rwz-fieldset">
                   <legend><GIcon size={14}/>{group.title}</legend>
-                  <div className="rwz-field-grid">{group.fields.map(field=><MemberField key={field.label} field={field}/>)}</div>
+                  <div className="wf-grid">{group.fields.map(field=><WizardField key={field.label} field={field}/>)}</div>
                 </fieldset>;
               })}
               {si===TOTAL-1&&<>

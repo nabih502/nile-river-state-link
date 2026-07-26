@@ -376,41 +376,39 @@ body{font-family:"Cairo",Tahoma,Arial,sans-serif}
 .rwz-fieldset{border:1.5px solid #e9ecef;border-radius:14px;padding:2rem;background:#fafbfc}
 .rwz-fieldset legend{font-size:.95rem;font-weight:800;color:#1b2735;display:flex;align-items:center;gap:8px;padding:0 10px;background:#fafbfc}
 .rwz-fieldset legend svg{color:#c27a00;flex-shrink:0}
-.rwz-field-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:22px;margin-top:1.5rem}
-
-/* ── Wizard field overrides — replaces the cramped 8px legacy styles ── */
-.rwz-fieldset .member-field{font-size:15px;font-weight:600;display:flex;flex-direction:column;gap:9px}
-.rwz-fieldset .member-field>span:first-child{font-size:14px;font-weight:700;color:#374151;display:block;letter-spacing:.01em}
-.rwz-fieldset .member-field em{color:#ef4444;margin-right:3px;font-style:normal}
-.rwz-fieldset .member-field>input,
-.rwz-fieldset .member-field>select{width:100%;height:52px;border:1.5px solid #d1d5db;border-radius:10px;padding:0 16px;background:#fff;color:#1f2937;font-size:15px;transition:border-color .2s,box-shadow .2s;font-family:inherit;direction:rtl}
-.rwz-fieldset .member-field>textarea{width:100%;min-height:110px;border:1.5px solid #d1d5db;border-radius:10px;padding:14px 16px;background:#fff;color:#1f2937;font-size:15px;transition:border-color .2s,box-shadow .2s;font-family:inherit;resize:vertical;direction:rtl;line-height:1.7}
-.rwz-fieldset .member-field>input:focus,
-.rwz-fieldset .member-field>select:focus,
-.rwz-fieldset .member-field>textarea:focus{border-color:#c27a00;outline:none;box-shadow:0 0 0 4px rgba(194,122,0,.13)}
-.rwz-fieldset .member-field>input:hover:not(:focus),
-.rwz-fieldset .member-field>select:hover:not(:focus){border-color:#b0b8c4}
-.rwz-fieldset .member-field>input::placeholder,
-.rwz-fieldset .member-field>textarea::placeholder{color:#b0b8c4;font-size:14px}
-/* Radio group */
-.rwz-fieldset .member-radios{height:auto;display:flex;gap:12px;flex-wrap:wrap;margin-top:4px}
-.rwz-fieldset .member-radios label{display:flex;align-items:center;gap:10px;padding:13px 22px;border:1.5px solid #d1d5db;border-radius:10px;background:#fff;cursor:pointer;font-size:15px;font-weight:600;color:#374151;transition:.18s;user-select:none}
-.rwz-fieldset .member-radios label:hover{border-color:#c27a00;background:#fffaf3}
-.rwz-fieldset .member-radios input[type="radio"]{width:18px;height:18px;accent-color:#c27a00;flex-shrink:0;cursor:pointer}
-/* File upload */
-.rwz-fieldset .member-file{min-height:100px;border:2px dashed #d1d5db;border-radius:12px;display:flex;align-items:center;justify-content:center;gap:12px;position:relative;background:#fff;transition:.18s;cursor:pointer}
-.rwz-fieldset .member-file:hover{border-color:#c27a00;background:#fffaf3}
-.rwz-fieldset .member-file svg{width:32px;height:32px;color:#9ca3af}
-.rwz-fieldset .member-file b{font-size:14px;color:#4b5563}
-.rwz-fieldset .member-file small{font-size:12px;color:#9ca3af;display:block;margin-top:2px}
-.rwz-fieldset .member-file input{position:absolute;inset:0;opacity:0;cursor:pointer}
+/* ── WizardField: fresh classes, zero legacy cascade conflicts ── */
+.wf-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;margin-top:1.5rem}
+.wf{display:flex;flex-direction:column;gap:8px;min-width:0}
+.wf.wf-full{grid-column:1/-1}
+.wf-label{font-size:14px;font-weight:700;color:#1f2937;display:block;line-height:1.4;margin:0}
+.wf-label em{color:#ef4444;font-style:normal;margin-right:3px}
+.wf-input{width:100%;height:48px;border:1.5px solid #d1d5db;border-radius:8px;padding:0 14px;font-size:15px;color:#1f2937;background:#fff;font-family:inherit;direction:rtl;transition:border-color .18s,box-shadow .18s;outline:none;-webkit-appearance:none;appearance:none;box-sizing:border-box}
+.wf-input:focus{border-color:#c27a00;box-shadow:0 0 0 3px rgba(194,122,0,.13)}
+.wf-input:hover:not(:focus){border-color:#9ca3af}
+.wf-input::placeholder{color:#b0b8c4;font-size:14px}
+textarea.wf-input{height:auto;padding:12px 14px;resize:vertical;line-height:1.7}
+select.wf-input{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b7480' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:left 12px center;padding-left:36px;cursor:pointer}
+/* Radio */
+.wf-radios{display:flex;gap:10px;flex-wrap:wrap;margin-top:2px}
+.wf-radio-opt{display:inline-flex;align-items:center;gap:10px;padding:10px 18px;border:1.5px solid #d1d5db;border-radius:8px;background:#fff;cursor:pointer;font-size:14px;font-weight:600;color:#374151;transition:.15s;user-select:none}
+.wf-radio-opt:hover{border-color:#c27a00;background:#fffaf3}
+.wf-radio-opt input[type="radio"]{width:16px;height:16px;accent-color:#c27a00;flex-shrink:0;cursor:pointer;margin:0}
+/* File */
+.wf-file{min-height:96px;border:2px dashed #d1d5db;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;position:relative;background:#fff;transition:.15s;cursor:pointer;padding:14px}
+.wf-file:hover{border-color:#c27a00;background:#fffaf3}
+.wf-file svg{color:#9ca3af}
+.wf-file b{font-size:14px;color:#4b5563;font-weight:600}
+.wf-file small{font-size:12px;color:#9ca3af}
+.wf-file input{position:absolute;inset:0;opacity:0;cursor:pointer}
 /* Toggle */
-.rwz-fieldset .member-toggle{min-height:52px;display:flex;align-items:center;gap:14px;position:relative;font-size:15px;color:#374151;font-weight:600;cursor:pointer;padding:10px 0}
-.rwz-fieldset .member-toggle input{position:absolute;opacity:0}
-.rwz-fieldset .member-toggle i{width:48px;height:26px;border-radius:20px;background:#d1d5db;position:relative;flex-shrink:0;transition:.25s}
-.rwz-fieldset .member-toggle i:after{content:"";position:absolute;width:20px;height:20px;border-radius:50%;background:#fff;top:3px;right:3px;transition:.25s;box-shadow:0 1px 4px rgba(0,0,0,.2)}
-.rwz-fieldset .member-toggle input:checked~i{background:#c27a00}
-.rwz-fieldset .member-toggle input:checked~i:after{right:calc(100% - 23px)}
+.wf-toggle-row{display:flex;align-items:center;gap:14px;cursor:pointer;padding:10px 0;user-select:none}
+.wf-toggle-track{position:relative;flex-shrink:0;line-height:0}
+.wf-toggle-track input{position:absolute;opacity:0;width:0;height:0}
+.wf-toggle-track i{display:block;width:46px;height:26px;border-radius:13px;background:#d1d5db;position:relative;transition:.25s}
+.wf-toggle-track i::after{content:"";position:absolute;width:20px;height:20px;border-radius:50%;background:#fff;top:3px;right:3px;transition:.25s;box-shadow:0 1px 4px rgba(0,0,0,.18)}
+.wf-toggle-track input:checked + i{background:#c27a00}
+.wf-toggle-track input:checked + i::after{right:3px;left:3px;right:auto}
+.wf-toggle-text{font-size:15px;font-weight:600;color:#374151}
 
 /* Interests */
 .reg-interests.rwz-fieldset p{font-size:.9rem;color:#6b7480;margin:.5rem 0 .5rem;line-height:1.7}
@@ -456,7 +454,7 @@ body{font-family:"Cairo",Tahoma,Arial,sans-serif}
   .rwz-step-icon-wrap{width:46px;height:46px}
   .rwz-fields-wrap{padding:1.25rem;gap:1.25rem}
   .rwz-fieldset{padding:1.25rem}
-  .rwz-field-grid{grid-template-columns:1fr;gap:16px}
+  .wf-grid{grid-template-columns:1fr!important;gap:14px}
   .rwz-nav{padding:1.1rem 1.25rem}
   .rwz-btn{padding:0 1.4rem;height:46px;font-size:.88rem}
 }
