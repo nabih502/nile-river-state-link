@@ -1772,6 +1772,15 @@ select.inv-input{cursor:pointer}
 /* ── Image preview ───────────────────────────────────── */
 .inv-img-preview{border-radius:10px;overflow:hidden;background:#f1f5f9;border:1.5px solid #e2e8f0;max-height:220px}
 .inv-img-preview img{width:100%;height:220px;object-fit:cover;display:block}
+.inv-field{display:flex;flex-direction:column;gap:.35rem}
+.inv-field-label{font-size:.85rem;font-weight:700;color:#374151}
+.inv-upload-zone{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.4rem;border:2px dashed #cbd5e1;border-radius:10px;padding:1.5rem;cursor:pointer;color:#94a3b8;font-size:.85rem;transition:border-color .15s,background .15s;background:#f8fafc;text-align:center}
+.inv-upload-zone:hover{border-color:#2563eb;background:#eff6ff;color:#2563eb}
+.inv-uploading{font-size:.875rem;color:#2563eb;font-weight:600}
+.inv-img-thumb{position:relative;border-radius:10px;overflow:hidden;border:1.5px solid #e2e8f0;background:#f1f5f9}
+.inv-img-thumb img{width:100%;height:180px;object-fit:cover;display:block}
+.inv-img-clear{position:absolute;top:.4rem;left:.4rem;background:rgba(0,0,0,.6);color:#fff;border:none;border-radius:50%;width:26px;height:26px;cursor:pointer;font-size:1.1rem;display:flex;align-items:center;justify-content:center;line-height:1;padding:0;transition:background .15s}
+.inv-img-clear:hover{background:rgba(220,38,38,.85)}
 
 /* ── Publish toggle ──────────────────────────────────── */
 .inv-pub-toggle{display:inline-flex;align-items:center;gap:.65rem;cursor:pointer;user-select:none}

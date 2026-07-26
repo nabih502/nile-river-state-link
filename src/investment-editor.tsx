@@ -35,6 +35,104 @@ export function ImagePreview({ url }: { url: string }) {
   );
 }
 
+// ── Image Upload ──────────────────────────────────────────────────────────────
+async function uploadImageFile(file: File): Promise<string> {
+  const ext = file.name.split(".").pop() || "jpg";
+  const path = `investments/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+  const { error } = await supabase.storage.from("images").upload(path, file);
+  if (error) throw error;
+  const { data } = supabase.storage.from("images").getPublicUrl(path);
+  return data.publicUrl;
+}
+
+export function ImageUpload({
+  value,
+  onChange,
+  label = "الصورة",
+}: {
+  value: string;
+  onChange: (url: string) => void;
+  label?: string;
+}) {
+  const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const handleFile = async (file: File) => {
+    setUploading(true);
+    setUploadError("");
+    try {
+      const url = await uploadImageFile(file);
+      onChange(url);
+    } catch (e: unknown) {
+      setUploadError(e instanceof Error ? e.message : "فشل رفع الصورة");
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  return (
+    <div className="inv-field">
+      <span className="inv-field-label">{label}</span>
+      {value ? (
+        <div className="inv-img-thumb">
+          <img src={value} alt="" />
+          <button
+            type="button"
+            className="inv-img-clear"
+            onClick={() => onChange("")}
+            title="إزالة الصورة"
+          >
+            ×
+          </button>
+        </div>
+      ) : (
+        <div
+          className="inv-upload-zone"
+          onClick={() => !uploading && inputRef.current?.click()}
+        >
+          {uploading ? (
+            <span className="inv-uploading">جاري الرفع...</span>
+          ) : (
+            <>
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+              >
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="17 8 12 3 7 8" />
+                <line x1="12" y1="3" x2="12" y2="15" />
+              </svg>
+              <span>اضغط لاختيار صورة</span>
+              <span style={{ fontSize: ".75rem", color: "#94a3b8" }}>
+                PNG، JPG، WebP — حتى 10MB
+              </span>
+            </>
+          )}
+        </div>
+      )}
+      {uploadError && (
+        <span style={{ color: "#dc2626", fontSize: ".8rem" }}>{uploadError}</span>
+      )}
+      <input
+        ref={inputRef}
+        type="file"
+        accept="image/jpeg,image/jpg,image/png,image/webp,image/gif,image/svg+xml"
+        style={{ display: "none" }}
+        onChange={(e) => {
+          const file = e.target.files?.[0];
+          if (file) handleFile(file);
+          e.target.value = "";
+        }}
+      />
+    </div>
+  );
+}
+
 // ── Publish Toggle ────────────────────────────────────────────────────────────
 export function PublishToggle({
   checked,
@@ -342,17 +440,11 @@ export function SectorEditor({
         </FormSection>
 
         <FormSection title="الصورة والمحتوى">
-          <label className="inv-label">
-            رابط الصورة
-            <input
-              value={form.image_url || ""}
-              className="inv-input"
-              dir="ltr"
-              placeholder="https://..."
-              onChange={(e) => set("image_url", e.target.value)}
-            />
-          </label>
-          <ImagePreview url={form.image_url || ""} />
+          <ImageUpload
+            value={form.image_url || ""}
+            onChange={(url) => set("image_url", url)}
+            label="الصورة"
+          />
           <label className="inv-label">
             الوصف
             <RichTextarea
@@ -544,17 +636,11 @@ export function OpportunityEditor({
         </FormSection>
 
         <FormSection title="الصورة والمحتوى">
-          <label className="inv-label">
-            رابط الصورة
-            <input
-              value={form.image_url || ""}
-              className="inv-input"
-              dir="ltr"
-              placeholder="https://..."
-              onChange={(e) => set("image_url", e.target.value)}
-            />
-          </label>
-          <ImagePreview url={form.image_url || ""} />
+          <ImageUpload
+            value={form.image_url || ""}
+            onChange={(url) => set("image_url", url)}
+            label="الصورة"
+          />
           <label className="inv-label">
             الوصف المختصر
             <RichTextarea
@@ -867,17 +953,11 @@ export function StoryEditor({
               />
             </label>
           </div>
-          <label className="inv-label">
-            رابط الصورة
-            <input
-              value={form.image_url || ""}
-              className="inv-input"
-              dir="ltr"
-              placeholder="https://..."
-              onChange={(e) => set("image_url", e.target.value)}
-            />
-          </label>
-          <ImagePreview url={form.image_url || ""} />
+          <ImageUpload
+            value={form.image_url || ""}
+            onChange={(url) => set("image_url", url)}
+            label="الصورة"
+          />
         </FormSection>
 
         <FormSection title="قصة النجاح">
@@ -1048,17 +1128,11 @@ export function PartnerEditor({
         </FormSection>
 
         <FormSection title="الروابط والشعار">
-          <label className="inv-label">
-            رابط الشعار
-            <input
-              value={form.logo_url || ""}
-              className="inv-input"
-              dir="ltr"
-              placeholder="https://..."
-              onChange={(e) => set("logo_url", e.target.value)}
-            />
-          </label>
-          <ImagePreview url={form.logo_url || ""} />
+          <ImageUpload
+            value={form.logo_url || ""}
+            onChange={(url) => set("logo_url", url)}
+            label="الشعار"
+          />
           <label className="inv-label">
             الموقع الإلكتروني
             <input
