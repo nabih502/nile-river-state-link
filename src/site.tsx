@@ -20,6 +20,7 @@ const routeMap: Record<string, PageKey> = {
   "culture-art-detail":"culture-art-detail",
   "culture-association-detail":"culture-association-detail",
   "inv-sector":"inv-sector", "inv-opportunity":"inv-opportunity",
+  "social-initiative-detail":"social-initiative-detail",
 };
 
 const nav = [["/","الرئيسية"],["/about","عن الرابطة"],["/social","الخدمات"],["/investment","المبادرات"],["/culture","الثقافة"],["/education","التعليم"],["/contact","تواصل معنا"]];
