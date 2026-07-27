@@ -3,7 +3,7 @@ import { supabase } from "./supabase";
 import { Aperture, ArrowLeft, Award, BadgeCheck, BadgePercent, Banknote, BookOpen, BriefcaseBusiness, Building2, CalendarDays, Camera, ChartNoAxesCombined, ChartPie, Check, ChevronLeft, CircleAlert, CircleCheckBig, Circle as CircleHelp, Clock3, CreditCard, Crown, Eye, Factory, Feather, FileImage, FileText, FileUp, Gem, Gift, Globe as Globe2, GraduationCap, HandHeart, Handshake, Headphones, HeartHandshake, HeartPulse, Landmark, LayoutDashboard, LayoutGrid, LibraryBig, Lightbulb, Menu, Megaphone, MonitorCheck, Music2, Network, Newspaper, MessageCircle, Info, LockKeyhole, Mail, MapPin, Paperclip, Percent, Phone, QrCode, ReceiptText, Palette, Pill, CirclePlay as PlayCircle, RefreshCw, ScanFace, Search, Settings2, Share2, Shield, ShieldCheck, Stethoscope, Send, ShoppingCart, Sparkles, Sprout, Store, Tags, Target, TrendingUp, Trophy, Truck, Upload, UserCheck, UserPlus, UserRound, UsersRound, Video, WalletCards, X } from "lucide-react";
 
 type InternalKey = "services" | "initiatives" | "news" | "library";
-type PageKey = "home" | "about" | "social" | "education" | "health" | "investment" | "culture" | InternalKey | "membership" | "register" | "photo" | "payment" | "success" | "contact" | "events" | "news-detail" | "events-detail" | "inv-sector" | "inv-opportunity";
+type PageKey = "home" | "about" | "social" | "education" | "health" | "investment" | "culture" | InternalKey | "membership" | "register" | "photo" | "payment" | "success" | "contact" | "events" | "news-detail" | "events-detail" | "inv-sector" | "inv-opportunity" | "culture-event-detail" | "culture-news-detail" | "culture-artist-detail" | "culture-initiative-detail";
 type PortalKey = "social" | "education" | "health" | "investment" | "culture";
 
 const MARKET_URL="https://sudan-market.com/";
@@ -14,6 +14,8 @@ const routeMap: Record<string, PageKey> = {
   services:"services", initiatives:"initiatives", news:"news", library:"library",
   membership:"membership", register:"register", photo:"photo", payment:"payment", success:"success", contact:"contact",
   events:"events", "news-detail":"news-detail", "events-detail":"events-detail",
+  "culture-event-detail":"culture-event-detail","culture-news-detail":"culture-news-detail",
+  "culture-artist-detail":"culture-artist-detail","culture-initiative-detail":"culture-initiative-detail",
   "inv-sector":"inv-sector", "inv-opportunity":"inv-opportunity",
 };
 
@@ -831,25 +833,25 @@ function CulturePage(){
     {icon:MessageCircle,title:"دعم فني متواصل",text:"فريق متخصص لمساعدتك"},
   ];
 
-  type ActivityItem = {image:string;tag:string;title:string;date:string;location:string};
-  type ArtistItem   = {image:string;name:string;role:string};
+  type ActivityItem = {id:string;image:string;tag:string;title:string;date:string;location:string};
+  type ArtistItem   = {id:string;slug:string;image:string;name:string;role:string};
   type AssocItem    = {icon:React.ElementType;title:string;place:string};
-  type InitItem     = {image:string;title:string;text:string};
-  type ContestItem  = {title:string;date:string};
-  type NewsItem     = {image:string;title:string;date:string};
-  type MediaItem    = {image:string;type:string;title:string;date:string};
+  type InitItem     = {id:string;slug:string;image:string;title:string;text:string};
+  type ContestItem  = {title:string;date:string;prize:string};
+  type NewsItem     = {id:string;image:string;title:string;date:string};
+  type MediaItem    = {image:string;type:string;title:string;date:string;link:string};
 
   const [activities, setActivities] = useState<ActivityItem[]>([
-    {image:"/assets/culture-folk-hq.webp",tag:"مهرجان تراثي",title:"مهرجان نهر النيل للتراث",date:"18 مايو 2025",location:"المدينة القديمة - عطبرة"},
-    {image:"/assets/culture-seminar-hq.webp",tag:"ندوة ثقافية",title:"ندوة دور الثقافة في بناء المجتمع",date:"22 مايو 2025",location:"قاعة المؤتمرات"},
-    {image:"/assets/culture-gallery-hq.webp",tag:"معرض فني",title:"معرض الفنون التشكيلية",date:"23 مايو 2025",location:"مركز الفنون"},
-    {image:"/assets/culture-poetry-hq.webp",tag:"أمسية شعرية",title:"أمسية شعرية لشعراء الشباب",date:"25 مايو 2025",location:"قاعة بيت الثقافة"},
+    {id:"",image:"/assets/culture-folk-hq.webp",tag:"مهرجان تراثي",title:"مهرجان نهر النيل للتراث",date:"18 مايو 2025",location:"المدينة القديمة - عطبرة"},
+    {id:"",image:"/assets/culture-seminar-hq.webp",tag:"ندوة ثقافية",title:"ندوة دور الثقافة في بناء المجتمع",date:"22 مايو 2025",location:"قاعة المؤتمرات"},
+    {id:"",image:"/assets/culture-gallery-hq.webp",tag:"معرض فني",title:"معرض الفنون التشكيلية",date:"23 مايو 2025",location:"مركز الفنون"},
+    {id:"",image:"/assets/culture-poetry-hq.webp",tag:"أمسية شعرية",title:"أمسية شعرية لشعراء الشباب",date:"25 مايو 2025",location:"قاعة بيت الثقافة"},
   ]);
   const [artists, setArtists] = useState<ArtistItem[]>([
-    {image:"/assets/culture-tayeb.jpg",name:"د. الطيب صالح",role:"أديب وروائي سوداني"},
-    {image:"/assets/culture-ahmed.jpg",name:"أحمد المصطفى",role:"شاعر سوداني"},
-    {image:"/assets/culture-taj.jpg",name:"تاج السر الحسن",role:"كاتب وإعلامي"},
-    {image:"/assets/culture-wardi.gif",name:"محمد وردي",role:"فنان ومطرب"},
+    {id:"",slug:"",image:"/assets/culture-tayeb.jpg",name:"د. الطيب صالح",role:"أديب وروائي سوداني"},
+    {id:"",slug:"",image:"/assets/culture-ahmed.jpg",name:"أحمد المصطفى",role:"شاعر سوداني"},
+    {id:"",slug:"",image:"/assets/culture-taj.jpg",name:"تاج السر الحسن",role:"كاتب وإعلامي"},
+    {id:"",slug:"",image:"/assets/culture-wardi.gif",name:"محمد وردي",role:"فنان ومطرب"},
   ]);
   const [associations, setAssociations] = useState<AssocItem[]>([
     {icon:Feather,title:"جمعية الخط العربي",place:"شندي"},
@@ -859,25 +861,25 @@ function CulturePage(){
     {icon:Landmark,title:"فرقة نهر النيل التقليدية",place:"الدامر"},
   ]);
   const [initiatives, setInitiatives] = useState<InitItem[]>([
-    {image:"/assets/culture-folk-hq.webp",title:"مشروع توثيق التراث الشفهي",text:"جمع وتوثيق الحكايات والأغاني الشعبية"},
-    {image:"/assets/culture-seminar-hq.webp",title:"مبادرة دعم المواهب الشابة",text:"احتضان وتنمية المبدعين في السودان"},
-    {image:"/assets/culture-gallery-hq.webp",title:"مشروع المتاحف المتنقلة",text:"نشر الثقافة في المناطق المختلفة"},
+    {image:"/assets/culture-folk-hq.webp",title:"مشروع توثيق التراث الشفهي",text:"جمع وتوثيق الحكايات والأغاني الشعبية",id:"",slug:""},
+    {image:"/assets/culture-seminar-hq.webp",title:"مبادرة دعم المواهب الشابة",text:"احتضان وتنمية المبدعين في السودان",id:"",slug:""},
+    {image:"/assets/culture-gallery-hq.webp",title:"مشروع المتاحف المتنقلة",text:"نشر الثقافة في المناطق المختلفة",id:"",slug:""},
   ]);
   const [contests, setContests] = useState<ContestItem[]>([
-    {title:"مسابقة الشعر السنوية",date:"آخر موعد: 30 مايو 2025"},
-    {title:"جائزة الإبداع الفني",date:"آخر موعد: 15 يونيو 2025"},
-    {title:"مسابقة التصوير الضوئي",date:"آخر موعد: 1 يوليو 2025"},
+    {title:"مسابقة الشعر السنوية",date:"آخر موعد: 30 مايو 2025",prize:"جائزة مالية"},
+    {title:"جائزة الإبداع الفني",date:"آخر موعد: 15 يونيو 2025",prize:"ميدالية ذهبية"},
+    {title:"مسابقة التصوير الضوئي",date:"آخر موعد: 1 يوليو 2025",prize:"معرض رسمي"},
   ]);
   const [news, setNews] = useState<NewsItem[]>([
-    {image:"/assets/culture-seminar-hq.webp",title:"إطلاق مبادرة إحياء التراث السوداني",date:"20 مايو 2025"},
-    {image:"/assets/culture-gallery-hq.webp",title:"نجاح معرض الفنون التشكيلية الأول",date:"18 مايو 2025"},
-    {image:"/assets/culture-poetry-hq.webp",title:"ندوة حول دور الشباب في الثقافة",date:"15 مايو 2025"},
-    {image:"/assets/culture-folk-hq.webp",title:"توقيع اتفاقية شراكة ثقافية جديدة",date:"10 مايو 2025"},
+    {id:"",image:"/assets/culture-seminar-hq.webp",title:"إطلاق مبادرة إحياء التراث السوداني",date:"20 مايو 2025"},
+    {id:"",image:"/assets/culture-gallery-hq.webp",title:"نجاح معرض الفنون التشكيلية الأول",date:"18 مايو 2025"},
+    {id:"",image:"/assets/culture-poetry-hq.webp",title:"ندوة حول دور الشباب في الثقافة",date:"15 مايو 2025"},
+    {id:"",image:"/assets/culture-folk-hq.webp",title:"توقيع اتفاقية شراكة ثقافية جديدة",date:"10 مايو 2025"},
   ]);
   const [media, setMedia] = useState<MediaItem[]>([
-    {image:"/assets/culture-folk-hq.webp",type:"فيديو",title:"مهرجان التراث السوداني 2025",date:"12 مايو 2025"},
-    {image:"/assets/culture-poetry-hq.webp",type:"بودكاست",title:"أمسية شعرية رائعة",date:"8 مايو 2025"},
-    {image:"/assets/culture-gallery-hq.webp",type:"فيديو",title:"معرض الفنون التشكيلية",date:"5 مايو 2025"},
+    {image:"/assets/culture-folk-hq.webp",type:"فيديو",title:"مهرجان التراث السوداني 2025",date:"12 مايو 2025",link:""},
+    {image:"/assets/culture-poetry-hq.webp",type:"بودكاست",title:"أمسية شعرية رائعة",date:"8 مايو 2025",link:""},
+    {image:"/assets/culture-gallery-hq.webp",type:"فيديو",title:"معرض الفنون التشكيلية",date:"5 مايو 2025",link:""},
   ]);
 
   const iconMap: Record<string, React.ElementType> = {
@@ -894,25 +896,25 @@ function CulturePage(){
 
   useEffect(()=>{
     supabase.from("culture_events").select("*").eq("published",true).order("sort_order").then(({data})=>{
-      if(data&&data.length>0) setActivities(data.map(r=>({image:r.image_url||"/assets/culture-folk-hq.webp",tag:r.tag,title:r.title,date:r.event_date,location:r.location})));
+      if(data&&data.length>0) setActivities(data.map(r=>({id:r.id,image:r.image_url||"/assets/culture-folk-hq.webp",tag:r.tag,title:r.title,date:r.event_date,location:r.location})));
     });
     supabase.from("culture_artists").select("*").eq("published",true).order("sort_order").then(({data})=>{
-      if(data&&data.length>0) setArtists(data.map(r=>({image:r.image_url||"/assets/culture-tayeb.jpg",name:r.name,role:r.role})));
+      if(data&&data.length>0) setArtists(data.map(r=>({id:r.id,slug:r.slug||"",image:r.image_url||"/assets/culture-tayeb.jpg",name:r.name,role:r.role})));
     });
     supabase.from("culture_associations").select("*").eq("published",true).order("sort_order").then(({data})=>{
       if(data&&data.length>0) setAssociations(data.map(r=>({icon:iconMap[r.icon]||UsersRound,title:r.title,place:r.place})));
     });
     supabase.from("culture_initiatives").select("*").eq("published",true).order("sort_order").then(({data})=>{
-      if(data&&data.length>0) setInitiatives(data.map(r=>({image:r.image_url||"/assets/culture-folk-hq.webp",title:r.title,text:r.text})));
+      if(data&&data.length>0) setInitiatives(data.map(r=>({id:r.id,slug:r.slug||"",image:r.image_url||"/assets/culture-folk-hq.webp",title:r.title,text:r.text})));
     });
     supabase.from("culture_contests").select("*").eq("published",true).order("sort_order").then(({data})=>{
-      if(data&&data.length>0) setContests(data.map(r=>({title:r.title,date:r.deadline})));
+      if(data&&data.length>0) setContests(data.map(r=>({title:r.title,date:r.deadline,prize:r.prize||""})));
     });
     supabase.from("culture_news").select("*").eq("published",true).order("sort_order").then(({data})=>{
-      if(data&&data.length>0) setNews(data.map(r=>({image:r.image_url||"/assets/culture-seminar-hq.webp",title:r.title,date:r.published_at?new Date(r.published_at).toLocaleDateString("ar-EG",{day:"2-digit",month:"long"}):""})));
+      if(data&&data.length>0) setNews(data.map(r=>({id:r.id,image:r.image_url||"/assets/culture-seminar-hq.webp",title:r.title,date:r.published_at?new Date(r.published_at).toLocaleDateString("ar-EG",{day:"2-digit",month:"long"}):""})));
     });
     supabase.from("culture_media").select("*").eq("published",true).order("sort_order").then(({data})=>{
-      if(data&&data.length>0) setMedia(data.map(r=>({image:r.image_url||"/assets/culture-folk-hq.webp",type:r.type,title:r.title,date:r.media_date})));
+      if(data&&data.length>0) setMedia(data.map(r=>({image:r.image_url||"/assets/culture-folk-hq.webp",type:r.type,title:r.title,date:r.media_date,link:r.link_url||""})));
     });
   },[]);
   return <div className="culture-redesign">
@@ -926,29 +928,29 @@ function CulturePage(){
       <div className="cul-main-column">
         <section className="cul-stats motion"><h2><ChartNoAxesCombined/> أرقام وإحصائيات<br/>الثقافة</h2>{stats.map(item=>{const Icon=item.icon;return <article key={item.label}><Icon/><span><b>{item.n}</b><small>{item.label}</small></span></article>})}</section>
 
-        <section id="culture-activities" className="cul-panel cul-activities"><CulturePanelHead title="الفعاليات والأنشطة الثقافية"/><div className="cul-activity-grid">{activities.map(item=><article className="motion" key={item.title}><div><img src={item.image} alt={item.title}/><span>{item.tag}</span></div><h3>{item.title}</h3><p><CalendarDays/> {item.date}</p><p><MapPin/> {item.location}</p><a href="/contact">تفاصيل الفعالية</a></article>)}</div><small className="cul-dots">● ● ● ●</small></section>
+        <section id="culture-activities" className="cul-panel cul-activities"><CulturePanelHead title="الفعاليات والأنشطة الثقافية" href="/culture#culture-activities"/><div className="cul-activity-grid">{activities.map(item=><article className="motion" key={item.title}><div><img src={item.image} alt={item.title}/><span>{item.tag}</span></div><h3>{item.title}</h3><p><CalendarDays/> {item.date}</p><p><MapPin/> {item.location}</p><a href={item.id?`/culture/event/${item.id}`:"#"}>تفاصيل الفعالية</a></article>)}</div><small className="cul-dots">● ● ● ●</small></section>
 
         <div className="cul-library-arts">
-          <section id="culture-library" className="cul-panel cul-library motion"><CulturePanelHead title="المكتبة الرقمية"/><div><img src="/assets/education-reference-library-books.png" alt="كتب وجهاز قراءة إلكتروني"/><article><h3>آلاف الكتب والمراجع<br/>الثقافية في متناول يدك</h3><ul><li><BookOpen/> كتب التراث السوداني</li><li><FileText/> الدراسات والبحوث</li><li><Newspaper/> المجلات الثقافية</li><li><FileImage/> الكتب المصورة</li></ul><a href="/contact">استكشف المكتبة <ChevronLeft/></a></article></div></section>
-          <section id="culture-arts" className="cul-panel cul-arts"><CulturePanelHead title="الفنون والأدب"/><div>{arts.map(item=>{const Icon=item.icon;return <a className="motion" href="/contact" key={item.title}><span><img src={item.image} alt=""/><Icon/></span><b>{item.title}</b><small>{item.text}</small></a>})}</div></section>
+          <section id="culture-library" className="cul-panel cul-library motion"><CulturePanelHead title="المكتبة الرقمية" href="/contact"/><div><img src="/assets/education-reference-library-books.png" alt="كتب وجهاز قراءة إلكتروني"/><article><h3>آلاف الكتب والمراجع<br/>الثقافية في متناول يدك</h3><ul><li><BookOpen/> كتب التراث السوداني</li><li><FileText/> الدراسات والبحوث</li><li><Newspaper/> المجلات الثقافية</li><li><FileImage/> الكتب المصورة</li></ul><a href="/contact">استكشف المكتبة <ChevronLeft/></a></article></div></section>
+          <section id="culture-arts" className="cul-panel cul-arts"><CulturePanelHead title="الفنون والأدب" href="/culture#culture-arts"/><div>{arts.map(item=>{const Icon=item.icon;return <a className="motion" href="/contact" key={item.title}><span><img src={item.image} alt=""/><Icon/></span><b>{item.title}</b><small>{item.text}</small></a>})}</div></section>
         </div>
 
         <div className="cul-assoc-initiatives">
-          <section id="culture-associations" className="cul-panel cul-associations"><CulturePanelHead title="الفرق والجمعيات الثقافية"/><div>{associations.map(item=>{const Icon=item.icon;return <a className="motion" href="/contact" key={item.title}><Icon/><b>{item.title}</b><small>{item.place}</small></a>})}</div></section>
-          <section id="culture-initiatives" className="cul-panel cul-initiatives"><CulturePanelHead title="المبادرات والمشاريع"/><div>{initiatives.map(item=><a className="motion" href="/contact" key={item.title}><img src={item.image} alt=""/><span><b>{item.title}</b><small>{item.text}</small></span><i>+</i></a>)}</div><a className="cul-panel-action" href="/contact">عرض جميع المبادرات</a></section>
+          <section id="culture-associations" className="cul-panel cul-associations"><CulturePanelHead title="الفرق والجمعيات الثقافية" href="/culture#culture-associations"/><div>{associations.map(item=>{const Icon=item.icon;return <a className="motion" href="/contact" key={item.title}><Icon/><b>{item.title}</b><small>{item.place}</small></a>})}</div></section>
+          <section id="culture-initiatives" className="cul-panel cul-initiatives"><CulturePanelHead title="المبادرات والمشاريع" href="/culture#culture-initiatives"/><div>{initiatives.map(item=><a className="motion" href={item.slug?`/culture/initiative/${item.slug}`:"#"} key={item.title}><img src={item.image} alt=""/><span><b>{item.title}</b><small>{item.text}</small></span><i>+</i></a>)}</div><a className="cul-panel-action" href="/culture#culture-initiatives">عرض جميع المبادرات</a></section>
         </div>
 
         <div className="cul-bottom-panels">
-          <section id="culture-news" className="cul-panel cul-news"><CulturePanelHead title="أحدث الأخبار الثقافية"/>{news.map(item=><a className="motion" href="/contact" key={item.title}><img src={item.image} alt=""/><span><b>{item.title}</b><small>{item.date}</small></span></a>)}</section>
-          <section className="cul-panel cul-media"><CulturePanelHead title="ميديا الثقافة"/>{media.map(item=><a className="motion" href="/contact" key={item.title}><span><img src={item.image} alt=""/><PlayCircle/></span><p><em>{item.type}</em><b>{item.title}</b><small>{item.date}</small></p></a>)}</section>
-          <section className="cul-panel cul-calendar"><CulturePanelHead title="التقويم الثقافي"/>{calendar.map(item=><a className="motion" href="/contact" key={`${item.day}-${item.title}`}><time><b>{item.day}</b><small>{item.month}</small></time><span><b>{item.title}</b><small><MapPin/> {item.place}</small></span></a>)}</section>
+          <section id="culture-news" className="cul-panel cul-news"><CulturePanelHead title="أحدث الأخبار الثقافية" href="/culture#culture-news"/>{news.map(item=><a className="motion" href={item.id?`/culture/news/${item.id}`:"#"} key={item.title}><img src={item.image} alt=""/><span><b>{item.title}</b><small>{item.date}</small></span></a>)}</section>
+          <section className="cul-panel cul-media"><CulturePanelHead title="ميديا الثقافة" href="/culture"/>{media.map(item=><a className="motion" href={item.link||"#"} target={item.link?"_blank":undefined} rel={item.link?"noopener noreferrer":undefined} key={item.title}><span><img src={item.image} alt=""/><PlayCircle/></span><p><em>{item.type}</em><b>{item.title}</b><small>{item.date}</small></p></a>)}</section>
+          <section className="cul-panel cul-calendar"><CulturePanelHead title="التقويم الثقافي" href="/events"/>{calendar.map(item=><a className="motion" href="/events" key={`${item.day}-${item.title}`}><time><b>{item.day}</b><small>{item.month}</small></time><span><b>{item.title}</b><small><MapPin/> {item.place}</small></span></a>)}</section>
         </div>
       </div>
 
       <aside className="cul-side-column">
-        <section className="cul-panel cul-artists motion"><CulturePanelHead title="أبرز الفنانين والأدباء"/><div>{artists.map(item=><a href="/contact" key={item.name}><img src={item.image} alt={item.name}/><span><b>{item.name}</b><small>{item.role}</small></span></a>)}</div></section>
+        <section className="cul-panel cul-artists motion"><CulturePanelHead title="أبرز الفنانين والأدباء" href="/culture#cul-artists"/><div>{artists.map(item=><a href={item.slug?`/culture/artist/${item.slug}`:"#"} key={item.name}><img src={item.image} alt={item.name}/><span><b>{item.name}</b><small>{item.role}</small></span></a>)}</div></section>
         <section className="cul-join motion"><h2>انضم إلى مجتمع الثقافة</h2><p>شارك في المنتديات والأنشطة<br/>الثقافية وكن جزءاً من مجتمعنا</p><a href="/membership">انضم الآن <UsersRound/></a></section>
-        <section id="culture-contests" className="cul-panel cul-contests"><CulturePanelHead title="المسابقات والجوائز"/><div>{contests.map(item=><a className="motion" href="/contact" key={item.title}><Trophy/><span><b>{item.title}</b><small>{item.date}</small></span></a>)}</div><a className="cul-panel-action" href="/contact">المزيد من المسابقات</a></section>
+        <section id="culture-contests" className="cul-panel cul-contests"><CulturePanelHead title="المسابقات والجوائز" href="/culture#culture-contests"/><div>{contests.map(item=><a className="motion" href="/contact" key={item.title}><Trophy/><span><b>{item.title}</b><small>{item.date}</small></span></a>)}</div><a className="cul-panel-action" href="/contact">المزيد من المسابقات</a></section>
         <section className="cul-share motion"><h2>شارك محتواك الثقافي</h2><p>لديك موهبة أو محتوى ثقافي؟<br/>شاركنا وكن مبدعاً</p><div><span><Feather/><b>تدوينة</b></span><span><Video/><b>فيديو</b></span><span><FileImage/><b>صورة</b></span><span><FileText/><b>مقال</b></span></div><a href="/contact">أرسل محتواك</a></section>
       </aside>
     </div>
@@ -957,7 +959,7 @@ function CulturePage(){
   </div>
 }
 
-function CulturePanelHead({title}:{title:string}){return <header className="cul-panel-head"><a href="/contact">عرض الكل</a><h2>{title}</h2></header>}
+function CulturePanelHead({title,href="/culture"}:{title:string;href?:string}){return <header className="cul-panel-head"><a href={href}>عرض الكل</a><h2>{title}</h2></header>}
 
 function PortalHero({type}:{type:PortalKey}){const p=info[type];return <><section className={`portal-hero portal-${type}`}><div className="portal-copy motion"><h1>{p.title}</h1><h2>{p.accent}</h2><p>{p.lead}</p></div><div className="portal-image motion"><img src={p.hero} alt={p.title}/></div>{["education","investment","culture"].includes(type)&&<aside className="portal-side motion"><h3>{p.icon}&nbsp; خدمات {p.title}</h3>{p.tabs.map((t,i)=><a key={t} className={i===0?"selected":""} href="#services">{t}<span>⌃</span></a>)}</aside>}</section><section className="portal-features motion">{(type==="health"?["في خدمتكم أينما كنتم","متاحة إلكترونياً","خدمة سريعة","موثوقة وآمنة"]:type==="social"?["حالات إنسانية","تواصل مباشر","استشارة اجتماعية","برامج ومبادرات","دعم المحتاجين"]:["جودة وتميز","دعم شامل","محتوى متخصص","تعلّم مرن"]).map((x,i)=><div key={x}><i>{["◎","▣","◷","♢","♡"][i]}</i><b>{x}</b><span>خدمة رقمية متكاملة</span></div>)}</section></>}
 
@@ -1862,4 +1864,99 @@ function EventDetailPage({slug}:{slug?:string}) {
   );
 }
 
-export default function NileSite({page,slug}:{page:string;slug?:string}){const active=routeMap[page]||"home";const hideHeader=["membership","photo","payment","success"].includes(active);const hideFooter=["membership","photo","payment","success"].includes(active);return <div dir="rtl"><Motion/>{!hideHeader&&<Header active={active}/>}<main>{active==="home"?<Home/>:active==="about"?<AboutPage/>:active==="social"?<SocialPage/>:active==="education"?<EducationPage/>:active==="health"?<HealthPage/>:active==="investment"?<InvestmentPage/>:active==="inv-sector"?<InvestmentSectorDetailPage slug={slug}/>:active==="inv-opportunity"?<InvestmentOpportunityDetailPage slug={slug}/>:active==="culture"?<CulturePage/>:["services","initiatives","library"].includes(active)?<InternalPage type={active as InternalKey}/>:active==="news"?<NewsListPage/>:active==="news-detail"?<NewsDetailPage slug={slug}/>:active==="events"?<EventsListPage/>:active==="events-detail"?<EventDetailPage slug={slug}/>:active==="membership"?<Membership/>:active==="register"?<Register/>:active==="photo"?<PhotoUpload/>:active==="payment"?<Payment/>:active==="success"?<Success/>:active==="contact"?<Contact/>:<Home/>}</main>{!hideFooter&&<Footer/>}</div>}
+function CultureEventDetailPage({slug}:{slug?:string}){
+  const [item,setItem]=useState<{id:string;title:string;image_url:string;tag:string;event_date:string;location:string;description:string}|null>(null);
+  const [loading,setLoading]=useState(true);
+  useEffect(()=>{
+    if(!slug)return;
+    supabase.from("culture_events").select("*").eq("id",slug).maybeSingle().then(({data})=>{setItem(data);setLoading(false);});
+  },[slug]);
+  if(loading)return <div style={{padding:"6rem 1rem",textAlign:"center",color:"#64748b"}}>جاري التحميل...</div>;
+  if(!item)return <div style={{padding:"6rem 1rem",textAlign:"center"}}><h2 style={{color:"#dc2626"}}>الفعالية غير موجودة</h2><a href="/culture" style={{color:"#2563eb"}}>العودة للثقافة</a></div>;
+  return(
+    <div dir="rtl">
+      {item.image_url&&<div className="detail-hero-img"><img src={item.image_url} alt={item.title}/></div>}
+      <article className="detail-article page-width">
+        <span className="news-cat" style={{background:"#7c3aed"}}>{item.tag||"فعالية ثقافية"}</span>
+        <h1>{item.title}</h1>
+        <div className="detail-meta">
+          {item.event_date&&<span><CalendarDays size={15}/> {item.event_date}</span>}
+          {item.location&&<span><MapPin size={15}/> {item.location}</span>}
+        </div>
+        {item.description&&<div className="detail-body" dangerouslySetInnerHTML={{__html:item.description.replace(/\n/g,"<br/>")}}/>}
+        <a href="/culture" className="detail-back">← العودة للثقافة</a>
+      </article>
+    </div>
+  );
+}
+
+function CultureNewsDetailPage({slug}:{slug?:string}){
+  const [item,setItem]=useState<{id:string;title:string;image_url:string;excerpt:string;body:string;published_at:string|null;created_at:string}|null>(null);
+  const [loading,setLoading]=useState(true);
+  useEffect(()=>{
+    if(!slug)return;
+    supabase.from("culture_news").select("*").eq("id",slug).maybeSingle().then(({data})=>{setItem(data);setLoading(false);});
+  },[slug]);
+  if(loading)return <div style={{padding:"6rem 1rem",textAlign:"center",color:"#64748b"}}>جاري التحميل...</div>;
+  if(!item)return <div style={{padding:"6rem 1rem",textAlign:"center"}}><h2 style={{color:"#dc2626"}}>الخبر غير موجود</h2><a href="/culture" style={{color:"#2563eb"}}>العودة للثقافة</a></div>;
+  return(
+    <div dir="rtl">
+      {item.image_url&&<div className="detail-hero-img"><img src={item.image_url} alt={item.title}/></div>}
+      <article className="detail-article page-width">
+        <span className="news-cat" style={{background:"#0e7490"}}>أخبار ثقافية</span>
+        <h1>{item.title}</h1>
+        <small className="detail-date">{item.published_at?new Date(item.published_at).toLocaleDateString("ar-EG",{year:"numeric",month:"long",day:"numeric"}):new Date(item.created_at).toLocaleDateString("ar-EG",{year:"numeric",month:"long",day:"numeric"})}</small>
+        {item.excerpt&&<p className="detail-excerpt">{item.excerpt}</p>}
+        {item.body&&<div className="detail-body" dangerouslySetInnerHTML={{__html:item.body.replace(/\n/g,"<br/>")}}/>}
+        <a href="/culture" className="detail-back">← العودة للثقافة</a>
+      </article>
+    </div>
+  );
+}
+
+function CultureArtistDetailPage({slug}:{slug?:string}){
+  const [item,setItem]=useState<{id:string;name:string;image_url:string;role:string;bio:string}|null>(null);
+  const [loading,setLoading]=useState(true);
+  useEffect(()=>{
+    if(!slug)return;
+    supabase.from("culture_artists").select("*").eq("slug",slug).maybeSingle().then(({data})=>{setItem(data);setLoading(false);});
+  },[slug]);
+  if(loading)return <div style={{padding:"6rem 1rem",textAlign:"center",color:"#64748b"}}>جاري التحميل...</div>;
+  if(!item)return <div style={{padding:"6rem 1rem",textAlign:"center"}}><h2 style={{color:"#dc2626"}}>الفنان غير موجود</h2><a href="/culture" style={{color:"#2563eb"}}>العودة للثقافة</a></div>;
+  return(
+    <div dir="rtl">
+      <article className="detail-article page-width" style={{paddingTop:"3rem"}}>
+        <div style={{display:"flex",gap:"2rem",alignItems:"flex-start",flexWrap:"wrap",marginBottom:"2rem"}}>
+          {item.image_url&&<img src={item.image_url} alt={item.name} style={{width:160,height:160,borderRadius:"50%",objectFit:"cover",flexShrink:0}}/>}
+          <div><h1 style={{margin:"0 0 .5rem"}}>{item.name}</h1><p style={{color:"#64748b",fontSize:"1.1rem",margin:0}}>{item.role}</p></div>
+        </div>
+        {item.bio&&<div className="detail-body" dangerouslySetInnerHTML={{__html:item.bio.replace(/\n/g,"<br/>")}}/>}
+        <a href="/culture" className="detail-back">← العودة للثقافة</a>
+      </article>
+    </div>
+  );
+}
+
+function CultureInitiativeDetailPage({slug}:{slug?:string}){
+  const [item,setItem]=useState<{id:string;title:string;image_url:string;text:string}|null>(null);
+  const [loading,setLoading]=useState(true);
+  useEffect(()=>{
+    if(!slug)return;
+    supabase.from("culture_initiatives").select("*").eq("slug",slug).maybeSingle().then(({data})=>{setItem(data);setLoading(false);});
+  },[slug]);
+  if(loading)return <div style={{padding:"6rem 1rem",textAlign:"center",color:"#64748b"}}>جاري التحميل...</div>;
+  if(!item)return <div style={{padding:"6rem 1rem",textAlign:"center"}}><h2 style={{color:"#dc2626"}}>المبادرة غير موجودة</h2><a href="/culture" style={{color:"#2563eb"}}>العودة للثقافة</a></div>;
+  return(
+    <div dir="rtl">
+      {item.image_url&&<div className="detail-hero-img"><img src={item.image_url} alt={item.title}/></div>}
+      <article className="detail-article page-width">
+        <span className="news-cat" style={{background:"#15803d"}}>مبادرة ثقافية</span>
+        <h1>{item.title}</h1>
+        {item.text&&<div className="detail-body" dangerouslySetInnerHTML={{__html:item.text.replace(/\n/g,"<br/>")}}/>}
+        <a href="/culture" className="detail-back">← العودة للثقافة</a>
+      </article>
+    </div>
+  );
+}
+
+export default function NileSite({page,slug}:{page:string;slug?:string}){const active=routeMap[page]||"home";const hideHeader=["membership","photo","payment","success"].includes(active);const hideFooter=["membership","photo","payment","success"].includes(active);return <div dir="rtl"><Motion/>{!hideHeader&&<Header active={active}/>}<main>{active==="home"?<Home/>:active==="about"?<AboutPage/>:active==="social"?<SocialPage/>:active==="education"?<EducationPage/>:active==="health"?<HealthPage/>:active==="investment"?<InvestmentPage/>:active==="inv-sector"?<InvestmentSectorDetailPage slug={slug}/>:active==="inv-opportunity"?<InvestmentOpportunityDetailPage slug={slug}/>:active==="culture"?<CulturePage/>:active==="culture-event-detail"?<CultureEventDetailPage slug={slug}/>:active==="culture-news-detail"?<CultureNewsDetailPage slug={slug}/>:active==="culture-artist-detail"?<CultureArtistDetailPage slug={slug}/>:active==="culture-initiative-detail"?<CultureInitiativeDetailPage slug={slug}/>:["services","initiatives","library"].includes(active)?<InternalPage type={active as InternalKey}/>:active==="news"?<NewsListPage/>:active==="news-detail"?<NewsDetailPage slug={slug}/>:active==="events"?<EventsListPage/>:active==="events-detail"?<EventDetailPage slug={slug}/>:active==="membership"?<Membership/>:active==="register"?<Register/>:active==="photo"?<PhotoUpload/>:active==="payment"?<Payment/>:active==="success"?<Success/>:active==="contact"?<Contact/>:<Home/>}</main>{!hideFooter&&<Footer/>}</div>}

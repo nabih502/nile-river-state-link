@@ -350,6 +350,7 @@ export function EventEditor({
       title: "",
       image_url: "",
       tag: "",
+      description: "",
       event_date: "",
       location: "",
       published: true,
@@ -371,6 +372,7 @@ export function EventEditor({
       tag: form.tag,
       event_date: form.event_date || null,
       location: form.location,
+      description: form.description || "",
       published: form.published,
     };
     const { error: err } = form.id
@@ -405,6 +407,7 @@ export function EventEditor({
         <SectionNav
           sections={[
             { id: "event-basics", label: "المعلومات الأساسية" },
+            { id: "event-desc", label: "الوصف" },
             { id: "event-image", label: "الصورة" },
           ]}
         />
@@ -449,6 +452,19 @@ export function EventEditor({
               className="inv-input"
               placeholder="مثال: مدينة دنقلا — قاعة الاحتفالات"
               onChange={(e) => set("location", e.target.value)}
+            />
+          </label>
+        </FormSection>
+
+        <FormSection title="الوصف" id="event-desc">
+          <label className="inv-label">
+            وصف الفعالية
+            <RichTextarea
+              value={form.description || ""}
+              onChange={(v) => set("description", v)}
+              rows={6}
+              max={2000}
+              placeholder="اكتب وصفاً كاملاً للفعالية..."
             />
           </label>
         </FormSection>

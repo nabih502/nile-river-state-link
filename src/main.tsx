@@ -20,6 +20,9 @@ function parseRoute(): { page: string; slug?: string } {
   if (parts[0] === "investment" && parts.length >= 3 && ["sector","opportunity"].includes(parts[1])) {
     return { page: `inv-${parts[1]}`, slug: parts[2] };
   }
+  if (parts[0] === "culture" && parts.length >= 3 && ["event","news","artist","initiative"].includes(parts[1])) {
+    return { page: `culture-${parts[1]}-detail`, slug: parts[2] };
+  }
   return { page: parts[0] };
 }
 
