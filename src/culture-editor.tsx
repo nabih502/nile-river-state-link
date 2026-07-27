@@ -495,6 +495,7 @@ export function CultureNewsEditor({
 }) {
   const [form, setForm] = useState<Partial<CultureNews>>(
     item ?? {
+      slug: "",
       title: "",
       image_url: "",
       excerpt: "",
@@ -514,6 +515,7 @@ export function CultureNewsEditor({
     setSaving(true);
     setError("");
     const payload = {
+      slug: form.slug || toSlug(form.title || "") || `news-${Date.now()}`,
       title: form.title,
       image_url: form.image_url,
       excerpt: form.excerpt,
@@ -567,6 +569,16 @@ export function CultureNewsEditor({
               value={form.title || ""}
               className="inv-input"
               onChange={(e) => set("title", e.target.value)}
+            />
+          </label>
+          <label className="inv-label">
+            الرابط المختصر (Slug)
+            <input
+              value={form.slug || ""}
+              className="inv-input"
+              dir="ltr"
+              placeholder="يُولَّد تلقائياً من العنوان"
+              onChange={(e) => set("slug", e.target.value)}
             />
           </label>
           <label className="inv-label">
@@ -628,6 +640,7 @@ export function ArtistEditor({
 }) {
   const [form, setForm] = useState<Partial<CultureArtist>>(
     item ?? {
+      slug: "",
       name: "",
       image_url: "",
       role: "",
@@ -646,6 +659,7 @@ export function ArtistEditor({
     setSaving(true);
     setError("");
     const payload = {
+      slug: form.slug || toSlug(form.name || "") || `artist-${Date.now()}`,
       name: form.name,
       image_url: form.image_url,
       role: form.role,
@@ -689,16 +703,26 @@ export function ArtistEditor({
         />
 
         <FormSection title="المعلومات الأساسية" id="artist-basics">
+          <label className="inv-label">
+            <span>
+              الاسم <span className="inv-req">*</span>
+            </span>
+            <input
+              required
+              value={form.name || ""}
+              className="inv-input"
+              onChange={(e) => set("name", e.target.value)}
+            />
+          </label>
           <div className="inv-form-row">
             <label className="inv-label">
-              <span>
-                الاسم <span className="inv-req">*</span>
-              </span>
+              الرابط المختصر (Slug)
               <input
-                required
-                value={form.name || ""}
+                value={form.slug || ""}
                 className="inv-input"
-                onChange={(e) => set("name", e.target.value)}
+                dir="ltr"
+                placeholder="يُولَّد تلقائياً من الاسم"
+                onChange={(e) => set("slug", e.target.value)}
               />
             </label>
             <label className="inv-label">
@@ -749,9 +773,15 @@ export function AssociationEditor({
 }) {
   const [form, setForm] = useState<Partial<CultureAssociation>>(
     item ?? {
+      slug: "",
       title: "",
       place: "",
       icon: "BookOpen",
+      description: "",
+      founded_year: "",
+      email: "",
+      phone: "",
+      members_count: "",
       published: true,
     }
   );
@@ -766,9 +796,15 @@ export function AssociationEditor({
     setSaving(true);
     setError("");
     const payload = {
+      slug: form.slug || toSlug(form.title || "") || `assoc-${Date.now()}`,
       title: form.title,
       place: form.place,
       icon: form.icon,
+      description: form.description || "",
+      founded_year: form.founded_year || "",
+      email: form.email || "",
+      phone: form.phone || "",
+      members_count: form.members_count || "",
       published: form.published,
     };
     const { error: err } = form.id
@@ -812,13 +848,23 @@ export function AssociationEditor({
               onChange={(e) => set("title", e.target.value)}
             />
           </label>
+          <label className="inv-label">
+            الرابط المختصر (Slug)
+            <input
+              value={form.slug || ""}
+              className="inv-input"
+              dir="ltr"
+              placeholder="يُولَّد تلقائياً من الاسم"
+              onChange={(e) => set("slug", e.target.value)}
+            />
+          </label>
           <div className="inv-form-row">
             <label className="inv-label">
               المكان / الموقع
               <input
                 value={form.place || ""}
                 className="inv-input"
-                placeholder="مثال: مدينة دنقلا"
+                placeholder="مثال: عطبرة"
                 onChange={(e) => set("place", e.target.value)}
               />
             </label>
@@ -833,10 +879,67 @@ export function AssociationEditor({
               />
             </label>
           </div>
+          <div className="inv-form-row">
+            <label className="inv-label">
+              سنة التأسيس
+              <input
+                value={form.founded_year || ""}
+                className="inv-input"
+                placeholder="مثال: ١٩٩٥"
+                onChange={(e) => set("founded_year", e.target.value)}
+              />
+            </label>
+            <label className="inv-label">
+              عدد الأعضاء
+              <input
+                value={form.members_count || ""}
+                className="inv-input"
+                placeholder="مثال: ٧٠ عضواً"
+                onChange={(e) => set("members_count", e.target.value)}
+              />
+            </label>
+          </div>
+          <div className="inv-form-row">
+            <label className="inv-label">
+              البريد الإلكتروني
+              <input
+                type="email"
+                value={form.email || ""}
+                className="inv-input"
+                dir="ltr"
+                placeholder="info@example.com"
+                onChange={(e) => set("email", e.target.value)}
+              />
+            </label>
+            <label className="inv-label">
+              رقم الهاتف
+              <input
+                value={form.phone || ""}
+                className="inv-input"
+                dir="ltr"
+                placeholder="+249-..."
+                onChange={(e) => set("phone", e.target.value)}
+              />
+            </label>
+          </div>
+          <label className="inv-label">
+            الوصف التفصيلي
+            <RichTextarea
+              value={form.description || ""}
+              onChange={(v) => set("description", v)}
+              rows={6}
+              max={2000}
+              placeholder="اكتب وصفاً تفصيلياً عن الجمعية وأنشطتها..."
+            />
+          </label>
         </FormSection>
       </form>
     </Drawer>
   );
+}
+
+function toSlug(s: string) {
+  return s.trim().toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9\u0600-\u06ff-]/g, "").slice(0, 60);
 }
 
 // ── Initiative Editor ─────────────────────────────────────────────────────────
@@ -853,6 +956,7 @@ export function InitiativeEditor({
 }) {
   const [form, setForm] = useState<Partial<CultureInitiative>>(
     item ?? {
+      slug: "",
       title: "",
       image_url: "",
       text: "",
@@ -870,6 +974,7 @@ export function InitiativeEditor({
     setSaving(true);
     setError("");
     const payload = {
+      slug: form.slug || toSlug(form.title || "") || `initiative-${Date.now()}`,
       title: form.title,
       image_url: form.image_url,
       text: form.text,
@@ -914,6 +1019,16 @@ export function InitiativeEditor({
               value={form.title || ""}
               className="inv-input"
               onChange={(e) => set("title", e.target.value)}
+            />
+          </label>
+          <label className="inv-label">
+            الرابط المختصر (Slug)
+            <input
+              value={form.slug || ""}
+              className="inv-input"
+              dir="ltr"
+              placeholder="يُولَّد تلقائياً من العنوان"
+              onChange={(e) => set("slug", e.target.value)}
             />
           </label>
           <ImageUpload
@@ -1060,6 +1175,7 @@ export function CultureMediaEditor({
       type: "فيديو",
       media_date: "",
       link_url: "",
+      description: "",
       published: true,
     }
   );
@@ -1079,6 +1195,7 @@ export function CultureMediaEditor({
       type: form.type,
       media_date: form.media_date || null,
       link_url: form.link_url,
+      description: form.description || "",
       published: form.published,
     };
     const { error: err } = form.id
@@ -1154,6 +1271,19 @@ export function CultureMediaEditor({
               dir="ltr"
               placeholder="https://..."
               onChange={(e) => set("link_url", e.target.value)}
+            />
+          </label>
+        </FormSection>
+
+        <FormSection title="الوصف">
+          <label className="inv-label">
+            وصف المحتوى
+            <RichTextarea
+              value={form.description || ""}
+              onChange={(v) => set("description", v)}
+              rows={5}
+              max={1500}
+              placeholder="اكتب وصفاً للفيديو أو البودكاست..."
             />
           </label>
         </FormSection>

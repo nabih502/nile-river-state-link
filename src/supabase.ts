@@ -157,6 +157,7 @@ export type CultureEvent = {
   tag: string;
   event_date: string;
   location: string;
+  description: string;
   published: boolean;
   sort_order: number;
   created_at: string;
@@ -164,6 +165,7 @@ export type CultureEvent = {
 
 export type CultureNews = {
   id: string;
+  slug: string;
   title: string;
   image_url: string;
   excerpt: string;
@@ -176,6 +178,7 @@ export type CultureNews = {
 
 export type CultureArtist = {
   id: string;
+  slug: string;
   name: string;
   image_url: string;
   role: string;
@@ -187,9 +190,15 @@ export type CultureArtist = {
 
 export type CultureAssociation = {
   id: string;
+  slug: string;
   title: string;
   place: string;
   icon: string;
+  description: string;
+  founded_year: string;
+  email: string;
+  phone: string;
+  members_count: string;
   published: boolean;
   sort_order: number;
   created_at: string;
@@ -197,6 +206,7 @@ export type CultureAssociation = {
 
 export type CultureInitiative = {
   id: string;
+  slug: string;
   title: string;
   image_url: string;
   text: string;
@@ -222,6 +232,7 @@ export type CultureMedia = {
   type: string;
   media_date: string;
   link_url: string;
+  description: string;
   published: boolean;
   sort_order: number;
   created_at: string;
