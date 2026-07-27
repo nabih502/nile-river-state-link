@@ -3,7 +3,7 @@ import { supabase } from "./supabase";
 import { Aperture, ArrowLeft, Award, BadgeCheck, BadgePercent, Banknote, BookOpen, BriefcaseBusiness, Building2, CalendarDays, Camera, ChartNoAxesCombined, ChartPie, Check, ChevronLeft, CircleAlert, CircleCheckBig, Circle as CircleHelp, Clock3, CreditCard, Crown, Eye, Factory, Feather, FileImage, FileText, FileUp, Gem, Gift, Globe as Globe2, GraduationCap, HandHeart, Handshake, Headphones, HeartHandshake, HeartPulse, Landmark, LayoutDashboard, LayoutGrid, LibraryBig, Lightbulb, Menu, Megaphone, MonitorCheck, Music2, Network, Newspaper, MessageCircle, Info, LockKeyhole, Mail, MapPin, Paperclip, Percent, Phone, QrCode, ReceiptText, Palette, Pill, CirclePlay as PlayCircle, RefreshCw, ScanFace, Search, Settings2, Share2, Shield, ShieldCheck, Stethoscope, Send, ShoppingCart, Sparkles, Sprout, Store, Tags, Target, TrendingUp, Trophy, Truck, Upload, UserCheck, UserPlus, UserRound, UsersRound, Video, WalletCards, X } from "lucide-react";
 
 type InternalKey = "services" | "initiatives" | "news" | "library";
-type PageKey = "home" | "about" | "social" | "education" | "health" | "investment" | "culture" | InternalKey | "membership" | "register" | "photo" | "payment" | "success" | "contact" | "events" | "news-detail" | "events-detail" | "inv-sector" | "inv-opportunity" | "culture-event-detail" | "culture-news-detail" | "culture-artist-detail" | "culture-initiative-detail";
+type PageKey = "home" | "about" | "social" | "education" | "health" | "investment" | "culture" | InternalKey | "membership" | "register" | "photo" | "payment" | "success" | "contact" | "events" | "news-detail" | "events-detail" | "inv-sector" | "inv-opportunity" | "culture-event-detail" | "culture-news-detail" | "culture-artist-detail" | "culture-initiative-detail" | "culture-media-detail";
 type PortalKey = "social" | "education" | "health" | "investment" | "culture";
 
 const MARKET_URL="https://sudan-market.com/";
@@ -16,6 +16,7 @@ const routeMap: Record<string, PageKey> = {
   events:"events", "news-detail":"news-detail", "events-detail":"events-detail",
   "culture-event-detail":"culture-event-detail","culture-news-detail":"culture-news-detail",
   "culture-artist-detail":"culture-artist-detail","culture-initiative-detail":"culture-initiative-detail",
+  "culture-media-detail":"culture-media-detail",
   "inv-sector":"inv-sector", "inv-opportunity":"inv-opportunity",
 };
 
@@ -839,7 +840,7 @@ function CulturePage(){
   type InitItem     = {id:string;slug:string;image:string;title:string;text:string};
   type ContestItem  = {title:string;date:string;prize:string};
   type NewsItem     = {id:string;image:string;title:string;date:string};
-  type MediaItem    = {image:string;type:string;title:string;date:string;link:string};
+  type MediaItem    = {id:string;image:string;type:string;title:string;date:string;link:string};
 
   const [activities, setActivities] = useState<ActivityItem[]>([
     {id:"",image:"/assets/culture-folk-hq.webp",tag:"مهرجان تراثي",title:"مهرجان نهر النيل للتراث",date:"18 مايو 2025",location:"المدينة القديمة - عطبرة"},
@@ -877,9 +878,9 @@ function CulturePage(){
     {id:"",image:"/assets/culture-folk-hq.webp",title:"توقيع اتفاقية شراكة ثقافية جديدة",date:"10 مايو 2025"},
   ]);
   const [media, setMedia] = useState<MediaItem[]>([
-    {image:"/assets/culture-folk-hq.webp",type:"فيديو",title:"مهرجان التراث السوداني 2025",date:"12 مايو 2025",link:""},
-    {image:"/assets/culture-poetry-hq.webp",type:"بودكاست",title:"أمسية شعرية رائعة",date:"8 مايو 2025",link:""},
-    {image:"/assets/culture-gallery-hq.webp",type:"فيديو",title:"معرض الفنون التشكيلية",date:"5 مايو 2025",link:""},
+    {id:"",image:"/assets/culture-folk-hq.webp",type:"فيديو",title:"مهرجان التراث السوداني 2025",date:"12 مايو 2025",link:""},
+    {id:"",image:"/assets/culture-poetry-hq.webp",type:"بودكاست",title:"أمسية شعرية رائعة",date:"8 مايو 2025",link:""},
+    {id:"",image:"/assets/culture-gallery-hq.webp",type:"فيديو",title:"معرض الفنون التشكيلية",date:"5 مايو 2025",link:""},
   ]);
 
   const iconMap: Record<string, React.ElementType> = {
@@ -914,7 +915,7 @@ function CulturePage(){
       if(data&&data.length>0) setNews(data.map(r=>({id:r.id,image:r.image_url||"/assets/culture-seminar-hq.webp",title:r.title,date:r.published_at?new Date(r.published_at).toLocaleDateString("ar-EG",{day:"2-digit",month:"long"}):""})));
     });
     supabase.from("culture_media").select("*").eq("published",true).order("sort_order").then(({data})=>{
-      if(data&&data.length>0) setMedia(data.map(r=>({image:r.image_url||"/assets/culture-folk-hq.webp",type:r.type,title:r.title,date:r.media_date,link:r.link_url||""})));
+      if(data&&data.length>0) setMedia(data.map(r=>({id:r.id,image:r.image_url||"/assets/culture-folk-hq.webp",type:r.type,title:r.title,date:r.media_date,link:r.link_url||""})));
     });
   },[]);
   return <div className="culture-redesign">
@@ -942,7 +943,7 @@ function CulturePage(){
 
         <div className="cul-bottom-panels">
           <section id="culture-news" className="cul-panel cul-news"><CulturePanelHead title="أحدث الأخبار الثقافية" href="/culture#culture-news"/>{news.map(item=><a className="motion" href={item.id?`/culture/news/${item.id}`:"#"} key={item.title}><img src={item.image} alt=""/><span><b>{item.title}</b><small>{item.date}</small></span></a>)}</section>
-          <section className="cul-panel cul-media"><CulturePanelHead title="ميديا الثقافة" href="/culture"/>{media.map(item=><a className="motion" href={item.link||"#"} target={item.link?"_blank":undefined} rel={item.link?"noopener noreferrer":undefined} onClick={item.link?undefined:(e)=>e.preventDefault()} key={item.title}><span><img src={item.image} alt=""/><PlayCircle/></span><p><em>{item.type}</em><b>{item.title}</b><small>{item.date}</small></p></a>)}</section>
+          <section className="cul-panel cul-media"><CulturePanelHead title="ميديا الثقافة" href="/culture"/>{media.map(item=><a className="motion" href={item.id?`/culture/media/${item.id}`:"#"} onClick={item.id?undefined:(e)=>e.preventDefault()} key={item.title}><span><img src={item.image} alt=""/><PlayCircle/></span><p><em>{item.type}</em><b>{item.title}</b><small>{item.date}</small></p></a>)}</section>
           <section className="cul-panel cul-calendar"><CulturePanelHead title="التقويم الثقافي" href="/events"/>{calendar.map(item=><a className="motion" href="/events" key={`${item.day}-${item.title}`}><time><b>{item.day}</b><small>{item.month}</small></time><span><b>{item.title}</b><small><MapPin/> {item.place}</small></span></a>)}</section>
         </div>
       </div>
@@ -1864,6 +1865,29 @@ function EventDetailPage({slug}:{slug?:string}) {
   );
 }
 
+function CultureMediaDetailPage({slug}:{slug?:string}){
+  const [item,setItem]=useState<{id:string;title:string;image_url:string;type:string;media_date:string;link_url:string}|null>(null);
+  const [loading,setLoading]=useState(true);
+  useEffect(()=>{
+    if(!slug)return;
+    supabase.from("culture_media").select("*").eq("id",slug).maybeSingle().then(({data})=>{setItem(data);setLoading(false);});
+  },[slug]);
+  if(loading)return <div style={{padding:"6rem 1rem",textAlign:"center",color:"#64748b"}}>جاري التحميل...</div>;
+  if(!item)return <div style={{padding:"6rem 1rem",textAlign:"center"}}><h2 style={{color:"#dc2626"}}>العنصر غير موجود</h2><a href="/culture" style={{color:"#2563eb"}}>العودة للثقافة</a></div>;
+  return(
+    <div dir="rtl">
+      {item.image_url&&<div className="detail-hero-img" style={{position:"relative"}}><img src={item.image_url} alt={item.title}/>{item.link_url&&<a href={item.link_url} target="_blank" rel="noopener noreferrer" style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center",background:"rgba(0,0,0,.35)"}}><svg width="72" height="72" viewBox="0 0 72 72" fill="none"><circle cx="36" cy="36" r="36" fill="rgba(255,255,255,.9)"/><polygon points="28,20 56,36 28,52" fill="#0e7490"/></svg></a>}</div>}
+      <article className="detail-article page-width">
+        <span className="news-cat" style={{background:item.type==="بودكاست"?"#7c3aed":"#0e7490"}}>{item.type}</span>
+        <h1>{item.title}</h1>
+        {item.media_date&&<small className="detail-date">{item.media_date}</small>}
+        {item.link_url&&<a href={item.link_url} target="_blank" rel="noopener noreferrer" style={{display:"inline-flex",alignItems:"center",gap:".5rem",marginTop:"1.5rem",padding:".75rem 1.5rem",background:"#0e7490",color:"#fff",borderRadius:".5rem",fontWeight:600,textDecoration:"none"}}>مشاهدة / استماع <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a>}
+        <a href="/culture" className="detail-back" style={{display:"block",marginTop:"2rem"}}>← العودة للثقافة</a>
+      </article>
+    </div>
+  );
+}
+
 function CultureEventDetailPage({slug}:{slug?:string}){
   const [item,setItem]=useState<{id:string;title:string;image_url:string;tag:string;event_date:string;location:string;description:string}|null>(null);
   const [loading,setLoading]=useState(true);
@@ -1959,4 +1983,4 @@ function CultureInitiativeDetailPage({slug}:{slug?:string}){
   );
 }
 
-export default function NileSite({page,slug}:{page:string;slug?:string}){const active=routeMap[page]||"home";const hideHeader=["membership","photo","payment","success"].includes(active);const hideFooter=["membership","photo","payment","success"].includes(active);return <div dir="rtl"><Motion/>{!hideHeader&&<Header active={active}/>}<main>{active==="home"?<Home/>:active==="about"?<AboutPage/>:active==="social"?<SocialPage/>:active==="education"?<EducationPage/>:active==="health"?<HealthPage/>:active==="investment"?<InvestmentPage/>:active==="inv-sector"?<InvestmentSectorDetailPage slug={slug}/>:active==="inv-opportunity"?<InvestmentOpportunityDetailPage slug={slug}/>:active==="culture"?<CulturePage/>:active==="culture-event-detail"?<CultureEventDetailPage slug={slug}/>:active==="culture-news-detail"?<CultureNewsDetailPage slug={slug}/>:active==="culture-artist-detail"?<CultureArtistDetailPage slug={slug}/>:active==="culture-initiative-detail"?<CultureInitiativeDetailPage slug={slug}/>:["services","initiatives","library"].includes(active)?<InternalPage type={active as InternalKey}/>:active==="news"?<NewsListPage/>:active==="news-detail"?<NewsDetailPage slug={slug}/>:active==="events"?<EventsListPage/>:active==="events-detail"?<EventDetailPage slug={slug}/>:active==="membership"?<Membership/>:active==="register"?<Register/>:active==="photo"?<PhotoUpload/>:active==="payment"?<Payment/>:active==="success"?<Success/>:active==="contact"?<Contact/>:<Home/>}</main>{!hideFooter&&<Footer/>}</div>}
+export default function NileSite({page,slug}:{page:string;slug?:string}){const active=routeMap[page]||"home";const hideHeader=["membership","photo","payment","success"].includes(active);const hideFooter=["membership","photo","payment","success"].includes(active);return <div dir="rtl"><Motion/>{!hideHeader&&<Header active={active}/>}<main>{active==="home"?<Home/>:active==="about"?<AboutPage/>:active==="social"?<SocialPage/>:active==="education"?<EducationPage/>:active==="health"?<HealthPage/>:active==="investment"?<InvestmentPage/>:active==="inv-sector"?<InvestmentSectorDetailPage slug={slug}/>:active==="inv-opportunity"?<InvestmentOpportunityDetailPage slug={slug}/>:active==="culture"?<CulturePage/>:active==="culture-media-detail"?<CultureMediaDetailPage slug={slug}/>:active==="culture-event-detail"?<CultureEventDetailPage slug={slug}/>:active==="culture-news-detail"?<CultureNewsDetailPage slug={slug}/>:active==="culture-artist-detail"?<CultureArtistDetailPage slug={slug}/>:active==="culture-initiative-detail"?<CultureInitiativeDetailPage slug={slug}/>:["services","initiatives","library"].includes(active)?<InternalPage type={active as InternalKey}/>:active==="news"?<NewsListPage/>:active==="news-detail"?<NewsDetailPage slug={slug}/>:active==="events"?<EventsListPage/>:active==="events-detail"?<EventDetailPage slug={slug}/>:active==="membership"?<Membership/>:active==="register"?<Register/>:active==="photo"?<PhotoUpload/>:active==="payment"?<Payment/>:active==="success"?<Success/>:active==="contact"?<Contact/>:<Home/>}</main>{!hideFooter&&<Footer/>}</div>}
