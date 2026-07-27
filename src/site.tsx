@@ -1866,7 +1866,7 @@ function EventDetailPage({slug}:{slug?:string}) {
 }
 
 function CultureMediaDetailPage({slug}:{slug?:string}){
-  const [item,setItem]=useState<{id:string;title:string;image_url:string;type:string;media_date:string;link_url:string}|null>(null);
+  const [item,setItem]=useState<{id:string;title:string;image_url:string;type:string;media_date:string;link_url:string;description:string}|null>(null);
   const [loading,setLoading]=useState(true);
   useEffect(()=>{
     if(!slug)return;
@@ -1881,6 +1881,7 @@ function CultureMediaDetailPage({slug}:{slug?:string}){
         <span className="news-cat" style={{background:item.type==="بودكاست"?"#7c3aed":"#0e7490"}}>{item.type}</span>
         <h1>{item.title}</h1>
         {item.media_date&&<small className="detail-date">{item.media_date}</small>}
+        {item.description&&<div className="detail-body" dangerouslySetInnerHTML={{__html:item.description.replace(/\n/g,"<br/>")}}/>}
         {item.link_url&&<a href={item.link_url} target="_blank" rel="noopener noreferrer" style={{display:"inline-flex",alignItems:"center",gap:".5rem",marginTop:"1.5rem",padding:".75rem 1.5rem",background:"#0e7490",color:"#fff",borderRadius:".5rem",fontWeight:600,textDecoration:"none"}}>مشاهدة / استماع <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a>}
         <a href="/culture" className="detail-back" style={{display:"block",marginTop:"2rem"}}>← العودة للثقافة</a>
       </article>

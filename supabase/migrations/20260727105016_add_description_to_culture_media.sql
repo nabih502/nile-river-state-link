@@ -1,0 +1,1 @@
+ALTER TABLE culture_media ADD COLUMN IF NOT EXISTS description text NOT NULL DEFAULT '';
