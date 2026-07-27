@@ -262,6 +262,8 @@ export type SocialInitiative = {
   amount: string;
   icon: string;
   action_label: string;
+  slug: string;
+  full_description: string;
   published: boolean;
   sort_order: number;
   created_at: string;

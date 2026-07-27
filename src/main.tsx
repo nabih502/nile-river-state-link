@@ -23,6 +23,9 @@ function parseRoute(): { page: string; slug?: string } {
   if (parts[0] === "culture" && parts.length >= 3 && ["event","news","artist","initiative","media","art","association"].includes(parts[1])) {
     return { page: `culture-${parts[1]}-detail`, slug: parts[2] };
   }
+  if (parts[0] === "social" && parts.length >= 3 && parts[1] === "initiative") {
+    return { page: "social-initiative-detail", slug: parts[2] };
+  }
   return { page: parts[0] };
 }
 

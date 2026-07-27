@@ -143,12 +143,16 @@ export function ServiceEditor({ item, open, onSave, onClose }: {
   );
 }
 
+function toSlug(s: string) {
+  return s.trim().replace(/\s+/g, "-").replace(/[^\u0600-\u06ffa-z0-9-]/gi, "").slice(0, 60);
+}
+
 // ── Initiative Editor ──────────────────────────────────────────────────────────
 export function SocialInitiativeEditor({ item, open, onSave, onClose }: {
   item: Partial<SocialInitiative> | null; open: boolean; onSave: () => void; onClose: () => void;
 }) {
   const [form, setForm] = useState<Partial<SocialInitiative>>(
-    item ?? { image_url: "", title: "", text: "", progress: 0, amount: "", icon: "♡", action_label: "ساهم الآن", published: true }
+    item ?? { image_url: "", title: "", text: "", full_description: "", slug: "", progress: 0, amount: "", icon: "♡", action_label: "ساهم الآن", published: true }
   );
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
@@ -156,7 +160,18 @@ export function SocialInitiativeEditor({ item, open, onSave, onClose }: {
 
   const save = async (e: React.FormEvent) => {
     e.preventDefault(); setSaving(true); setError("");
-    const payload = { image_url: form.image_url, title: form.title, text: form.text, progress: Number(form.progress) || 0, amount: form.amount, icon: form.icon, action_label: form.action_label, published: form.published };
+    const payload = {
+      image_url: form.image_url,
+      title: form.title,
+      text: form.text,
+      full_description: form.full_description || "",
+      slug: form.slug || toSlug(form.title || "") || `initiative-${Date.now()}`,
+      progress: Number(form.progress) || 0,
+      amount: form.amount,
+      icon: form.icon,
+      action_label: form.action_label,
+      published: form.published,
+    };
     const { error: err } = form.id
       ? await supabase.from("social_initiatives").update(payload).eq("id", form.id)
       : await supabase.from("social_initiatives").insert(payload);
@@ -175,8 +190,16 @@ export function SocialInitiativeEditor({ item, open, onSave, onClose }: {
             <input required value={form.title || ""} className="inv-input" onChange={(e) => set("title", e.target.value)} />
           </label>
           <label className="inv-label">
-            الوصف
+            الرابط المختصر (Slug)
+            <input value={form.slug || ""} className="inv-input" dir="ltr" placeholder="يُولَّد تلقائياً من العنوان" onChange={(e) => set("slug", e.target.value)} />
+          </label>
+          <label className="inv-label">
+            الوصف المختصر (يظهر في البطاقة)
             <textarea value={form.text || ""} className="inv-input" rows={3} style={{ resize: "vertical" }} onChange={(e) => set("text", e.target.value)} />
+          </label>
+          <label className="inv-label">
+            الوصف التفصيلي الكامل (يظهر في صفحة المبادرة)
+            <textarea value={form.full_description || ""} className="inv-input" rows={6} placeholder="اكتب وصفاً تفصيلياً يظهر عند فتح صفحة المبادرة..." style={{ resize: "vertical" }} onChange={(e) => set("full_description", e.target.value)} />
           </label>
           <div className="inv-form-row">
             <label className="inv-label">
@@ -193,7 +216,7 @@ export function SocialInitiativeEditor({ item, open, onSave, onClose }: {
             <input type="range" min={0} max={100} value={form.progress || 0} className="inv-input" onChange={(e) => set("progress", Number(e.target.value))} />
           </label>
           <label className="inv-label">
-            نص الزر
+            نص زر الإجراء
             <input value={form.action_label || ""} className="inv-input" placeholder="ساهم الآن" onChange={(e) => set("action_label", e.target.value)} />
           </label>
         </FormSection>

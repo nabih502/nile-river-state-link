@@ -3,7 +3,7 @@ import { supabase } from "./supabase";
 import { Aperture, ArrowLeft, Award, BadgeCheck, BadgePercent, Banknote, BookOpen, BriefcaseBusiness, Building2, Calendar, CalendarDays, Camera, ChartNoAxesCombined, ChartPie, Check, ChevronLeft, CircleAlert, CircleCheckBig, Circle as CircleHelp, Clock3, CreditCard, Crown, Eye, Factory, Feather, FileImage, FileText, FileUp, Gem, Gift, Globe as Globe2, GraduationCap, HandHeart, Handshake, Headphones, HeartHandshake, HeartPulse, Landmark, LayoutDashboard, LayoutGrid, LibraryBig, Lightbulb, Menu, Megaphone, MonitorCheck, Music2, Network, Newspaper, MessageCircle, Info, LockKeyhole, Mail, MapPin, Paperclip, Percent, Phone, QrCode, ReceiptText, Palette, Pill, CirclePlay as PlayCircle, RefreshCw, ScanFace, Search, Settings2, Share2, Shield, ShieldCheck, Stethoscope, Send, ShoppingCart, Sparkles, Sprout, Store, Tags, Target, TrendingUp, Trophy, Truck, Upload, UserCheck, UserPlus, UserRound, UsersRound, Video, WalletCards, X } from "lucide-react";
 
 type InternalKey = "services" | "initiatives" | "news" | "library";
-type PageKey = "home" | "about" | "social" | "education" | "health" | "investment" | "culture" | InternalKey | "membership" | "register" | "photo" | "payment" | "success" | "contact" | "events" | "news-detail" | "events-detail" | "inv-sector" | "inv-opportunity" | "culture-event-detail" | "culture-news-detail" | "culture-artist-detail" | "culture-initiative-detail" | "culture-media-detail" | "culture-art-detail" | "culture-association-detail";
+type PageKey = "home" | "about" | "social" | "education" | "health" | "investment" | "culture" | InternalKey | "membership" | "register" | "photo" | "payment" | "success" | "contact" | "events" | "news-detail" | "events-detail" | "inv-sector" | "inv-opportunity" | "culture-event-detail" | "culture-news-detail" | "culture-artist-detail" | "culture-initiative-detail" | "culture-media-detail" | "culture-art-detail" | "culture-association-detail" | "social-initiative-detail";
 type PortalKey = "social" | "education" | "health" | "investment" | "culture";
 
 const MARKET_URL="https://sudan-market.com/";
@@ -544,7 +544,7 @@ function SocialPage(){
 
     <section id="social-services" className="ss-services page-width"><div className="ss-title motion"><span/><h2>خدماتنا الاجتماعية</h2><span/></div><div className="ss-service-grid">{services.map(svc=>{const Icon=ssIconMap[svc.icon]||HeartHandshake;return <article className="ss-service-card motion" key={svc.id}><div className="ss-service-icon" aria-hidden="true"><Icon/></div><h3>{svc.title}</h3><p>{svc.lead}</p><ul>{[svc.bullet_1,svc.bullet_2,svc.bullet_3,svc.bullet_4].filter(Boolean).map(b=><li key={b}>{b}</li>)}</ul><a href="/contact">{svc.action_label}<ArrowLeft/></a></article>;})}</div></section>
 
-    <section className="ss-initiatives page-width"><div className="ss-title motion"><span/><h2>مبادراتنا الحالية</h2><span/></div><div className="ss-initiative-grid">{initiatives.map(item=><article className="ss-initiative-card motion" key={item.id}><img src={item.image_url} alt={item.title}/><div><h3>{item.title}</h3><p>{item.text}</p><small>تم جمع {item.progress}%</small><span className="ss-progress"><i style={{width:`${item.progress}%`}}/></span><footer><b>{item.amount}</b><a href="/contact">{item.action_label}</a></footer></div></article>)}</div><a className="ss-all-initiatives" href="/contact">عرض جميع المبادرات <ArrowLeft/></a></section>
+    <section className="ss-initiatives page-width"><div className="ss-title motion"><span/><h2>مبادراتنا الحالية</h2><span/></div><div className="ss-initiative-grid">{initiatives.map(item=><article className="ss-initiative-card motion" key={item.id}><img src={item.image_url} alt={item.title}/><div><h3>{item.title}</h3><p>{item.text}</p><small>تم جمع {item.progress}%</small><span className="ss-progress"><i style={{width:`${item.progress}%`}}/></span><footer><b>{item.amount}</b><a href={item.slug?`/social/initiative/${item.slug}`:"/contact"}>{item.action_label}</a></footer></div></article>)}</div><a className="ss-all-initiatives" href="/contact">عرض جميع المبادرات <ArrowLeft/></a></section>
 
     <section className="ss-stats page-width motion"><div className="ss-family-art" aria-label="التكافل الأسري"><HeartHandshake/></div>{stats.map(item=>{const Icon=ssIconMap[item.icon]||UsersRound;return <div key={item.id}><Icon aria-hidden="true"/><b>{item.value}</b><small>{item.label}</small></div>;})}</section>
 
@@ -2067,6 +2067,41 @@ function CultureArtistDetailPage({slug}:{slug?:string}){
   );
 }
 
+function SocialInitiativeDetailPage({slug}:{slug?:string}){
+  const [item,setItem]=useState<{id:string;title:string;image_url:string;text:string;full_description:string;progress:number;amount:string;icon:string;action_label:string}|null>(null);
+  const [loading,setLoading]=useState(true);
+  useEffect(()=>{
+    if(!slug)return;
+    supabase.from("social_initiatives").select("*").eq("slug",slug).maybeSingle().then(({data})=>{setItem(data);setLoading(false);});
+  },[slug]);
+  if(loading)return <div style={{padding:"6rem 1rem",textAlign:"center",color:"#64748b"}}>جاري التحميل...</div>;
+  if(!item)return <div style={{padding:"6rem 1rem",textAlign:"center"}}><h2 style={{color:"#dc2626"}}>المبادرة غير موجودة</h2><a href="/social" style={{color:"#0f766e"}}>العودة للخدمات الاجتماعية</a></div>;
+  return(
+    <div dir="rtl">
+      {item.image_url&&<div className="detail-hero-img"><img src={item.image_url} alt={item.title}/></div>}
+      <article className="detail-article page-width">
+        <span className="news-cat" style={{background:"#0f766e"}}>مبادرة اجتماعية</span>
+        <h1>{item.title}</h1>
+        <div style={{display:"flex",gap:"1rem",alignItems:"center",marginBottom:"1.5rem",flexWrap:"wrap"}}>
+          <span style={{background:"#f0fdf4",color:"#15803d",padding:"0.35rem 0.9rem",borderRadius:"2rem",fontWeight:700,fontSize:"0.9rem",border:"1px solid #bbf7d0"}}>المبلغ المستهدف: {item.amount}</span>
+          <span style={{background:"#f0fdf4",color:"#0f766e",padding:"0.35rem 0.9rem",borderRadius:"2rem",fontWeight:700,fontSize:"0.9rem",border:"1px solid #99f6e4"}}>نسبة الإنجاز: {item.progress}%</span>
+        </div>
+        <div style={{background:"#f8fafc",borderRadius:"0.75rem",padding:"1rem 1.25rem",marginBottom:"1.5rem"}}>
+          <div style={{height:"10px",background:"#e2e8f0",borderRadius:"9999px",overflow:"hidden"}}>
+            <div style={{height:"100%",width:`${item.progress}%`,background:"linear-gradient(90deg,#0f766e,#14b8a6)",borderRadius:"9999px",transition:"width 0.6s ease"}}/>
+          </div>
+        </div>
+        {item.text&&<div className="detail-body" dangerouslySetInnerHTML={{__html:item.text.replace(/\n/g,"<br/>")}}/>}
+        {item.full_description&&<div className="detail-body" style={{marginTop:"1.5rem"}} dangerouslySetInnerHTML={{__html:item.full_description.replace(/\n/g,"<br/>")}}/>}
+        <div style={{marginTop:"2rem",display:"flex",gap:"1rem",flexWrap:"wrap"}}>
+          <a href="/contact" style={{background:"#0f766e",color:"#fff",padding:"0.75rem 1.75rem",borderRadius:"0.5rem",fontWeight:700,textDecoration:"none"}}>{item.action_label}</a>
+          <a href="/social" className="detail-back">← العودة للخدمات الاجتماعية</a>
+        </div>
+      </article>
+    </div>
+  );
+}
+
 function CultureInitiativeDetailPage({slug}:{slug?:string}){
   const [item,setItem]=useState<{id:string;title:string;image_url:string;text:string}|null>(null);
   const [loading,setLoading]=useState(true);
@@ -2089,6 +2124,6 @@ function CultureInitiativeDetailPage({slug}:{slug?:string}){
   );
 }
 
-export default function NileSite({page,slug}:{page:string;slug?:string}){const active=routeMap[page]||"home";const hideHeader=["membership","photo","payment","success"].includes(active);const hideFooter=["membership","photo","payment","success"].includes(active);return <div dir="rtl"><Motion/>{!hideHeader&&<Header active={active}/>}<main>{active==="home"?<Home/>:active==="about"?<AboutPage/>:active==="social"?<SocialPage/>:active==="education"?<EducationPage/>:active==="health"?<HealthPage/>:active==="investment"?<InvestmentPage/>:active==="inv-sector"?<InvestmentSectorDetailPage slug={slug}/>:active==="inv-opportunity"?<InvestmentOpportunityDetailPage slug={slug}/>:active==="culture"?<CulturePage/>:active==="culture-art-detail"?<CultureArtDetailPage slug={slug}/>:
+export default function NileSite({page,slug}:{page:string;slug?:string}){const active=routeMap[page]||"home";const hideHeader=["membership","photo","payment","success"].includes(active);const hideFooter=["membership","photo","payment","success"].includes(active);return <div dir="rtl"><Motion/>{!hideHeader&&<Header active={active}/>}<main>{active==="home"?<Home/>:active==="about"?<AboutPage/>:active==="social"?<SocialPage/>:active==="education"?<EducationPage/>:active==="health"?<HealthPage/>:active==="investment"?<InvestmentPage/>:active==="inv-sector"?<InvestmentSectorDetailPage slug={slug}/>:active==="inv-opportunity"?<InvestmentOpportunityDetailPage slug={slug}/>:active==="culture"?<CulturePage/>:active==="social-initiative-detail"?<SocialInitiativeDetailPage slug={slug}/>:active==="culture-art-detail"?<CultureArtDetailPage slug={slug}/>:
 active==="culture-association-detail"?<CultureAssociationDetailPage slug={slug}/>:
 active==="culture-media-detail"?<CultureMediaDetailPage slug={slug}/>:active==="culture-event-detail"?<CultureEventDetailPage slug={slug}/>:active==="culture-news-detail"?<CultureNewsDetailPage slug={slug}/>:active==="culture-artist-detail"?<CultureArtistDetailPage slug={slug}/>:active==="culture-initiative-detail"?<CultureInitiativeDetailPage slug={slug}/>:["services","initiatives","library"].includes(active)?<InternalPage type={active as InternalKey}/>:active==="news"?<NewsListPage/>:active==="news-detail"?<NewsDetailPage slug={slug}/>:active==="events"?<EventsListPage/>:active==="events-detail"?<EventDetailPage slug={slug}/>:active==="membership"?<Membership/>:active==="register"?<Register/>:active==="photo"?<PhotoUpload/>:active==="payment"?<Payment/>:active==="success"?<Success/>:active==="contact"?<Contact/>:<Home/>}</main>{!hideFooter&&<Footer/>}</div>}
