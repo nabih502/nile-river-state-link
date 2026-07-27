@@ -237,3 +237,51 @@ export type CultureMedia = {
   sort_order: number;
   created_at: string;
 };
+
+export type SocialService = {
+  id: string;
+  icon: string;
+  title: string;
+  lead: string;
+  bullet_1: string;
+  bullet_2: string;
+  bullet_3: string;
+  bullet_4: string;
+  action_label: string;
+  published: boolean;
+  sort_order: number;
+  created_at: string;
+};
+
+export type SocialInitiative = {
+  id: string;
+  image_url: string;
+  title: string;
+  text: string;
+  progress: number;
+  amount: string;
+  icon: string;
+  action_label: string;
+  published: boolean;
+  sort_order: number;
+  created_at: string;
+};
+
+export type SocialStat = {
+  id: string;
+  value: string;
+  label: string;
+  icon: string;
+  sort_order: number;
+  created_at: string;
+};
+
+export type SocialValue = {
+  id: string;
+  icon: string;
+  title: string;
+  text: string;
+  published: boolean;
+  sort_order: number;
+  created_at: string;
+};
