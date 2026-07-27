@@ -905,7 +905,7 @@ function CulturePage(){
       if(data&&data.length>0) setArtists(data.map(r=>({id:r.id,slug:r.slug||"",image:r.image_url||"/assets/culture-tayeb.jpg",name:r.name,role:r.role})));
     });
     supabase.from("culture_associations").select("id,slug,title,place,icon,published,sort_order").eq("published",true).order("sort_order").then(({data})=>{
-      if(data&&data.length>0) setAssociations(data.map(r=>({icon:iconMap[r.icon]||UsersRound,title:r.title,place:r.place})));
+      if(data&&data.length>0) setAssociations(data.map(r=>({id:r.id,slug:r.slug||"",icon:iconMap[r.icon]||UsersRound,title:r.title,place:r.place})));
     });
     supabase.from("culture_initiatives").select("*").eq("published",true).order("sort_order").then(({data})=>{
       if(data&&data.length>0) setInitiatives(data.map(r=>({id:r.id,slug:r.slug||"",image:r.image_url||"/assets/culture-folk-hq.webp",title:r.title,text:r.text})));
