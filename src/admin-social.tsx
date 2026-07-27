@@ -220,7 +220,7 @@ function InitiativesTab({ items, setItems, onEdit, onDelete }: {
             </div>
             <div style={{ display: "flex", gap: "0.5rem", alignItems: "center", justifyContent: "space-between" }}>
               <div style={{ display: "flex", gap: "0.4rem", flexWrap: "wrap" }}>
-                {row.slug && <Badge label={`/${row.slug}`} color="teal" />}
+                {row.slug && <a href={`/social/initiative/${row.slug}`} target="_blank" rel="noopener noreferrer" style={{ background: "#f0fdfa", color: "#0f766e", padding: "0.2rem 0.6rem", borderRadius: "9999px", fontSize: "0.7rem", fontWeight: 600, textDecoration: "none", border: "1px solid #ccfbf1" }}>↗ معاينة</a>}
               </div>
               <div style={{ display: "flex", gap: "0.4rem" }}>
                 <button type="button" className="inv-icon-btn" onClick={() => onEdit(row)} title="تعديل"><Pencil size={14} /></button>
