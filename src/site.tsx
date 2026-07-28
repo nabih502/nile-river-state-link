@@ -1569,9 +1569,7 @@ function Contact(){
       {/* ══ HERO ══════════════════════════════════════════════════════════ */}
       <div style={{position:"relative",height:"clamp(380px,55vh,520px)",overflow:"hidden",background:"#0f172a"}}>
         {heroImage && <img src={heroImage} alt="تواصل معنا" style={{width:"100%",height:"100%",objectFit:"cover"}}/>}
-        <div style={{position:"absolute",inset:0,background:"linear-gradient(110deg,rgba(0,0,0,0.88) 0%,rgba(0,0,0,0.55) 55%,rgba(0,0,0,0.1) 100%)"}}/>
-        {/* decorative vertical line */}
-        <div style={{position:"absolute",top:0,right:"clamp(4rem,10vw,8rem)",width:2,height:"100%",background:"linear-gradient(to bottom,transparent,rgba(37,99,235,0.7),transparent)"}}/>
+        <div style={{position:"absolute",inset:0,background:"linear-gradient(110deg,rgba(0,0,0,0.55) 0%,rgba(0,0,0,0.3) 55%,rgba(0,0,0,0.05) 100%)"}}/>
         <div style={{position:"absolute",inset:0,display:"flex",flexDirection:"column",justifyContent:"center",padding:"clamp(2rem,6vw,5rem)",maxWidth:"1200px",margin:"0 auto",left:0,right:0}}>
           <div style={{display:"inline-flex",alignItems:"center",gap:"0.5rem",background:"rgba(37,99,235,0.8)",backdropFilter:"blur(10px)",color:"#fff",padding:"0.4rem 1rem",borderRadius:"9999px",fontSize:"0.78rem",fontWeight:700,marginBottom:"1.25rem",width:"fit-content",border:"1px solid rgba(255,255,255,0.2)"}}>
             <MessageCircle size={14}/> رابطة ولاية نهر النيل
