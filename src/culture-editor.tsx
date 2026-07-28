@@ -782,6 +782,7 @@ export function AssociationEditor({
       email: "",
       phone: "",
       members_count: "",
+      image_url: "",
       published: true,
     }
   );
@@ -805,6 +806,7 @@ export function AssociationEditor({
       email: form.email || "",
       phone: form.phone || "",
       members_count: form.members_count || "",
+      image_url: form.image_url || "",
       published: form.published,
     };
     const { error: err } = form.id
@@ -932,6 +934,13 @@ export function AssociationEditor({
               placeholder="اكتب وصفاً تفصيلياً عن الجمعية وأنشطتها..."
             />
           </label>
+        </FormSection>
+        <FormSection title="صورة الغلاف">
+          <ImageUpload
+            value={form.image_url || ""}
+            onChange={(url) => set("image_url", url)}
+            label="صورة الغلاف (تظهر كهيرو في صفحة الجمعية)"
+          />
         </FormSection>
       </form>
     </Drawer>
@@ -1294,6 +1303,76 @@ export function CultureMediaEditor({
             onChange={(url) => set("image_url", url)}
             label="صورة مصغرة"
           />
+        </FormSection>
+      </form>
+    </Drawer>
+  );
+}
+
+// ── Art Category Editor ──────────────────────────────────────────────────────
+export type ArtCategory = {
+  id: string; slug: string; title: string; icon: string; image_url: string;
+  description: string; activities: string; published: boolean; sort_order: number;
+};
+
+export function ArtCategoryEditor({ item, open, onSave, onClose }: {
+  item: Partial<ArtCategory> | null; open: boolean; onSave: () => void; onClose: () => void;
+}) {
+  const [form, setForm] = useState<Partial<ArtCategory>>(
+    item ?? { slug: "", title: "", icon: "", image_url: "", description: "", activities: "", published: true }
+  );
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState("");
+  const set = <K extends keyof ArtCategory>(k: K, v: ArtCategory[K]) => setForm(f => ({ ...f, [k]: v }));
+
+  const save = async (e: React.FormEvent) => {
+    e.preventDefault(); setSaving(true); setError("");
+    const payload = {
+      slug: form.slug || toSlug(form.title || "") || `art-${Date.now()}`,
+      title: form.title, icon: form.icon || "",
+      image_url: form.image_url || "",
+      description: form.description || "",
+      activities: form.activities || "",
+      published: form.published,
+    };
+    const { error: err } = form.id
+      ? await supabase.from("culture_art_categories").update(payload).eq("id", form.id)
+      : await supabase.from("culture_art_categories").insert(payload);
+    setSaving(false);
+    if (err) { setError(err.message); return; }
+    onSave();
+  };
+
+  return (
+    <Drawer title={form.id ? "تعديل مجال الفنون" : "إضافة مجال فنون"} open={open} onClose={onClose}
+      footer={<DrawerFoot formId="artcat-form" saving={saving} isEdit={!!form.id} onClose={onClose} published={!!form.published} onTogglePublish={(v) => set("published", v)} error={error} />}>
+      <form id="artcat-form" onSubmit={save}>
+        <FormSection title="المعلومات الأساسية">
+          <div className="inv-form-row">
+            <label className="inv-label">
+              <span>العنوان <span className="inv-req">*</span></span>
+              <input required value={form.title || ""} className="inv-input" onChange={(e) => set("title", e.target.value)} />
+            </label>
+            <label className="inv-label">
+              الرمز (Emoji)
+              <input value={form.icon || ""} className="inv-input" dir="ltr" placeholder="🎨" onChange={(e) => set("icon", e.target.value)} />
+            </label>
+          </div>
+          <label className="inv-label">
+            الرابط المختصر (Slug)
+            <input value={form.slug || ""} className="inv-input" dir="ltr" placeholder="يُولَّد تلقائياً" onChange={(e) => set("slug", e.target.value)} />
+          </label>
+          <label className="inv-label">
+            الوصف التفصيلي
+            <RichTextarea value={form.description || ""} onChange={(v) => set("description", v)} rows={8} max={3000} placeholder="وصف تفصيلي عن هذا المجال الفني..." />
+          </label>
+          <label className="inv-label">
+            الفعاليات والأنشطة (مفصولة بفاصلة)
+            <textarea value={form.activities || ""} className="inv-input" rows={3} placeholder="الملتقى الأدبي الشهري, مسابقة سنوية, ورشة..." style={{ resize: "vertical" }} onChange={(e) => set("activities", e.target.value)} />
+          </label>
+        </FormSection>
+        <FormSection title="صورة الغلاف">
+          <ImageUpload value={form.image_url || ""} onChange={(url) => set("image_url", url)} label="صورة تظهر كهيرو في صفحة المجال الفني" />
         </FormSection>
       </form>
     </Drawer>

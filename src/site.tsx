@@ -1889,85 +1889,88 @@ function EventDetailPage({slug}:{slug?:string}) {
 }
 
 
-const ART_DETAIL: Record<string,{title:string;image:string;description:string;activities:string[];icon:string}> = {
-  "art-poetry":{
-    title:"القصة والشعر",image:"/assets/culture-hero-hq.webp",icon:"✍",
-    description:"يُمثّل الأدب السوداني بشعره وقصصه ورواياته أحد أعمق مناهل الثقافة الوطنية. تزخر ولاية نهر النيل بمبدعين أسهموا في رسم ملامح الهوية السودانية عبر الكلمة المكتوبة والمُلقاة.\n\nمن أبرز الأسماء التي أنجبتها الولاية في هذا المجال: الشاعر محمد المهدي المجذوب، والروائي الطيب صالح، وعدد من الأقلام الشابة المتميزة التي تواصل مسيرة العطاء.\n\n**لماذا القصة والشعر في ولايتنا مختلفان؟**\nيتميز الأدب النيلي بحضور الطبيعة الطاغي، ووجدان متجذر بالمكان والنيل والصحراء، وصوت إنساني عميق يعكس تجربة الإنسان السوداني بصدق وعذوبة.",
-    activities:["الملتقى الأدبي الشهري","مسابقة الشعر والقصة السنوية","مجموعة شعرية جماعية","ورشة الكتابة الإبداعية للشباب"]
-  },
-  "art-visual":{
-    title:"الفنون التشكيلية",image:"/assets/culture-gallery-hq.webp",icon:"🎨",
-    description:"الفنون التشكيلية في ولاية نهر النيل مدرسة متكاملة تمتد جذورها إلى الحضارات النوبية والمروية التي زيّنت معابدها وجدرانها بفن راقٍ لا تزال آثاره ماثلة حتى اليوم.\n\nيواصل فنانو اليوم مسيرة الأسلاف بأسلوب معاصر يُراوح بين الواقعية والتجريد، مستلهمين من رموز النيل والبيئة المحيطة والوجه الإنساني السوداني معجمهم البصري الخاص.\n\n**التخصصات الفنية الموجودة في الولاية:**\nالرسم بالزيت والألوان المائية، النحت، فن الخط العربي، التصميم الجرافيكي، الفن الرقمي، وصناعة الخزف والفخار التراثي.",
-    activities:["المعرض التشكيلي السنوي","ورش الرسم الأسبوعية في نادي الفنون","برنامج الفن للأطفال","جلسة النقد الفني الشهرية"]
-  },
-  "art-music":{
-    title:"الموسيقى والغناء",image:"/assets/culture-poetry-hq.webp",icon:"🎵",
-    description:"لولاية نهر النيل حضور موسيقي بارز على الخريطة الفنية السودانية؛ فمن رحابها انطلق محمد وردي ليُصبح أسطورة الغناء السوداني، وتتالت الأصوات والألحان لتُثري المشهد الموسيقي جيلاً بعد جيل.\n\nتتنوع الألوان الموسيقية في الولاية بين الغناء الشعبي التراثي والموسيقى الكلاسيكية والأغنية الحديثة، ويشتغل العازفون على آلات متنوعة من العود والطنبور وآلات النفخ والإيقاع.\n\n**مبادرات دعم الموسيقى:**\nتُقدّم رابطة الفنانين والموسيقيين دعماً متواصلاً للمواهب الموسيقية الشابة، وتُنظّم حفلات وأمسيات دورية لإتاحة الفرصة للفنانين للظهور أمام الجمهور.",
-    activities:["الأمسيات الموسيقية الشهرية","مشروع توثيق الألحان التراثية","ورش تعليم العزف للناشئة","مسابقة الصوت الذهبي السنوية"]
-  },
-  "art-theater":{
-    title:"المسرح والدراما",image:"/assets/culture-seminar-hq.webp",icon:"🎭",
-    description:"المسرح في ولاية نهر النيل فضاء فني حيّ يُعالج قضايا المجتمع ويُحكي تاريخ الإنسان بأسلوب درامي يصل إلى القلوب. حمل فرق المسرح المحلية شعلة الإبداع المسرحي على مدى عقود.\n\nمن العروض الكلاسيكية المستلهمة من التراث إلى المسرحيات الاجتماعية التي تتناول هموم الحياة اليومية، يقدم مسرح الولاية محتوى ثرياً يجمع المتعة بالقيمة.\n\n**أنماط المسرح المتاحة:**\nالمسرح الاجتماعي، المسرح التراثي الاستعراضي، مسرح الطفل، المسرح الوثائقي، والعروض الشعرية الأدائية.",
-    activities:["العرض المسرحي الشهري","مسرح الشارع في الأعياد الوطنية","ورشة الإلقاء والتمثيل للشباب","مهرجان المسرح الصغير للأطفال"]
-  },
-  "art-photo":{
-    title:"التصوير الفوتوغرافي",image:"/assets/culture-folk-hq.webp",icon:"📷",
-    description:"التصوير الفوتوغرافي في ولاية نهر النيل مغامرة بصرية لا تنتهي؛ فكل زاوية في هذه الأرض تحكي قصة — من ضفاف النيل الهادئ إلى صخب المدينة، ومن وجوه العجائز الحكيمة إلى بسمات الأطفال البريئة.\n\nيُوثّق المصورون الفوتوغرافيون في الولاية التراث المعماري والبيئة الطبيعية والحياة اليومية بعيون فنية مُدرَّبة، مُسهمين في بناء أرشيف بصري لا يُقدَّر لهذه الأرض وناسها.\n\n**فرص التصوير في الولاية:**\nالمواقع الأثرية بالمناطق النوبية، مشاهد الصيد على النيل، الأسواق الشعبية، الفعاليات الثقافية، وطبيعة الصحراء والأودية.",
-    activities:["معرض الصورة الشهري","رحلات تصوير ميدانية","ورشة التصوير الاحترافي","مسابقة الصورة المُعبِّرة السنوية"]
-  }
-};
-
 function CultureArtDetailPage({slug}:{slug?:string}){
-  const item = slug ? ART_DETAIL[slug] : null;
-  if(!item) return <div style={{padding:"6rem 1rem",textAlign:"center"}}><h2 style={{color:"#dc2626"}}>الصفحة غير موجودة</h2><a href="/culture" style={{color:"#2563eb"}}>العودة للثقافة</a></div>;
+  type ArtRow={id:string;slug:string;title:string;icon:string;image_url:string;description:string;activities:string;published:boolean};
+  const [item,setItem]=useState<ArtRow|null>(null);
+  const [loading,setLoading]=useState(true);
+  useEffect(()=>{
+    if(!slug){setLoading(false);return;}
+    supabase.from("culture_art_categories").select("*").eq("slug",slug).maybeSingle().then(({data})=>{setItem(data as ArtRow|null);setLoading(false);});
+  },[slug]);
+  if(loading)return(<div style={{minHeight:"60vh",display:"flex",alignItems:"center",justifyContent:"center"}}><div style={{textAlign:"center",color:"#64748b"}}><div style={{width:40,height:40,border:"3px solid #0e7490",borderTopColor:"transparent",borderRadius:"50%",animation:"spin 0.8s linear infinite",margin:"0 auto 1rem"}}/><p>جاري التحميل...</p></div></div>);
+  if(!item)return(<div style={{minHeight:"60vh",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:"1rem"}}><h2 style={{color:"#0f172a"}}>الصفحة غير موجودة</h2><a href="/culture" style={{background:"#0e7490",color:"#fff",padding:"0.6rem 1.5rem",borderRadius:"0.5rem",textDecoration:"none",fontWeight:600}}>العودة للثقافة</a></div>);
+  const acts=(item.activities||'').split(',').map(s=>s.trim()).filter(Boolean);
   return(
-    <div dir="rtl">
-      <div className="detail-hero-img"><img src={item.image} alt={item.title}/></div>
-      <article className="detail-article page-width">
-        <span className="news-cat" style={{background:"#0e7490",fontSize:"1.4rem"}}>{item.icon}</span>
-        <h1>{item.title}</h1>
-        <div className="detail-body" dangerouslySetInnerHTML={{__html:item.description.replace(/\n/g,"<br/>")}}/>
-        {item.activities.length>0&&<div style={{marginTop:"2rem",padding:"1.5rem",background:"#f0fdf4",borderRadius:".75rem",border:"1px solid #bbf7d0"}}>
-          <h3 style={{color:"#166534",marginBottom:"1rem"}}>الفعاليات والأنشطة</h3>
-          <ul style={{listStyle:"none",padding:0,display:"flex",flexDirection:"column",gap:".5rem"}}>
-            {item.activities.map(a=><li key={a} style={{display:"flex",alignItems:"center",gap:".5rem",color:"#15803d"}}>◈ {a}</li>)}
-          </ul>
+    <div dir="rtl" style={{background:"#f8fafc",minHeight:"100vh"}}>
+      <div style={{position:"relative",height:"400px",overflow:"hidden"}}>
+        {item.image_url?<img src={item.image_url} alt={item.title} style={{width:"100%",height:"100%",objectFit:"cover"}}/>:<div style={{width:"100%",height:"100%",background:"linear-gradient(135deg,#134e4a,#0e7490)"}}/>}
+        <div style={{position:"absolute",inset:0,background:"linear-gradient(to top,rgba(0,0,0,0.75),rgba(0,0,0,0.15))"}}/>
+        <div style={{position:"absolute",inset:0,display:"flex",flexDirection:"column",justifyContent:"flex-end",padding:"2.5rem",maxWidth:"1200px",margin:"0 auto",left:0,right:0}}>
+          <span style={{fontSize:"2.5rem",marginBottom:"0.5rem"}}>{item.icon}</span>
+          <span style={{display:"inline-flex",background:"#0e7490",color:"#fff",padding:"0.3rem 0.9rem",borderRadius:"9999px",fontSize:"0.78rem",fontWeight:700,marginBottom:"0.75rem",width:"fit-content"}}>فن وثقافة</span>
+          <h1 style={{color:"#fff",fontSize:"clamp(1.6rem,4vw,2.4rem)",fontWeight:800,margin:0,textShadow:"0 2px 8px rgba(0,0,0,0.4)"}}>{item.title}</h1>
+        </div>
+      </div>
+      <div style={{maxWidth:"1200px",margin:"0 auto",padding:"2.5rem 1.5rem",display:"grid",gridTemplateColumns:"1fr 280px",gap:"2rem",alignItems:"start"}} className="soc-svc-grid">
+        <div>
+          <div style={{background:"#fff",borderRadius:"1rem",padding:"2rem",boxShadow:"0 1px 6px rgba(0,0,0,0.06)",marginBottom:"1.5rem"}}>
+            <div style={{color:"#374151",lineHeight:1.9,fontSize:"0.95rem"}} dangerouslySetInnerHTML={{__html:item.description.replace(/\n/g,"<br/>")}}/>
+          </div>
+          <a href="/culture" style={{display:"inline-flex",alignItems:"center",gap:"0.5rem",color:"#0e7490",fontWeight:600,textDecoration:"none",fontSize:"0.9rem"}}>
+            <ArrowLeft size={16}/> العودة للثقافة
+          </a>
+        </div>
+        {acts.length>0&&<div style={{background:"#fff",borderRadius:"1rem",padding:"1.75rem",boxShadow:"0 4px 20px rgba(0,0,0,0.1)",border:"1px solid #e2e8f0"}}>
+          <h3 style={{fontSize:"0.95rem",fontWeight:700,color:"#0f172a",marginBottom:"1.25rem",paddingBottom:"0.75rem",borderBottom:"2px solid #ecfeff"}}>الفعاليات والأنشطة</h3>
+          {acts.map(a=><div key={a} style={{display:"flex",alignItems:"flex-start",gap:"0.5rem",marginBottom:"0.625rem"}}><span style={{color:"#0e7490",fontWeight:700,flexShrink:0}}>◈</span><span style={{fontSize:"0.85rem",color:"#374151",lineHeight:1.5}}>{a}</span></div>)}
         </div>}
-        <a href="/culture" className="detail-back" style={{display:"block",marginTop:"2rem"}}>← العودة للثقافة</a>
-      </article>
+      </div>
     </div>
   );
 }
 
 function CultureAssociationDetailPage({slug}:{slug?:string}){
-  const [item,setItem]=useState<{id:string;title:string;place:string;icon:string;description:string;founded_year:string;members_count:string;email:string;phone:string}|null>(null);
+  type AssocRow={id:string;title:string;place:string;icon:string;description:string;founded_year:string;members_count:string;email:string;phone:string;image_url:string};
+  const [item,setItem]=useState<AssocRow|null>(null);
   const [loading,setLoading]=useState(true);
   useEffect(()=>{
-    if(!slug)return;
-    supabase.from("culture_associations").select("*").eq("slug",slug).maybeSingle().then(({data})=>{setItem(data);setLoading(false);});
+    if(!slug){setLoading(false);return;}
+    supabase.from("culture_associations").select("*").eq("slug",slug).maybeSingle().then(({data})=>{setItem(data as AssocRow|null);setLoading(false);});
   },[slug]);
-  if(loading)return <div style={{padding:"6rem 1rem",textAlign:"center",color:"#64748b"}}>جاري التحميل...</div>;
-  if(!item)return <div style={{padding:"6rem 1rem",textAlign:"center"}}><h2 style={{color:"#dc2626"}}>الجمعية غير موجودة</h2><a href="/culture" style={{color:"#2563eb"}}>العودة للثقافة</a></div>;
+  if(loading)return(<div style={{minHeight:"60vh",display:"flex",alignItems:"center",justifyContent:"center"}}><div style={{textAlign:"center",color:"#64748b"}}><div style={{width:40,height:40,border:"3px solid #0e7490",borderTopColor:"transparent",borderRadius:"50%",animation:"spin 0.8s linear infinite",margin:"0 auto 1rem"}}/><p>جاري التحميل...</p></div></div>);
+  if(!item)return(<div style={{minHeight:"60vh",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:"1rem"}}><h2 style={{color:"#0f172a"}}>الجمعية غير موجودة</h2><a href="/culture" style={{background:"#0e7490",color:"#fff",padding:"0.6rem 1.5rem",borderRadius:"0.5rem",textDecoration:"none",fontWeight:600}}>العودة للثقافة</a></div>);
   return(
-    <div dir="rtl">
-      <article className="detail-article page-width" style={{paddingTop:"4rem"}}>
-        <div style={{width:"4rem",height:"4rem",background:"#0e7490",borderRadius:"50%",display:"flex",alignItems:"center",justifyContent:"center",marginBottom:"1rem"}}>
-          <DynIcon name={item.icon} fallback={Landmark} style={{width:"1.75rem",height:"1.75rem",color:"#fff"}}/>
+    <div dir="rtl" style={{background:"#f8fafc",minHeight:"100vh"}}>
+      <div style={{position:"relative",height:"380px",overflow:"hidden"}}>
+        {item.image_url?<img src={item.image_url} alt={item.title} style={{width:"100%",height:"100%",objectFit:"cover"}}/>:<div style={{width:"100%",height:"100%",background:"linear-gradient(135deg,#134e4a,#0e7490,#0891b2)"}}/>}
+        <div style={{position:"absolute",inset:0,background:"linear-gradient(to top,rgba(0,0,0,0.78),rgba(0,0,0,0.2))"}}/>
+        <div style={{position:"absolute",inset:0,display:"flex",flexDirection:"column",justifyContent:"flex-end",padding:"2.5rem",maxWidth:"1200px",margin:"0 auto",left:0,right:0}}>
+          <div style={{display:"flex",alignItems:"center",gap:"0.75rem",marginBottom:"0.75rem"}}>
+            <span style={{width:52,height:52,background:"rgba(255,255,255,0.15)",backdropFilter:"blur(8px)",borderRadius:"0.875rem",display:"flex",alignItems:"center",justifyContent:"center",border:"1px solid rgba(255,255,255,0.25)"}}><DynIcon name={item.icon} fallback={Landmark} style={{width:"1.6rem",height:"1.6rem",color:"#fff"}}/></span>
+            <span style={{background:"#0e7490",color:"#fff",padding:"0.3rem 0.9rem",borderRadius:"9999px",fontSize:"0.78rem",fontWeight:700}}>جمعية ثقافية</span>
+          </div>
+          <h1 style={{color:"#fff",fontSize:"clamp(1.6rem,4vw,2.2rem)",fontWeight:800,margin:"0 0 0.4rem",textShadow:"0 2px 8px rgba(0,0,0,0.4)"}}>{item.title}</h1>
+          <div style={{display:"flex",flexWrap:"wrap",gap:"1rem"}}>
+            <span style={{color:"rgba(255,255,255,0.8)",fontSize:"0.85rem",display:"flex",alignItems:"center",gap:"0.3rem"}}><MapPin size={14}/>{item.place}</span>
+            {item.founded_year&&<span style={{color:"rgba(255,255,255,0.8)",fontSize:"0.85rem",display:"flex",alignItems:"center",gap:"0.3rem"}}><Calendar size={14}/>تأسست {item.founded_year}</span>}
+            {item.members_count&&<span style={{color:"rgba(255,255,255,0.8)",fontSize:"0.85rem",display:"flex",alignItems:"center",gap:"0.3rem"}}><UsersRound size={14}/>{item.members_count}</span>}
+          </div>
         </div>
-        <h1>{item.title}</h1>
-        <div style={{display:"flex",flexWrap:"wrap",gap:"1rem",marginBottom:"1.5rem"}}>
-          <span style={{display:"flex",alignItems:"center",gap:".4rem",color:"#64748b",fontSize:".9rem"}}><MapPin size={15}/>{item.place}</span>
-          {item.founded_year&&<span style={{display:"flex",alignItems:"center",gap:".4rem",color:"#64748b",fontSize:".9rem"}}><Calendar size={15}/>تأسست {item.founded_year}</span>}
-          {item.members_count&&<span style={{display:"flex",alignItems:"center",gap:".4rem",color:"#64748b",fontSize:".9rem"}}><UsersRound size={15}/>{item.members_count}</span>}
+      </div>
+      <div style={{maxWidth:"1200px",margin:"0 auto",padding:"2.5rem 1.5rem",display:"grid",gridTemplateColumns:"1fr 300px",gap:"2rem",alignItems:"start"}} className="soc-svc-grid">
+        <div>
+          {item.description&&<div style={{background:"#fff",borderRadius:"1rem",padding:"2rem",boxShadow:"0 1px 6px rgba(0,0,0,0.06)",marginBottom:"1.5rem"}}>
+            <h2 style={{fontSize:"1.05rem",fontWeight:700,color:"#0f172a",marginBottom:"1.25rem",paddingBottom:"0.75rem",borderBottom:"2px solid #ecfeff",display:"flex",alignItems:"center",gap:"0.5rem"}}><span style={{color:"#0e7490"}}>◈</span> عن الجمعية</h2>
+            <div style={{color:"#374151",lineHeight:1.9,fontSize:"0.95rem"}} dangerouslySetInnerHTML={{__html:item.description.replace(/\n/g,"<br/>")}}/>  
+          </div>}
+          <a href="/culture" style={{display:"inline-flex",alignItems:"center",gap:"0.5rem",color:"#0e7490",fontWeight:600,textDecoration:"none",fontSize:"0.9rem"}}><ArrowLeft size={16}/> العودة للثقافة</a>
         </div>
-        {item.description&&<div className="detail-body" dangerouslySetInnerHTML={{__html:item.description.replace(/\n/g,"<br/>")}}/>}
-        {(item.email||item.phone)&&<div style={{marginTop:"2rem",padding:"1.5rem",background:"#f0f9ff",borderRadius:".75rem",border:"1px solid #bae6fd"}}>
-          <h3 style={{color:"#0369a1",marginBottom:"1rem"}}>التواصل مع الجمعية</h3>
-          {item.email&&<p style={{display:"flex",alignItems:"center",gap:".5rem",color:"#0c4a6e",marginBottom:".5rem"}}><Mail size={16}/>{item.email}</p>}
-          {item.phone&&<p style={{display:"flex",alignItems:"center",gap:".5rem",color:"#0c4a6e"}}><Phone size={16}/>{item.phone}</p>}
+        {(item.email||item.phone)&&<div style={{background:"#fff",borderRadius:"1rem",padding:"1.75rem",boxShadow:"0 4px 20px rgba(0,0,0,0.1)",border:"1px solid #e2e8f0"}}>
+          <h3 style={{fontSize:"0.95rem",fontWeight:700,color:"#0f172a",marginBottom:"1.25rem"}}>التواصل مع الجمعية</h3>
+          {item.email&&<a href={`mailto:${item.email}`} style={{display:"flex",alignItems:"center",gap:"0.5rem",color:"#0e7490",textDecoration:"none",marginBottom:"0.75rem",fontSize:"0.9rem"}}><Mail size={16}/>{item.email}</a>}
+          {item.phone&&<a href={`tel:${item.phone}`} style={{display:"flex",alignItems:"center",gap:"0.5rem",color:"#0e7490",textDecoration:"none",fontSize:"0.9rem"}}><Phone size={16}/>{item.phone}</a>}
         </div>}
-        <a href="/culture" className="detail-back" style={{display:"block",marginTop:"2rem"}}>← العودة للثقافة</a>
-      </article>
+      </div>
     </div>
   );
 }
@@ -2050,21 +2053,31 @@ function CultureArtistDetailPage({slug}:{slug?:string}){
   const [item,setItem]=useState<{id:string;name:string;image_url:string;role:string;bio:string}|null>(null);
   const [loading,setLoading]=useState(true);
   useEffect(()=>{
-    if(!slug)return;
+    if(!slug){setLoading(false);return;}
     supabase.from("culture_artists").select("*").eq("slug",slug).maybeSingle().then(({data})=>{setItem(data);setLoading(false);});
   },[slug]);
-  if(loading)return <div style={{padding:"6rem 1rem",textAlign:"center",color:"#64748b"}}>جاري التحميل...</div>;
-  if(!item)return <div style={{padding:"6rem 1rem",textAlign:"center"}}><h2 style={{color:"#dc2626"}}>الفنان غير موجود</h2><a href="/culture" style={{color:"#2563eb"}}>العودة للثقافة</a></div>;
+  if(loading)return(<div style={{minHeight:"60vh",display:"flex",alignItems:"center",justifyContent:"center"}}><div style={{textAlign:"center",color:"#64748b"}}><div style={{width:40,height:40,border:"3px solid #0e7490",borderTopColor:"transparent",borderRadius:"50%",animation:"spin 0.8s linear infinite",margin:"0 auto 1rem"}}/><p>جاري التحميل...</p></div></div>);
+  if(!item)return(<div style={{minHeight:"60vh",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:"1rem"}}><h2 style={{color:"#0f172a"}}>الفنان غير موجود</h2><a href="/culture" style={{background:"#0e7490",color:"#fff",padding:"0.6rem 1.5rem",borderRadius:"0.5rem",textDecoration:"none",fontWeight:600}}>العودة للثقافة</a></div>);
   return(
-    <div dir="rtl">
-      <article className="detail-article page-width" style={{paddingTop:"3rem"}}>
-        <div style={{display:"flex",gap:"2rem",alignItems:"flex-start",flexWrap:"wrap",marginBottom:"2rem"}}>
-          {item.image_url&&<img src={item.image_url} alt={item.name} style={{width:160,height:160,borderRadius:"50%",objectFit:"cover",flexShrink:0}}/>}
-          <div><h1 style={{margin:"0 0 .5rem"}}>{item.name}</h1><p style={{color:"#64748b",fontSize:"1.1rem",margin:0}}>{item.role}</p></div>
+    <div dir="rtl" style={{background:"#f8fafc",minHeight:"100vh"}}>
+      {/* ── Hero full-width ── */}
+      <div style={{position:"relative",height:"420px",overflow:"hidden"}}>
+        {item.image_url?<img src={item.image_url} alt={item.name} style={{width:"100%",height:"100%",objectFit:"cover",objectPosition:"top"}}/>:<div style={{width:"100%",height:"100%",background:"linear-gradient(135deg,#134e4a,#0e7490)"}}/>}
+        <div style={{position:"absolute",inset:0,background:"linear-gradient(to top,rgba(0,0,0,0.82) 0%,rgba(0,0,0,0.3) 55%,transparent 100%)"}}/>
+        <div style={{position:"absolute",inset:0,display:"flex",flexDirection:"column",justifyContent:"flex-end",padding:"2.5rem",maxWidth:"1200px",margin:"0 auto",left:0,right:0}}>
+          <span style={{display:"inline-block",background:"#0e7490",color:"#fff",padding:"0.3rem 0.9rem",borderRadius:"9999px",fontSize:"0.78rem",fontWeight:700,marginBottom:"0.75rem",width:"fit-content"}}>فنان وثقافة</span>
+          <h1 style={{color:"#fff",fontSize:"clamp(1.8rem,4vw,2.6rem)",fontWeight:800,margin:"0 0 0.3rem",textShadow:"0 2px 8px rgba(0,0,0,0.4)"}}>{item.name}</h1>
+          <p style={{color:"rgba(255,255,255,0.75)",fontSize:"1.05rem",margin:0}}>{item.role}</p>
         </div>
-        {item.bio&&<div className="detail-body" dangerouslySetInnerHTML={{__html:item.bio.replace(/\n/g,"<br/>")}}/>}
-        <a href="/culture" className="detail-back">← العودة للثقافة</a>
-      </article>
+      </div>
+      {/* ── Bio ── */}
+      <div style={{maxWidth:"900px",margin:"0 auto",padding:"2.5rem 1.5rem"}}>
+        {item.bio&&<div style={{background:"#fff",borderRadius:"1rem",padding:"2rem",boxShadow:"0 1px 6px rgba(0,0,0,0.06)",marginBottom:"1.5rem"}}>
+          <h2 style={{fontSize:"1.05rem",fontWeight:700,color:"#0f172a",marginBottom:"1.25rem",paddingBottom:"0.75rem",borderBottom:"2px solid #ecfeff",display:"flex",alignItems:"center",gap:"0.5rem"}}><span style={{color:"#0e7490"}}>◈</span> السيرة الذاتية</h2>
+          <div style={{color:"#374151",lineHeight:1.9,fontSize:"0.95rem"}} dangerouslySetInnerHTML={{__html:item.bio.replace(/\n/g,"<br/>")}}/>  
+        </div>}
+        <a href="/culture" style={{display:"inline-flex",alignItems:"center",gap:"0.5rem",color:"#0e7490",fontWeight:600,textDecoration:"none",fontSize:"0.9rem"}}><ArrowLeft size={16}/> العودة للثقافة</a>
+      </div>
     </div>
   );
 }

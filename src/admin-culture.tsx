@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "./supabase";
+import { Pencil, Trash2 } from "lucide-react";
 import type {
   CultureEvent,
   CultureNews,
@@ -17,6 +18,8 @@ import {
   InitiativeEditor,
   ContestEditor,
   CultureMediaEditor,
+  ArtCategoryEditor,
+  type ArtCategory,
 } from "./culture-editor";
 
 type CultureTab =
@@ -26,7 +29,8 @@ type CultureTab =
   | "associations"
   | "initiatives"
   | "contests"
-  | "media";
+  | "media"
+  | "art_categories";
 
 function formatDate(d: string | null) {
   if (!d) return "—";
@@ -653,6 +657,7 @@ export default function CulturePanel() {
   const [initiatives, setInitiatives] = useState<CultureInitiative[]>([]);
   const [contests, setContests] = useState<CultureContest[]>([]);
   const [media, setMedia] = useState<CultureMedia[]>([]);
+  const [artCategories, setArtCategories] = useState<ArtCategory[]>([]);
 
   // editor state — undefined = closed, null = new item, object = edit item
   const [editEvent, setEditEvent] = useState<Partial<CultureEvent> | null | undefined>(undefined);
@@ -662,6 +667,7 @@ export default function CulturePanel() {
   const [editInitiative, setEditInitiative] = useState<Partial<CultureInitiative> | null | undefined>(undefined);
   const [editContest, setEditContest] = useState<Partial<CultureContest> | null | undefined>(undefined);
   const [editMedia, setEditMedia] = useState<Partial<CultureMedia> | null | undefined>(undefined);
+  const [editArtCategory, setEditArtCategory] = useState<Partial<ArtCategory> | null | undefined>(undefined);
 
   const [confirmId, setConfirmId] = useState<{ table: string; id: string } | null>(null);
 
@@ -694,6 +700,10 @@ export default function CulturePanel() {
       const { data } = await supabase.from("culture_media").select("*").order("sort_order");
       setMedia(data ?? []);
     }
+    if (t === "art_categories") {
+      const { data } = await supabase.from("culture_art_categories").select("*").order("sort_order");
+      setArtCategories((data ?? []) as ArtCategory[]);
+    }
   };
 
   useEffect(() => {
@@ -715,6 +725,7 @@ export default function CulturePanel() {
     { key: "initiatives", label: "المبادرات" },
     { key: "contests", label: "المسابقات" },
     { key: "media", label: "الوسائط" },
+    { key: "art_categories", label: "مجالات الفنون" },
   ];
 
   const tabConfig: Record<CultureTab, { title: string; addLabel: string; count: number; onAdd: () => void }> = {
@@ -725,6 +736,7 @@ export default function CulturePanel() {
     initiatives: { title: "المبادرات الثقافية", addLabel: "إضافة مبادرة جديدة", count: initiatives.length, onAdd: () => setEditInitiative(null) },
     contests: { title: "المسابقات الثقافية", addLabel: "إضافة مسابقة جديدة", count: contests.length, onAdd: () => setEditContest(null) },
     media: { title: "الوسائط الثقافية", addLabel: "إضافة وسيط جديد", count: media.length, onAdd: () => setEditMedia(null) },
+    art_categories: { title: "مجالات الفنون", addLabel: "إضافة مجال فني جديد", count: artCategories.length, onAdd: () => setEditArtCategory(null) },
   };
 
   const cfg = tabConfig[tab];
@@ -809,6 +821,13 @@ export default function CulturePanel() {
             onDelete={(id) => setConfirmId({ table: "culture_media", id })}
           />
         )}
+        {tab === "art_categories" && (
+          <ArtCategoriesTab
+            rows={artCategories}
+            onEdit={(r) => setEditArtCategory(r)}
+            onDelete={(id) => setConfirmId({ table: "culture_art_categories", id })}
+          />
+        )}
       </div>
 
       {/* Editors (drawers) — key forces remount when switching items */}
@@ -876,6 +895,16 @@ export default function CulturePanel() {
         />
       )}
 
+      {editArtCategory !== undefined && (
+        <ArtCategoryEditor
+          key={editArtCategory?.id || "new-artcat"}
+          item={editArtCategory}
+          open={true}
+          onSave={() => { setEditArtCategory(undefined); load("art_categories"); }}
+          onClose={() => setEditArtCategory(undefined)}
+        />
+      )}
+
       {confirmId && (
         <Confirm
           message="هل أنت متأكد من الحذف؟ لا يمكن التراجع."
@@ -883,6 +912,43 @@ export default function CulturePanel() {
           onCancel={() => setConfirmId(null)}
         />
       )}
+    </div>
+  );
+}
+
+// ── ArtCategoriesTab ────────────────────────────────────────────────────────
+function ArtCategoriesTab({ rows, onEdit, onDelete }: {
+  rows: ArtCategory[];
+  onEdit: (r: ArtCategory) => void;
+  onDelete: (id: string) => void;
+}) {
+  if (!rows.length) return (
+    <div className="inv-empty">
+      <span style={{ fontSize: "2rem" }}>🎭</span>
+      <p>لا توجد مجالات فنية بعد</p>
+    </div>
+  );
+  return (
+    <div className="inv-card-grid">
+      {rows.map((row) => (
+        <article key={row.id} className="inv-card">
+          {row.image_url && <img src={row.image_url} alt={row.title} className="inv-card-img" />}
+          {!row.image_url && <div style={{ height: 100, background: "linear-gradient(135deg,#134e4a,#0e7490)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "2.5rem" }}>{row.icon || "🎨"}</div>}
+          <div className="inv-card-body">
+            <div style={{ display: "flex", gap: "0.4rem", marginBottom: "0.5rem", flexWrap: "wrap" }}>
+              {row.icon && <span style={{ fontSize: "1.2rem" }}>{row.icon}</span>}
+              {!row.published && <span className="inv-badge inv-badge--warn">مسودة</span>}
+              {row.slug && <a href={`/culture/${row.slug}`} target="_blank" rel="noopener noreferrer" style={{ background: "#ecfeff", color: "#0e7490", padding: "0.2rem 0.6rem", borderRadius: "9999px", fontSize: "0.7rem", fontWeight: 600, textDecoration: "none", border: "1px solid #a5f3fc" }}>↗ معاينة</a>}
+            </div>
+            <h4 style={{ fontSize: "0.95rem", fontWeight: 700, color: "#0f172a", marginBottom: "0.35rem" }}>{row.title}</h4>
+            {row.description && <p style={{ fontSize: "0.78rem", color: "#64748b", lineHeight: 1.4, marginBottom: "0.625rem", WebkitLineClamp: 2, display: "-webkit-box", WebkitBoxOrient: "vertical", overflow: "hidden" }}>{row.description.slice(0, 80)}...</p>}
+            <div style={{ display: "flex", justifyContent: "flex-end", gap: "0.4rem" }}>
+              <button type="button" className="inv-icon-btn" onClick={() => onEdit(row)} title="تعديل"><Pencil size={14} /></button>
+              <button type="button" className="inv-icon-btn inv-icon-btn--danger" onClick={() => onDelete(row.id)} title="حذف"><Trash2 size={14} /></button>
+            </div>
+          </div>
+        </article>
+      ))}
     </div>
   );
 }

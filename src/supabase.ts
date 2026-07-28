@@ -199,6 +199,7 @@ export type CultureAssociation = {
   email: string;
   phone: string;
   members_count: string;
+  image_url: string;
   published: boolean;
   sort_order: number;
   created_at: string;
