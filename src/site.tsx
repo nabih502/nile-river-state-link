@@ -1,6 +1,6 @@
-import { FormEvent, useEffect, useRef, useState } from "react";
+import { FormEvent, useCallback, useEffect, useRef, useState } from "react";
 import { supabase } from "./supabase";
-import { Aperture, ArrowLeft, Award, BadgeCheck, BadgePercent, Banknote, BookOpen, BriefcaseBusiness, Building2, Calendar, CalendarDays, Camera, ChartNoAxesCombined, ChartPie, Check, ChevronLeft, CircleAlert, CircleCheckBig, Circle as CircleHelp, Clock3, CreditCard, Crown, Eye, Factory, Feather, FileImage, FileText, FileUp, Gem, Gift, Globe as Globe2, GraduationCap, HandHeart, Handshake, Headphones, HeartHandshake, HeartPulse, Landmark, LayoutDashboard, LayoutGrid, LibraryBig, Lightbulb, Menu, Megaphone, MonitorCheck, Music2, Network, Newspaper, MessageCircle, Info, LockKeyhole, Mail, MapPin, Paperclip, Percent, Phone, QrCode, ReceiptText, Palette, Pill, CirclePlay as PlayCircle, RefreshCw, ScanFace, Search, Settings2, Share2, Shield, ShieldCheck, Stethoscope, Send, ShoppingCart, Sparkles, Sprout, Store, Tags, Target, TrendingUp, Trophy, Truck, Upload, UserCheck, UserPlus, UserRound, UsersRound, Video, WalletCards, X } from "lucide-react";
+import { Aperture, ArrowLeft, Award, BadgeCheck, BadgePercent, Banknote, BookOpen, BriefcaseBusiness, Building2, Calendar, CalendarDays, Camera, ChartNoAxesCombined, ChartPie, Check, ChevronLeft, ChevronRight, CircleAlert, CircleCheckBig, Circle as CircleHelp, Clock3, CreditCard, Crown, Eye, Factory, Feather, FileImage, FileText, FileUp, Gem, Gift, Globe as Globe2, GraduationCap, HandHeart, Handshake, Headphones, HeartHandshake, HeartPulse, Landmark, LayoutDashboard, LayoutGrid, LibraryBig, Lightbulb, Menu, Megaphone, MonitorCheck, Music2, Network, Newspaper, MessageCircle, Info, LockKeyhole, Mail, MapPin, Paperclip, Percent, Phone, QrCode, ReceiptText, Palette, Pill, CirclePlay as PlayCircle, RefreshCw, ScanFace, Search, Settings2, Share2, Shield, ShieldCheck, Stethoscope, Send, ShoppingCart, Sparkles, Sprout, Store, Tags, Target, TrendingUp, Trophy, Truck, Upload, UserCheck, UserPlus, UserRound, UsersRound, Video, WalletCards, X } from "lucide-react";
 
 type InternalKey = "services" | "initiatives" | "news" | "library";
 type PageKey = "home" | "about" | "social" | "education" | "health" | "investment" | "culture" | InternalKey | "membership" | "register" | "photo" | "payment" | "success" | "contact" | "events" | "news-detail" | "events-detail" | "inv-sector" | "inv-opportunity" | "culture-event-detail" | "culture-news-detail" | "culture-artist-detail" | "culture-initiative-detail" | "culture-media-detail" | "culture-art-detail" | "culture-association-detail" | "social-initiative-detail" | "social-service-detail";
@@ -1598,28 +1598,139 @@ function Contact(){
 
 // ─── News list page ──────────────────────────────────────────────────────────
 function NewsListPage() {
-  const [items, setItems] = useState<{id:string;title:string;slug:string;excerpt:string;image_url:string;category:string;published_at:string|null;created_at:string}[]>([]);
+  type NewsItem = {id:string;title:string;slug:string;excerpt:string;image_url:string;category:string;published_at:string|null;created_at:string};
+  const [items, setItems] = useState<NewsItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [slide, setSlide] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const timerRef = useRef<ReturnType<typeof setInterval>|null>(null);
+
   useEffect(() => {
     supabase.from("news").select("id,title,slug,excerpt,image_url,category,published_at,created_at").eq("published",true).order("published_at",{ascending:false}).then(({data})=>{setItems(data??[]);setLoading(false);});
   }, []);
+
+  const heroes = items.filter(i=>i.image_url).slice(0,5);
+  const ticker = items.slice(0,8);
+
+  const prev = useCallback(()=>setSlide(s=>(s-1+heroes.length)%heroes.length),[heroes.length]);
+  const next = useCallback(()=>setSlide(s=>(s+1)%heroes.length),[heroes.length]);
+
+  useEffect(()=>{
+    if(paused||heroes.length<2) return;
+    timerRef.current=setInterval(next,5500);
+    return ()=>{if(timerRef.current)clearInterval(timerRef.current);};
+  },[next,paused,heroes.length]);
+
+  const fmtDate=(d:string|null,c:string)=>new Date(d||c).toLocaleDateString("ar-SA",{year:"numeric",month:"long",day:"numeric"});
+
   return (
-    <div dir="rtl">
-      <section className="inner-hero" style={{background:"linear-gradient(135deg,#1e3a5f 0%,#2563eb 100%)"}}>
-        <div className="page-width"><h1>الأخبار</h1><p>آخر الأخبار والمستجدات من رابطة ولاية نهر النيل</p></div>
-      </section>
-      <section className="page-width" style={{padding:"3rem 1rem"}}>
-        {loading && <p style={{textAlign:"center",color:"#64748b"}}>جاري التحميل...</p>}
-        {!loading && items.length === 0 && <p style={{textAlign:"center",color:"#64748b"}}>لا توجد أخبار منشورة حالياً</p>}
+    <div dir="rtl" style={{background:"#f8fafc",minHeight:"100vh"}}>
+      {/* ── Hero Slider ── */}
+      {!loading && heroes.length>0 && (
+        <div style={{position:"relative",height:"520px",overflow:"hidden",background:"#0f172a"}}
+          onMouseEnter={()=>setPaused(true)} onMouseLeave={()=>setPaused(false)}>
+          {/* Slides */}
+          {heroes.map((item,i)=>(
+            <div key={item.id} style={{position:"absolute",inset:0,transition:"opacity 0.8s ease",opacity:i===slide?1:0,pointerEvents:i===slide?"auto":"none"}}>
+              <img src={item.image_url} alt={item.title} style={{width:"100%",height:"100%",objectFit:"cover"}}/>
+              <div style={{position:"absolute",inset:0,background:"linear-gradient(to top,rgba(0,0,0,0.9) 0%,rgba(0,0,0,0.5) 45%,rgba(0,0,0,0.05) 100%)"}}/>
+            </div>
+          ))}
+          {/* Content */}
+          {heroes[slide] && (
+            <div style={{position:"absolute",inset:0,display:"flex",flexDirection:"column",justifyContent:"flex-end",padding:"clamp(1.5rem,4vw,3rem)",maxWidth:"900px",animation:"fadeUp 0.6s ease"}}>
+              <span style={{display:"inline-flex",background:"#2563eb",color:"#fff",padding:"0.3rem 0.9rem",borderRadius:"9999px",fontSize:"0.78rem",fontWeight:700,marginBottom:"0.75rem",width:"fit-content",gap:"0.4rem",alignItems:"center"}}>
+                <Newspaper size={13}/> {heroes[slide].category||"أخبار"}
+              </span>
+              <h1 style={{color:"#fff",fontSize:"clamp(1.4rem,3.5vw,2.2rem)",fontWeight:800,margin:"0 0 0.75rem",lineHeight:1.3,textShadow:"0 2px 16px rgba(0,0,0,0.6)"}}>
+                {heroes[slide].title}
+              </h1>
+              {heroes[slide].excerpt && (
+                <p style={{color:"rgba(255,255,255,0.75)",fontSize:"0.9rem",lineHeight:1.65,margin:"0 0 1.25rem",maxWidth:"580px"}}>
+                  {heroes[slide].excerpt.slice(0,130)}...
+                </p>
+              )}
+              <div style={{display:"flex",alignItems:"center",gap:"1rem",flexWrap:"wrap"}}>
+                <a href={`/news/${heroes[slide].slug}`} style={{background:"#2563eb",color:"#fff",padding:"0.65rem 1.5rem",borderRadius:"0.5rem",textDecoration:"none",fontWeight:700,fontSize:"0.9rem",display:"flex",alignItems:"center",gap:"0.5rem"}}>
+                  اقرأ المزيد <ArrowLeft size={16}/>
+                </a>
+                <span style={{color:"rgba(255,255,255,0.55)",fontSize:"0.8rem",display:"flex",alignItems:"center",gap:"0.4rem"}}>
+                  <Calendar size={13}/>{fmtDate(heroes[slide].published_at,heroes[slide].created_at)}
+                </span>
+              </div>
+            </div>
+          )}
+          {/* Arrows */}
+          {heroes.length>1&&<>
+            <button onClick={next} style={{position:"absolute",top:"50%",left:"1.25rem",transform:"translateY(-50%)",background:"rgba(255,255,255,0.12)",backdropFilter:"blur(10px)",border:"1px solid rgba(255,255,255,0.22)",color:"#fff",width:44,height:44,borderRadius:"50%",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",transition:"background 0.2s"}}
+              onMouseEnter={e=>(e.currentTarget.style.background="rgba(255,255,255,0.25)")} onMouseLeave={e=>(e.currentTarget.style.background="rgba(255,255,255,0.12)")}>
+              <ChevronLeft size={20}/>
+            </button>
+            <button onClick={prev} style={{position:"absolute",top:"50%",right:"1.25rem",transform:"translateY(-50%)",background:"rgba(255,255,255,0.12)",backdropFilter:"blur(10px)",border:"1px solid rgba(255,255,255,0.22)",color:"#fff",width:44,height:44,borderRadius:"50%",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",transition:"background 0.2s"}}
+              onMouseEnter={e=>(e.currentTarget.style.background="rgba(255,255,255,0.25)")} onMouseLeave={e=>(e.currentTarget.style.background="rgba(255,255,255,0.12)")}>
+              <ChevronRight size={20}/>
+            </button>
+          </>}
+          {/* Dot nav */}
+          <div style={{position:"absolute",bottom:"1.25rem",left:"50%",transform:"translateX(-50%)",display:"flex",gap:"0.5rem",alignItems:"center"}}>
+            {heroes.map((_,i)=>(
+              <button key={i} onClick={()=>setSlide(i)} style={{width:i===slide?28:8,height:8,borderRadius:9999,background:i===slide?"#fff":"rgba(255,255,255,0.4)",border:"none",cursor:"pointer",padding:0,transition:"all 0.35s ease"}}/>
+            ))}
+          </div>
+          {/* Slide counter */}
+          <div style={{position:"absolute",top:"1.5rem",left:"1.5rem",background:"rgba(0,0,0,0.4)",backdropFilter:"blur(8px)",color:"rgba(255,255,255,0.8)",padding:"0.25rem 0.7rem",borderRadius:"9999px",fontSize:"0.75rem",fontWeight:600,fontVariantNumeric:"tabular-nums"}}>
+            {slide+1} / {heroes.length}
+          </div>
+          {/* Thumbnail strip */}
+          <div style={{position:"absolute",bottom:"1.25rem",right:"1.5rem",display:"flex",gap:"0.5rem"}}>
+            {heroes.map((h,i)=>i!==slide&&(
+              <button key={h.id} onClick={()=>setSlide(i)} style={{width:64,height:44,borderRadius:"0.375rem",overflow:"hidden",border:"2px solid rgba(255,255,255,0.3)",cursor:"pointer",padding:0,opacity:0.75,transition:"opacity 0.2s"}}
+                onMouseEnter={e=>(e.currentTarget.style.opacity="1")} onMouseLeave={e=>(e.currentTarget.style.opacity="0.75")}>
+                <img src={h.image_url} alt={h.title} style={{width:"100%",height:"100%",objectFit:"cover"}}/>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+      {loading && <div style={{height:520,display:"flex",alignItems:"center",justifyContent:"center",background:"#0f172a"}}><div style={{width:40,height:40,border:"3px solid #2563eb",borderTopColor:"transparent",borderRadius:"50%",animation:"spin 0.8s linear infinite"}}/></div>}
+
+      {/* ── Breaking news ticker ── */}
+      {ticker.length>0 && (
+        <div style={{background:"#1e3a5f",overflow:"hidden",display:"flex",alignItems:"stretch",boxShadow:"0 2px 8px rgba(0,0,0,0.15)"}}>
+          <div style={{background:"#dc2626",padding:"0.55rem 1.1rem",display:"flex",alignItems:"center",gap:"0.4rem",fontWeight:800,fontSize:"0.82rem",color:"#fff",flexShrink:0,whiteSpace:"nowrap",letterSpacing:"0.03em"}}>
+            <Megaphone size={14}/> عاجل
+          </div>
+          <div style={{overflow:"hidden",flex:1,display:"flex",alignItems:"center"}}>
+            <div style={{display:"inline-flex",gap:"3rem",padding:"0.55rem 0",animation:"tickerScroll 35s linear infinite",whiteSpace:"nowrap"}}>
+              {[...ticker,...ticker].map((item,i)=>(
+                <a key={i} href={`/news/${item.slug}`} style={{color:"rgba(255,255,255,0.88)",textDecoration:"none",fontSize:"0.84rem",fontWeight:500,display:"inline-flex",alignItems:"center",gap:"0.5rem",transition:"color 0.2s"}}
+                  onMouseEnter={e=>(e.currentTarget.style.color="#fff")} onMouseLeave={e=>(e.currentTarget.style.color="rgba(255,255,255,0.88)")}>
+                  <span style={{color:"#facc15",fontSize:"0.7rem"}}>◆</span>{item.title}
+                </a>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── News grid ── */}
+      <section style={{maxWidth:"1200px",margin:"0 auto",padding:"2.5rem 1.5rem"}}>
+        <div style={{display:"flex",alignItems:"center",gap:"0.75rem",marginBottom:"2rem"}}>
+          <div style={{width:4,height:32,background:"#2563eb",borderRadius:2}}/>
+          <h2 style={{fontSize:"1.25rem",fontWeight:800,color:"#0f172a",margin:0}}>جميع الأخبار</h2>
+          {items.length>0&&<span style={{background:"#eff6ff",color:"#2563eb",padding:"0.2rem 0.6rem",borderRadius:"9999px",fontSize:"0.75rem",fontWeight:700,marginRight:"auto"}}>{items.length} خبر</span>}
+        </div>
+        {loading && <p style={{textAlign:"center",color:"#64748b",padding:"3rem"}}>جاري التحميل...</p>}
+        {!loading && items.length===0 && <p style={{textAlign:"center",color:"#64748b",padding:"3rem"}}>لا توجد أخبار منشورة حالياً</p>}
         <div className="news-grid">
-          {items.map(item => (
+          {items.map(item=>(
             <a key={item.id} href={`/news/${item.slug}`} className="news-card">
-              {item.image_url ? <img src={item.image_url} alt={item.title} /> : <div className="news-card-placeholder" />}
+              {item.image_url ? <img src={item.image_url} alt={item.title}/> : <div className="news-card-placeholder"/>}
               <div className="news-card-body">
                 <span className="news-cat">{item.category}</span>
                 <h3>{item.title}</h3>
-                {item.excerpt && <p>{item.excerpt}</p>}
-                <small>{item.published_at ? new Date(item.published_at).toLocaleDateString("ar-SA") : new Date(item.created_at).toLocaleDateString("ar-SA")}</small>
+                {item.excerpt&&<p>{item.excerpt}</p>}
+                <small>{fmtDate(item.published_at,item.created_at)}</small>
               </div>
             </a>
           ))}
@@ -1823,28 +1934,126 @@ function NewsDetailPage({slug}:{slug?:string}) {
 
 // ─── Events list page ─────────────────────────────────────────────────────────
 function EventsListPage() {
-  const [items, setItems] = useState<{id:string;title:string;slug:string;excerpt:string;image_url:string;location:string;event_date:string}[]>([]);
+  type EventItem={id:string;title:string;slug:string;excerpt:string;image_url:string;location:string;event_date:string};
+  const [items, setItems] = useState<EventItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [slide, setSlide] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const timerRef = useRef<ReturnType<typeof setInterval>|null>(null);
+
   useEffect(() => {
     supabase.from("events").select("id,title,slug,excerpt,image_url,location,event_date").eq("published",true).order("event_date",{ascending:false}).then(({data})=>{setItems(data??[]);setLoading(false);});
   }, []);
+
+  const heroes = items.filter(i=>i.image_url).slice(0,5);
+  const next = useCallback(()=>setSlide(s=>(s+1)%heroes.length),[heroes.length]);
+  const prev = useCallback(()=>setSlide(s=>(s-1+heroes.length)%heroes.length),[heroes.length]);
+
+  useEffect(()=>{
+    if(paused||heroes.length<2) return;
+    timerRef.current=setInterval(next,6000);
+    return ()=>{if(timerRef.current)clearInterval(timerRef.current);};
+  },[next,paused,heroes.length]);
+
+  const fmtDate=(d:string)=>new Date(d).toLocaleDateString("ar-SA",{year:"numeric",month:"long",day:"numeric"});
+
   return (
-    <div dir="rtl">
-      <section className="inner-hero" style={{background:"linear-gradient(135deg,#14532d 0%,#16a34a 100%)"}}>
-        <div className="page-width"><h1>الفعاليات</h1><p>فعاليات وأنشطة رابطة ولاية نهر النيل</p></div>
-      </section>
-      <section className="page-width" style={{padding:"3rem 1rem"}}>
-        {loading && <p style={{textAlign:"center",color:"#64748b"}}>جاري التحميل...</p>}
-        {!loading && items.length === 0 && <p style={{textAlign:"center",color:"#64748b"}}>لا توجد فعاليات منشورة حالياً</p>}
+    <div dir="rtl" style={{background:"#f8fafc",minHeight:"100vh"}}>
+      {/* ── Events Hero Slider ── */}
+      {!loading && heroes.length>0 && (
+        <div style={{position:"relative",height:"540px",overflow:"hidden",background:"#0a2a1a"}}
+          onMouseEnter={()=>setPaused(true)} onMouseLeave={()=>setPaused(false)}>
+          {/* Slides */}
+          {heroes.map((item,i)=>(
+            <div key={item.id} style={{position:"absolute",inset:0,transition:"opacity 0.9s ease",opacity:i===slide?1:0,pointerEvents:i===slide?"auto":"none"}}>
+              <img src={item.image_url} alt={item.title} style={{width:"100%",height:"100%",objectFit:"cover"}}/>
+              <div style={{position:"absolute",inset:0,background:"linear-gradient(110deg,rgba(0,0,0,0.87) 0%,rgba(0,0,0,0.5) 50%,rgba(0,0,0,0.1) 100%)"}}/>
+            </div>
+          ))}
+          {/* Date strip decoration */}
+          {heroes[slide] && (
+            <div style={{position:"absolute",top:0,right:0,width:"3px",height:"100%",background:"linear-gradient(to bottom,transparent,#16a34a,transparent)"}}/>
+          )}
+          {/* Content */}
+          {heroes[slide] && (
+            <div style={{position:"absolute",inset:0,display:"flex",flexDirection:"column",justifyContent:"center",padding:"clamp(1.5rem,5vw,4rem)",maxWidth:"720px",animation:"fadeUp 0.6s ease"}}>
+              {/* Date badge */}
+              <div style={{display:"inline-flex",alignItems:"center",gap:"0.5rem",background:"rgba(22,163,74,0.85)",backdropFilter:"blur(8px)",color:"#fff",padding:"0.4rem 1rem",borderRadius:"9999px",fontSize:"0.8rem",fontWeight:700,marginBottom:"1.25rem",width:"fit-content",border:"1px solid rgba(255,255,255,0.2)"}}>
+                <CalendarDays size={14}/>
+                {fmtDate(heroes[slide].event_date)}
+              </div>
+              <span style={{display:"inline-flex",background:"rgba(255,255,255,0.1)",backdropFilter:"blur(8px)",color:"rgba(255,255,255,0.9)",padding:"0.25rem 0.85rem",borderRadius:"9999px",fontSize:"0.75rem",fontWeight:600,marginBottom:"0.85rem",width:"fit-content",border:"1px solid rgba(255,255,255,0.15)"}}>
+                فعالية قادمة
+              </span>
+              <h1 style={{color:"#fff",fontSize:"clamp(1.5rem,4vw,2.4rem)",fontWeight:900,margin:"0 0 0.85rem",lineHeight:1.25,textShadow:"0 2px 16px rgba(0,0,0,0.6)"}}>
+                {heroes[slide].title}
+              </h1>
+              {heroes[slide].excerpt && (
+                <p style={{color:"rgba(255,255,255,0.72)",fontSize:"0.92rem",lineHeight:1.65,margin:"0 0 0.75rem",maxWidth:"540px"}}>
+                  {heroes[slide].excerpt.slice(0,120)}...
+                </p>
+              )}
+              {heroes[slide].location && (
+                <div style={{display:"flex",alignItems:"center",gap:"0.4rem",color:"rgba(255,255,255,0.6)",fontSize:"0.82rem",marginBottom:"1.5rem"}}>
+                  <MapPin size={14}/>{heroes[slide].location}
+                </div>
+              )}
+              <a href={`/events/${heroes[slide].slug}`} style={{background:"#16a34a",color:"#fff",padding:"0.75rem 1.75rem",borderRadius:"0.6rem",textDecoration:"none",fontWeight:700,fontSize:"0.9rem",display:"flex",alignItems:"center",gap:"0.5rem",width:"fit-content",boxShadow:"0 4px 16px rgba(22,163,74,0.4)"}}>
+                تفاصيل الفعالية <ArrowLeft size={16}/>
+              </a>
+            </div>
+          )}
+          {/* Arrows */}
+          {heroes.length>1&&<>
+            <button onClick={next} style={{position:"absolute",top:"50%",left:"1.5rem",transform:"translateY(-50%)",background:"rgba(255,255,255,0.1)",backdropFilter:"blur(10px)",border:"1px solid rgba(255,255,255,0.2)",color:"#fff",width:46,height:46,borderRadius:"50%",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",transition:"all 0.2s"}}
+              onMouseEnter={e=>{e.currentTarget.style.background="rgba(22,163,74,0.7)";e.currentTarget.style.borderColor="rgba(22,163,74,0.8)";}} onMouseLeave={e=>{e.currentTarget.style.background="rgba(255,255,255,0.1)";e.currentTarget.style.borderColor="rgba(255,255,255,0.2)";}}>
+              <ChevronLeft size={20}/>
+            </button>
+            <button onClick={prev} style={{position:"absolute",top:"50%",right:"1.5rem",transform:"translateY(-50%)",background:"rgba(255,255,255,0.1)",backdropFilter:"blur(10px)",border:"1px solid rgba(255,255,255,0.2)",color:"#fff",width:46,height:46,borderRadius:"50%",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",transition:"all 0.2s"}}
+              onMouseEnter={e=>{e.currentTarget.style.background="rgba(22,163,74,0.7)";e.currentTarget.style.borderColor="rgba(22,163,74,0.8)";}} onMouseLeave={e=>{e.currentTarget.style.background="rgba(255,255,255,0.1)";e.currentTarget.style.borderColor="rgba(255,255,255,0.2)";}}>
+              <ChevronRight size={20}/>
+            </button>
+          </>}
+          {/* Progress bar */}
+          <div style={{position:"absolute",bottom:0,left:0,right:0,height:3,background:"rgba(255,255,255,0.1)"}}>
+            <div key={`${slide}-prog`} style={{height:"100%",background:"#16a34a",animation:paused?"none":"progressBar 6s linear",width:paused?"auto":"100%"}}/>
+          </div>
+          {/* Dot nav */}
+          <div style={{position:"absolute",bottom:"1.5rem",left:"50%",transform:"translateX(-50%)",display:"flex",gap:"0.5rem",alignItems:"center"}}>
+            {heroes.map((_,i)=>(
+              <button key={i} onClick={()=>setSlide(i)} style={{width:i===slide?28:8,height:8,borderRadius:9999,background:i===slide?"#16a34a":"rgba(255,255,255,0.35)",border:"none",cursor:"pointer",padding:0,transition:"all 0.35s ease",boxShadow:i===slide?"0 0 8px rgba(22,163,74,0.6)":"none"}}/>
+            ))}
+          </div>
+          {/* Side thumbnails */}
+          <div style={{position:"absolute",bottom:"1.5rem",right:"1.75rem",display:"flex",gap:"0.5rem"}}>
+            {heroes.map((h,i)=>i!==slide&&(
+              <button key={h.id} onClick={()=>setSlide(i)} style={{width:70,height:48,borderRadius:"0.375rem",overflow:"hidden",border:"2px solid rgba(255,255,255,0.25)",cursor:"pointer",padding:0,opacity:0.7,transition:"all 0.2s"}}
+                onMouseEnter={e=>{e.currentTarget.style.opacity="1";e.currentTarget.style.borderColor="rgba(22,163,74,0.8)";}} onMouseLeave={e=>{e.currentTarget.style.opacity="0.7";e.currentTarget.style.borderColor="rgba(255,255,255,0.25)";}}>
+                <img src={h.image_url} alt={h.title} style={{width:"100%",height:"100%",objectFit:"cover"}}/>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+      {loading && <div style={{height:540,display:"flex",alignItems:"center",justifyContent:"center",background:"#0a2a1a"}}><div style={{width:40,height:40,border:"3px solid #16a34a",borderTopColor:"transparent",borderRadius:"50%",animation:"spin 0.8s linear infinite"}}/></div>}
+
+      {/* ── Events grid ── */}
+      <section style={{maxWidth:"1200px",margin:"0 auto",padding:"2.5rem 1.5rem"}}>
+        <div style={{display:"flex",alignItems:"center",gap:"0.75rem",marginBottom:"2rem"}}>
+          <div style={{width:4,height:32,background:"#16a34a",borderRadius:2}}/>
+          <h2 style={{fontSize:"1.25rem",fontWeight:800,color:"#0f172a",margin:0}}>جميع الفعاليات</h2>
+          {items.length>0&&<span style={{background:"#f0fdf4",color:"#16a34a",padding:"0.2rem 0.6rem",borderRadius:"9999px",fontSize:"0.75rem",fontWeight:700,marginRight:"auto"}}>{items.length} فعالية</span>}
+        </div>
+        {!loading && items.length===0 && <p style={{textAlign:"center",color:"#64748b",padding:"3rem"}}>لا توجد فعاليات منشورة حالياً</p>}
         <div className="news-grid">
-          {items.map(item => (
+          {items.map(item=>(
             <a key={item.id} href={`/events/${item.slug}`} className="news-card">
-              {item.image_url ? <img src={item.image_url} alt={item.title} /> : <div className="news-card-placeholder" style={{background:"linear-gradient(135deg,#14532d,#16a34a)"}} />}
+              {item.image_url?<img src={item.image_url} alt={item.title}/>:<div className="news-card-placeholder" style={{background:"linear-gradient(135deg,#14532d,#16a34a)"}}/>}
               <div className="news-card-body">
-                {item.location && <span className="news-cat" style={{background:"#16a34a"}}>{item.location}</span>}
+                <span className="news-cat" style={{background:"#16a34a"}}><CalendarDays size={11}/> {fmtDate(item.event_date)}</span>
                 <h3>{item.title}</h3>
-                {item.excerpt && <p>{item.excerpt}</p>}
-                <small>{new Date(item.event_date).toLocaleDateString("ar-SA",{year:"numeric",month:"long",day:"numeric"})}</small>
+                {item.excerpt&&<p>{item.excerpt}</p>}
+                {item.location&&<small style={{display:"flex",alignItems:"center",gap:"0.3rem"}}><MapPin size={11}/>{item.location}</small>}
               </div>
             </a>
           ))}
