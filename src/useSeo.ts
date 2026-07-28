@@ -111,3 +111,39 @@ export function useSeo(slug: string) {
 export function invalidateSeoCache(slug: string) {
   cache.delete(slug);
 }
+
+/**
+ * Apply item-specific SEO overrides. Call this after fetching a content item
+ * that has its own seo_title / seo_description / seo_image fields.
+ * Falls back to the provided defaults (usually the item's own title/excerpt/image).
+ */
+export function applyItemSeo(opts: {
+  title: string;
+  fallbackTitle?: string;
+  description: string;
+  fallbackDescription?: string;
+  image: string;
+  fallbackImage?: string;
+  canonical?: string;
+}) {
+  const title = opts.title || opts.fallbackTitle || "رابطة ولاية نهر النيل";
+  const description = opts.description || opts.fallbackDescription || "";
+  const image = opts.image || opts.fallbackImage || "/og.png";
+  const canonical =
+    opts.canonical ||
+    (typeof window !== "undefined"
+      ? window.location.origin + window.location.pathname
+      : "");
+
+  document.title = title;
+  setMeta("description", description);
+  setMeta("og:title", title, "property");
+  setMeta("og:description", description, "property");
+  setMeta("og:image", image, "property");
+  setMeta("og:url", canonical, "property");
+  setMeta("og:type", "article", "property");
+  setMeta("twitter:title", title);
+  setMeta("twitter:description", description);
+  setMeta("twitter:image", image);
+  setLink("canonical", canonical);
+}

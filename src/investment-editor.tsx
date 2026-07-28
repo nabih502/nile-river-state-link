@@ -382,6 +382,9 @@ export function SectorEditor({
       highlight3: "بيئة استثمارية آمنة",
       sort_order: 0,
       published: true,
+      seo_title: "",
+      seo_description: "",
+      seo_image: "",
     }
   );
   const [saving, setSaving] = useState(false);
@@ -405,6 +408,9 @@ export function SectorEditor({
       highlight3: form.highlight3 ?? "بيئة استثمارية آمنة",
       sort_order: Number(form.sort_order) || 0,
       published: form.published,
+      seo_title: (form as any).seo_title || "",
+      seo_description: (form as any).seo_description || "",
+      seo_image: (form as any).seo_image || "",
     };
     const { error: err } = form.id
       ? await supabase.from("investment_sectors").update(payload).eq("id", form.id)
@@ -439,6 +445,7 @@ export function SectorEditor({
           { id: "sector-basics", label: "المعلومات الأساسية" },
           { id: "sector-card", label: "بطاقة معلومات القطاع" },
           { id: "sector-media", label: "الصورة والمحتوى" },
+          { id: "sector-seo", label: "SEO" },
         ]} />
         <FormSection title="المعلومات الأساسية" id="sector-basics">
           <div className="inv-form-row">
@@ -526,6 +533,42 @@ export function SectorEditor({
             />
           </label>
         </FormSection>
+        <FormSection title="تحسين محركات البحث (SEO)" id="sector-seo">
+          <div className="inv-form-row">
+            <label className="inv-label">
+              عنوان SEO
+              <input
+                value={(form as any).seo_title || ""}
+                className="inv-input"
+                onChange={e => (set as any)("seo_title", e.target.value)}
+                placeholder="اتركه فارغاً لاستخدام العنوان الافتراضي"
+              />
+              <span style={{fontSize:"0.72rem",color:"#94a3b8"}}>مثالي: 50–65 حرف ({((form as any).seo_title || "").length})</span>
+            </label>
+            <label className="inv-label">
+              وصف SEO
+              <textarea
+                rows={3}
+                value={(form as any).seo_description || ""}
+                className="inv-input"
+                onChange={e => (set as any)("seo_description", e.target.value)}
+                placeholder="اتركه فارغاً لاستخدام الوصف الافتراضي"
+                style={{resize:"vertical"}}
+              />
+              <span style={{fontSize:"0.72rem",color:"#94a3b8"}}>مثالي: 120–160 حرف ({((form as any).seo_description || "").length})</span>
+            </label>
+          </div>
+          <label className="inv-label">
+            صورة المشاركة (OG Image)
+            <input
+              value={(form as any).seo_image || ""}
+              className="inv-input"
+              onChange={e => (set as any)("seo_image", e.target.value)}
+              placeholder="رابط الصورة (فارغ = استخدام الصورة الرئيسية)"
+              dir="ltr"
+            />
+          </label>
+        </FormSection>
       </form>
     </Drawer>
   );
@@ -560,6 +603,9 @@ export function OpportunityEditor({
       status: "available",
       show_specs: true,
       published: true,
+      seo_title: "",
+      seo_description: "",
+      seo_image: "",
     }
   );
   const [saving, setSaving] = useState(false);
@@ -588,6 +634,9 @@ export function OpportunityEditor({
       status: form.status,
       show_specs: form.show_specs,
       published: form.published,
+      seo_title: (form as any).seo_title || "",
+      seo_description: (form as any).seo_description || "",
+      seo_image: (form as any).seo_image || "",
     };
     const { error: err } = form.id
       ? await supabase.from("investment_opportunities").update(payload).eq("id", form.id)
@@ -622,6 +671,7 @@ export function OpportunityEditor({
           { id: "opp-basics", label: "المعلومات الأساسية" },
           { id: "opp-specs", label: "المواصفات المالية" },
           { id: "opp-media", label: "الصورة والمحتوى" },
+          { id: "opp-seo", label: "SEO" },
         ]} />
         <FormSection title="المعلومات الأساسية" id="opp-basics">
           <div className="inv-form-row">
@@ -756,6 +806,42 @@ export function OpportunityEditor({
             >
               <div className="inv-toggle-thumb" />
             </div>
+          </label>
+        </FormSection>
+        <FormSection title="تحسين محركات البحث (SEO)" id="opp-seo">
+          <div className="inv-form-row">
+            <label className="inv-label">
+              عنوان SEO
+              <input
+                value={(form as any).seo_title || ""}
+                className="inv-input"
+                onChange={e => (set as any)("seo_title", e.target.value)}
+                placeholder="اتركه فارغاً لاستخدام العنوان الافتراضي"
+              />
+              <span style={{fontSize:"0.72rem",color:"#94a3b8"}}>مثالي: 50–65 حرف ({((form as any).seo_title || "").length})</span>
+            </label>
+            <label className="inv-label">
+              وصف SEO
+              <textarea
+                rows={3}
+                value={(form as any).seo_description || ""}
+                className="inv-input"
+                onChange={e => (set as any)("seo_description", e.target.value)}
+                placeholder="اتركه فارغاً لاستخدام الوصف الافتراضي"
+                style={{resize:"vertical"}}
+              />
+              <span style={{fontSize:"0.72rem",color:"#94a3b8"}}>مثالي: 120–160 حرف ({((form as any).seo_description || "").length})</span>
+            </label>
+          </div>
+          <label className="inv-label">
+            صورة المشاركة (OG Image)
+            <input
+              value={(form as any).seo_image || ""}
+              className="inv-input"
+              onChange={e => (set as any)("seo_image", e.target.value)}
+              placeholder="رابط الصورة (فارغ = استخدام الصورة الرئيسية)"
+              dir="ltr"
+            />
           </label>
         </FormSection>
       </form>

@@ -89,7 +89,7 @@ export function ServiceEditor({ item, open, onSave, onClose }: {
   item: Partial<SocialService> | null; open: boolean; onSave: () => void; onClose: () => void;
 }) {
   const [form, setForm] = useState<Partial<SocialService>>(
-    item ?? { icon: "HeartHandshake", title: "", lead: "", bullet_1: "", bullet_2: "", bullet_3: "", bullet_4: "", action_label: "تواصل معنا", slug: "", full_description: "", image_url: "", published: true }
+    item ?? { icon: "HeartHandshake", title: "", lead: "", bullet_1: "", bullet_2: "", bullet_3: "", bullet_4: "", action_label: "تواصل معنا", slug: "", full_description: "", image_url: "", published: true, seo_title: "", seo_description: "", seo_image: "" }
   );
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
@@ -105,6 +105,9 @@ export function ServiceEditor({ item, open, onSave, onClose }: {
       full_description: form.full_description || "",
       image_url: form.image_url || "",
       published: form.published,
+      seo_title: (form as any).seo_title || "",
+      seo_description: (form as any).seo_description || "",
+      seo_image: (form as any).seo_image || "",
     };
     const { error: err } = form.id
       ? await supabase.from("social_services").update(payload).eq("id", form.id)
@@ -157,6 +160,42 @@ export function ServiceEditor({ item, open, onSave, onClose }: {
         <FormSection title="الصورة">
           <ImageUpload value={form.image_url || ""} onChange={(url) => set("image_url", url)} label="صورة الخدمة (تظهر في صفحة التفاصيل)" />
         </FormSection>
+        <FormSection title="تحسين محركات البحث (SEO)">
+          <div className="inv-form-row">
+            <label className="inv-label">
+              عنوان SEO
+              <input
+                value={(form as any).seo_title || ""}
+                className="inv-input"
+                onChange={e => (set as any)("seo_title", e.target.value)}
+                placeholder="اتركه فارغاً لاستخدام العنوان الافتراضي"
+              />
+              <span style={{fontSize:"0.72rem",color:"#94a3b8"}}>مثالي: 50–65 حرف ({((form as any).seo_title || "").length})</span>
+            </label>
+            <label className="inv-label">
+              وصف SEO
+              <textarea
+                rows={3}
+                value={(form as any).seo_description || ""}
+                className="inv-input"
+                onChange={e => (set as any)("seo_description", e.target.value)}
+                placeholder="اتركه فارغاً لاستخدام الوصف الافتراضي"
+                style={{resize:"vertical"}}
+              />
+              <span style={{fontSize:"0.72rem",color:"#94a3b8"}}>مثالي: 120–160 حرف ({((form as any).seo_description || "").length})</span>
+            </label>
+          </div>
+          <label className="inv-label">
+            صورة المشاركة (OG Image)
+            <input
+              value={(form as any).seo_image || ""}
+              className="inv-input"
+              onChange={e => (set as any)("seo_image", e.target.value)}
+              placeholder="رابط الصورة (فارغ = استخدام الصورة الرئيسية)"
+              dir="ltr"
+            />
+          </label>
+        </FormSection>
       </form>
     </Drawer>
   );
@@ -171,7 +210,7 @@ export function SocialInitiativeEditor({ item, open, onSave, onClose }: {
   item: Partial<SocialInitiative> | null; open: boolean; onSave: () => void; onClose: () => void;
 }) {
   const [form, setForm] = useState<Partial<SocialInitiative>>(
-    item ?? { image_url: "", title: "", text: "", full_description: "", slug: "", progress: 0, amount: "", icon: "♡", action_label: "ساهم الآن", published: true }
+    item ?? { image_url: "", title: "", text: "", full_description: "", slug: "", progress: 0, amount: "", icon: "♡", action_label: "ساهم الآن", published: true, seo_title: "", seo_description: "", seo_image: "" }
   );
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
@@ -190,6 +229,9 @@ export function SocialInitiativeEditor({ item, open, onSave, onClose }: {
       icon: form.icon,
       action_label: form.action_label,
       published: form.published,
+      seo_title: (form as any).seo_title || "",
+      seo_description: (form as any).seo_description || "",
+      seo_image: (form as any).seo_image || "",
     };
     const { error: err } = form.id
       ? await supabase.from("social_initiatives").update(payload).eq("id", form.id)
@@ -241,6 +283,42 @@ export function SocialInitiativeEditor({ item, open, onSave, onClose }: {
         </FormSection>
         <FormSection title="الصورة">
           <ImageUpload value={form.image_url || ""} onChange={(url) => set("image_url", url)} label="صورة المبادرة" />
+        </FormSection>
+        <FormSection title="تحسين محركات البحث (SEO)">
+          <div className="inv-form-row">
+            <label className="inv-label">
+              عنوان SEO
+              <input
+                value={(form as any).seo_title || ""}
+                className="inv-input"
+                onChange={e => (set as any)("seo_title", e.target.value)}
+                placeholder="اتركه فارغاً لاستخدام العنوان الافتراضي"
+              />
+              <span style={{fontSize:"0.72rem",color:"#94a3b8"}}>مثالي: 50–65 حرف ({((form as any).seo_title || "").length})</span>
+            </label>
+            <label className="inv-label">
+              وصف SEO
+              <textarea
+                rows={3}
+                value={(form as any).seo_description || ""}
+                className="inv-input"
+                onChange={e => (set as any)("seo_description", e.target.value)}
+                placeholder="اتركه فارغاً لاستخدام الوصف الافتراضي"
+                style={{resize:"vertical"}}
+              />
+              <span style={{fontSize:"0.72rem",color:"#94a3b8"}}>مثالي: 120–160 حرف ({((form as any).seo_description || "").length})</span>
+            </label>
+          </div>
+          <label className="inv-label">
+            صورة المشاركة (OG Image)
+            <input
+              value={(form as any).seo_image || ""}
+              className="inv-input"
+              onChange={e => (set as any)("seo_image", e.target.value)}
+              placeholder="رابط الصورة (فارغ = استخدام الصورة الرئيسية)"
+              dir="ltr"
+            />
+          </label>
         </FormSection>
       </form>
     </Drawer>

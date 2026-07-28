@@ -1,6 +1,6 @@
 import { FormEvent, useCallback, useEffect, useRef, useState } from "react";
 import { supabase } from "./supabase";
-import { useSeo } from "./useSeo";
+import { useSeo, applyItemSeo } from "./useSeo";
 import { Aperture, ArrowLeft, Award, BadgeCheck, BadgePercent, Banknote, BookOpen, BriefcaseBusiness, Building2, Calendar, CalendarDays, Camera, ChartNoAxesCombined, ChartPie, Check, ChevronLeft, ChevronRight, CircleAlert, CircleCheckBig, Circle as CircleHelp, Clock3, CreditCard, Crown, Eye, Factory, Feather, FileImage, FileText, FileUp, Gem, Gift, Globe as Globe2, GraduationCap, HandHeart, Handshake, Headphones, HeartHandshake, HeartPulse, Landmark, LayoutDashboard, LayoutGrid, LibraryBig, Lightbulb, Menu, Megaphone, MonitorCheck, Music2, Network, Newspaper, MessageCircle, Info, LockKeyhole, Mail, MapPin, Paperclip, Percent, Phone, QrCode, ReceiptText, Palette, Pill, CirclePlay as PlayCircle, RefreshCw, ScanFace, Search, Settings2, Share2, Shield, ShieldCheck, Stethoscope, Send, ShoppingCart, Sparkles, Sprout, Store, Tags, Target, TrendingUp, Trophy, Truck, Upload, UserCheck, UserPlus, UserRound, UsersRound, Video, WalletCards, X } from "lucide-react";
 
 type InternalKey = "services" | "initiatives" | "news" | "library";
@@ -1974,6 +1974,7 @@ function InvestmentSectorDetailPage({slug}:{slug?:string}){
     if(!slug){setLoading(false);return;}
     supabase.from("investment_sectors").select("*").eq("slug",slug).eq("published",true).maybeSingle().then(({data})=>{
       setSector(data);
+      if(data){applyItemSeo({title:data.seo_title||"",fallbackTitle:data.name||"",description:data.seo_description||"",fallbackDescription:data.description||"",image:data.seo_image||"",fallbackImage:data.image_url||""});}
       if(data){
         supabase.from("investment_opportunities").select("id,title,slug,image_url,min_investment,expected_return,duration,location,status").eq("published",true).order("created_at",{ascending:false}).limit(6).then(({data:od})=>setOpps(od||[]));
       }
@@ -2041,7 +2042,7 @@ function InvestmentOpportunityDetailPage({slug}:{slug?:string}){
   const [loading,setLoading] = useState(true);
   useEffect(()=>{
     if(!slug){setLoading(false);return;}
-    supabase.from("investment_opportunities").select("*").eq("slug",slug).eq("published",true).maybeSingle().then(({data})=>{setOpp(data);setLoading(false);});
+    supabase.from("investment_opportunities").select("*").eq("slug",slug).eq("published",true).maybeSingle().then(({data})=>{setOpp(data);if(data){applyItemSeo({title:data.seo_title||"",fallbackTitle:data.title||"",description:data.seo_description||"",fallbackDescription:data.description||"",image:data.seo_image||"",fallbackImage:data.image_url||""});}setLoading(false);});
   },[slug]);
   if(loading) return <div className="inv-detail-loading"><div className="inv-detail-spinner"/></div>;
   if(!opp) return <div className="inv-detail-empty"><h2>الفرصة غير موجودة</h2><a href="/investment">العودة للاستثمار</a></div>;
@@ -2094,7 +2095,7 @@ function NewsDetailPage({slug}:{slug?:string}) {
 
   useEffect(() => {
     if (!slug) return;
-    supabase.from("news").select("*").eq("slug",slug).eq("published",true).maybeSingle().then(({data})=>{setItem(data as NewsItem|null);setLoading(false);});
+    supabase.from("news").select("*").eq("slug",slug).eq("published",true).maybeSingle().then(({data})=>{setItem(data as NewsItem|null);if(data){applyItemSeo({title:data.seo_title||"",fallbackTitle:data.title||"",description:data.seo_description||"",fallbackDescription:data.excerpt||"",image:data.seo_image||"",fallbackImage:data.image_url||""});}setLoading(false);});
   }, [slug]);
 
   const pageUrl = typeof window!=="undefined" ? window.location.href : "";
@@ -2376,7 +2377,7 @@ function EventDetailPage({slug}:{slug?:string}) {
 
   useEffect(() => {
     if (!slug) return;
-    supabase.from("events").select("*").eq("slug",slug).eq("published",true).maybeSingle().then(({data})=>{setItem(data as EventItem|null);setLoading(false);});
+    supabase.from("events").select("*").eq("slug",slug).eq("published",true).maybeSingle().then(({data})=>{setItem(data as EventItem|null);if(data){applyItemSeo({title:data.seo_title||"",fallbackTitle:data.title||"",description:data.seo_description||"",fallbackDescription:data.excerpt||"",image:data.seo_image||"",fallbackImage:data.image_url||""});}setLoading(false);});
   }, [slug]);
 
   const pageUrl = typeof window!=="undefined" ? window.location.href : "";
@@ -2554,7 +2555,7 @@ function CultureArtDetailPage({slug}:{slug?:string}){
   const [loading,setLoading]=useState(true);
   useEffect(()=>{
     if(!slug){setLoading(false);return;}
-    supabase.from("culture_art_categories").select("*").eq("slug",slug).maybeSingle().then(({data})=>{setItem(data as ArtRow|null);setLoading(false);});
+    supabase.from("culture_art_categories").select("*").eq("slug",slug).maybeSingle().then(({data})=>{setItem(data as ArtRow|null);if(data){applyItemSeo({title:data.seo_title||"",fallbackTitle:data.title||"",description:data.seo_description||"",fallbackDescription:data.description||"",image:data.seo_image||"",fallbackImage:data.image_url||""});}setLoading(false);});
   },[slug]);
   if(loading)return(<div style={{minHeight:"60vh",display:"flex",alignItems:"center",justifyContent:"center"}}><div style={{textAlign:"center",color:"#64748b"}}><div style={{width:40,height:40,border:"3px solid #0e7490",borderTopColor:"transparent",borderRadius:"50%",animation:"spin 0.8s linear infinite",margin:"0 auto 1rem"}}/><p>جاري التحميل...</p></div></div>);
   if(!item)return(<div style={{minHeight:"60vh",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:"1rem"}}><h2 style={{color:"#0f172a"}}>الصفحة غير موجودة</h2><a href="/culture" style={{background:"#0e7490",color:"#fff",padding:"0.6rem 1.5rem",borderRadius:"0.5rem",textDecoration:"none",fontWeight:600}}>العودة للثقافة</a></div>);
@@ -2594,7 +2595,7 @@ function CultureAssociationDetailPage({slug}:{slug?:string}){
   const [loading,setLoading]=useState(true);
   useEffect(()=>{
     if(!slug){setLoading(false);return;}
-    supabase.from("culture_associations").select("*").eq("slug",slug).maybeSingle().then(({data})=>{setItem(data as AssocRow|null);setLoading(false);});
+    supabase.from("culture_associations").select("*").eq("slug",slug).maybeSingle().then(({data})=>{setItem(data as AssocRow|null);if(data){applyItemSeo({title:data.seo_title||"",fallbackTitle:data.title||"",description:data.seo_description||"",fallbackDescription:data.description||"",image:data.seo_image||"",fallbackImage:data.image_url||""});}setLoading(false);});
   },[slug]);
   if(loading)return(<div style={{minHeight:"60vh",display:"flex",alignItems:"center",justifyContent:"center"}}><div style={{textAlign:"center",color:"#64748b"}}><div style={{width:40,height:40,border:"3px solid #0e7490",borderTopColor:"transparent",borderRadius:"50%",animation:"spin 0.8s linear infinite",margin:"0 auto 1rem"}}/><p>جاري التحميل...</p></div></div>);
   if(!item)return(<div style={{minHeight:"60vh",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:"1rem"}}><h2 style={{color:"#0f172a"}}>الجمعية غير موجودة</h2><a href="/culture" style={{background:"#0e7490",color:"#fff",padding:"0.6rem 1.5rem",borderRadius:"0.5rem",textDecoration:"none",fontWeight:600}}>العودة للثقافة</a></div>);
@@ -2639,7 +2640,7 @@ function CultureMediaDetailPage({slug}:{slug?:string}){
   const [loading,setLoading]=useState(true);
   useEffect(()=>{
     if(!slug)return;
-    supabase.from("culture_media").select("*").eq("id",slug).maybeSingle().then(({data})=>{setItem(data);setLoading(false);});
+    supabase.from("culture_media").select("*").eq("id",slug).maybeSingle().then(({data})=>{setItem(data);if(data){applyItemSeo({title:data.seo_title||"",fallbackTitle:data.title||"",description:data.seo_description||"",fallbackDescription:data.description||"",image:data.seo_image||"",fallbackImage:data.image_url||""});}setLoading(false);});
   },[slug]);
   if(loading)return <div style={{padding:"6rem 1rem",textAlign:"center",color:"#64748b"}}>جاري التحميل...</div>;
   if(!item)return <div style={{padding:"6rem 1rem",textAlign:"center"}}><h2 style={{color:"#dc2626"}}>العنصر غير موجود</h2><a href="/culture" style={{color:"#2563eb"}}>العودة للثقافة</a></div>;
@@ -2663,7 +2664,7 @@ function CultureEventDetailPage({slug}:{slug?:string}){
   const [loading,setLoading]=useState(true);
   useEffect(()=>{
     if(!slug)return;
-    supabase.from("culture_events").select("*").eq("id",slug).maybeSingle().then(({data})=>{setItem(data);setLoading(false);});
+    supabase.from("culture_events").select("*").eq("id",slug).maybeSingle().then(({data})=>{setItem(data);if(data){applyItemSeo({title:data.seo_title||"",fallbackTitle:data.title||"",description:data.seo_description||"",fallbackDescription:data.description||"",image:data.seo_image||"",fallbackImage:data.image_url||""});}setLoading(false);});
   },[slug]);
   if(loading)return <div style={{padding:"6rem 1rem",textAlign:"center",color:"#64748b"}}>جاري التحميل...</div>;
   if(!item)return <div style={{padding:"6rem 1rem",textAlign:"center"}}><h2 style={{color:"#dc2626"}}>الفعالية غير موجودة</h2><a href="/culture" style={{color:"#2563eb"}}>العودة للثقافة</a></div>;
@@ -2689,7 +2690,7 @@ function CultureNewsDetailPage({slug}:{slug?:string}){
   const [loading,setLoading]=useState(true);
   useEffect(()=>{
     if(!slug)return;
-    supabase.from("culture_news").select("*").eq("id",slug).maybeSingle().then(({data})=>{setItem(data);setLoading(false);});
+    supabase.from("culture_news").select("*").eq("id",slug).maybeSingle().then(({data})=>{setItem(data);if(data){applyItemSeo({title:data.seo_title||"",fallbackTitle:data.title||"",description:data.seo_description||"",fallbackDescription:data.excerpt||data.body||"",image:data.seo_image||"",fallbackImage:data.image_url||""});}setLoading(false);});
   },[slug]);
   if(loading)return <div style={{padding:"6rem 1rem",textAlign:"center",color:"#64748b"}}>جاري التحميل...</div>;
   if(!item)return <div style={{padding:"6rem 1rem",textAlign:"center"}}><h2 style={{color:"#dc2626"}}>الخبر غير موجود</h2><a href="/culture" style={{color:"#2563eb"}}>العودة للثقافة</a></div>;
@@ -2713,7 +2714,7 @@ function CultureArtistDetailPage({slug}:{slug?:string}){
   const [loading,setLoading]=useState(true);
   useEffect(()=>{
     if(!slug){setLoading(false);return;}
-    supabase.from("culture_artists").select("*").eq("slug",slug).maybeSingle().then(({data})=>{setItem(data);setLoading(false);});
+    supabase.from("culture_artists").select("*").eq("slug",slug).maybeSingle().then(({data})=>{setItem(data);if(data){applyItemSeo({title:data.seo_title||"",fallbackTitle:data.name||"",description:data.seo_description||"",fallbackDescription:data.bio||"",image:data.seo_image||"",fallbackImage:data.image_url||""});}setLoading(false);});
   },[slug]);
   if(loading)return(<div style={{minHeight:"60vh",display:"flex",alignItems:"center",justifyContent:"center"}}><div style={{textAlign:"center",color:"#64748b"}}><div style={{width:40,height:40,border:"3px solid #0e7490",borderTopColor:"transparent",borderRadius:"50%",animation:"spin 0.8s linear infinite",margin:"0 auto 1rem"}}/><p>جاري التحميل...</p></div></div>);
   if(!item)return(<div style={{minHeight:"60vh",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:"1rem"}}><h2 style={{color:"#0f172a"}}>الفنان غير موجود</h2><a href="/culture" style={{background:"#0e7490",color:"#fff",padding:"0.6rem 1.5rem",borderRadius:"0.5rem",textDecoration:"none",fontWeight:600}}>العودة للثقافة</a></div>);
@@ -2748,7 +2749,7 @@ function SocialServiceDetailPage({slug}:{slug?:string}){
   const iconMap2:Record<string,React.ElementType>={HeartHandshake,HandHeart,MessageCircle,UsersRound,Headphones,GraduationCap,BookOpen,UserPlus,Handshake,Eye,Network,ShieldCheck,UserCheck};
   useEffect(()=>{
     if(!slug){setLoading(false);return;}
-    supabase.from("social_services").select("*").eq("slug",slug).maybeSingle().then(({data})=>{setItem(data as SvcRow|null);setLoading(false);});
+    supabase.from("social_services").select("*").eq("slug",slug).maybeSingle().then(({data})=>{setItem(data as SvcRow|null);if(data){applyItemSeo({title:data.seo_title||"",fallbackTitle:data.title||"",description:data.seo_description||"",fallbackDescription:data.full_description||data.lead||"",image:data.seo_image||"",fallbackImage:data.image_url||""});}setLoading(false);});
   },[slug]);
 
   if(loading)return(
@@ -2859,7 +2860,7 @@ function SocialInitiativeDetailPage({slug}:{slug?:string}){
   const [loading,setLoading]=useState(true);
   useEffect(()=>{
     if(!slug){setLoading(false);return;}
-    supabase.from("social_initiatives").select("*").eq("slug",slug).maybeSingle().then(({data})=>{setItem(data as InitRow|null);setLoading(false);});
+    supabase.from("social_initiatives").select("*").eq("slug",slug).maybeSingle().then(({data})=>{setItem(data as InitRow|null);if(data){applyItemSeo({title:data.seo_title||"",fallbackTitle:data.title||"",description:data.seo_description||"",fallbackDescription:data.full_description||data.text||"",image:data.seo_image||"",fallbackImage:data.image_url||""});}setLoading(false);});
   },[slug]);
 
   if(loading)return(

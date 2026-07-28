@@ -354,6 +354,9 @@ export function EventEditor({
       event_date: "",
       location: "",
       published: true,
+      seo_title: "",
+      seo_description: "",
+      seo_image: "",
     }
   );
   const [saving, setSaving] = useState(false);
@@ -374,6 +377,9 @@ export function EventEditor({
       location: form.location,
       description: form.description || "",
       published: form.published,
+      seo_title: (form as any).seo_title || "",
+      seo_description: (form as any).seo_description || "",
+      seo_image: (form as any).seo_image || "",
     };
     const { error: err } = form.id
       ? await supabase.from("culture_events").update(payload).eq("id", form.id)
@@ -409,6 +415,7 @@ export function EventEditor({
             { id: "event-basics", label: "المعلومات الأساسية" },
             { id: "event-desc", label: "الوصف" },
             { id: "event-image", label: "الصورة" },
+            { id: "event-seo", label: "SEO" },
           ]}
         />
 
@@ -476,6 +483,42 @@ export function EventEditor({
             label="صورة الفعالية"
           />
         </FormSection>
+        <FormSection id="event-seo" title="تحسين محركات البحث (SEO)">
+          <div className="inv-form-row">
+            <label className="inv-label">
+              عنوان SEO
+              <input
+                value={(form as any).seo_title || ""}
+                className="inv-input"
+                onChange={e => (set as any)("seo_title", e.target.value)}
+                placeholder="اتركه فارغاً لاستخدام العنوان الافتراضي"
+              />
+              <span style={{fontSize:"0.72rem",color:"#94a3b8"}}>مثالي: 50–65 حرف ({((form as any).seo_title || "").length})</span>
+            </label>
+            <label className="inv-label">
+              وصف SEO
+              <textarea
+                rows={3}
+                value={(form as any).seo_description || ""}
+                className="inv-input"
+                onChange={e => (set as any)("seo_description", e.target.value)}
+                placeholder="اتركه فارغاً لاستخدام الوصف الافتراضي"
+                style={{resize:"vertical"}}
+              />
+              <span style={{fontSize:"0.72rem",color:"#94a3b8"}}>مثالي: 120–160 حرف ({((form as any).seo_description || "").length})</span>
+            </label>
+          </div>
+          <label className="inv-label">
+            صورة المشاركة (OG Image)
+            <input
+              value={(form as any).seo_image || ""}
+              className="inv-input"
+              onChange={e => (set as any)("seo_image", e.target.value)}
+              placeholder="رابط الصورة (فارغ = استخدام الصورة الرئيسية)"
+              dir="ltr"
+            />
+          </label>
+        </FormSection>
       </form>
     </Drawer>
   );
@@ -502,6 +545,9 @@ export function CultureNewsEditor({
       body: "",
       published_at: "",
       published: true,
+      seo_title: "",
+      seo_description: "",
+      seo_image: "",
     }
   );
   const [saving, setSaving] = useState(false);
@@ -522,6 +568,9 @@ export function CultureNewsEditor({
       body: form.body,
       published_at: form.published_at || null,
       published: form.published,
+      seo_title: (form as any).seo_title || "",
+      seo_description: (form as any).seo_description || "",
+      seo_image: (form as any).seo_image || "",
     };
     const { error: err } = form.id
       ? await supabase.from("culture_news").update(payload).eq("id", form.id)
@@ -556,6 +605,7 @@ export function CultureNewsEditor({
           sections={[
             { id: "cnews-basics", label: "المعلومات الأساسية" },
             { id: "cnews-media", label: "الصورة والمحتوى" },
+            { id: "cnews-seo", label: "SEO" },
           ]}
         />
 
@@ -621,6 +671,42 @@ export function CultureNewsEditor({
             />
           </label>
         </FormSection>
+        <FormSection id="cnews-seo" title="تحسين محركات البحث (SEO)">
+          <div className="inv-form-row">
+            <label className="inv-label">
+              عنوان SEO
+              <input
+                value={(form as any).seo_title || ""}
+                className="inv-input"
+                onChange={e => (set as any)("seo_title", e.target.value)}
+                placeholder="اتركه فارغاً لاستخدام العنوان الافتراضي"
+              />
+              <span style={{fontSize:"0.72rem",color:"#94a3b8"}}>مثالي: 50–65 حرف ({((form as any).seo_title || "").length})</span>
+            </label>
+            <label className="inv-label">
+              وصف SEO
+              <textarea
+                rows={3}
+                value={(form as any).seo_description || ""}
+                className="inv-input"
+                onChange={e => (set as any)("seo_description", e.target.value)}
+                placeholder="اتركه فارغاً لاستخدام الوصف الافتراضي"
+                style={{resize:"vertical"}}
+              />
+              <span style={{fontSize:"0.72rem",color:"#94a3b8"}}>مثالي: 120–160 حرف ({((form as any).seo_description || "").length})</span>
+            </label>
+          </div>
+          <label className="inv-label">
+            صورة المشاركة (OG Image)
+            <input
+              value={(form as any).seo_image || ""}
+              className="inv-input"
+              onChange={e => (set as any)("seo_image", e.target.value)}
+              placeholder="رابط الصورة (فارغ = استخدام الصورة الرئيسية)"
+              dir="ltr"
+            />
+          </label>
+        </FormSection>
       </form>
     </Drawer>
   );
@@ -646,6 +732,9 @@ export function ArtistEditor({
       role: "",
       bio: "",
       published: true,
+      seo_title: "",
+      seo_description: "",
+      seo_image: "",
     }
   );
   const [saving, setSaving] = useState(false);
@@ -665,6 +754,9 @@ export function ArtistEditor({
       role: form.role,
       bio: form.bio,
       published: form.published,
+      seo_title: (form as any).seo_title || "",
+      seo_description: (form as any).seo_description || "",
+      seo_image: (form as any).seo_image || "",
     };
     const { error: err } = form.id
       ? await supabase.from("culture_artists").update(payload).eq("id", form.id)
@@ -699,6 +791,7 @@ export function ArtistEditor({
           sections={[
             { id: "artist-basics", label: "المعلومات الأساسية" },
             { id: "artist-image", label: "الصورة" },
+            { id: "artist-seo", label: "SEO" },
           ]}
         />
 
@@ -754,6 +847,42 @@ export function ArtistEditor({
             label="صورة الفنان"
           />
         </FormSection>
+        <FormSection id="artist-seo" title="تحسين محركات البحث (SEO)">
+          <div className="inv-form-row">
+            <label className="inv-label">
+              عنوان SEO
+              <input
+                value={(form as any).seo_title || ""}
+                className="inv-input"
+                onChange={e => (set as any)("seo_title", e.target.value)}
+                placeholder="اتركه فارغاً لاستخدام العنوان الافتراضي"
+              />
+              <span style={{fontSize:"0.72rem",color:"#94a3b8"}}>مثالي: 50–65 حرف ({((form as any).seo_title || "").length})</span>
+            </label>
+            <label className="inv-label">
+              وصف SEO
+              <textarea
+                rows={3}
+                value={(form as any).seo_description || ""}
+                className="inv-input"
+                onChange={e => (set as any)("seo_description", e.target.value)}
+                placeholder="اتركه فارغاً لاستخدام الوصف الافتراضي"
+                style={{resize:"vertical"}}
+              />
+              <span style={{fontSize:"0.72rem",color:"#94a3b8"}}>مثالي: 120–160 حرف ({((form as any).seo_description || "").length})</span>
+            </label>
+          </div>
+          <label className="inv-label">
+            صورة المشاركة (OG Image)
+            <input
+              value={(form as any).seo_image || ""}
+              className="inv-input"
+              onChange={e => (set as any)("seo_image", e.target.value)}
+              placeholder="رابط الصورة (فارغ = استخدام الصورة الرئيسية)"
+              dir="ltr"
+            />
+          </label>
+        </FormSection>
       </form>
     </Drawer>
   );
@@ -784,6 +913,9 @@ export function AssociationEditor({
       members_count: "",
       image_url: "",
       published: true,
+      seo_title: "",
+      seo_description: "",
+      seo_image: "",
     }
   );
   const [saving, setSaving] = useState(false);
@@ -808,6 +940,9 @@ export function AssociationEditor({
       members_count: form.members_count || "",
       image_url: form.image_url || "",
       published: form.published,
+      seo_title: (form as any).seo_title || "",
+      seo_description: (form as any).seo_description || "",
+      seo_image: (form as any).seo_image || "",
     };
     const { error: err } = form.id
       ? await supabase.from("culture_associations").update(payload).eq("id", form.id)
@@ -942,6 +1077,42 @@ export function AssociationEditor({
             label="صورة الغلاف (تظهر كهيرو في صفحة الجمعية)"
           />
         </FormSection>
+        <FormSection title="تحسين محركات البحث (SEO)">
+          <div className="inv-form-row">
+            <label className="inv-label">
+              عنوان SEO
+              <input
+                value={(form as any).seo_title || ""}
+                className="inv-input"
+                onChange={e => (set as any)("seo_title", e.target.value)}
+                placeholder="اتركه فارغاً لاستخدام العنوان الافتراضي"
+              />
+              <span style={{fontSize:"0.72rem",color:"#94a3b8"}}>مثالي: 50–65 حرف ({((form as any).seo_title || "").length})</span>
+            </label>
+            <label className="inv-label">
+              وصف SEO
+              <textarea
+                rows={3}
+                value={(form as any).seo_description || ""}
+                className="inv-input"
+                onChange={e => (set as any)("seo_description", e.target.value)}
+                placeholder="اتركه فارغاً لاستخدام الوصف الافتراضي"
+                style={{resize:"vertical"}}
+              />
+              <span style={{fontSize:"0.72rem",color:"#94a3b8"}}>مثالي: 120–160 حرف ({((form as any).seo_description || "").length})</span>
+            </label>
+          </div>
+          <label className="inv-label">
+            صورة المشاركة (OG Image)
+            <input
+              value={(form as any).seo_image || ""}
+              className="inv-input"
+              onChange={e => (set as any)("seo_image", e.target.value)}
+              placeholder="رابط الصورة (فارغ = استخدام الصورة الرئيسية)"
+              dir="ltr"
+            />
+          </label>
+        </FormSection>
       </form>
     </Drawer>
   );
@@ -970,6 +1141,9 @@ export function InitiativeEditor({
       image_url: "",
       text: "",
       published: true,
+      seo_title: "",
+      seo_description: "",
+      seo_image: "",
     }
   );
   const [saving, setSaving] = useState(false);
@@ -988,6 +1162,9 @@ export function InitiativeEditor({
       image_url: form.image_url,
       text: form.text,
       published: form.published,
+      seo_title: (form as any).seo_title || "",
+      seo_description: (form as any).seo_description || "",
+      seo_image: (form as any).seo_image || "",
     };
     const { error: err } = form.id
       ? await supabase.from("culture_initiatives").update(payload).eq("id", form.id)
@@ -1053,6 +1230,42 @@ export function InitiativeEditor({
               rows={6}
               max={2000}
               placeholder="اكتب تفاصيل المبادرة..."
+            />
+          </label>
+        </FormSection>
+        <FormSection title="تحسين محركات البحث (SEO)">
+          <div className="inv-form-row">
+            <label className="inv-label">
+              عنوان SEO
+              <input
+                value={(form as any).seo_title || ""}
+                className="inv-input"
+                onChange={e => (set as any)("seo_title", e.target.value)}
+                placeholder="اتركه فارغاً لاستخدام العنوان الافتراضي"
+              />
+              <span style={{fontSize:"0.72rem",color:"#94a3b8"}}>مثالي: 50–65 حرف ({((form as any).seo_title || "").length})</span>
+            </label>
+            <label className="inv-label">
+              وصف SEO
+              <textarea
+                rows={3}
+                value={(form as any).seo_description || ""}
+                className="inv-input"
+                onChange={e => (set as any)("seo_description", e.target.value)}
+                placeholder="اتركه فارغاً لاستخدام الوصف الافتراضي"
+                style={{resize:"vertical"}}
+              />
+              <span style={{fontSize:"0.72rem",color:"#94a3b8"}}>مثالي: 120–160 حرف ({((form as any).seo_description || "").length})</span>
+            </label>
+          </div>
+          <label className="inv-label">
+            صورة المشاركة (OG Image)
+            <input
+              value={(form as any).seo_image || ""}
+              className="inv-input"
+              onChange={e => (set as any)("seo_image", e.target.value)}
+              placeholder="رابط الصورة (فارغ = استخدام الصورة الرئيسية)"
+              dir="ltr"
             />
           </label>
         </FormSection>
@@ -1186,6 +1399,9 @@ export function CultureMediaEditor({
       link_url: "",
       description: "",
       published: true,
+      seo_title: "",
+      seo_description: "",
+      seo_image: "",
     }
   );
   const [saving, setSaving] = useState(false);
@@ -1206,6 +1422,9 @@ export function CultureMediaEditor({
       link_url: form.link_url,
       description: form.description || "",
       published: form.published,
+      seo_title: (form as any).seo_title || "",
+      seo_description: (form as any).seo_description || "",
+      seo_image: (form as any).seo_image || "",
     };
     const { error: err } = form.id
       ? await supabase.from("culture_media").update(payload).eq("id", form.id)
@@ -1304,6 +1523,42 @@ export function CultureMediaEditor({
             label="صورة مصغرة"
           />
         </FormSection>
+        <FormSection title="تحسين محركات البحث (SEO)">
+          <div className="inv-form-row">
+            <label className="inv-label">
+              عنوان SEO
+              <input
+                value={(form as any).seo_title || ""}
+                className="inv-input"
+                onChange={e => (set as any)("seo_title", e.target.value)}
+                placeholder="اتركه فارغاً لاستخدام العنوان الافتراضي"
+              />
+              <span style={{fontSize:"0.72rem",color:"#94a3b8"}}>مثالي: 50–65 حرف ({((form as any).seo_title || "").length})</span>
+            </label>
+            <label className="inv-label">
+              وصف SEO
+              <textarea
+                rows={3}
+                value={(form as any).seo_description || ""}
+                className="inv-input"
+                onChange={e => (set as any)("seo_description", e.target.value)}
+                placeholder="اتركه فارغاً لاستخدام الوصف الافتراضي"
+                style={{resize:"vertical"}}
+              />
+              <span style={{fontSize:"0.72rem",color:"#94a3b8"}}>مثالي: 120–160 حرف ({((form as any).seo_description || "").length})</span>
+            </label>
+          </div>
+          <label className="inv-label">
+            صورة المشاركة (OG Image)
+            <input
+              value={(form as any).seo_image || ""}
+              className="inv-input"
+              onChange={e => (set as any)("seo_image", e.target.value)}
+              placeholder="رابط الصورة (فارغ = استخدام الصورة الرئيسية)"
+              dir="ltr"
+            />
+          </label>
+        </FormSection>
       </form>
     </Drawer>
   );
@@ -1313,13 +1568,14 @@ export function CultureMediaEditor({
 export type ArtCategory = {
   id: string; slug: string; title: string; icon: string; image_url: string;
   description: string; activities: string; published: boolean; sort_order: number;
+  seo_title: string; seo_description: string; seo_image: string;
 };
 
 export function ArtCategoryEditor({ item, open, onSave, onClose }: {
   item: Partial<ArtCategory> | null; open: boolean; onSave: () => void; onClose: () => void;
 }) {
   const [form, setForm] = useState<Partial<ArtCategory>>(
-    item ?? { slug: "", title: "", icon: "", image_url: "", description: "", activities: "", published: true }
+    item ?? { slug: "", title: "", icon: "", image_url: "", description: "", activities: "", published: true, seo_title: "", seo_description: "", seo_image: "" }
   );
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
@@ -1334,6 +1590,9 @@ export function ArtCategoryEditor({ item, open, onSave, onClose }: {
       description: form.description || "",
       activities: form.activities || "",
       published: form.published,
+      seo_title: form.seo_title || "",
+      seo_description: form.seo_description || "",
+      seo_image: form.seo_image || "",
     };
     const { error: err } = form.id
       ? await supabase.from("culture_art_categories").update(payload).eq("id", form.id)
@@ -1373,6 +1632,42 @@ export function ArtCategoryEditor({ item, open, onSave, onClose }: {
         </FormSection>
         <FormSection title="صورة الغلاف">
           <ImageUpload value={form.image_url || ""} onChange={(url) => set("image_url", url)} label="صورة تظهر كهيرو في صفحة المجال الفني" />
+        </FormSection>
+        <FormSection title="تحسين محركات البحث (SEO)">
+          <div className="inv-form-row">
+            <label className="inv-label">
+              عنوان SEO
+              <input
+                value={form.seo_title || ""}
+                className="inv-input"
+                onChange={e => set("seo_title", e.target.value)}
+                placeholder="اتركه فارغاً لاستخدام العنوان الافتراضي"
+              />
+              <span style={{fontSize:"0.72rem",color:"#94a3b8"}}>مثالي: 50–65 حرف ({(form.seo_title || "").length})</span>
+            </label>
+            <label className="inv-label">
+              وصف SEO
+              <textarea
+                rows={3}
+                value={form.seo_description || ""}
+                className="inv-input"
+                onChange={e => set("seo_description", e.target.value)}
+                placeholder="اتركه فارغاً لاستخدام الوصف الافتراضي"
+                style={{resize:"vertical"}}
+              />
+              <span style={{fontSize:"0.72rem",color:"#94a3b8"}}>مثالي: 120–160 حرف ({(form.seo_description || "").length})</span>
+            </label>
+          </div>
+          <label className="inv-label">
+            صورة المشاركة (OG Image)
+            <input
+              value={form.seo_image || ""}
+              className="inv-input"
+              onChange={e => set("seo_image", e.target.value)}
+              placeholder="رابط الصورة (فارغ = استخدام الصورة الرئيسية)"
+              dir="ltr"
+            />
+          </label>
         </FormSection>
       </form>
     </Drawer>
