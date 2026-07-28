@@ -3,7 +3,7 @@ import { supabase } from "./supabase";
 import { Aperture, ArrowLeft, Award, BadgeCheck, BadgePercent, Banknote, BookOpen, BriefcaseBusiness, Building2, Calendar, CalendarDays, Camera, ChartNoAxesCombined, ChartPie, Check, ChevronLeft, CircleAlert, CircleCheckBig, Circle as CircleHelp, Clock3, CreditCard, Crown, Eye, Factory, Feather, FileImage, FileText, FileUp, Gem, Gift, Globe as Globe2, GraduationCap, HandHeart, Handshake, Headphones, HeartHandshake, HeartPulse, Landmark, LayoutDashboard, LayoutGrid, LibraryBig, Lightbulb, Menu, Megaphone, MonitorCheck, Music2, Network, Newspaper, MessageCircle, Info, LockKeyhole, Mail, MapPin, Paperclip, Percent, Phone, QrCode, ReceiptText, Palette, Pill, CirclePlay as PlayCircle, RefreshCw, ScanFace, Search, Settings2, Share2, Shield, ShieldCheck, Stethoscope, Send, ShoppingCart, Sparkles, Sprout, Store, Tags, Target, TrendingUp, Trophy, Truck, Upload, UserCheck, UserPlus, UserRound, UsersRound, Video, WalletCards, X } from "lucide-react";
 
 type InternalKey = "services" | "initiatives" | "news" | "library";
-type PageKey = "home" | "about" | "social" | "education" | "health" | "investment" | "culture" | InternalKey | "membership" | "register" | "photo" | "payment" | "success" | "contact" | "events" | "news-detail" | "events-detail" | "inv-sector" | "inv-opportunity" | "culture-event-detail" | "culture-news-detail" | "culture-artist-detail" | "culture-initiative-detail" | "culture-media-detail" | "culture-art-detail" | "culture-association-detail" | "social-initiative-detail";
+type PageKey = "home" | "about" | "social" | "education" | "health" | "investment" | "culture" | InternalKey | "membership" | "register" | "photo" | "payment" | "success" | "contact" | "events" | "news-detail" | "events-detail" | "inv-sector" | "inv-opportunity" | "culture-event-detail" | "culture-news-detail" | "culture-artist-detail" | "culture-initiative-detail" | "culture-media-detail" | "culture-art-detail" | "culture-association-detail" | "social-initiative-detail" | "social-service-detail";
 type PortalKey = "social" | "education" | "health" | "investment" | "culture";
 
 const MARKET_URL="https://sudan-market.com/";
@@ -21,6 +21,7 @@ const routeMap: Record<string, PageKey> = {
   "culture-association-detail":"culture-association-detail",
   "inv-sector":"inv-sector", "inv-opportunity":"inv-opportunity",
   "social-initiative-detail":"social-initiative-detail",
+  "social-service-detail":"social-service-detail",
 };
 
 const nav = [["/","الرئيسية"],["/about","عن الرابطة"],["/social","الخدمات"],["/investment","المبادرات"],["/culture","الثقافة"],["/education","التعليم"],["/contact","تواصل معنا"]];
@@ -543,7 +544,7 @@ function SocialPage(){
 
     <section className="ss-quick page-width motion">{services.map(svc=>{const Icon=ssIconMap[svc.icon]||HeartHandshake;return <a href="#social-services" key={svc.id}><span className="ss-quick-icon" aria-hidden="true"><Icon/></span><span><b>{svc.title}</b><small>{svc.lead.slice(0,28)}...</small></span></a>;})}</section>
 
-    <section id="social-services" className="ss-services page-width"><div className="ss-title motion"><span/><h2>خدماتنا الاجتماعية</h2><span/></div><div className="ss-service-grid">{services.map(svc=>{const Icon=ssIconMap[svc.icon]||HeartHandshake;return <article className="ss-service-card motion" key={svc.id}><div className="ss-service-icon" aria-hidden="true"><Icon/></div><h3>{svc.title}</h3><p>{svc.lead}</p><ul>{[svc.bullet_1,svc.bullet_2,svc.bullet_3,svc.bullet_4].filter(Boolean).map(b=><li key={b}>{b}</li>)}</ul><a href="/contact">{svc.action_label}<ArrowLeft/></a></article>;})}</div></section>
+    <section id="social-services" className="ss-services page-width"><div className="ss-title motion"><span/><h2>خدماتنا الاجتماعية</h2><span/></div><div className="ss-service-grid">{services.map(svc=>{const Icon=ssIconMap[svc.icon]||HeartHandshake;return <article className="ss-service-card motion" key={svc.id}><div className="ss-service-icon" aria-hidden="true"><Icon/></div><h3>{svc.title}</h3><p>{svc.lead}</p><ul>{[svc.bullet_1,svc.bullet_2,svc.bullet_3,svc.bullet_4].filter(Boolean).map(b=><li key={b}>{b}</li>)}</ul><a href={svc.slug?`/social/service/${svc.slug}`:"/contact"}>{svc.action_label}<ArrowLeft/></a></article>;})}</div></section>
 
     <section className="ss-initiatives page-width"><div className="ss-title motion"><span/><h2>مبادراتنا الحالية</h2><span/></div><div className="ss-initiative-grid">{initiatives.map(item=><article className="ss-initiative-card motion" key={item.id}><img src={item.image_url} alt={item.title}/><div><h3>{item.title}</h3><p>{item.text}</p><small>تم جمع {item.progress}%</small><span className="ss-progress"><i style={{width:`${item.progress}%`}}/></span><footer><b>{item.amount}</b><a href={item.slug?`/social/initiative/${item.slug}`:"/contact"}>{item.action_label}</a></footer></div></article>)}</div><a className="ss-all-initiatives" href="/contact">عرض جميع المبادرات <ArrowLeft/></a></section>
 
@@ -2068,6 +2069,118 @@ function CultureArtistDetailPage({slug}:{slug?:string}){
   );
 }
 
+function SocialServiceDetailPage({slug}:{slug?:string}){
+  type SvcRow={id:string;title:string;lead:string;icon:string;bullet_1:string;bullet_2:string;bullet_3:string;bullet_4:string;action_label:string;full_description:string;image_url:string;published:boolean};
+  const [item,setItem]=useState<SvcRow|null>(null);
+  const [loading,setLoading]=useState(true);
+  const iconMap2:Record<string,React.ElementType>={HeartHandshake,HandHeart,MessageCircle,UsersRound,Headphones,GraduationCap,BookOpen,UserPlus,Handshake,Eye,Network,ShieldCheck,UserCheck};
+  useEffect(()=>{
+    if(!slug){setLoading(false);return;}
+    supabase.from("social_services").select("*").eq("slug",slug).maybeSingle().then(({data})=>{setItem(data as SvcRow|null);setLoading(false);});
+  },[slug]);
+
+  if(loading)return(
+    <div style={{minHeight:"60vh",display:"flex",alignItems:"center",justifyContent:"center"}}>
+      <div style={{textAlign:"center",color:"#64748b"}}>
+        <div style={{width:40,height:40,border:"3px solid #0f766e",borderTopColor:"transparent",borderRadius:"50%",animation:"spin 0.8s linear infinite",margin:"0 auto 1rem"}}/>
+        <p>جاري التحميل...</p>
+      </div>
+    </div>
+  );
+  if(!item)return(
+    <div style={{minHeight:"60vh",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:"1rem"}}>
+      <h2 style={{color:"#0f172a"}}>الخدمة غير موجودة</h2>
+      <a href="/social" style={{background:"#0f766e",color:"#fff",padding:"0.6rem 1.5rem",borderRadius:"0.5rem",textDecoration:"none",fontWeight:600}}>العودة للخدمات الاجتماعية</a>
+    </div>
+  );
+
+  const Icon=iconMap2[item.icon]||HeartHandshake;
+  const bullets=[item.bullet_1,item.bullet_2,item.bullet_3,item.bullet_4].filter(Boolean);
+  return(
+    <div dir="rtl" style={{background:"#f8fafc",minHeight:"100vh"}}>
+      {/* ── Hero ── */}
+      <div style={{position:"relative",height:"380px",overflow:"hidden"}}>
+        {item.image_url
+          ? <img src={item.image_url} alt={item.title} style={{width:"100%",height:"100%",objectFit:"cover"}}/>
+          : <div style={{width:"100%",height:"100%",background:"linear-gradient(135deg,#064e3b,#0f766e,#14b8a6)"}}/>
+        }
+        <div style={{position:"absolute",inset:0,background:"linear-gradient(to top,rgba(6,30,25,0.82) 0%,rgba(6,30,25,0.35) 55%,rgba(6,30,25,0.1) 100%)"}}/>
+        <div style={{position:"absolute",inset:0,display:"flex",flexDirection:"column",justifyContent:"flex-end",padding:"2.5rem",maxWidth:"1200px",margin:"0 auto",left:0,right:0}}>
+          <div style={{display:"flex",alignItems:"center",gap:"0.75rem",marginBottom:"0.75rem"}}>
+            <span style={{background:"rgba(255,255,255,0.15)",backdropFilter:"blur(8px)",color:"#fff",width:52,height:52,borderRadius:"0.875rem",display:"flex",alignItems:"center",justifyContent:"center",border:"1px solid rgba(255,255,255,0.25)"}}>
+              <Icon size={26}/>
+            </span>
+            <span style={{background:"#0f766e",color:"#fff",padding:"0.3rem 0.9rem",borderRadius:"9999px",fontSize:"0.78rem",fontWeight:700}}>خدمة اجتماعية</span>
+          </div>
+          <h1 style={{color:"#fff",fontSize:"clamp(1.6rem,4vw,2.2rem)",fontWeight:800,margin:"0 0 0.4rem",textShadow:"0 2px 8px rgba(0,0,0,0.4)"}}>{item.title}</h1>
+          <p style={{color:"rgba(255,255,255,0.8)",fontSize:"1rem",maxWidth:"580px",margin:0,lineHeight:1.6}}>{item.lead}</p>
+        </div>
+      </div>
+
+      {/* ── Main content ── */}
+      <div style={{maxWidth:"1200px",margin:"0 auto",padding:"2.5rem 1.5rem",display:"grid",gridTemplateColumns:"1fr 320px",gap:"2rem",alignItems:"start"}} className="soc-svc-grid">
+        {/* Left */}
+        <div>
+          {item.full_description&&(
+            <div style={{background:"#fff",borderRadius:"1rem",padding:"2rem",boxShadow:"0 1px 6px rgba(0,0,0,0.06)",marginBottom:"1.5rem"}}>
+              <h2 style={{fontSize:"1.05rem",fontWeight:700,color:"#0f172a",marginBottom:"1.25rem",paddingBottom:"0.75rem",borderBottom:"2px solid #f0fdfa",display:"flex",alignItems:"center",gap:"0.5rem"}}>
+                <span style={{color:"#0f766e",fontSize:"1.1rem"}}>◈</span> تفاصيل الخدمة
+              </h2>
+              <div style={{color:"#374151",lineHeight:1.9,fontSize:"0.95rem"}} dangerouslySetInnerHTML={{__html:item.full_description.replace(/\n/g,"<br/>")}}/>
+            </div>
+          )}
+          {!item.full_description&&(
+            <div style={{background:"#fff",borderRadius:"1rem",padding:"2rem",boxShadow:"0 1px 6px rgba(0,0,0,0.06)",marginBottom:"1.5rem"}}>
+              <p style={{color:"#64748b",lineHeight:1.8,fontSize:"0.95rem"}}>{item.lead}</p>
+            </div>
+          )}
+          {/* Bullets as feature cards */}
+          {bullets.length>0&&(
+            <div style={{background:"#fff",borderRadius:"1rem",padding:"1.75rem",boxShadow:"0 1px 6px rgba(0,0,0,0.06)",marginBottom:"1.5rem"}}>
+              <h3 style={{fontSize:"0.95rem",fontWeight:700,color:"#0f172a",marginBottom:"1.25rem"}}>ما تشمله هذه الخدمة</h3>
+              <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(180px,1fr))",gap:"0.75rem"}}>
+                {bullets.map(b=>(
+                  <div key={b} style={{display:"flex",alignItems:"center",gap:"0.625rem",padding:"0.75rem 1rem",background:"#f0fdfa",borderRadius:"0.625rem",border:"1px solid #ccfbf1"}}>
+                    <span style={{color:"#0f766e",fontWeight:800,fontSize:"1rem",flexShrink:0}}>✓</span>
+                    <span style={{fontSize:"0.85rem",fontWeight:600,color:"#0f172a"}}>{b}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+          <a href="/social" style={{display:"inline-flex",alignItems:"center",gap:"0.5rem",color:"#0f766e",fontWeight:600,textDecoration:"none",fontSize:"0.9rem"}}>
+            <ArrowLeft size={16}/> العودة لجميع الخدمات الاجتماعية
+          </a>
+        </div>
+
+        {/* Right — action card */}
+        <div style={{position:"sticky",top:"6rem"}}>
+          <div style={{background:"#fff",borderRadius:"1rem",padding:"1.75rem",boxShadow:"0 4px 20px rgba(0,0,0,0.1)",border:"1px solid #e2e8f0"}}>
+            <div style={{display:"flex",alignItems:"center",justifyContent:"center",width:64,height:64,background:"linear-gradient(135deg,#0f766e,#14b8a6)",borderRadius:"1rem",margin:"0 auto 1.25rem",boxShadow:"0 4px 12px rgba(15,118,110,0.35)"}}>
+              <Icon size={32} color="#fff"/>
+            </div>
+            <h3 style={{textAlign:"center",fontSize:"1rem",fontWeight:700,color:"#0f172a",marginBottom:"0.5rem"}}>{item.title}</h3>
+            <p style={{textAlign:"center",fontSize:"0.8rem",color:"#64748b",marginBottom:"1.5rem",lineHeight:1.6}}>{item.lead}</p>
+            <div style={{borderTop:"1px solid #f1f5f9",paddingTop:"1.25rem",marginBottom:"1.25rem"}}>
+              {bullets.map(b=>(
+                <div key={b} style={{display:"flex",alignItems:"center",gap:"0.5rem",marginBottom:"0.5rem"}}>
+                  <span style={{color:"#0f766e",fontWeight:700,fontSize:"0.85rem"}}>✓</span>
+                  <span style={{fontSize:"0.82rem",color:"#475569"}}>{b}</span>
+                </div>
+              ))}
+            </div>
+            <a href="/contact" style={{display:"block",background:"#0f766e",color:"#fff",padding:"0.85rem",borderRadius:"0.625rem",textAlign:"center",fontWeight:700,textDecoration:"none",fontSize:"0.95rem"}}
+              onMouseEnter={e=>(e.currentTarget.style.background="#0d6460")}
+              onMouseLeave={e=>(e.currentTarget.style.background="#0f766e")}
+            >{item.action_label}</a>
+            <p style={{fontSize:"0.72rem",color:"#94a3b8",textAlign:"center",marginTop:"0.625rem"}}>تواصل معنا للمزيد من المعلومات</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function SocialInitiativeDetailPage({slug}:{slug?:string}){
   type InitRow = {id:string;title:string;image_url:string;text:string;full_description:string;progress:number;amount:string;icon:string;action_label:string;published:boolean};
   const [item,setItem]=useState<InitRow|null>(null);
@@ -2214,6 +2327,6 @@ function CultureInitiativeDetailPage({slug}:{slug?:string}){
   );
 }
 
-export default function NileSite({page,slug}:{page:string;slug?:string}){const active=routeMap[page]||"home";const hideHeader=["membership","photo","payment","success"].includes(active);const hideFooter=["membership","photo","payment","success"].includes(active);return <div dir="rtl"><Motion/>{!hideHeader&&<Header active={active}/>}<main>{active==="home"?<Home/>:active==="about"?<AboutPage/>:active==="social"?<SocialPage/>:active==="education"?<EducationPage/>:active==="health"?<HealthPage/>:active==="investment"?<InvestmentPage/>:active==="inv-sector"?<InvestmentSectorDetailPage slug={slug}/>:active==="inv-opportunity"?<InvestmentOpportunityDetailPage slug={slug}/>:active==="culture"?<CulturePage/>:active==="social-initiative-detail"?<SocialInitiativeDetailPage slug={slug}/>:active==="culture-art-detail"?<CultureArtDetailPage slug={slug}/>:
+export default function NileSite({page,slug}:{page:string;slug?:string}){const active=routeMap[page]||"home";const hideHeader=["membership","photo","payment","success"].includes(active);const hideFooter=["membership","photo","payment","success"].includes(active);return <div dir="rtl"><Motion/>{!hideHeader&&<Header active={active}/>}<main>{active==="home"?<Home/>:active==="about"?<AboutPage/>:active==="social"?<SocialPage/>:active==="education"?<EducationPage/>:active==="health"?<HealthPage/>:active==="investment"?<InvestmentPage/>:active==="inv-sector"?<InvestmentSectorDetailPage slug={slug}/>:active==="inv-opportunity"?<InvestmentOpportunityDetailPage slug={slug}/>:active==="culture"?<CulturePage/>:active==="social-initiative-detail"?<SocialInitiativeDetailPage slug={slug}/>:active==="social-service-detail"?<SocialServiceDetailPage slug={slug}/>:active==="culture-art-detail"?<CultureArtDetailPage slug={slug}/>:
 active==="culture-association-detail"?<CultureAssociationDetailPage slug={slug}/>:
 active==="culture-media-detail"?<CultureMediaDetailPage slug={slug}/>:active==="culture-event-detail"?<CultureEventDetailPage slug={slug}/>:active==="culture-news-detail"?<CultureNewsDetailPage slug={slug}/>:active==="culture-artist-detail"?<CultureArtistDetailPage slug={slug}/>:active==="culture-initiative-detail"?<CultureInitiativeDetailPage slug={slug}/>:["services","initiatives","library"].includes(active)?<InternalPage type={active as InternalKey}/>:active==="news"?<NewsListPage/>:active==="news-detail"?<NewsDetailPage slug={slug}/>:active==="events"?<EventsListPage/>:active==="events-detail"?<EventDetailPage slug={slug}/>:active==="membership"?<Membership/>:active==="register"?<Register/>:active==="photo"?<PhotoUpload/>:active==="payment"?<Payment/>:active==="success"?<Success/>:active==="contact"?<Contact/>:<Home/>}</main>{!hideFooter&&<Footer/>}</div>}

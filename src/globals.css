@@ -1946,3 +1946,4 @@ select.inv-input{cursor:pointer}
 @media (max-width: 768px) {
   .soc-init-grid { grid-template-columns: 1fr !important; }
 }
+@media (max-width: 768px) { .soc-svc-grid { grid-template-columns: 1fr !important; } }

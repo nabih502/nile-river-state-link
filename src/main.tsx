@@ -26,6 +26,9 @@ function parseRoute(): { page: string; slug?: string } {
   if (parts[0] === "social" && parts.length >= 3 && parts[1] === "initiative") {
     return { page: "social-initiative-detail", slug: parts[2] };
   }
+  if (parts[0] === "social" && parts.length >= 3 && parts[1] === "service") {
+    return { page: "social-service-detail", slug: parts[2] };
+  }
   return { page: parts[0] };
 }
 

@@ -159,7 +159,8 @@ function ServicesTab({ items, setItems, onEdit, onDelete }: {
                 <span key={b} style={{ background: "#f1f5f9", color: "#475569", padding: "0.2rem 0.6rem", borderRadius: "0.375rem", fontSize: "0.72rem" }}>{b}</span>
               ))}
             </div>
-            <div style={{ display: "flex", gap: "0.5rem", justifyContent: "flex-end" }}>
+            <div style={{ display: "flex", gap: "0.5rem", justifyContent: "flex-end", alignItems: "center" }}>
+              {row.slug && <a href={`/social/service/${row.slug}`} target="_blank" rel="noopener noreferrer" style={{ background: "#f0fdfa", color: "#0f766e", padding: "0.2rem 0.6rem", borderRadius: "9999px", fontSize: "0.7rem", fontWeight: 600, textDecoration: "none", border: "1px solid #ccfbf1" }}>↗ معاينة</a>}
               <button type="button" className="inv-icon-btn" onClick={() => onEdit(row)} title="تعديل"><Pencil size={14} /></button>
               <button type="button" className="inv-icon-btn inv-icon-btn--danger" onClick={() => onDelete(row.id)} title="حذف"><Trash2 size={14} /></button>
             </div>

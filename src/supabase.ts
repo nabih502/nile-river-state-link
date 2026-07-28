@@ -248,6 +248,9 @@ export type SocialService = {
   bullet_3: string;
   bullet_4: string;
   action_label: string;
+  slug: string;
+  full_description: string;
+  image_url: string;
   published: boolean;
   sort_order: number;
   created_at: string;

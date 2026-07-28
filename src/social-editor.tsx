@@ -89,7 +89,7 @@ export function ServiceEditor({ item, open, onSave, onClose }: {
   item: Partial<SocialService> | null; open: boolean; onSave: () => void; onClose: () => void;
 }) {
   const [form, setForm] = useState<Partial<SocialService>>(
-    item ?? { icon: "HeartHandshake", title: "", lead: "", bullet_1: "", bullet_2: "", bullet_3: "", bullet_4: "", action_label: "تواصل معنا", published: true }
+    item ?? { icon: "HeartHandshake", title: "", lead: "", bullet_1: "", bullet_2: "", bullet_3: "", bullet_4: "", action_label: "تواصل معنا", slug: "", full_description: "", image_url: "", published: true }
   );
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
@@ -97,7 +97,15 @@ export function ServiceEditor({ item, open, onSave, onClose }: {
 
   const save = async (e: React.FormEvent) => {
     e.preventDefault(); setSaving(true); setError("");
-    const payload = { icon: form.icon, title: form.title, lead: form.lead, bullet_1: form.bullet_1 || "", bullet_2: form.bullet_2 || "", bullet_3: form.bullet_3 || "", bullet_4: form.bullet_4 || "", action_label: form.action_label, published: form.published };
+    const payload = {
+      icon: form.icon, title: form.title, lead: form.lead,
+      bullet_1: form.bullet_1 || "", bullet_2: form.bullet_2 || "", bullet_3: form.bullet_3 || "", bullet_4: form.bullet_4 || "",
+      action_label: form.action_label,
+      slug: form.slug || toSlug(form.title || "") || `service-${Date.now()}`,
+      full_description: form.full_description || "",
+      image_url: form.image_url || "",
+      published: form.published,
+    };
     const { error: err } = form.id
       ? await supabase.from("social_services").update(payload).eq("id", form.id)
       : await supabase.from("social_services").insert(payload);
@@ -115,28 +123,39 @@ export function ServiceEditor({ item, open, onSave, onClose }: {
             <span>العنوان <span className="inv-req">*</span></span>
             <input required value={form.title || ""} className="inv-input" onChange={(e) => set("title", e.target.value)} />
           </label>
+          <label className="inv-label">
+            الرابط المختصر (Slug)
+            <input value={form.slug || ""} className="inv-input" dir="ltr" placeholder="يُولَّد تلقائياً من العنوان" onChange={(e) => set("slug", e.target.value)} />
+          </label>
           <div className="inv-form-row">
             <label className="inv-label">
               الأيقونة (Lucide)
               <input value={form.icon || ""} className="inv-input" dir="ltr" placeholder="HeartHandshake" onChange={(e) => set("icon", e.target.value)} />
             </label>
             <label className="inv-label">
-              نص الزر
+              نص زر الإجراء
               <input value={form.action_label || ""} className="inv-input" placeholder="تواصل معنا" onChange={(e) => set("action_label", e.target.value)} />
             </label>
           </div>
           <label className="inv-label">
-            النص التعريفي
+            النص التعريفي المختصر
             <textarea value={form.lead || ""} className="inv-input" rows={2} placeholder="وصف موجز للخدمة..." style={{ resize: "vertical" }} onChange={(e) => set("lead", e.target.value)} />
           </label>
+          <label className="inv-label">
+            الوصف التفصيلي الكامل (يظهر في صفحة الخدمة)
+            <textarea value={form.full_description || ""} className="inv-input" rows={6} placeholder="اكتب وصفاً تفصيلياً يظهر عند فتح صفحة الخدمة..." style={{ resize: "vertical" }} onChange={(e) => set("full_description", e.target.value)} />
+          </label>
         </FormSection>
-        <FormSection title="التفاصيل (4 نقاط)">
+        <FormSection title="ما تشمله الخدمة (4 نقاط)">
           {(["bullet_1","bullet_2","bullet_3","bullet_4"] as const).map((k, i) => (
             <label className="inv-label" key={k}>
               النقطة {i + 1}
               <input value={form[k] || ""} className="inv-input" onChange={(e) => set(k, e.target.value)} />
             </label>
           ))}
+        </FormSection>
+        <FormSection title="الصورة">
+          <ImageUpload value={form.image_url || ""} onChange={(url) => set("image_url", url)} label="صورة الخدمة (تظهر في صفحة التفاصيل)" />
         </FormSection>
       </form>
     </Drawer>
