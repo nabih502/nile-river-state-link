@@ -6,8 +6,8 @@ import { SocialPanel } from "./admin-social";
 
 type Section = "dashboard" | "news" | "events" | "members" | "messages" | "investment" | "culture" | "social" | "settings";
 
-interface NewsRow { id: string; title: string; slug: string; excerpt: string; body: string; image_url: string; category: string; published: boolean; published_at: string | null; created_at: string; }
-interface EventRow { id: string; title: string; slug: string; excerpt: string; body: string; image_url: string; location: string; event_date: string; event_end_date: string | null; published: boolean; created_at: string; }
+interface NewsRow { id: string; title: string; slug: string; excerpt: string; body: string; image_url: string; category: string; published: boolean; published_at: string | null; created_at: string; author_name: string; author_image_url: string; read_time: number; }
+interface EventRow { id: string; title: string; slug: string; excerpt: string; body: string; image_url: string; location: string; event_date: string; event_end_date: string | null; published: boolean; created_at: string; author_name: string; author_image_url: string; organizer: string; }
 interface MemberRow { id: string; full_name: string; email: string; phone: string; national_id: string; gender: string; country: string; state: string; membership_type: string; status: string; created_at: string; }
 interface MessageRow { id: string; name: string; email: string; phone: string; subject: string; message: string; read: boolean; created_at: string; }
 interface Stats { news: number; events: number; members: number; messages: number; unread: number; inquiries: number; newInquiries: number; }
@@ -78,7 +78,7 @@ function Confirm({ message, onConfirm, onCancel }: { message: string; onConfirm:
 
 // ─── News Editor ─────────────────────────────────────────────────────────────
 function NewsEditor({ item, onSave, onCancel }: { item: Partial<NewsRow> | null; onSave: () => void; onCancel: () => void }) {
-  const blank: Partial<NewsRow> = { title: "", slug: "", excerpt: "", body: "", image_url: "", category: "عام", published: false };
+  const blank: Partial<NewsRow> = { title: "", slug: "", excerpt: "", body: "", image_url: "", category: "عام", published: false, author_name: "", author_image_url: "", read_time: 0 };
   const [form, setForm] = useState<Partial<NewsRow>>(item ?? blank);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
@@ -98,6 +98,9 @@ function NewsEditor({ item, onSave, onCancel }: { item: Partial<NewsRow> | null;
       category: form.category,
       published: form.published,
       published_at: form.published ? (form.published_at || new Date().toISOString()) : null,
+      author_name: form.author_name || "",
+      author_image_url: form.author_image_url || "",
+      read_time: form.read_time || 0,
     };
     const { error: err } = form.id
       ? await supabase.from("news").update(payload).eq("id", form.id)
@@ -129,6 +132,11 @@ function NewsEditor({ item, onSave, onCancel }: { item: Partial<NewsRow> | null;
             </select>
           </label>
         </div>
+        <div className="adm-form-row">
+          <label>اسم الكاتب<input value={form.author_name || ""} onChange={e => set("author_name", e.target.value)} placeholder="اسم محرر الخبر" /></label>
+          <label>صورة الكاتب (رابط)<input value={form.author_image_url || ""} onChange={e => set("author_image_url", e.target.value)} dir="ltr" placeholder="https://..." /></label>
+        </div>
+        <label>وقت القراءة (بالدقائق)<input type="number" min={0} max={120} value={form.read_time || 0} onChange={e => set("read_time", e.target.value)} style={{width:"120px"}} /></label>
         <label className="adm-toggle-label">
           <input type="checkbox" checked={!!form.published} onChange={e => set("published", e.target.checked)} />
           نشر الخبر
@@ -144,7 +152,7 @@ function NewsEditor({ item, onSave, onCancel }: { item: Partial<NewsRow> | null;
 
 // ─── Event Editor ─────────────────────────────────────────────────────────────
 function EventEditor({ item, onSave, onCancel }: { item: Partial<EventRow> | null; onSave: () => void; onCancel: () => void }) {
-  const blank: Partial<EventRow> = { title: "", slug: "", excerpt: "", body: "", image_url: "", location: "", event_date: new Date().toISOString().slice(0, 16), event_end_date: null, published: false };
+  const blank: Partial<EventRow> = { title: "", slug: "", excerpt: "", body: "", image_url: "", location: "", event_date: new Date().toISOString().slice(0, 16), event_end_date: null, published: false, author_name: "", author_image_url: "", organizer: "" };
   const [form, setForm] = useState<Partial<EventRow>>(item ?? blank);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
@@ -165,6 +173,9 @@ function EventEditor({ item, onSave, onCancel }: { item: Partial<EventRow> | nul
       event_date: form.event_date,
       event_end_date: form.event_end_date || null,
       published: form.published,
+      author_name: form.author_name || "",
+      author_image_url: form.author_image_url || "",
+      organizer: form.organizer || "",
     };
     const { error: err } = form.id
       ? await supabase.from("events").update(payload).eq("id", form.id)
@@ -192,6 +203,11 @@ function EventEditor({ item, onSave, onCancel }: { item: Partial<EventRow> | nul
           <label>رابط الصورة<input value={form.image_url || ""} onChange={e => set("image_url", e.target.value)} dir="ltr" /></label>
           <label>الموقع<input value={form.location || ""} onChange={e => set("location", e.target.value)} /></label>
         </div>
+        <div className="adm-form-row">
+          <label>اسم المنظِّم<input value={form.author_name || ""} onChange={e => set("author_name", e.target.value)} placeholder="اسم المنظم أو مقدم الفعالية" /></label>
+          <label>الجهة المنظِّمة<input value={form.organizer || ""} onChange={e => set("organizer", e.target.value)} placeholder="الجهة أو المؤسسة المنظِّمة" /></label>
+        </div>
+        <label>صورة المنظِّم (رابط)<input value={form.author_image_url || ""} onChange={e => set("author_image_url", e.target.value)} dir="ltr" placeholder="https://..." /></label>
         <div className="adm-form-row">
           <label>تاريخ البداية *<input required type="datetime-local" value={(form.event_date || "").slice(0, 16)} onChange={e => set("event_date", e.target.value)} dir="ltr" /></label>
           <label>تاريخ النهاية<input type="datetime-local" value={(form.event_end_date || "").slice(0, 16)} onChange={e => set("event_end_date", e.target.value || null)} dir="ltr" /></label>

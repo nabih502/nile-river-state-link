@@ -1904,30 +1904,151 @@ function InvestmentOpportunityDetailPage({slug}:{slug?:string}){
 
 // ─── News detail page ─────────────────────────────────────────────────────────
 function NewsDetailPage({slug}:{slug?:string}) {
-  const [item, setItem] = useState<{title:string;body:string;excerpt:string;image_url:string;category:string;published_at:string|null;created_at:string}|null>(null);
+  type NewsItem={id:string;title:string;slug:string;body:string;excerpt:string;image_url:string;category:string;published_at:string|null;created_at:string;author_name:string;author_image_url:string;read_time:number};
+  const [item, setItem] = useState<NewsItem|null>(null);
   const [loading, setLoading] = useState(true);
+  const [copied, setCopied] = useState(false);
+
   useEffect(() => {
     if (!slug) return;
-    supabase.from("news").select("*").eq("slug",slug).eq("published",true).maybeSingle().then(({data})=>{setItem(data);setLoading(false);});
+    supabase.from("news").select("*").eq("slug",slug).eq("published",true).maybeSingle().then(({data})=>{setItem(data as NewsItem|null);setLoading(false);});
   }, [slug]);
-  if (loading) return <div style={{padding:"6rem 1rem",textAlign:"center",color:"#64748b"}}>جاري التحميل...</div>;
-  if (!item) return (
-    <div style={{padding:"6rem 1rem",textAlign:"center"}}>
-      <h2 style={{color:"#dc2626"}}>الخبر غير موجود</h2>
-      <a href="/news" style={{color:"#2563eb"}}>العودة للأخبار</a>
+
+  const pageUrl = typeof window!=="undefined" ? window.location.href : "";
+  const share = (platform: string) => {
+    const text = encodeURIComponent(item?.title||"");
+    const url = encodeURIComponent(pageUrl);
+    const urls: Record<string,string> = {
+      whatsapp: `https://wa.me/?text=${text}%20${url}`,
+      twitter:  `https://twitter.com/intent/tweet?text=${text}&url=${url}`,
+      facebook: `https://www.facebook.com/sharer/sharer.php?u=${url}`,
+      telegram: `https://t.me/share/url?url=${url}&text=${text}`,
+    };
+    if(urls[platform]) window.open(urls[platform],"_blank","noopener,noreferrer,width=600,height=450");
+  };
+  const copyLink = () => {
+    navigator.clipboard.writeText(pageUrl).then(()=>{setCopied(true);setTimeout(()=>setCopied(false),2000);});
+  };
+
+  const fmtDate=(d:string|null,c:string)=>new Date(d||c).toLocaleDateString("ar-SA",{weekday:"long",year:"numeric",month:"long",day:"numeric"});
+
+  if (loading) return (
+    <div style={{minHeight:"60vh",display:"flex",alignItems:"center",justifyContent:"center"}}>
+      <div style={{textAlign:"center",color:"#64748b"}}><div style={{width:40,height:40,border:"3px solid #2563eb",borderTopColor:"transparent",borderRadius:"50%",animation:"spin 0.8s linear infinite",margin:"0 auto 1rem"}}/><p>جاري التحميل...</p></div>
     </div>
   );
+  if (!item) return (
+    <div style={{minHeight:"60vh",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:"1rem"}}>
+      <h2 style={{color:"#0f172a"}}>الخبر غير موجود</h2>
+      <a href="/news" style={{background:"#2563eb",color:"#fff",padding:"0.65rem 1.5rem",borderRadius:"0.5rem",textDecoration:"none",fontWeight:700}}>العودة للأخبار</a>
+    </div>
+  );
+
   return (
-    <div dir="rtl">
-      {item.image_url && <div className="detail-hero-img"><img src={item.image_url} alt={item.title} /></div>}
-      <article className="detail-article page-width">
-        <span className="news-cat">{item.category}</span>
-        <h1>{item.title}</h1>
-        <small className="detail-date">{item.published_at ? new Date(item.published_at).toLocaleDateString("ar-SA",{year:"numeric",month:"long",day:"numeric"}) : new Date(item.created_at).toLocaleDateString("ar-SA",{year:"numeric",month:"long",day:"numeric"})}</small>
-        {item.excerpt && <p className="detail-excerpt">{item.excerpt}</p>}
-        <div className="detail-body" dangerouslySetInnerHTML={{__html: item.body.replace(/\n/g,"<br/>")}} />
-        <a href="/news" className="detail-back">← العودة للأخبار</a>
-      </article>
+    <div dir="rtl" style={{background:"#f8fafc",minHeight:"100vh"}}>
+      {/* ── Hero ── */}
+      <div style={{position:"relative",height:"460px",overflow:"hidden",background:"#0f172a"}}>
+        {item.image_url
+          ? <img src={item.image_url} alt={item.title} style={{width:"100%",height:"100%",objectFit:"cover"}}/>
+          : <div style={{width:"100%",height:"100%",background:"linear-gradient(135deg,#1e3a5f,#2563eb)"}}/>
+        }
+        <div style={{position:"absolute",inset:0,background:"linear-gradient(to top,rgba(0,0,0,0.88) 0%,rgba(0,0,0,0.45) 55%,rgba(0,0,0,0.05) 100%)"}}/>
+        <div style={{position:"absolute",inset:0,display:"flex",flexDirection:"column",justifyContent:"flex-end",padding:"clamp(1.5rem,4vw,3rem)",maxWidth:"1200px",margin:"0 auto",left:0,right:0}}>
+          <div style={{display:"flex",flexWrap:"wrap",gap:"0.5rem",marginBottom:"0.9rem"}}>
+            {item.category && <span style={{background:"#2563eb",color:"#fff",padding:"0.3rem 0.9rem",borderRadius:"9999px",fontSize:"0.78rem",fontWeight:700}}>{item.category}</span>}
+            {item.read_time>0 && <span style={{background:"rgba(255,255,255,0.12)",backdropFilter:"blur(8px)",color:"rgba(255,255,255,0.85)",padding:"0.3rem 0.9rem",borderRadius:"9999px",fontSize:"0.78rem",fontWeight:600,border:"1px solid rgba(255,255,255,0.15)",display:"flex",alignItems:"center",gap:"0.3rem"}}><Clock3 size={12}/> {item.read_time} دقائق قراءة</span>}
+          </div>
+          <h1 style={{color:"#fff",fontSize:"clamp(1.5rem,3.5vw,2.4rem)",fontWeight:900,margin:"0 0 0.9rem",lineHeight:1.3,textShadow:"0 2px 16px rgba(0,0,0,0.5)",maxWidth:"860px"}}>
+            {item.title}
+          </h1>
+          {/* Author + date row */}
+          <div style={{display:"flex",alignItems:"center",gap:"1.5rem",flexWrap:"wrap"}}>
+            {item.author_name && (
+              <div style={{display:"flex",alignItems:"center",gap:"0.6rem"}}>
+                {item.author_image_url
+                  ? <img src={item.author_image_url} alt={item.author_name} style={{width:36,height:36,borderRadius:"50%",objectFit:"cover",border:"2px solid rgba(255,255,255,0.4)"}}/>
+                  : <div style={{width:36,height:36,borderRadius:"50%",background:"linear-gradient(135deg,#2563eb,#1d4ed8)",display:"flex",alignItems:"center",justifyContent:"center",border:"2px solid rgba(255,255,255,0.4)"}}><UserRound size={18} color="#fff"/></div>
+                }
+                <div>
+                  <p style={{color:"rgba(255,255,255,0.55)",fontSize:"0.68rem",margin:"0 0 0.1rem",fontWeight:500}}>كاتب الخبر</p>
+                  <p style={{color:"#fff",fontSize:"0.85rem",margin:0,fontWeight:700}}>{item.author_name}</p>
+                </div>
+              </div>
+            )}
+            <div style={{display:"flex",alignItems:"center",gap:"0.4rem",color:"rgba(255,255,255,0.65)",fontSize:"0.82rem"}}>
+              <Calendar size={13}/>{fmtDate(item.published_at,item.created_at)}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ── Content + Sidebar ── */}
+      <div style={{maxWidth:"1200px",margin:"0 auto",padding:"2.5rem 1.5rem",display:"grid",gridTemplateColumns:"1fr 300px",gap:"2.5rem",alignItems:"start"}} className="news-detail-grid">
+        {/* Main article */}
+        <div>
+          {item.excerpt && (
+            <div style={{background:"linear-gradient(135deg,#eff6ff,#dbeafe)",borderRight:"4px solid #2563eb",borderRadius:"0 0.75rem 0.75rem 0",padding:"1.25rem 1.5rem",marginBottom:"2rem"}}>
+              <p style={{color:"#1e3a5f",fontSize:"1.05rem",lineHeight:1.7,margin:0,fontWeight:500}}>{item.excerpt}</p>
+            </div>
+          )}
+          <div style={{background:"#fff",borderRadius:"1rem",padding:"2rem 2.25rem",boxShadow:"0 1px 6px rgba(0,0,0,0.06)",lineHeight:1.95,color:"#374151",fontSize:"1rem"}}
+            dangerouslySetInnerHTML={{__html:item.body.replace(/\n/g,"<br/>")}}/>
+
+          {/* Tags + back */}
+          <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginTop:"2rem",flexWrap:"wrap",gap:"1rem"}}>
+            <a href="/news" style={{display:"inline-flex",alignItems:"center",gap:"0.5rem",color:"#2563eb",fontWeight:700,textDecoration:"none",fontSize:"0.9rem",padding:"0.6rem 1.25rem",border:"2px solid #2563eb",borderRadius:"0.5rem",transition:"all 0.2s"}}
+              onMouseEnter={e=>{e.currentTarget.style.background="#2563eb";e.currentTarget.style.color="#fff";}} onMouseLeave={e=>{e.currentTarget.style.background="transparent";e.currentTarget.style.color="#2563eb";}}>
+              <ChevronRight size={16}/> العودة للأخبار
+            </a>
+            {item.category && <span style={{background:"#eff6ff",color:"#2563eb",padding:"0.4rem 1rem",borderRadius:"9999px",fontSize:"0.82rem",fontWeight:700,border:"1px solid #bfdbfe"}}># {item.category}</span>}
+          </div>
+        </div>
+
+        {/* Sidebar */}
+        <aside style={{display:"flex",flexDirection:"column",gap:"1.5rem",position:"sticky",top:"5rem"}}>
+          {/* Author card */}
+          {item.author_name && (
+            <div style={{background:"#fff",borderRadius:"1rem",padding:"1.5rem",boxShadow:"0 4px 20px rgba(0,0,0,0.08)",border:"1px solid #e2e8f0",textAlign:"center"}}>
+              <div style={{marginBottom:"0.75rem",display:"flex",justifyContent:"center"}}>
+                {item.author_image_url
+                  ? <img src={item.author_image_url} alt={item.author_name} style={{width:80,height:80,borderRadius:"50%",objectFit:"cover",border:"3px solid #eff6ff",boxShadow:"0 2px 12px rgba(37,99,235,0.15)"}}/>
+                  : <div style={{width:80,height:80,borderRadius:"50%",background:"linear-gradient(135deg,#2563eb,#1d4ed8)",display:"flex",alignItems:"center",justifyContent:"center",boxShadow:"0 2px 12px rgba(37,99,235,0.2)"}}><UserRound size={36} color="#fff"/></div>
+                }
+              </div>
+              <p style={{color:"#64748b",fontSize:"0.72rem",margin:"0 0 0.25rem",fontWeight:600,textTransform:"uppercase",letterSpacing:"0.06em"}}>كاتب الخبر</p>
+              <p style={{color:"#0f172a",fontWeight:800,fontSize:"1rem",margin:0}}>{item.author_name}</p>
+            </div>
+          )}
+
+          {/* Date card */}
+          <div style={{background:"#fff",borderRadius:"1rem",padding:"1.25rem 1.5rem",boxShadow:"0 4px 20px rgba(0,0,0,0.08)",border:"1px solid #e2e8f0"}}>
+            <p style={{color:"#64748b",fontSize:"0.75rem",fontWeight:700,textTransform:"uppercase",letterSpacing:"0.06em",margin:"0 0 0.75rem",display:"flex",alignItems:"center",gap:"0.4rem"}}><Calendar size={13}/> تاريخ النشر</p>
+            <p style={{color:"#0f172a",fontWeight:700,fontSize:"0.92rem",margin:0}}>{fmtDate(item.published_at,item.created_at)}</p>
+            {item.read_time>0 && <p style={{color:"#64748b",fontSize:"0.8rem",margin:"0.5rem 0 0",display:"flex",alignItems:"center",gap:"0.4rem"}}><Clock3 size={12}/> وقت القراءة: {item.read_time} دقائق</p>}
+          </div>
+
+          {/* Share card */}
+          <div style={{background:"#fff",borderRadius:"1rem",padding:"1.25rem 1.5rem",boxShadow:"0 4px 20px rgba(0,0,0,0.08)",border:"1px solid #e2e8f0"}}>
+            <p style={{color:"#64748b",fontSize:"0.75rem",fontWeight:700,textTransform:"uppercase",letterSpacing:"0.06em",margin:"0 0 1rem",display:"flex",alignItems:"center",gap:"0.4rem"}}><Share2 size={13}/> شارك الخبر</p>
+            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"0.5rem"}}>
+              {[
+                {id:"whatsapp",label:"واتساب",bg:"#25d366",hover:"#1da851"},
+                {id:"telegram",label:"تيليغرام",bg:"#0088cc",hover:"#006fa3"},
+                {id:"twitter",label:"X (تويتر)",bg:"#000",hover:"#222"},
+                {id:"facebook",label:"فيسبوك",bg:"#1877f2",hover:"#1264c9"},
+              ].map(p=>(
+                <button key={p.id} onClick={()=>share(p.id)} style={{background:p.bg,color:"#fff",border:"none",borderRadius:"0.5rem",padding:"0.55rem 0.5rem",fontSize:"0.76rem",fontWeight:700,cursor:"pointer",transition:"all 0.2s",width:"100%"}}
+                  onMouseEnter={e=>(e.currentTarget.style.background=p.hover)} onMouseLeave={e=>(e.currentTarget.style.background=p.bg)}>
+                  {p.label}
+                </button>
+              ))}
+            </div>
+            <button onClick={copyLink} style={{width:"100%",marginTop:"0.5rem",background:copied?"#16a34a":"#f1f5f9",color:copied?"#fff":"#475569",border:"none",borderRadius:"0.5rem",padding:"0.55rem",fontSize:"0.76rem",fontWeight:700,cursor:"pointer",transition:"all 0.25s",display:"flex",alignItems:"center",justifyContent:"center",gap:"0.4rem"}}>
+              {copied ? <><CircleCheckBig size={13}/> تم النسخ!</> : <><Share2 size={13}/> نسخ الرابط</>}
+            </button>
+          </div>
+        </aside>
+      </div>
     </div>
   );
 }
@@ -2065,34 +2186,180 @@ function EventsListPage() {
 
 // ─── Event detail page ────────────────────────────────────────────────────────
 function EventDetailPage({slug}:{slug?:string}) {
-  const [item, setItem] = useState<{title:string;body:string;excerpt:string;image_url:string;location:string;event_date:string;event_end_date:string|null}|null>(null);
+  type EventItem={id:string;title:string;slug:string;body:string;excerpt:string;image_url:string;location:string;event_date:string;event_end_date:string|null;author_name:string;author_image_url:string;organizer:string;created_at:string};
+  const [item, setItem] = useState<EventItem|null>(null);
   const [loading, setLoading] = useState(true);
+  const [copied, setCopied] = useState(false);
+
   useEffect(() => {
     if (!slug) return;
-    supabase.from("events").select("*").eq("slug",slug).eq("published",true).maybeSingle().then(({data})=>{setItem(data);setLoading(false);});
+    supabase.from("events").select("*").eq("slug",slug).eq("published",true).maybeSingle().then(({data})=>{setItem(data as EventItem|null);setLoading(false);});
   }, [slug]);
-  if (loading) return <div style={{padding:"6rem 1rem",textAlign:"center",color:"#64748b"}}>جاري التحميل...</div>;
-  if (!item) return (
-    <div style={{padding:"6rem 1rem",textAlign:"center"}}>
-      <h2 style={{color:"#dc2626"}}>الفعالية غير موجودة</h2>
-      <a href="/events" style={{color:"#2563eb"}}>العودة للفعاليات</a>
+
+  const pageUrl = typeof window!=="undefined" ? window.location.href : "";
+  const share = (platform: string) => {
+    const text = encodeURIComponent(item?.title||"");
+    const url = encodeURIComponent(pageUrl);
+    const urls: Record<string,string> = {
+      whatsapp: `https://wa.me/?text=${text}%20${url}`,
+      twitter:  `https://twitter.com/intent/tweet?text=${text}&url=${url}`,
+      facebook: `https://www.facebook.com/sharer/sharer.php?u=${url}`,
+      telegram: `https://t.me/share/url?url=${url}&text=${text}`,
+    };
+    if(urls[platform]) window.open(urls[platform],"_blank","noopener,noreferrer,width=600,height=450");
+  };
+  const copyLink = () => {
+    navigator.clipboard.writeText(pageUrl).then(()=>{setCopied(true);setTimeout(()=>setCopied(false),2000);});
+  };
+
+  const fmtDate=(d:string)=>new Date(d).toLocaleDateString("ar-SA",{weekday:"long",year:"numeric",month:"long",day:"numeric"});
+  const fmtTime=(d:string)=>new Date(d).toLocaleTimeString("ar-SA",{hour:"2-digit",minute:"2-digit"});
+
+  if (loading) return (
+    <div style={{minHeight:"60vh",display:"flex",alignItems:"center",justifyContent:"center"}}>
+      <div style={{textAlign:"center",color:"#64748b"}}><div style={{width:40,height:40,border:"3px solid #16a34a",borderTopColor:"transparent",borderRadius:"50%",animation:"spin 0.8s linear infinite",margin:"0 auto 1rem"}}/><p>جاري التحميل...</p></div>
     </div>
   );
+  if (!item) return (
+    <div style={{minHeight:"60vh",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:"1rem"}}>
+      <h2 style={{color:"#0f172a"}}>الفعالية غير موجودة</h2>
+      <a href="/events" style={{background:"#16a34a",color:"#fff",padding:"0.65rem 1.5rem",borderRadius:"0.5rem",textDecoration:"none",fontWeight:700}}>العودة للفعاليات</a>
+    </div>
+  );
+
+  const isUpcoming = new Date(item.event_date) > new Date();
+
   return (
-    <div dir="rtl">
-      {item.image_url && <div className="detail-hero-img"><img src={item.image_url} alt={item.title} /></div>}
-      <article className="detail-article page-width">
-        <span className="news-cat" style={{background:"#16a34a"}}>فعالية</span>
-        <h1>{item.title}</h1>
-        <div className="detail-meta">
-          {item.location && <span>📍 {item.location}</span>}
-          <span>📅 {new Date(item.event_date).toLocaleDateString("ar-SA",{year:"numeric",month:"long",day:"numeric",hour:"2-digit",minute:"2-digit"})}</span>
-          {item.event_end_date && <span>🏁 {new Date(item.event_end_date).toLocaleDateString("ar-SA",{year:"numeric",month:"long",day:"numeric",hour:"2-digit",minute:"2-digit"})}</span>}
+    <div dir="rtl" style={{background:"#f8fafc",minHeight:"100vh"}}>
+      {/* ── Hero ── */}
+      <div style={{position:"relative",height:"480px",overflow:"hidden",background:"#0a2a1a"}}>
+        {item.image_url
+          ? <img src={item.image_url} alt={item.title} style={{width:"100%",height:"100%",objectFit:"cover"}}/>
+          : <div style={{width:"100%",height:"100%",background:"linear-gradient(135deg,#14532d,#16a34a)"}}/>
+        }
+        <div style={{position:"absolute",inset:0,background:"linear-gradient(to top,rgba(0,0,0,0.92) 0%,rgba(0,0,0,0.5) 55%,rgba(0,0,0,0.05) 100%)"}}/>
+        <div style={{position:"absolute",inset:0,display:"flex",flexDirection:"column",justifyContent:"flex-end",padding:"clamp(1.5rem,4vw,3rem)",maxWidth:"1200px",margin:"0 auto",left:0,right:0}}>
+          <div style={{display:"flex",flexWrap:"wrap",gap:"0.5rem",marginBottom:"0.9rem"}}>
+            <span style={{background:isUpcoming?"#16a34a":"#6b7280",color:"#fff",padding:"0.3rem 0.9rem",borderRadius:"9999px",fontSize:"0.78rem",fontWeight:700,display:"flex",alignItems:"center",gap:"0.3rem"}}>
+              <CalendarDays size={12}/>{isUpcoming?"فعالية قادمة":"فعالية منتهية"}
+            </span>
+            {item.location && <span style={{background:"rgba(255,255,255,0.12)",backdropFilter:"blur(8px)",color:"rgba(255,255,255,0.85)",padding:"0.3rem 0.9rem",borderRadius:"9999px",fontSize:"0.78rem",fontWeight:600,border:"1px solid rgba(255,255,255,0.15)",display:"flex",alignItems:"center",gap:"0.3rem"}}><MapPin size={12}/>{item.location}</span>}
+          </div>
+          <h1 style={{color:"#fff",fontSize:"clamp(1.5rem,3.5vw,2.4rem)",fontWeight:900,margin:"0 0 0.9rem",lineHeight:1.3,textShadow:"0 2px 16px rgba(0,0,0,0.5)",maxWidth:"860px"}}>
+            {item.title}
+          </h1>
+          <div style={{display:"flex",alignItems:"center",gap:"1.5rem",flexWrap:"wrap"}}>
+            {item.author_name && (
+              <div style={{display:"flex",alignItems:"center",gap:"0.6rem"}}>
+                {item.author_image_url
+                  ? <img src={item.author_image_url} alt={item.author_name} style={{width:36,height:36,borderRadius:"50%",objectFit:"cover",border:"2px solid rgba(255,255,255,0.4)"}}/>
+                  : <div style={{width:36,height:36,borderRadius:"50%",background:"rgba(22,163,74,0.7)",backdropFilter:"blur(8px)",display:"flex",alignItems:"center",justifyContent:"center",border:"2px solid rgba(255,255,255,0.3)"}}><UserRound size={18} color="#fff"/></div>
+                }
+                <div>
+                  <p style={{color:"rgba(255,255,255,0.55)",fontSize:"0.68rem",margin:"0 0 0.1rem",fontWeight:500}}>المُنظِّم</p>
+                  <p style={{color:"#fff",fontSize:"0.85rem",margin:0,fontWeight:700}}>{item.author_name}</p>
+                </div>
+              </div>
+            )}
+            <div style={{display:"flex",alignItems:"center",gap:"0.4rem",color:"rgba(255,255,255,0.65)",fontSize:"0.82rem"}}>
+              <Calendar size={13}/>{fmtDate(item.event_date)}
+            </div>
+          </div>
         </div>
-        {item.excerpt && <p className="detail-excerpt">{item.excerpt}</p>}
-        <div className="detail-body" dangerouslySetInnerHTML={{__html: item.body.replace(/\n/g,"<br/>")}} />
-        <a href="/events" className="detail-back">← العودة للفعاليات</a>
-      </article>
+      </div>
+
+      {/* ── Content + Sidebar ── */}
+      <div style={{maxWidth:"1200px",margin:"0 auto",padding:"2.5rem 1.5rem",display:"grid",gridTemplateColumns:"1fr 300px",gap:"2.5rem",alignItems:"start"}} className="news-detail-grid">
+        {/* Main */}
+        <div>
+          {item.excerpt && (
+            <div style={{background:"linear-gradient(135deg,#f0fdf4,#dcfce7)",borderRight:"4px solid #16a34a",borderRadius:"0 0.75rem 0.75rem 0",padding:"1.25rem 1.5rem",marginBottom:"2rem"}}>
+              <p style={{color:"#14532d",fontSize:"1.05rem",lineHeight:1.7,margin:0,fontWeight:500}}>{item.excerpt}</p>
+            </div>
+          )}
+          <div style={{background:"#fff",borderRadius:"1rem",padding:"2rem 2.25rem",boxShadow:"0 1px 6px rgba(0,0,0,0.06)",lineHeight:1.95,color:"#374151",fontSize:"1rem"}}
+            dangerouslySetInnerHTML={{__html:item.body.replace(/\n/g,"<br/>")}}/>
+
+          <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginTop:"2rem",flexWrap:"wrap",gap:"1rem"}}>
+            <a href="/events" style={{display:"inline-flex",alignItems:"center",gap:"0.5rem",color:"#16a34a",fontWeight:700,textDecoration:"none",fontSize:"0.9rem",padding:"0.6rem 1.25rem",border:"2px solid #16a34a",borderRadius:"0.5rem",transition:"all 0.2s"}}
+              onMouseEnter={e=>{e.currentTarget.style.background="#16a34a";e.currentTarget.style.color="#fff";}} onMouseLeave={e=>{e.currentTarget.style.background="transparent";e.currentTarget.style.color="#16a34a";}}>
+              <ChevronRight size={16}/> العودة للفعاليات
+            </a>
+          </div>
+        </div>
+
+        {/* Sidebar */}
+        <aside style={{display:"flex",flexDirection:"column",gap:"1.5rem",position:"sticky",top:"5rem"}}>
+          {/* Event details card */}
+          <div style={{background:"#fff",borderRadius:"1rem",overflow:"hidden",boxShadow:"0 4px 20px rgba(0,0,0,0.08)",border:"1px solid #e2e8f0"}}>
+            <div style={{background:"linear-gradient(135deg,#16a34a,#15803d)",padding:"1rem 1.25rem"}}>
+              <p style={{color:"rgba(255,255,255,0.8)",fontSize:"0.72rem",fontWeight:700,textTransform:"uppercase",letterSpacing:"0.06em",margin:"0 0 0.25rem"}}>تفاصيل الفعالية</p>
+              <p style={{color:"#fff",fontWeight:800,fontSize:"0.95rem",margin:0}}>{item.title.slice(0,45)}{item.title.length>45?"...":""}</p>
+            </div>
+            <div style={{padding:"1.25rem"}}>
+              <div style={{display:"flex",flexDirection:"column",gap:"0.85rem"}}>
+                <div style={{display:"flex",gap:"0.75rem",alignItems:"flex-start"}}>
+                  <div style={{width:32,height:32,background:"#f0fdf4",borderRadius:"0.5rem",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}><CalendarDays size={16} color="#16a34a"/></div>
+                  <div><p style={{color:"#64748b",fontSize:"0.7rem",fontWeight:600,margin:"0 0 0.1rem"}}>تاريخ البداية</p><p style={{color:"#0f172a",fontWeight:700,fontSize:"0.85rem",margin:0}}>{fmtDate(item.event_date)}</p><p style={{color:"#64748b",fontSize:"0.78rem",margin:"0.1rem 0 0"}}>{fmtTime(item.event_date)}</p></div>
+                </div>
+                {item.event_end_date && (
+                  <div style={{display:"flex",gap:"0.75rem",alignItems:"flex-start"}}>
+                    <div style={{width:32,height:32,background:"#fef9c3",borderRadius:"0.5rem",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}><CalendarDays size={16} color="#ca8a04"/></div>
+                    <div><p style={{color:"#64748b",fontSize:"0.7rem",fontWeight:600,margin:"0 0 0.1rem"}}>تاريخ النهاية</p><p style={{color:"#0f172a",fontWeight:700,fontSize:"0.85rem",margin:0}}>{fmtDate(item.event_end_date)}</p><p style={{color:"#64748b",fontSize:"0.78rem",margin:"0.1rem 0 0"}}>{fmtTime(item.event_end_date)}</p></div>
+                  </div>
+                )}
+                {item.location && (
+                  <div style={{display:"flex",gap:"0.75rem",alignItems:"flex-start"}}>
+                    <div style={{width:32,height:32,background:"#eff6ff",borderRadius:"0.5rem",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}><MapPin size={16} color="#2563eb"/></div>
+                    <div><p style={{color:"#64748b",fontSize:"0.7rem",fontWeight:600,margin:"0 0 0.1rem"}}>الموقع</p><p style={{color:"#0f172a",fontWeight:700,fontSize:"0.85rem",margin:0}}>{item.location}</p></div>
+                  </div>
+                )}
+                {item.organizer && (
+                  <div style={{display:"flex",gap:"0.75rem",alignItems:"flex-start"}}>
+                    <div style={{width:32,height:32,background:"#fdf4ff",borderRadius:"0.5rem",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}><UsersRound size={16} color="#9333ea"/></div>
+                    <div><p style={{color:"#64748b",fontSize:"0.7rem",fontWeight:600,margin:"0 0 0.1rem"}}>الجهة المنظِّمة</p><p style={{color:"#0f172a",fontWeight:700,fontSize:"0.85rem",margin:0}}>{item.organizer}</p></div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Organizer card */}
+          {item.author_name && (
+            <div style={{background:"#fff",borderRadius:"1rem",padding:"1.5rem",boxShadow:"0 4px 20px rgba(0,0,0,0.08)",border:"1px solid #e2e8f0",textAlign:"center"}}>
+              <div style={{marginBottom:"0.75rem",display:"flex",justifyContent:"center"}}>
+                {item.author_image_url
+                  ? <img src={item.author_image_url} alt={item.author_name} style={{width:80,height:80,borderRadius:"50%",objectFit:"cover",border:"3px solid #f0fdf4",boxShadow:"0 2px 12px rgba(22,163,74,0.15)"}}/>
+                  : <div style={{width:80,height:80,borderRadius:"50%",background:"linear-gradient(135deg,#16a34a,#15803d)",display:"flex",alignItems:"center",justifyContent:"center",boxShadow:"0 2px 12px rgba(22,163,74,0.2)"}}><UserRound size={36} color="#fff"/></div>
+                }
+              </div>
+              <p style={{color:"#64748b",fontSize:"0.72rem",margin:"0 0 0.25rem",fontWeight:600,textTransform:"uppercase",letterSpacing:"0.06em"}}>المُنظِّم</p>
+              <p style={{color:"#0f172a",fontWeight:800,fontSize:"1rem",margin:0}}>{item.author_name}</p>
+            </div>
+          )}
+
+          {/* Share */}
+          <div style={{background:"#fff",borderRadius:"1rem",padding:"1.25rem 1.5rem",boxShadow:"0 4px 20px rgba(0,0,0,0.08)",border:"1px solid #e2e8f0"}}>
+            <p style={{color:"#64748b",fontSize:"0.75rem",fontWeight:700,textTransform:"uppercase",letterSpacing:"0.06em",margin:"0 0 1rem",display:"flex",alignItems:"center",gap:"0.4rem"}}><Share2 size={13}/> شارك الفعالية</p>
+            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"0.5rem"}}>
+              {[
+                {id:"whatsapp",label:"واتساب",bg:"#25d366",hover:"#1da851"},
+                {id:"telegram",label:"تيليغرام",bg:"#0088cc",hover:"#006fa3"},
+                {id:"twitter",label:"X (تويتر)",bg:"#000",hover:"#222"},
+                {id:"facebook",label:"فيسبوك",bg:"#1877f2",hover:"#1264c9"},
+              ].map(p=>(
+                <button key={p.id} onClick={()=>share(p.id)} style={{background:p.bg,color:"#fff",border:"none",borderRadius:"0.5rem",padding:"0.55rem 0.5rem",fontSize:"0.76rem",fontWeight:700,cursor:"pointer",transition:"all 0.2s",width:"100%"}}
+                  onMouseEnter={e=>(e.currentTarget.style.background=p.hover)} onMouseLeave={e=>(e.currentTarget.style.background=p.bg)}>
+                  {p.label}
+                </button>
+              ))}
+            </div>
+            <button onClick={copyLink} style={{width:"100%",marginTop:"0.5rem",background:copied?"#16a34a":"#f1f5f9",color:copied?"#fff":"#475569",border:"none",borderRadius:"0.5rem",padding:"0.55rem",fontSize:"0.76rem",fontWeight:700,cursor:"pointer",transition:"all 0.25s",display:"flex",alignItems:"center",justifyContent:"center",gap:"0.4rem"}}>
+              {copied ? <><CircleCheckBig size={13}/> تم النسخ!</> : <><Share2 size={13}/> نسخ الرابط</>}
+            </button>
+          </div>
+        </aside>
+      </div>
     </div>
   );
 }

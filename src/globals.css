@@ -1961,3 +1961,16 @@ select.inv-input{cursor:pointer}
   from { opacity: 0; transform: translateY(20px); }
   to   { opacity: 1; transform: translateY(0); }
 }
+
+/* ── News / Event Detail Layout ─────────────────────────────────────────────── */
+.news-detail-grid {
+  grid-template-columns: 1fr 300px;
+}
+@media (max-width: 900px) {
+  .news-detail-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .news-detail-grid aside {
+    position: static !important;
+  }
+}
