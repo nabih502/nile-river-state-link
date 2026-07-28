@@ -372,6 +372,157 @@ function EditPanel({ page, onSave, onClose }: { page: SeoData; onSave: () => voi
   );
 }
 
+// ── Inline tab content (used inside section admins) ───────────────────────────
+export function SeoTabContent({ slug }: { slug: string }) {
+  const [form, setForm] = useState<SeoData | null>(null);
+  const [tab, setTab] = useState<"basic" | "og" | "technical" | "preview">("basic");
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
+
+  useEffect(() => {
+    supabase.from("page_seo").select("*").eq("page_slug", slug).maybeSingle().then(({ data: d }) => {
+      if (d) setForm(d as SeoData);
+    });
+  }, [slug]);
+
+  const set = (k: keyof SeoData, v: string | boolean) => setForm(f => f ? { ...f, [k]: v } : f);
+
+  const save = async () => {
+    if (!form) return;
+    setSaving(true);
+    await supabase.from("page_seo").update({
+      title: form.title, description: form.description, keywords: form.keywords,
+      og_title: form.og_title, og_description: form.og_description, og_image: form.og_image,
+      og_type: form.og_type, canonical_url: form.canonical_url, robots: form.robots,
+      twitter_card: form.twitter_card, schema_type: form.schema_type,
+      updated_at: new Date().toISOString(),
+    }).eq("page_slug", form.page_slug);
+    invalidateSeoCache(form.page_slug);
+    setSaving(false);
+    setSaved(true);
+    setTimeout(() => setSaved(false), 3000);
+  };
+
+  if (!form) return <div style={{ textAlign: "center", padding: "2rem", color: "#94a3b8" }}>جاري التحميل...</div>;
+
+  const score = calcScore(form);
+  const tabList = [
+    { id: "basic" as const, label: "SEO الأساسي" },
+    { id: "og" as const, label: "Open Graph" },
+    { id: "technical" as const, label: "تقني" },
+    { id: "preview" as const, label: "معاينة" },
+  ];
+
+  return (
+    <div dir="rtl" style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
+      {/* score bar */}
+      <div style={{ display: "flex", alignItems: "center", gap: "1rem", background: "#f8fafc", borderRadius: "0.75rem", padding: "0.85rem 1.25rem", border: "1px solid #e2e8f0" }}>
+        <div style={{ width: 48, height: 48, borderRadius: "50%", border: `3px solid ${scoreColor(score)}`, background: scoreBg(score), display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 900, fontSize: "1rem", color: scoreColor(score), flexShrink: 0 }}>{score}</div>
+        <div style={{ flex: 1 }}>
+          <p style={{ margin: 0, fontWeight: 800, fontSize: "0.9rem", color: "#0f172a" }}>درجة SEO للصفحة</p>
+          <p style={{ margin: "0.15rem 0 0", fontSize: "0.78rem", color: "#64748b" }}>{form.page_label} — <span dir="ltr">{form.page_url}</span></p>
+        </div>
+        <ScoreBadge score={score} />
+      </div>
+
+      {/* sub-tabs */}
+      <div style={{ display: "flex", background: "#f1f5f9", borderRadius: "0.65rem", padding: "0.25rem" }}>
+        {tabList.map(t => (
+          <button key={t.id} onClick={() => setTab(t.id)} type="button" style={{ flex: 1, background: tab === t.id ? "#fff" : "transparent", border: "none", borderRadius: "0.45rem", padding: "0.6rem 0.5rem", fontWeight: tab === t.id ? 800 : 500, color: tab === t.id ? "#2563eb" : "#64748b", cursor: "pointer", fontSize: "0.82rem", fontFamily: "inherit", transition: "all 0.15s", boxShadow: tab === t.id ? "0 1px 4px rgba(0,0,0,0.08)" : "none" }}>
+            {t.label}
+          </button>
+        ))}
+      </div>
+
+      {tab === "basic" && <>
+        <Field label="عنوان الصفحة (Title Tag)" hint="50–65 حرف مثالي">
+          <input style={inputStyle} value={form.title} onChange={e => set("title", e.target.value)} placeholder="عنوان الصفحة | اسم الموقع" onFocus={e=>(e.target.style.borderColor="#2563eb")} onBlur={e=>(e.target.style.borderColor="#e2e8f0")} />
+          <CharCounter len={form.title.length} min={50} max={65} />
+        </Field>
+        <Field label="وصف الصفحة (Meta Description)" hint="120–160 حرف مثالي">
+          <textarea style={{ ...inputStyle, resize: "vertical" }} rows={3} value={form.description} onChange={e => set("description", e.target.value)} placeholder="وصف مختصر يظهر في نتائج البحث…" onFocus={e=>(e.target.style.borderColor="#2563eb")} onBlur={e=>(e.target.style.borderColor="#e2e8f0")} />
+          <CharCounter len={form.description.length} min={120} max={160} />
+        </Field>
+        <Field label="الكلمات المفتاحية" hint="مفصولة بفاصلة">
+          <input style={inputStyle} value={form.keywords} onChange={e => set("keywords", e.target.value)} placeholder="كلمة, كلمة أخرى, …" onFocus={e=>(e.target.style.borderColor="#2563eb")} onBlur={e=>(e.target.style.borderColor="#e2e8f0")} />
+        </Field>
+        <div style={{ background: "#f8fafc", borderRadius: "0.75rem", padding: "1rem", border: "1px solid #e2e8f0" }}>
+          <p style={{ fontSize: "0.75rem", fontWeight: 700, color: "#64748b", margin: "0 0 0.75rem", display: "flex", alignItems: "center", gap: 6 }}><Search size={13} /> معاينة Google</p>
+          <GooglePreview title={form.title} description={form.description} url={form.canonical_url || `https://nilelink.org${form.page_url}`} />
+        </div>
+      </>}
+
+      {tab === "og" && <>
+        <Field label="OG Title" hint="عنوان المشاركة على السوشيال">
+          <input style={inputStyle} value={form.og_title} onChange={e => set("og_title", e.target.value)} placeholder="اتركه فارغاً لاستخدام العنوان تلقائياً" onFocus={e=>(e.target.style.borderColor="#2563eb")} onBlur={e=>(e.target.style.borderColor="#e2e8f0")} />
+          <CharCounter len={(form.og_title || form.title).length} min={40} max={95} />
+        </Field>
+        <Field label="OG Description">
+          <textarea style={{ ...inputStyle, resize: "vertical" }} rows={3} value={form.og_description} onChange={e => set("og_description", e.target.value)} placeholder="اتركه فارغاً لاستخدام الوصف تلقائياً" onFocus={e=>(e.target.style.borderColor="#2563eb")} onBlur={e=>(e.target.style.borderColor="#e2e8f0")} />
+        </Field>
+        <Field label="OG Image (1200×630 px)">
+          <input style={{ ...inputStyle, direction: "ltr" }} value={form.og_image} onChange={e => set("og_image", e.target.value)} placeholder="https://… أو /assets/…" onFocus={e=>(e.target.style.borderColor="#2563eb")} onBlur={e=>(e.target.style.borderColor="#e2e8f0")} />
+        </Field>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.85rem" }}>
+          <Field label="OG Type"><select style={{ ...inputStyle, background: "#fff" }} value={form.og_type} onChange={e => set("og_type", e.target.value)}>{OG_TYPES.map(t => <option key={t}>{t}</option>)}</select></Field>
+          <Field label="Twitter Card"><select style={{ ...inputStyle, background: "#fff" }} value={form.twitter_card} onChange={e => set("twitter_card", e.target.value)}>{TWITTER_CARDS.map(t => <option key={t}>{t}</option>)}</select></Field>
+        </div>
+        <div style={{ background: "#f8fafc", borderRadius: "0.75rem", padding: "1rem", border: "1px solid #e2e8f0" }}>
+          <p style={{ fontSize: "0.75rem", fontWeight: 700, color: "#64748b", margin: "0 0 0.75rem", display: "flex", alignItems: "center", gap: 6 }}><Eye size={13} /> معاينة بطاقة المشاركة</p>
+          <OGPreview title={form.og_title || form.title} description={form.og_description || form.description} image={form.og_image} url={form.canonical_url || `nilelink.org${form.page_url}`} />
+        </div>
+      </>}
+
+      {tab === "technical" && <>
+        <Field label="Robots">
+          <select style={{ ...inputStyle, background: "#fff" }} value={form.robots} onChange={e => set("robots", e.target.value)}>{ROBOTS_OPTIONS.map(r => <option key={r}>{r}</option>)}</select>
+        </Field>
+        <Field label="Canonical URL">
+          <input style={{ ...inputStyle, direction: "ltr" }} value={form.canonical_url} onChange={e => set("canonical_url", e.target.value)} placeholder={`https://nilelink.org${form.page_url}`} onFocus={e=>(e.target.style.borderColor="#2563eb")} onBlur={e=>(e.target.style.borderColor="#e2e8f0")} />
+          <span style={{ fontSize: "0.72rem", color: "#94a3b8" }}>اتركه فارغاً لاستخدام رابط الصفحة تلقائياً</span>
+        </Field>
+        <Field label="Schema Type">
+          <select style={{ ...inputStyle, background: "#fff" }} value={form.schema_type} onChange={e => set("schema_type", e.target.value)}>{SCHEMA_TYPES.map(s => <option key={s}>{s}</option>)}</select>
+        </Field>
+        <div style={{ background: "#f8fafc", borderRadius: "0.75rem", border: "1px solid #e2e8f0", padding: "1rem 1.25rem" }}>
+          <p style={{ fontSize: "0.8rem", fontWeight: 700, color: "#374151", margin: "0 0 0.75rem", display: "flex", alignItems: "center", gap: 6 }}><BarChart3 size={14} /> قائمة مراجعة</p>
+          {[
+            { label: "عنوان موجود", ok: !!form.title }, { label: "العنوان 50–65 حرفاً", ok: form.title.length >= 50 && form.title.length <= 65 },
+            { label: "وصف موجود", ok: !!form.description }, { label: "الوصف 120–160 حرفاً", ok: form.description.length >= 120 && form.description.length <= 160 },
+            { label: "كلمات مفتاحية", ok: !!form.keywords }, { label: "صورة OG", ok: !!form.og_image },
+          ].map(item => (
+            <div key={item.label} style={{ display: "flex", alignItems: "center", gap: "0.6rem", padding: "0.3rem 0", borderBottom: "1px solid #f1f5f9" }}>
+              <CheckCircle2 size={15} color={item.ok ? "#16a34a" : "#e2e8f0"} fill={item.ok ? "#16a34a" : "none"} />
+              <span style={{ fontSize: "0.82rem", color: item.ok ? "#374151" : "#94a3b8" }}>{item.label}</span>
+            </div>
+          ))}
+        </div>
+      </>}
+
+      {tab === "preview" && (
+        <div style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
+          <div>
+            <p style={{ fontSize: "0.8rem", fontWeight: 700, color: "#374151", margin: "0 0 0.75rem" }}>نتائج Google</p>
+            <GooglePreview title={form.title} description={form.description} url={form.canonical_url || `https://nilelink.org${form.page_url}`} />
+          </div>
+          <div>
+            <p style={{ fontSize: "0.8rem", fontWeight: 700, color: "#374151", margin: "0 0 0.75rem" }}>بطاقة المشاركة</p>
+            <OGPreview title={form.og_title || form.title} description={form.og_description || form.description} image={form.og_image} url={`nilelink.org${form.page_url}`} />
+          </div>
+        </div>
+      )}
+
+      {/* save */}
+      <div style={{ display: "flex", justifyContent: "flex-end", gap: "0.75rem", paddingTop: "0.5rem" }}>
+        {saved && <span style={{ color: "#16a34a", fontSize: "0.82rem", fontWeight: 700, alignSelf: "center" }}>تم الحفظ ✓</span>}
+        <button onClick={save} disabled={saving} type="button" style={{ background: "#2563eb", color: "#fff", border: "none", borderRadius: "0.5rem", padding: "0.65rem 2rem", fontWeight: 800, cursor: saving ? "not-allowed" : "pointer", fontFamily: "inherit", display: "flex", alignItems: "center", gap: "0.5rem", opacity: saving ? 0.7 : 1 }}>
+          <Save size={15} />{saving ? "جاري الحفظ..." : "حفظ التغييرات"}
+        </button>
+      </div>
+    </div>
+  );
+}
+
 // ── Main export ────────────────────────────────────────────────────────────────
 export default function AdminSeo() {
   const [pages, setPages] = useState<SeoData[]>([]);

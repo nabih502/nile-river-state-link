@@ -4,12 +4,11 @@ import InvestmentPanel from "./admin-investment";
 import CulturePanel from "./admin-culture";
 import { SocialPanel } from "./admin-social";
 import AdminContact from "./admin-contact";
-import AdminSeo from "./admin-seo";
 
-type Section = "dashboard" | "news" | "events" | "members" | "messages" | "investment" | "culture" | "social" | "contact" | "seo" | "settings";
+type Section = "dashboard" | "news" | "events" | "members" | "messages" | "investment" | "culture" | "social" | "contact" | "settings";
 
-interface NewsRow { id: string; title: string; slug: string; excerpt: string; body: string; image_url: string; category: string; published: boolean; published_at: string | null; created_at: string; author_name: string; author_image_url: string; read_time: number; }
-interface EventRow { id: string; title: string; slug: string; excerpt: string; body: string; image_url: string; location: string; event_date: string; event_end_date: string | null; published: boolean; created_at: string; author_name: string; author_image_url: string; organizer: string; }
+interface NewsRow { id: string; title: string; slug: string; excerpt: string; body: string; image_url: string; category: string; published: boolean; published_at: string | null; created_at: string; author_name: string; author_image_url: string; read_time: number; seo_title: string; seo_description: string; seo_image: string; }
+interface EventRow { id: string; title: string; slug: string; excerpt: string; body: string; image_url: string; location: string; event_date: string; event_end_date: string | null; published: boolean; created_at: string; author_name: string; author_image_url: string; organizer: string; seo_title: string; seo_description: string; seo_image: string; }
 interface MemberRow { id: string; full_name: string; email: string; phone: string; national_id: string; gender: string; country: string; state: string; membership_type: string; status: string; created_at: string; }
 interface MessageRow { id: string; name: string; email: string; phone: string; subject: string; message: string; read: boolean; created_at: string; }
 interface Stats { news: number; events: number; members: number; messages: number; unread: number; inquiries: number; newInquiries: number; }
@@ -80,10 +79,11 @@ function Confirm({ message, onConfirm, onCancel }: { message: string; onConfirm:
 
 // ─── News Editor ─────────────────────────────────────────────────────────────
 function NewsEditor({ item, onSave, onCancel }: { item: Partial<NewsRow> | null; onSave: () => void; onCancel: () => void }) {
-  const blank: Partial<NewsRow> = { title: "", slug: "", excerpt: "", body: "", image_url: "", category: "عام", published: false, author_name: "", author_image_url: "", read_time: 0 };
+  const blank: Partial<NewsRow> = { title: "", slug: "", excerpt: "", body: "", image_url: "", category: "عام", published: false, author_name: "", author_image_url: "", read_time: 0, seo_title: "", seo_description: "", seo_image: "" };
   const [form, setForm] = useState<Partial<NewsRow>>(item ?? blank);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+  const [eTab, setETab] = useState<"content"|"seo">("content");
 
   const set = (k: keyof NewsRow, v: string | boolean) => setForm(f => ({ ...f, [k]: v }));
 
@@ -103,6 +103,9 @@ function NewsEditor({ item, onSave, onCancel }: { item: Partial<NewsRow> | null;
       author_name: form.author_name || "",
       author_image_url: form.author_image_url || "",
       read_time: form.read_time || 0,
+      seo_title: form.seo_title || "",
+      seo_description: form.seo_description || "",
+      seo_image: form.seo_image || "",
     };
     const { error: err } = form.id
       ? await supabase.from("news").update(payload).eq("id", form.id)
@@ -119,7 +122,11 @@ function NewsEditor({ item, onSave, onCancel }: { item: Partial<NewsRow> | null;
           <h2>{form.id ? "تعديل خبر" : "إضافة خبر جديد"}</h2>
           <button type="button" onClick={onCancel} className="adm-close">✕</button>
         </div>
+        <div style={{display:"flex",gap:"0.4rem",padding:"0.75rem 1.25rem",borderBottom:"1px solid #e2e8f0",background:"#f8fafc"}}>
+          {(["content","seo"] as const).map(t=><button key={t} type="button" onClick={()=>setETab(t)} style={{padding:"0.45rem 1.1rem",borderRadius:"0.45rem",border:"none",fontFamily:"inherit",fontWeight:eTab===t?800:500,color:eTab===t?"#2563eb":"#64748b",background:eTab===t?"#eff6ff":"transparent",cursor:"pointer",fontSize:"0.83rem"}}>{t==="content"?"المحتوى":"SEO"}</button>)}
+        </div>
         {error && <p className="adm-err">{error}</p>}
+        {eTab==="content" && <>
         <div className="adm-form-row">
           <label>العنوان *<input required value={form.title || ""} onChange={e => { set("title", e.target.value); if (!form.id) set("slug", slugify(e.target.value)); }} /></label>
           <label>الرابط (slug)<input value={form.slug || ""} onChange={e => set("slug", e.target.value)} dir="ltr" /></label>
@@ -143,6 +150,23 @@ function NewsEditor({ item, onSave, onCancel }: { item: Partial<NewsRow> | null;
           <input type="checkbox" checked={!!form.published} onChange={e => set("published", e.target.checked)} />
           نشر الخبر
         </label>
+        </>}
+        {eTab==="seo" && <div style={{display:"flex",flexDirection:"column",gap:"1rem",padding:"0.25rem 0"}}>
+          <div style={{display:"flex",flexDirection:"column",gap:"0.35rem"}}>
+            <div style={{display:"flex",justifyContent:"space-between"}}><span style={{fontSize:"0.78rem",fontWeight:700}}>عنوان SEO</span><span style={{fontSize:"0.7rem",color:"#94a3b8"}}>50–65 حرف</span></div>
+            <input value={form.seo_title||""} onChange={e=>set("seo_title",e.target.value)} placeholder="عنوان الخبر في محركات البحث (فارغ = استخدام عنوان الخبر تلقائياً)" />
+            <span style={{fontSize:"0.72rem",color:(form.seo_title||form.title||"").length>=50&&(form.seo_title||form.title||"").length<=65?"#16a34a":"#d97706"}}>{(form.seo_title||form.title||"").length} / 65</span>
+          </div>
+          <div style={{display:"flex",flexDirection:"column",gap:"0.35rem"}}>
+            <div style={{display:"flex",justifyContent:"space-between"}}><span style={{fontSize:"0.78rem",fontWeight:700}}>وصف SEO</span><span style={{fontSize:"0.7rem",color:"#94a3b8"}}>120–160 حرف</span></div>
+            <textarea rows={3} value={form.seo_description||""} onChange={e=>set("seo_description",e.target.value)} placeholder="وصف مختصر يظهر في نتائج البحث (فارغ = استخدام الوصف المختصر تلقائياً)" style={{resize:"vertical"}} />
+            <span style={{fontSize:"0.72rem",color:(form.seo_description||form.excerpt||"").length>=120&&(form.seo_description||form.excerpt||"").length<=160?"#16a34a":"#d97706"}}>{(form.seo_description||form.excerpt||"").length} / 160</span>
+          </div>
+          <div style={{display:"flex",flexDirection:"column",gap:"0.35rem"}}>
+            <span style={{fontSize:"0.78rem",fontWeight:700}}>صورة المشاركة (OG Image)</span>
+            <input value={form.seo_image||""} onChange={e=>set("seo_image",e.target.value)} placeholder="رابط الصورة (فارغ = استخدام صورة الخبر تلقائياً)" dir="ltr" />
+          </div>
+        </div>}
         <div className="adm-editor-foot">
           <button type="submit" disabled={saving}>{saving ? "جاري الحفظ..." : "حفظ"}</button>
           <button type="button" onClick={onCancel}>إلغاء</button>
@@ -154,10 +178,11 @@ function NewsEditor({ item, onSave, onCancel }: { item: Partial<NewsRow> | null;
 
 // ─── Event Editor ─────────────────────────────────────────────────────────────
 function EventEditor({ item, onSave, onCancel }: { item: Partial<EventRow> | null; onSave: () => void; onCancel: () => void }) {
-  const blank: Partial<EventRow> = { title: "", slug: "", excerpt: "", body: "", image_url: "", location: "", event_date: new Date().toISOString().slice(0, 16), event_end_date: null, published: false, author_name: "", author_image_url: "", organizer: "" };
+  const blank: Partial<EventRow> = { title: "", slug: "", excerpt: "", body: "", image_url: "", location: "", event_date: new Date().toISOString().slice(0, 16), event_end_date: null, published: false, author_name: "", author_image_url: "", organizer: "", seo_title: "", seo_description: "", seo_image: "" };
   const [form, setForm] = useState<Partial<EventRow>>(item ?? blank);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+  const [eTab, setETab] = useState<"content"|"seo">("content");
 
   const set = (k: keyof EventRow, v: string | boolean | null) => setForm(f => ({ ...f, [k]: v }));
 
@@ -178,6 +203,9 @@ function EventEditor({ item, onSave, onCancel }: { item: Partial<EventRow> | nul
       author_name: form.author_name || "",
       author_image_url: form.author_image_url || "",
       organizer: form.organizer || "",
+      seo_title: form.seo_title || "",
+      seo_description: form.seo_description || "",
+      seo_image: form.seo_image || "",
     };
     const { error: err } = form.id
       ? await supabase.from("events").update(payload).eq("id", form.id)
@@ -194,7 +222,11 @@ function EventEditor({ item, onSave, onCancel }: { item: Partial<EventRow> | nul
           <h2>{form.id ? "تعديل فعالية" : "إضافة فعالية جديدة"}</h2>
           <button type="button" onClick={onCancel} className="adm-close">✕</button>
         </div>
+        <div style={{display:"flex",gap:"0.4rem",padding:"0.75rem 1.25rem",borderBottom:"1px solid #e2e8f0",background:"#f8fafc"}}>
+          {(["content","seo"] as const).map(t=><button key={t} type="button" onClick={()=>setETab(t)} style={{padding:"0.45rem 1.1rem",borderRadius:"0.45rem",border:"none",fontFamily:"inherit",fontWeight:eTab===t?800:500,color:eTab===t?"#2563eb":"#64748b",background:eTab===t?"#eff6ff":"transparent",cursor:"pointer",fontSize:"0.83rem"}}>{t==="content"?"المحتوى":"SEO"}</button>)}
+        </div>
         {error && <p className="adm-err">{error}</p>}
+        {eTab==="content" && <>
         <div className="adm-form-row">
           <label>العنوان *<input required value={form.title || ""} onChange={e => { set("title", e.target.value); if (!form.id) set("slug", slugify(e.target.value)); }} /></label>
           <label>الرابط (slug)<input value={form.slug || ""} onChange={e => set("slug", e.target.value)} dir="ltr" /></label>
@@ -218,6 +250,23 @@ function EventEditor({ item, onSave, onCancel }: { item: Partial<EventRow> | nul
           <input type="checkbox" checked={!!form.published} onChange={e => set("published", e.target.checked)} />
           نشر الفعالية
         </label>
+        </>}
+        {eTab==="seo" && <div style={{display:"flex",flexDirection:"column",gap:"1rem",padding:"0.25rem 0"}}>
+          <div style={{display:"flex",flexDirection:"column",gap:"0.35rem"}}>
+            <div style={{display:"flex",justifyContent:"space-between"}}><span style={{fontSize:"0.78rem",fontWeight:700}}>عنوان SEO</span><span style={{fontSize:"0.7rem",color:"#94a3b8"}}>50–65 حرف</span></div>
+            <input value={form.seo_title||""} onChange={e=>set("seo_title",e.target.value)} placeholder="عنوان الفعالية في محركات البحث (فارغ = استخدام العنوان تلقائياً)" />
+            <span style={{fontSize:"0.72rem",color:(form.seo_title||form.title||"").length>=50&&(form.seo_title||form.title||"").length<=65?"#16a34a":"#d97706"}}>{(form.seo_title||form.title||"").length} / 65</span>
+          </div>
+          <div style={{display:"flex",flexDirection:"column",gap:"0.35rem"}}>
+            <div style={{display:"flex",justifyContent:"space-between"}}><span style={{fontSize:"0.78rem",fontWeight:700}}>وصف SEO</span><span style={{fontSize:"0.7rem",color:"#94a3b8"}}>120–160 حرف</span></div>
+            <textarea rows={3} value={form.seo_description||""} onChange={e=>set("seo_description",e.target.value)} placeholder="وصف مختصر يظهر في نتائج البحث (فارغ = استخدام الوصف المختصر تلقائياً)" style={{resize:"vertical"}} />
+            <span style={{fontSize:"0.72rem",color:(form.seo_description||form.excerpt||"").length>=120&&(form.seo_description||form.excerpt||"").length<=160?"#16a34a":"#d97706"}}>{(form.seo_description||form.excerpt||"").length} / 160</span>
+          </div>
+          <div style={{display:"flex",flexDirection:"column",gap:"0.35rem"}}>
+            <span style={{fontSize:"0.78rem",fontWeight:700}}>صورة المشاركة (OG Image)</span>
+            <input value={form.seo_image||""} onChange={e=>set("seo_image",e.target.value)} placeholder="رابط الصورة (فارغ = استخدام صورة الفعالية تلقائياً)" dir="ltr" />
+          </div>
+        </div>}
         <div className="adm-editor-foot">
           <button type="submit" disabled={saving}>{saving ? "جاري الحفظ..." : "حفظ"}</button>
           <button type="button" onClick={onCancel}>إلغاء</button>
@@ -356,7 +405,6 @@ export default function AdminApp() {
     { key: "culture", label: "الثقافة" },
     { key: "social", label: "الخدمات الاجتماعية" },
     { key: "contact", label: "تواصل معنا" },
-    { key: "seo", label: "SEO" },
     { key: "settings", label: "الإعدادات" },
   ];
 
@@ -555,7 +603,7 @@ export default function AdminApp() {
           {section === "culture" && <CulturePanel />}
           {section === "social" && <SocialPanel />}
           {section === "contact" && <AdminContact />}
-          {section === "seo" && <AdminSeo />}
+
 
           {/* ── Settings ── */}
           {section === "settings" && <SettingsPanel />}

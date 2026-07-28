@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "./supabase";
 import { Settings2, Phone, Mail, MapPin, Clock3, MessageCircle, Send, Trash2, Plus, Save, Eye, EyeOff, GripVertical, ChevronDown, ChevronUp, CircleCheck as CheckCircle, X } from "lucide-react";
+import { SeoTabContent } from "./admin-seo";
 
 type Settings = Record<string, string>;
 type InfoItem = { id: string; title: string; lines: string[]; icon_name: string; link_url: string; color: string; sort_order: number; published: boolean };
@@ -474,7 +475,7 @@ function Field({ label, value, onChange, dir, placeholder }: { label: string; va
 
 // ─── Main export ───────────────────────────────────────────────────────────────
 export default function AdminContact() {
-  const [tab, setTab] = useState<"settings" | "info" | "faq" | "messages">("settings");
+  const [tab, setTab] = useState<"settings" | "info" | "faq" | "messages" | "seo">("settings");
   const [settings, setSettings] = useState<Settings>({});
 
   useEffect(() => {
@@ -488,6 +489,7 @@ export default function AdminContact() {
     { id: "info",     label: "وسائل التواصل",  icon: <Phone size={15} /> },
     { id: "faq",      label: "روابط سريعة",    icon: <MessageCircle size={15} /> },
     { id: "messages", label: "الرسائل الواردة", icon: <Mail size={15} /> },
+    { id: "seo",      label: "SEO",               icon: <Eye size={15} /> },
   ];
 
   return (
@@ -512,6 +514,7 @@ export default function AdminContact() {
         {tab === "info"      && <InfoPanel />}
         {tab === "faq"       && <FaqPanel />}
         {tab === "messages"  && <MessagesPanel />}
+        {tab === "seo"       && <SeoTabContent slug="contact" />}
       </div>
     </div>
   );

@@ -18,6 +18,7 @@ import {
   StatEditor,
 } from "./investment-editor";
 
+import { SeoTabContent } from "./admin-seo";
 type InvTab =
   | "sectors"
   | "opportunities"
@@ -25,7 +26,8 @@ type InvTab =
   | "stories"
   | "partners"
   | "stats"
-  | "inquiries";
+  | "inquiries"
+  | "seo";
 
 function formatDate(d: string | null) {
   if (!d) return "—";
@@ -720,6 +722,7 @@ export default function InvestmentPanel() {
     { key: "partners", label: "الشركاء" },
     { key: "stats", label: "الإحصاءات" },
     { key: "inquiries", label: "الطلبات", badge: tab !== "inquiries" ? newInquiriesCount : undefined },
+    { key: "seo", label: "SEO" },
   ];
 
   const tabConfig: Record<InvTab, { title: string; addLabel: string; count: number; onAdd: () => void }> = {
@@ -823,6 +826,7 @@ export default function InvestmentPanel() {
             onDelete={(id) => setConfirmId({ table: "investment_inquiries", id })}
           />
         )}
+        {tab === "seo" && <SeoTabContent slug="investment" />}
       </div>
 
       {/* Editors (drawers) — key forces remount when switching items */}

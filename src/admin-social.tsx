@@ -15,7 +15,8 @@ import {
 } from "lucide-react";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
-type SocialTab = "services" | "initiatives" | "stats" | "values";
+import { SeoTabContent } from "./admin-seo";
+type SocialTab = "services" | "initiatives" | "stats" | "values" | "seo";
 
 // ── Icon map ──────────────────────────────────────────────────────────────────
 const iconMap: Record<string, React.ElementType> = {
@@ -348,6 +349,7 @@ export function SocialPanel() {
     { key: "initiatives", label: "المبادرات",   icon: TrendingUp },
     { key: "stats",       label: "الإحصائيات", icon: Users },
     { key: "values",      label: "القيم",       icon: Star },
+    { key: "seo",         label: "SEO",         icon: Star },
   ];
 
   const meta: Record<SocialTab, { title: string; addLabel: string; onAdd: () => void }> = {
@@ -355,9 +357,10 @@ export function SocialPanel() {
     initiatives: { title: "المبادرات والمشاريع",    addLabel: "إضافة مبادرة",    onAdd: () => setEditInitiative(null) },
     stats:       { title: "الإحصائيات والأرقام",   addLabel: "إضافة إحصائية",  onAdd: () => setEditStat(null) },
     values:      { title: "القيم المؤسسية",         addLabel: "إضافة قيمة",     onAdd: () => setEditValue(null) },
+    seo:         { title: "SEO الخدمات الاجتماعية",   addLabel: "",              onAdd: () => {} },
   };
 
-  const counts = { services: services.length, initiatives: initiatives.length, stats: stats.length, values: values.length };
+  const counts = { services: services.length, initiatives: initiatives.length, stats: stats.length, values: values.length, seo: 0 };
 
   return (
     <div className="inv-panel">
@@ -406,6 +409,7 @@ export function SocialPanel() {
       {tab === "initiatives" && <InitiativesTab items={initiatives} setItems={setInitiatives} onEdit={setEditInitiative} onDelete={(id) => setConfirmId({ table: "social_initiatives", id })} />}
       {tab === "stats"       && <StatsTab       items={stats}       setItems={setStats}       onEdit={setEditStat}       onDelete={(id) => setConfirmId({ table: "social_stats",        id })} />}
       {tab === "values"      && <ValuesTab      items={values}      setItems={setValues}      onEdit={setEditValue}      onDelete={(id) => setConfirmId({ table: "social_values",       id })} />}
+      {tab === "seo"        && <SeoTabContent slug="social" />}
 
       {/* ── Editors ── */}
       {editService !== undefined && (

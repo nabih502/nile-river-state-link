@@ -22,6 +22,7 @@ import {
   type ArtCategory,
 } from "./culture-editor";
 
+import { SeoTabContent } from "./admin-seo";
 type CultureTab =
   | "events"
   | "news"
@@ -30,7 +31,8 @@ type CultureTab =
   | "initiatives"
   | "contests"
   | "media"
-  | "art_categories";
+  | "art_categories"
+  | "seo";
 
 function formatDate(d: string | null) {
   if (!d) return "—";
@@ -726,6 +728,7 @@ export default function CulturePanel() {
     { key: "contests", label: "المسابقات" },
     { key: "media", label: "الوسائط" },
     { key: "art_categories", label: "مجالات الفنون" },
+    { key: "seo", label: "SEO" },
   ];
 
   const tabConfig: Record<CultureTab, { title: string; addLabel: string; count: number; onAdd: () => void }> = {
@@ -828,6 +831,7 @@ export default function CulturePanel() {
             onDelete={(id) => setConfirmId({ table: "culture_art_categories", id })}
           />
         )}
+        {tab === "seo" && <SeoTabContent slug="culture" />}
       </div>
 
       {/* Editors (drawers) — key forces remount when switching items */}
