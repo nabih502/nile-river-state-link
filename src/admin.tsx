@@ -4,8 +4,9 @@ import InvestmentPanel from "./admin-investment";
 import CulturePanel from "./admin-culture";
 import { SocialPanel } from "./admin-social";
 import AdminContact from "./admin-contact";
+import AdminSeo from "./admin-seo";
 
-type Section = "dashboard" | "news" | "events" | "members" | "messages" | "investment" | "culture" | "social" | "contact" | "settings";
+type Section = "dashboard" | "news" | "events" | "members" | "messages" | "investment" | "culture" | "social" | "contact" | "seo" | "settings";
 
 interface NewsRow { id: string; title: string; slug: string; excerpt: string; body: string; image_url: string; category: string; published: boolean; published_at: string | null; created_at: string; author_name: string; author_image_url: string; read_time: number; }
 interface EventRow { id: string; title: string; slug: string; excerpt: string; body: string; image_url: string; location: string; event_date: string; event_end_date: string | null; published: boolean; created_at: string; author_name: string; author_image_url: string; organizer: string; }
@@ -355,6 +356,7 @@ export default function AdminApp() {
     { key: "culture", label: "الثقافة" },
     { key: "social", label: "الخدمات الاجتماعية" },
     { key: "contact", label: "تواصل معنا" },
+    { key: "seo", label: "SEO" },
     { key: "settings", label: "الإعدادات" },
   ];
 
@@ -553,6 +555,7 @@ export default function AdminApp() {
           {section === "culture" && <CulturePanel />}
           {section === "social" && <SocialPanel />}
           {section === "contact" && <AdminContact />}
+          {section === "seo" && <AdminSeo />}
 
           {/* ── Settings ── */}
           {section === "settings" && <SettingsPanel />}
