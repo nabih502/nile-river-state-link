@@ -1513,87 +1513,271 @@ function Payment(){
 function Success(){return <MemberStepShell className="success-step"><header className="success-brand"><img src="/assets/membership-mark-transparent-v2.png" alt="شعار الرابطة"/><div><h2>رابطة ولاية نهر النيل</h2><b>الإلكترونية</b></div></header><section className="success-hero"><div className="success-check"><CircleCheckBig/></div><h1>مبروك</h1><h2>أنت الآن عضو</h2><p>في رابطة ولاية نهر النيل الإلكترونية</p></section><section className="success-member-card"><div className="success-user"><UserRound/></div><h3>رقم العضوية</h3><strong>NRN-2025-000123</strong><span/><h3>الباركود</h3><div className="success-barcode"/><small>N R N 2 0 2 5 0 0 0 1 2 3</small></section><section className="success-thanks"><ShieldCheck/><div><h2>شكراً لانضمامك إلينا</h2><p>معاً نبني مجتمعاً رقمياً قوياً ومتكافلاً لخدمة أبناء الولاية</p><b>وحدتنا .. قوتنا&nbsp;&nbsp;&nbsp; ومستقبلنا .. مسؤوليتنا</b></div></section></MemberStepShell>}
 
 function Contact(){
-  const [sent,setSent]=useState(false);
-  const [fileName,setFileName]=useState("");
-  const [name,setName]=useState("");
-  const [email,setEmail]=useState("");
-  const [phone,setPhone]=useState("");
+  // ── types ──
+  type Settings = Record<string,string>;
+  type InfoItem = {id:string;title:string;lines:string[];icon_name:string;link_url:string;color:string;sort_order:number};
+  type FaqItem  = {id:string;title:string;description:string;icon_name:string;link_url:string;sort_order:number};
+
+  // ── state ──
+  const [settings, setSettings] = useState<Settings>({});
+  const [info,     setInfo]     = useState<InfoItem[]>([]);
+  const [faq,      setFaq]      = useState<FaqItem[]>([]);
+  const [sent,     setSent]     = useState(false);
+  const [submitting,setSubmitting]=useState(false);
+  const [name,   setName]   = useState("");
+  const [email,  setEmail]  = useState("");
+  const [phone,  setPhone]  = useState("");
   const [subject,setSubject]=useState("");
   const [message,setMessage]=useState("");
-  const [submitting,setSubmitting]=useState(false);
-  const submit=async(event:FormEvent)=>{event.preventDefault();setSubmitting(true);await supabase.from("contact_messages").insert({name,email,phone,subject,message});setSubmitting(false);setSent(true)};
-  const benefits=[
-    {icon:UsersRound,title:"نحن معكم",text:"نتواصل معكم بما يسهم في تطوير خدماتنا"},
-    {icon:Globe2,title:"خدمتكم أينما كنتم",text:"ندعمكم من داخل وخارج ولاية نهر النيل"},
-    {icon:ShieldCheck,title:"خصوصية وأمان",text:"نحافظ على سرية معلوماتكم"},
-    {icon:Clock3,title:"استجابة سريعة",text:"نرد على رسائلكم في أسرع وقت"},
-    {icon:Headphones,title:"فريق متخصص",text:"فريق دعم متكامل لخدمتكم"},
-  ];
-  const methods=[
-    {icon:MessageCircle,title:"واتساب",lines:["+249 912 345 678"]},
-    {icon:Phone,title:"اتصال هاتفي",lines:["+249 123 456 789"]},
-    {icon:Mail,title:"البريد الإلكتروني",lines:["info@nilelink.org"]},
-    {icon:MapPin,title:"العنوان",lines:["المملكة العربية السعودية - جدة"]},
-    {icon:Clock3,title:"ساعات العمل",lines:["من الأحد إلى الخميس","9:00 صباحاً - 5:00 مساءً"]},
-  ];
-  const questions=[
-    {icon:Info,title:"الخدمات والبرامج",text:"تفاصيل عن خدماتنا وبرامجنا"},
-    {icon:Headphones,title:"الدعم الفني",text:"المساعدة في استخدام المنصة والتطبيق"},
-    {icon:CreditCard,title:"العضوية والدفع",text:"الاستفسار عن العضوية وطرق الدفع"},
-    {icon:FileText,title:"الشكاوى والمقترحات",text:"نستقبل شكاواكم ومقترحاتكم"},
-    {icon:CircleHelp,title:"الاستفسارات العامة",text:"إجابات على أكثر الأسئلة الشائعة"},
-  ];
-  return <div className="contact-redesign">
-    <section className="ct-hero">
-      <div className="ct-hero-media">
-        <img src="/assets/contact-hero-hq.webp" alt="حاسوب محمول يعرض وسائل التواصل"/>
-        <strong className="ct-screen-title">تواصل معنا</strong>
-        <img className="ct-mug-logo" src="/assets/ChatGPT_Image_Jul_21,_2026,_05_25_20_PM.png" alt="" aria-hidden/>
+
+  // ── load ──
+  useEffect(()=>{
+    supabase.from("contact_settings").select("key,value").then(({data})=>{
+      if(data) setSettings(Object.fromEntries(data.map(r=>[r.key,r.value])));
+    });
+    supabase.from("contact_info_items").select("*").eq("published",true).order("sort_order").then(({data})=>setInfo(data??[]));
+    supabase.from("contact_faq_items").select("*").eq("published",true).order("sort_order").then(({data})=>setFaq(data??[]));
+  },[]);
+
+  const s = (k:string,fallback="")=>settings[k]??fallback;
+
+  // ── icon map ──
+  const iconMap: Record<string,React.ComponentType<{size?:number;color?:string}>> = {
+    MessageCircle, Phone, Mail, MapPin, Clock3, Send, Headphones, Info,
+    CreditCard, FileText, CircleHelp: CircleHelp as unknown as React.ComponentType<{size?:number;color?:string}>,
+    Handshake, UsersRound, Globe2, ShieldCheck,
+  };
+  const Icon = (name:string, sz=22, color="#fff")=>{
+    const C = iconMap[name] ?? Info;
+    return <C size={sz} color={color}/>;
+  };
+
+  // ── submit ──
+  const submit = async(ev:FormEvent)=>{
+    ev.preventDefault();
+    setSubmitting(true);
+    await supabase.from("contact_messages").insert({name,email,phone,subject,message});
+    setSubmitting(false);
+    setSent(true);
+  };
+
+  const heroImage = s("hero_image_url","/assets/contact-hero-hq.webp");
+
+  return (
+    <div dir="rtl" style={{background:"#f8fafc",minHeight:"100vh"}}>
+
+      {/* ══ HERO ══════════════════════════════════════════════════════════ */}
+      <div style={{position:"relative",height:"clamp(380px,55vh,520px)",overflow:"hidden",background:"#0f172a"}}>
+        {heroImage && <img src={heroImage} alt="تواصل معنا" style={{width:"100%",height:"100%",objectFit:"cover"}}/>}
+        <div style={{position:"absolute",inset:0,background:"linear-gradient(110deg,rgba(0,0,0,0.88) 0%,rgba(0,0,0,0.55) 55%,rgba(0,0,0,0.1) 100%)"}}/>
+        {/* decorative vertical line */}
+        <div style={{position:"absolute",top:0,right:"clamp(4rem,10vw,8rem)",width:2,height:"100%",background:"linear-gradient(to bottom,transparent,rgba(37,99,235,0.7),transparent)"}}/>
+        <div style={{position:"absolute",inset:0,display:"flex",flexDirection:"column",justifyContent:"center",padding:"clamp(2rem,6vw,5rem)",maxWidth:"1200px",margin:"0 auto",left:0,right:0}}>
+          <div style={{display:"inline-flex",alignItems:"center",gap:"0.5rem",background:"rgba(37,99,235,0.8)",backdropFilter:"blur(10px)",color:"#fff",padding:"0.4rem 1rem",borderRadius:"9999px",fontSize:"0.78rem",fontWeight:700,marginBottom:"1.25rem",width:"fit-content",border:"1px solid rgba(255,255,255,0.2)"}}>
+            <MessageCircle size={14}/> رابطة ولاية نهر النيل
+          </div>
+          <h1 style={{color:"#fff",fontSize:"clamp(2rem,5vw,3.5rem)",fontWeight:900,margin:"0 0 1rem",lineHeight:1.15,textShadow:"0 2px 20px rgba(0,0,0,0.5)"}}>
+            {s("hero_title","تواصل معنا")}
+          </h1>
+          <p style={{color:"rgba(255,255,255,0.78)",fontSize:"clamp(0.9rem,1.8vw,1.1rem)",lineHeight:1.75,maxWidth:"560px",margin:0}}>
+            {s("hero_subtitle","نحن هنا لخدمتكم")}
+          </p>
+          <div style={{display:"flex",gap:"1rem",marginTop:"2rem",flexWrap:"wrap"}}>
+            <a href="#contact-form" style={{background:"#2563eb",color:"#fff",padding:"0.75rem 1.75rem",borderRadius:"0.6rem",textDecoration:"none",fontWeight:700,fontSize:"0.9rem",display:"flex",alignItems:"center",gap:"0.5rem",boxShadow:"0 4px 16px rgba(37,99,235,0.45)"}}>
+              <Send size={16}/> أرسل رسالة
+            </a>
+            {s("whatsapp_number") && (
+              <a href={`https://wa.me/${s("whatsapp_number")}`} target="_blank" rel="noopener noreferrer"
+                style={{background:"rgba(255,255,255,0.12)",backdropFilter:"blur(10px)",color:"#fff",padding:"0.75rem 1.75rem",borderRadius:"0.6rem",textDecoration:"none",fontWeight:700,fontSize:"0.9rem",display:"flex",alignItems:"center",gap:"0.5rem",border:"1px solid rgba(255,255,255,0.2)"}}>
+                <MessageCircle size={16}/> واتساب مباشر
+              </a>
+            )}
+          </div>
+        </div>
       </div>
-      <div className="ct-hero-copy motion">
-        <MessageCircle className="ct-hero-watermark" aria-hidden/>
-        <h1>تواصل معنا</h1>
-        <h2>نحن هنا لخدمتكم</h2>
-        <p>نسعد بتواصلكم واستقبال استفساراتكم ومقترحاتكم<br/>وشكاواكم، فريقنا جاهز للرد عليكم وتقديم الدعم<br/>في أسرع وقت ممكن.</p>
+
+      {/* ══ INFO CARDS ════════════════════════════════════════════════════ */}
+      {info.length>0 && (
+        <div style={{maxWidth:"1200px",margin:"-3rem auto 0",padding:"0 1.5rem",position:"relative",zIndex:10}}>
+          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(190px,1fr))",gap:"1rem"}}>
+            {info.map(item=>(
+              <a key={item.id} href={item.link_url||"#"} target={item.link_url?.startsWith("http")?"_blank":"_self"} rel="noopener noreferrer"
+                style={{background:"#fff",borderRadius:"1rem",padding:"1.5rem 1.25rem",boxShadow:"0 8px 30px rgba(0,0,0,0.1)",textDecoration:"none",display:"flex",flexDirection:"column",alignItems:"flex-start",gap:"0.75rem",border:"1px solid #e2e8f0",transition:"all 0.25s",borderTop:`3px solid ${item.color}`}}
+                onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-4px)";e.currentTarget.style.boxShadow="0 16px 40px rgba(0,0,0,0.13)";}}
+                onMouseLeave={e=>{e.currentTarget.style.transform="translateY(0)";e.currentTarget.style.boxShadow="0 8px 30px rgba(0,0,0,0.1)";}}>
+                <div style={{width:46,height:46,borderRadius:"0.75rem",background:`${item.color}18`,display:"flex",alignItems:"center",justifyContent:"center"}}>
+                  {Icon(item.icon_name,22,item.color)}
+                </div>
+                <div>
+                  <p style={{color:"#0f172a",fontWeight:800,fontSize:"0.9rem",margin:"0 0 0.35rem"}}>{item.title}</p>
+                  {item.lines.map((l,i)=><p key={i} style={{color:i===0?"#374151":"#94a3b8",fontSize:i===0?"0.82rem":"0.75rem",margin:"0.1rem 0",fontWeight:i===0?600:400}}>{l}</p>)}
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* ══ FORM + SIDE INFO ══════════════════════════════════════════════ */}
+      <div id="contact-form" style={{maxWidth:"1200px",margin:"4rem auto 0",padding:"0 1.5rem",display:"grid",gridTemplateColumns:"1fr 380px",gap:"2.5rem",alignItems:"start"}} className="contact-main-grid">
+
+        {/* Form */}
+        <div style={{background:"#fff",borderRadius:"1.25rem",overflow:"hidden",boxShadow:"0 4px 24px rgba(0,0,0,0.08)",border:"1px solid #e2e8f0"}}>
+          <div style={{background:"linear-gradient(135deg,#1e3a5f,#2563eb)",padding:"2rem 2.25rem"}}>
+            <h2 style={{color:"#fff",fontWeight:900,fontSize:"1.35rem",margin:"0 0 0.4rem"}}>{s("form_title","أرسل لنا رسالة")}</h2>
+            <p style={{color:"rgba(255,255,255,0.72)",margin:0,fontSize:"0.88rem"}}>{s("form_subtitle","نسعد بتواصلكم")}</p>
+          </div>
+          <div style={{padding:"2rem 2.25rem"}}>
+            {sent ? (
+              <div style={{textAlign:"center",padding:"3rem 1rem"}}>
+                <div style={{width:72,height:72,background:"#f0fdf4",borderRadius:"50%",display:"flex",alignItems:"center",justifyContent:"center",margin:"0 auto 1.25rem"}}>
+                  <CircleCheckBig size={36} color="#16a34a"/>
+                </div>
+                <h3 style={{color:"#0f172a",fontWeight:800,fontSize:"1.2rem",margin:"0 0 0.5rem"}}>تم إرسال رسالتك بنجاح!</h3>
+                <p style={{color:"#64748b",margin:"0 0 1.5rem"}}>سنتواصل معك في أقرب وقت ممكن.</p>
+                <button onClick={()=>{setSent(false);setName("");setEmail("");setPhone("");setSubject("");setMessage("");}}
+                  style={{background:"#2563eb",color:"#fff",border:"none",borderRadius:"0.6rem",padding:"0.7rem 1.75rem",fontWeight:700,cursor:"pointer",fontSize:"0.9rem"}}>
+                  إرسال رسالة أخرى
+                </button>
+              </div>
+            ) : (
+              <form onSubmit={submit}>
+                <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"1rem"}}>
+                  {/* Name */}
+                  <label style={{display:"flex",flexDirection:"column",gap:"0.4rem"}}>
+                    <span style={{fontSize:"0.8rem",fontWeight:700,color:"#374151"}}>الاسم الكامل *</span>
+                    <div style={{position:"relative"}}>
+                      <span style={{position:"absolute",top:"50%",right:"0.85rem",transform:"translateY(-50%)",color:"#94a3b8",pointerEvents:"none"}}><UserRound size={16}/></span>
+                      <input required value={name} onChange={e=>setName(e.target.value)} placeholder="أدخل اسمك الكامل"
+                        style={{width:"100%",border:"1.5px solid #e2e8f0",borderRadius:"0.6rem",padding:"0.7rem 2.5rem 0.7rem 0.85rem",fontSize:"0.9rem",outline:"none",boxSizing:"border-box",transition:"border 0.2s",fontFamily:"inherit"}}
+                        onFocus={e=>e.target.style.borderColor="#2563eb"} onBlur={e=>e.target.style.borderColor="#e2e8f0"}/>
+                    </div>
+                  </label>
+                  {/* Email */}
+                  <label style={{display:"flex",flexDirection:"column",gap:"0.4rem"}}>
+                    <span style={{fontSize:"0.8rem",fontWeight:700,color:"#374151"}}>البريد الإلكتروني *</span>
+                    <div style={{position:"relative"}}>
+                      <span style={{position:"absolute",top:"50%",right:"0.85rem",transform:"translateY(-50%)",color:"#94a3b8",pointerEvents:"none"}}><Mail size={16}/></span>
+                      <input required type="email" value={email} onChange={e=>setEmail(e.target.value)} placeholder="example@email.com" dir="ltr"
+                        style={{width:"100%",border:"1.5px solid #e2e8f0",borderRadius:"0.6rem",padding:"0.7rem 2.5rem 0.7rem 0.85rem",fontSize:"0.9rem",outline:"none",boxSizing:"border-box",transition:"border 0.2s",fontFamily:"inherit"}}
+                        onFocus={e=>e.target.style.borderColor="#2563eb"} onBlur={e=>e.target.style.borderColor="#e2e8f0"}/>
+                    </div>
+                  </label>
+                  {/* Phone */}
+                  <label style={{display:"flex",flexDirection:"column",gap:"0.4rem"}}>
+                    <span style={{fontSize:"0.8rem",fontWeight:700,color:"#374151"}}>رقم الجوال</span>
+                    <div style={{position:"relative"}}>
+                      <span style={{position:"absolute",top:"50%",right:"0.85rem",transform:"translateY(-50%)",color:"#94a3b8",pointerEvents:"none"}}><Phone size={16}/></span>
+                      <input type="tel" value={phone} onChange={e=>setPhone(e.target.value)} placeholder="+249 912 345 678" dir="ltr"
+                        style={{width:"100%",border:"1.5px solid #e2e8f0",borderRadius:"0.6rem",padding:"0.7rem 2.5rem 0.7rem 0.85rem",fontSize:"0.9rem",outline:"none",boxSizing:"border-box",transition:"border 0.2s",fontFamily:"inherit"}}
+                        onFocus={e=>e.target.style.borderColor="#2563eb"} onBlur={e=>e.target.style.borderColor="#e2e8f0"}/>
+                    </div>
+                  </label>
+                  {/* Subject */}
+                  <label style={{display:"flex",flexDirection:"column",gap:"0.4rem"}}>
+                    <span style={{fontSize:"0.8rem",fontWeight:700,color:"#374151"}}>نوع الرسالة *</span>
+                    <select required value={subject} onChange={e=>setSubject(e.target.value)}
+                      style={{width:"100%",border:"1.5px solid #e2e8f0",borderRadius:"0.6rem",padding:"0.7rem 0.85rem",fontSize:"0.9rem",outline:"none",boxSizing:"border-box",transition:"border 0.2s",fontFamily:"inherit",background:"#fff",appearance:"none"}}
+                      onFocus={e=>e.target.style.borderColor="#2563eb"} onBlur={e=>e.target.style.borderColor="#e2e8f0"}>
+                      <option value="" disabled>اختر نوع الرسالة *</option>
+                      <option>استفسار عام</option><option>شكوى</option><option>اقتراح</option><option>دعم فني</option><option>عضوية</option><option>استثمار وشراكة</option>
+                    </select>
+                  </label>
+                  {/* Message */}
+                  <label style={{display:"flex",flexDirection:"column",gap:"0.4rem",gridColumn:"1/-1"}}>
+                    <span style={{fontSize:"0.8rem",fontWeight:700,color:"#374151"}}>نص الرسالة *</span>
+                    <textarea required rows={5} value={message} onChange={e=>setMessage(e.target.value)} placeholder="اكتب رسالتك هنا..."
+                      style={{width:"100%",border:"1.5px solid #e2e8f0",borderRadius:"0.6rem",padding:"0.85rem",fontSize:"0.9rem",outline:"none",boxSizing:"border-box",resize:"vertical",transition:"border 0.2s",fontFamily:"inherit",lineHeight:1.7}}
+                      onFocus={e=>e.target.style.borderColor="#2563eb"} onBlur={e=>e.target.style.borderColor="#e2e8f0"}/>
+                  </label>
+                  {/* Submit */}
+                  <button type="submit" disabled={submitting} style={{gridColumn:"1/-1",background:submitting?"#93c5fd":"#2563eb",color:"#fff",border:"none",borderRadius:"0.6rem",padding:"0.9rem 2rem",fontWeight:800,fontSize:"1rem",cursor:submitting?"not-allowed":"pointer",display:"flex",alignItems:"center",justifyContent:"center",gap:"0.6rem",transition:"all 0.2s",boxShadow:"0 4px 16px rgba(37,99,235,0.35)",fontFamily:"inherit"}}
+                    onMouseEnter={e=>{if(!submitting)e.currentTarget.style.background="#1d4ed8";}} onMouseLeave={e=>{if(!submitting)e.currentTarget.style.background="#2563eb";}}>
+                    <Send size={18}/>{submitting?"جاري الإرسال...":"إرسال الرسالة"}
+                  </button>
+                </div>
+              </form>
+            )}
+          </div>
+        </div>
+
+        {/* Sidebar */}
+        <aside style={{display:"flex",flexDirection:"column",gap:"1.5rem"}}>
+          {/* Quick info */}
+          {info.slice(0,4).map(item=>(
+            <a key={item.id} href={item.link_url||"#"} target={item.link_url?.startsWith("http")?"_blank":"_self"} rel="noopener noreferrer"
+              style={{background:"#fff",borderRadius:"1rem",padding:"1.25rem 1.5rem",boxShadow:"0 2px 12px rgba(0,0,0,0.06)",textDecoration:"none",display:"flex",alignItems:"center",gap:"1rem",border:"1px solid #e2e8f0",transition:"all 0.2s",borderRight:`3px solid ${item.color}`}}
+              onMouseEnter={e=>{e.currentTarget.style.transform="translateX(-3px)";e.currentTarget.style.boxShadow="0 8px 24px rgba(0,0,0,0.1)";}}
+              onMouseLeave={e=>{e.currentTarget.style.transform="translateX(0)";e.currentTarget.style.boxShadow="0 2px 12px rgba(0,0,0,0.06)";}}>
+              <div style={{width:44,height:44,borderRadius:"0.75rem",background:`${item.color}18`,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
+                {Icon(item.icon_name,20,item.color)}
+              </div>
+              <div style={{flex:1,minWidth:0}}>
+                <p style={{color:"#0f172a",fontWeight:800,fontSize:"0.88rem",margin:"0 0 0.2rem"}}>{item.title}</p>
+                {item.lines.map((l,i)=><p key={i} style={{color:i===0?"#374151":"#94a3b8",fontSize:"0.78rem",margin:"0.1rem 0",fontWeight:i===0?600:400,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{l}</p>)}
+              </div>
+              <ChevronLeft size={16} color="#94a3b8"/>
+            </a>
+          ))}
+          {/* Map placeholder or embed */}
+          {s("map_embed_url") ? (
+            <div style={{borderRadius:"1rem",overflow:"hidden",border:"1px solid #e2e8f0",boxShadow:"0 2px 12px rgba(0,0,0,0.06)"}}>
+              <iframe src={s("map_embed_url")} width="100%" height="220" style={{border:0,display:"block"}} allowFullScreen loading="lazy" title="الموقع على الخريطة"/>
+            </div>
+          ) : (
+            <div style={{background:"#fff",borderRadius:"1rem",padding:"1.75rem 1.5rem",boxShadow:"0 2px 12px rgba(0,0,0,0.06)",border:"1px solid #e2e8f0",textAlign:"center"}}>
+              <MapPin size={32} color="#cbd5e1" style={{margin:"0 auto 0.75rem",display:"block"}}/>
+              <p style={{color:"#94a3b8",fontSize:"0.82rem",margin:0}}>يمكن إضافة خريطة الموقع من لوحة التحكم</p>
+            </div>
+          )}
+        </aside>
       </div>
-      <i className="ct-hero-wave" aria-hidden/>
-    </section>
 
-    <section className="ct-benefits page-width motion">
-      {benefits.map(item=>{const Icon=item.icon;return <article key={item.title}><Icon/><h3>{item.title}</h3><p>{item.text}</p></article>})}
-    </section>
+      {/* ══ FAQ ═══════════════════════════════════════════════════════════ */}
+      {faq.length>0 && (
+        <section style={{maxWidth:"1200px",margin:"4rem auto 0",padding:"0 1.5rem"}}>
+          <div style={{display:"flex",alignItems:"center",gap:"0.75rem",marginBottom:"2rem"}}>
+            <div style={{width:4,height:32,background:"#2563eb",borderRadius:2}}/>
+            <h2 style={{fontSize:"1.25rem",fontWeight:800,color:"#0f172a",margin:0}}>كيف يمكننا مساعدتك؟</h2>
+          </div>
+          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(260px,1fr))",gap:"1rem"}}>
+            {faq.map(item=>(
+              <a key={item.id} href={item.link_url||"#contact-form"}
+                style={{background:"#fff",borderRadius:"1rem",padding:"1.5rem",boxShadow:"0 2px 12px rgba(0,0,0,0.06)",textDecoration:"none",display:"flex",gap:"1rem",alignItems:"flex-start",border:"1px solid #e2e8f0",transition:"all 0.25s"}}
+                onMouseEnter={e=>{e.currentTarget.style.borderColor="#2563eb";e.currentTarget.style.boxShadow="0 8px 24px rgba(37,99,235,0.12)";e.currentTarget.style.transform="translateY(-2px)";}}
+                onMouseLeave={e=>{e.currentTarget.style.borderColor="#e2e8f0";e.currentTarget.style.boxShadow="0 2px 12px rgba(0,0,0,0.06)";e.currentTarget.style.transform="translateY(0)";}}>
+                <div style={{width:44,height:44,borderRadius:"0.75rem",background:"#eff6ff",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
+                  {Icon(item.icon_name,20,"#2563eb")}
+                </div>
+                <div>
+                  <p style={{color:"#0f172a",fontWeight:800,fontSize:"0.9rem",margin:"0 0 0.35rem"}}>{item.title}</p>
+                  <p style={{color:"#64748b",fontSize:"0.8rem",margin:0,lineHeight:1.6}}>{item.description}</p>
+                </div>
+              </a>
+            ))}
+          </div>
+        </section>
+      )}
 
-    <section className="ct-contact-panel page-width" id="contact-form">
-      <aside className="ct-methods motion">
-        <h2>طرق التواصل</h2>
-        <span className="ct-title-line"/>
-        <div>{methods.map(item=>{const Icon=item.icon;return <a href={item.title==="البريد الإلكتروني"?"mailto:info@nilelink.org":item.title==="واتساب"?"https://wa.me/249912345678":item.title==="اتصال هاتفي"?"tel:+249123456789":"#contact-form"} key={item.title}><i><Icon/></i><span><b>{item.title}</b>{item.lines.map(line=><small key={line}>{line}</small>)}</span></a>})}</div>
-      </aside>
-      <form className="ct-form motion" onSubmit={submit}>
-        <h2>أرسل لنا رسالة</h2>
-        <span className="ct-title-line"/>
-        {sent?<div className="ct-sent"><CircleCheckBig/><h2>تم إرسال رسالتك بنجاح</h2><p>سنتواصل معك في أقرب وقت.</p><button type="button" onClick={()=>setSent(false)}>إرسال رسالة أخرى</button></div>:<div className="ct-form-fields">
-          <label className="ct-control"><UserRound/><input required value={name} onChange={e=>setName(e.target.value)} aria-label="الاسم الكامل" placeholder="الاسم الكامل *"/></label>
-          <label className="ct-control"><Mail/><input required type="email" value={email} onChange={e=>setEmail(e.target.value)} aria-label="البريد الإلكتروني" placeholder="البريد الإلكتروني *"/></label>
-          <label className="ct-control wide"><Phone/><input type="tel" value={phone} onChange={e=>setPhone(e.target.value)} aria-label="رقم الجوال" placeholder="رقم الجوال"/></label>
-          <label className="ct-control wide select"><select required value={subject} onChange={e=>setSubject(e.target.value)} aria-label="اختر نوع الرسالة"><option value="" disabled>اختر نوع الرسالة *</option><option>استفسار عام</option><option>شكوى</option><option>اقتراح</option><option>دعم فني</option></select></label>
-          <label className="ct-control wide message"><FileText/><textarea required rows={5} value={message} onChange={e=>setMessage(e.target.value)} aria-label="نص الرسالة" placeholder="نص الرسالة *"/></label>
-          <label className="ct-attachment wide"><Paperclip/><span><b>{fileName||"إرفاق ملف (اختياري)"}</b><small>ارفق الملفات بصيغة (PDF, JPG, PNG) وبحجم لا يتجاوز 5MB</small></span><input type="file" accept="image/jpeg,image/png,application/pdf" onChange={event=>setFileName(event.target.files?.[0]?.name||"")}/></label>
-          <button className="ct-submit wide" type="submit" disabled={submitting}><Send/>{submitting?"جاري الإرسال...":"إرسال الرسالة"}</button>
-        </div>}
-      </form>
-    </section>
+      {/* ══ NEWSLETTER ════════════════════════════════════════════════════ */}
+      <section style={{maxWidth:"1200px",margin:"4rem auto",padding:"0 1.5rem"}}>
+        <div style={{background:"linear-gradient(135deg,#1e3a5f 0%,#2563eb 50%,#1d4ed8 100%)",borderRadius:"1.5rem",padding:"3rem 2.5rem",display:"flex",alignItems:"center",gap:"2.5rem",flexWrap:"wrap",boxShadow:"0 8px 32px rgba(37,99,235,0.3)"}}>
+          <div style={{flex:1,minWidth:"240px"}}>
+            <h3 style={{color:"#fff",fontWeight:900,fontSize:"1.3rem",margin:"0 0 0.5rem"}}>{s("newsletter_title","كن على تواصل دائم")}</h3>
+            <p style={{color:"rgba(255,255,255,0.75)",margin:0,fontSize:"0.9rem",lineHeight:1.65}}>{s("newsletter_subtitle","اشترك في نشرتنا البريدية")}</p>
+          </div>
+          <form onSubmit={e=>e.preventDefault()} style={{display:"flex",gap:"0.75rem",flexWrap:"wrap",flex:1,minWidth:"260px"}}>
+            <input type="email" required placeholder="أدخل بريدك الإلكتروني" dir="ltr"
+              style={{flex:1,minWidth:"200px",border:"none",borderRadius:"0.6rem",padding:"0.8rem 1.25rem",fontSize:"0.9rem",outline:"none",fontFamily:"inherit"}}/>
+            <button type="submit" style={{background:"#fff",color:"#1e3a5f",border:"none",borderRadius:"0.6rem",padding:"0.8rem 1.75rem",fontWeight:800,fontSize:"0.9rem",cursor:"pointer",display:"flex",alignItems:"center",gap:"0.5rem",fontFamily:"inherit",whiteSpace:"nowrap"}}>
+              <Send size={16}/> اشترك الآن
+            </button>
+          </form>
+        </div>
+      </section>
 
-    <section className="ct-faq page-width motion">
-      <header><span/><h2>أسئلة شائعة</h2><span/></header>
-      <div>{questions.map(item=>{const Icon=item.icon;return <a href="#contact-form" key={item.title}><Icon/><b>{item.title}</b><small>{item.text}</small></a>})}</div>
-    </section>
-
-    <section className="ct-newsletter page-width motion">
-      <div className="ct-news-copy"><Mail/><span><h2>كن على تواصل دائم</h2><p>اشترك في نشرتنا البريدية ليصلك كل جديد<br/>عن أخبار الرابطة والفعاليات والخدمات</p></span></div>
-      <form onSubmit={event=>event.preventDefault()}><input type="email" required aria-label="البريد الإلكتروني للاشتراك" placeholder="البريد الإلكتروني"/><button type="submit"><Send/>اشترك الآن</button></form>
-    </section>
-  </div>
+    </div>
+  );
 }
 
 // ─── News list page ──────────────────────────────────────────────────────────
