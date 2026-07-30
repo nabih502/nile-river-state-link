@@ -510,13 +510,7 @@ export function EventEditor({
           </div>
           <label className="inv-label">
             صورة المشاركة (OG Image)
-            <input
-              value={(form as any).seo_image || ""}
-              className="inv-input"
-              onChange={e => (set as any)("seo_image", e.target.value)}
-              placeholder="رابط الصورة (فارغ = استخدام الصورة الرئيسية)"
-              dir="ltr"
-            />
+            <SeoImageUpload value={(form as any).seo_image || ""} onChange={url => (set as any)("seo_image", url)} />
           </label>
         </FormSection>
       </form>
@@ -698,13 +692,7 @@ export function CultureNewsEditor({
           </div>
           <label className="inv-label">
             صورة المشاركة (OG Image)
-            <input
-              value={(form as any).seo_image || ""}
-              className="inv-input"
-              onChange={e => (set as any)("seo_image", e.target.value)}
-              placeholder="رابط الصورة (فارغ = استخدام الصورة الرئيسية)"
-              dir="ltr"
-            />
+            <SeoImageUpload value={(form as any).seo_image || ""} onChange={url => (set as any)("seo_image", url)} />
           </label>
         </FormSection>
       </form>
@@ -874,13 +862,7 @@ export function ArtistEditor({
           </div>
           <label className="inv-label">
             صورة المشاركة (OG Image)
-            <input
-              value={(form as any).seo_image || ""}
-              className="inv-input"
-              onChange={e => (set as any)("seo_image", e.target.value)}
-              placeholder="رابط الصورة (فارغ = استخدام الصورة الرئيسية)"
-              dir="ltr"
-            />
+            <SeoImageUpload value={(form as any).seo_image || ""} onChange={url => (set as any)("seo_image", url)} />
           </label>
         </FormSection>
       </form>
@@ -1104,13 +1086,7 @@ export function AssociationEditor({
           </div>
           <label className="inv-label">
             صورة المشاركة (OG Image)
-            <input
-              value={(form as any).seo_image || ""}
-              className="inv-input"
-              onChange={e => (set as any)("seo_image", e.target.value)}
-              placeholder="رابط الصورة (فارغ = استخدام الصورة الرئيسية)"
-              dir="ltr"
-            />
+            <SeoImageUpload value={(form as any).seo_image || ""} onChange={url => (set as any)("seo_image", url)} />
           </label>
         </FormSection>
       </form>
@@ -1260,13 +1236,7 @@ export function InitiativeEditor({
           </div>
           <label className="inv-label">
             صورة المشاركة (OG Image)
-            <input
-              value={(form as any).seo_image || ""}
-              className="inv-input"
-              onChange={e => (set as any)("seo_image", e.target.value)}
-              placeholder="رابط الصورة (فارغ = استخدام الصورة الرئيسية)"
-              dir="ltr"
-            />
+            <SeoImageUpload value={(form as any).seo_image || ""} onChange={url => (set as any)("seo_image", url)} />
           </label>
         </FormSection>
       </form>
@@ -1550,13 +1520,7 @@ export function CultureMediaEditor({
           </div>
           <label className="inv-label">
             صورة المشاركة (OG Image)
-            <input
-              value={(form as any).seo_image || ""}
-              className="inv-input"
-              onChange={e => (set as any)("seo_image", e.target.value)}
-              placeholder="رابط الصورة (فارغ = استخدام الصورة الرئيسية)"
-              dir="ltr"
-            />
+            <SeoImageUpload value={(form as any).seo_image || ""} onChange={url => (set as any)("seo_image", url)} />
           </label>
         </FormSection>
       </form>
@@ -1660,13 +1624,7 @@ export function ArtCategoryEditor({ item, open, onSave, onClose }: {
           </div>
           <label className="inv-label">
             صورة المشاركة (OG Image)
-            <input
-              value={form.seo_image || ""}
-              className="inv-input"
-              onChange={e => set("seo_image", e.target.value)}
-              placeholder="رابط الصورة (فارغ = استخدام الصورة الرئيسية)"
-              dir="ltr"
-            />
+            <SeoImageUpload value={form.seo_image || ""} onChange={url => set("seo_image", url)} />
           </label>
         </FormSection>
       </form>

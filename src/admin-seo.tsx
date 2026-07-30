@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { supabase } from "./supabase";
 import { invalidateSeoCache, type SeoData } from "./useSeo";
-import { Search, Globe as Globe2, CircleCheck as CheckCircle2, CircleAlert as AlertCircle, TriangleAlert as AlertTriangle, Save, X, ChevronRight, Eye, ChartBar as BarChart3, RefreshCw, ExternalLink } from "lucide-react";
+import { Search, Globe as Globe2, CircleCheck as CheckCircle2, CircleAlert as AlertCircle, TriangleAlert as AlertTriangle, Save, X, ChevronRight, Eye, ChartBar as BarChart3, RefreshCw, ExternalLink, Upload } from "lucide-react";
 
 // ── score ──────────────────────────────────────────────────────────────────────
 function calcScore(d: SeoData): number {
@@ -250,11 +250,7 @@ function EditPanel({ page, onSave, onClose }: { page: SeoData; onSave: () => voi
             </Field>
 
             <Field label="OG Image (صورة المشاركة)" hint="مقاسات مثالية 1200×630 px">
-              <div style={{ display: "flex", gap: "0.5rem" }}>
-                <input style={{ ...inputStyle, flex: 1 }} value={form.og_image} onChange={e => set("og_image", e.target.value)}
-                  placeholder="https://… أو /assets/…"
-                  onFocus={e => (e.target.style.borderColor = "#2563eb")} onBlur={e => (e.target.style.borderColor = "#e2e8f0")} />
-              </div>
+              <SeoImageUpload value={form.og_image} onChange={url => set("og_image", url)} />
             </Field>
 
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.85rem" }}>
@@ -372,6 +368,66 @@ function EditPanel({ page, onSave, onClose }: { page: SeoData; onSave: () => voi
   );
 }
 
+
+// ── SEO Image Upload (shared across all SEO forms) ───────────────────────────
+export function SeoImageUpload({ value, onChange }: { value: string; onChange: (url: string) => void }) {
+  const [uploading, setUploading] = useState(false);
+  const [err, setErr] = useState("");
+  const ref = useRef<HTMLInputElement>(null);
+
+  const upload = async (file: File) => {
+    setUploading(true);
+    setErr("");
+    try {
+      const ext = file.name.split(".").pop() || "jpg";
+      const path = `seo/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+      const { error: upErr } = await supabase.storage.from("images").upload(path, file);
+      if (upErr) throw upErr;
+      const { data } = supabase.storage.from("images").getPublicUrl(path);
+      onChange(data.publicUrl);
+    } catch (e: unknown) {
+      setErr(e instanceof Error ? e.message : "فشل رفع الصورة");
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+      {value && (
+        <div style={{ position: "relative" }}>
+          <img src={value} alt="" style={{ width: "100%", maxHeight: 160, objectFit: "cover", borderRadius: "0.5rem", border: "1px solid #e2e8f0", display: "block" }} />
+          <button type="button" onClick={() => onChange("")} style={{ position: "absolute", top: 6, insetInlineEnd: 6, background: "rgba(0,0,0,0.55)", color: "#fff", border: "none", borderRadius: "50%", width: 26, height: 26, cursor: "pointer", fontSize: "1.1rem", lineHeight: 1, display: "flex", alignItems: "center", justifyContent: "center" }}>×</button>
+        </div>
+      )}
+      {!value && (
+        <div onClick={() => !uploading && ref.current?.click()}
+          style={{ border: "2px dashed #e2e8f0", borderRadius: "0.5rem", padding: "1.25rem", textAlign: "center", cursor: uploading ? "not-allowed" : "pointer", background: "#fafafa", display: "flex", flexDirection: "column", alignItems: "center", gap: "0.3rem" }}>
+          {uploading
+            ? <span style={{ fontSize: "0.82rem", color: "#64748b" }}>جاري الرفع...</span>
+            : <>
+                <Upload size={20} color="#94a3b8" />
+                <span style={{ fontSize: "0.82rem", color: "#64748b" }}>اضغط لرفع صورة من جهازك</span>
+                <span style={{ fontSize: "0.71rem", color: "#94a3b8" }}>PNG، JPG، WebP — مقاس مثالي 1200×630</span>
+              </>}
+        </div>
+      )}
+      {err && <span style={{ color: "#dc2626", fontSize: "0.78rem" }}>{err}</span>}
+      <div style={{ display: "flex", gap: "0.4rem" }}>
+        <input value={value} onChange={e => onChange(e.target.value)} placeholder="أو الصق رابط الصورة مباشرةً..." dir="ltr"
+          style={{ ...inputStyle, flex: 1, fontSize: "0.8rem" }}
+          onFocus={e => (e.target.style.borderColor = "#2563eb")} onBlur={e => (e.target.style.borderColor = "#e2e8f0")} />
+        <button type="button" onClick={() => ref.current?.click()} disabled={uploading}
+          style={{ background: "#2563eb", color: "#fff", border: "none", borderRadius: "0.45rem", padding: "0 1rem", cursor: uploading ? "not-allowed" : "pointer", fontSize: "0.8rem", fontFamily: "inherit", whiteSpace: "nowrap", display: "flex", alignItems: "center", gap: "0.35rem", opacity: uploading ? 0.7 : 1 }}>
+          <Upload size={14} />{uploading ? "..." : "رفع"}
+        </button>
+      </div>
+      <input ref={ref} type="file" accept="image/jpeg,image/jpg,image/png,image/webp" style={{ display: "none" }}
+        onChange={e => { const f = e.target.files?.[0]; if (f) upload(f); e.target.value = ""; }} />
+    </div>
+  );
+}
+
 // ── Inline tab content (used inside section admins) ───────────────────────────
 export function SeoTabContent({ slug }: { slug: string }) {
   const [form, setForm] = useState<SeoData | null>(null);
@@ -461,7 +517,7 @@ export function SeoTabContent({ slug }: { slug: string }) {
           <textarea style={{ ...inputStyle, resize: "vertical" }} rows={3} value={form.og_description} onChange={e => set("og_description", e.target.value)} placeholder="اتركه فارغاً لاستخدام الوصف تلقائياً" onFocus={e=>(e.target.style.borderColor="#2563eb")} onBlur={e=>(e.target.style.borderColor="#e2e8f0")} />
         </Field>
         <Field label="OG Image (1200×630 px)">
-          <input style={{ ...inputStyle, direction: "ltr" }} value={form.og_image} onChange={e => set("og_image", e.target.value)} placeholder="https://… أو /assets/…" onFocus={e=>(e.target.style.borderColor="#2563eb")} onBlur={e=>(e.target.style.borderColor="#e2e8f0")} />
+          <SeoImageUpload value={form.og_image} onChange={url => set("og_image", url)} />
         </Field>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.85rem" }}>
           <Field label="OG Type"><select style={{ ...inputStyle, background: "#fff" }} value={form.og_type} onChange={e => set("og_type", e.target.value)}>{OG_TYPES.map(t => <option key={t}>{t}</option>)}</select></Field>

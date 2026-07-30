@@ -560,13 +560,7 @@ export function SectorEditor({
           </div>
           <label className="inv-label">
             صورة المشاركة (OG Image)
-            <input
-              value={(form as any).seo_image || ""}
-              className="inv-input"
-              onChange={e => (set as any)("seo_image", e.target.value)}
-              placeholder="رابط الصورة (فارغ = استخدام الصورة الرئيسية)"
-              dir="ltr"
-            />
+            <SeoImageUpload value={(form as any).seo_image || ""} onChange={url => (set as any)("seo_image", url)} />
           </label>
         </FormSection>
       </form>
@@ -835,13 +829,7 @@ export function OpportunityEditor({
           </div>
           <label className="inv-label">
             صورة المشاركة (OG Image)
-            <input
-              value={(form as any).seo_image || ""}
-              className="inv-input"
-              onChange={e => (set as any)("seo_image", e.target.value)}
-              placeholder="رابط الصورة (فارغ = استخدام الصورة الرئيسية)"
-              dir="ltr"
-            />
+            <SeoImageUpload value={(form as any).seo_image || ""} onChange={url => (set as any)("seo_image", url)} />
           </label>
         </FormSection>
       </form>

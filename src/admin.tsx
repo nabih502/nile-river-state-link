@@ -164,7 +164,7 @@ function NewsEditor({ item, onSave, onCancel }: { item: Partial<NewsRow> | null;
           </div>
           <div style={{display:"flex",flexDirection:"column",gap:"0.35rem"}}>
             <span style={{fontSize:"0.78rem",fontWeight:700}}>صورة المشاركة (OG Image)</span>
-            <input value={form.seo_image||""} onChange={e=>set("seo_image",e.target.value)} placeholder="رابط الصورة (فارغ = استخدام صورة الخبر تلقائياً)" dir="ltr" />
+            <SeoImageUpload value={form.seo_image||""} onChange={url=>set("seo_image",url)} />
           </div>
         </div>}
         <div className="adm-editor-foot">
@@ -264,7 +264,7 @@ function EventEditor({ item, onSave, onCancel }: { item: Partial<EventRow> | nul
           </div>
           <div style={{display:"flex",flexDirection:"column",gap:"0.35rem"}}>
             <span style={{fontSize:"0.78rem",fontWeight:700}}>صورة المشاركة (OG Image)</span>
-            <input value={form.seo_image||""} onChange={e=>set("seo_image",e.target.value)} placeholder="رابط الصورة (فارغ = استخدام صورة الفعالية تلقائياً)" dir="ltr" />
+            <SeoImageUpload value={form.seo_image||""} onChange={url=>set("seo_image",url)} />
           </div>
         </div>}
         <div className="adm-editor-foot">
