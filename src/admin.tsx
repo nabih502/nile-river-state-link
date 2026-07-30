@@ -4,6 +4,7 @@ import InvestmentPanel from "./admin-investment";
 import CulturePanel from "./admin-culture";
 import { SocialPanel } from "./admin-social";
 import AdminContact from "./admin-contact";
+import AdminMembersPanel from "./admin-members";
 
 type Section = "dashboard" | "news" | "events" | "members" | "messages" | "investment" | "culture" | "social" | "contact" | "settings";
 
@@ -543,37 +544,7 @@ export default function AdminApp() {
           )}
 
           {/* ── Members ── */}
-          {section === "members" && (
-            <div className="adm-section">
-              <div className="adm-section-head"><h2>الأعضاء ({filteredMembers.length})</h2></div>
-              <div className="adm-table-wrap">
-                <table className="adm-table">
-                  <thead><tr><th>الاسم</th><th>البريد</th><th>الجوال</th><th>الدولة</th><th>نوع العضوية</th><th>الحالة</th><th>تاريخ التسجيل</th><th>إجراءات</th></tr></thead>
-                  <tbody>
-                    {filteredMembers.map(row => (
-                      <tr key={row.id}>
-                        <td><b>{row.full_name}</b></td>
-                        <td dir="ltr">{row.email || "-"}</td>
-                        <td dir="ltr">{row.phone || "-"}</td>
-                        <td>{row.country || "-"}</td>
-                        <td><span className="adm-tag">{row.membership_type}</span></td>
-                        <td>
-                          <select value={row.status} onChange={e => updateMemberStatus(row.id, e.target.value)} className="adm-status-select">
-                            <option value="pending">معلق</option>
-                            <option value="active">نشط</option>
-                            <option value="rejected">مرفوض</option>
-                          </select>
-                        </td>
-                        <td>{formatDate(row.created_at)}</td>
-                        <td><button className="adm-btn-danger" onClick={() => setConfirmId({ table: "members", id: row.id })}>حذف</button></td>
-                      </tr>
-                    ))}
-                    {filteredMembers.length === 0 && <tr><td colSpan={8} className="adm-empty">لا يوجد أعضاء</td></tr>}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          )}
+          {section === "members" && <AdminMembersPanel />}
 
           {/* ── Messages ── */}
           {section === "messages" && (
