@@ -10,7 +10,6 @@ import "./globals.css";
 import NileSite from "./site";
 import AdminApp from "./admin";
 import MemberPortal from "./portal";
-import AdminMemberDetail from "./admin-member-detail";
 
 function parseRoute(): { page: string; slug?: string } {
   const raw = window.location.pathname.replace(/^\/+|\/+$/g, "") || "home";
@@ -68,7 +67,7 @@ function App() {
   }, []);
 
   if (route.page === "admin") return <AdminApp />;
-  if (route.page === "admin-member") return <AdminMemberDetail memberId={route.slug!} />;
+  if (route.page === "admin-member") return <AdminApp memberId={route.slug} />;
   if (route.page === "portal") return <MemberPortal />;
   return <NileSite page={route.page} slug={route.slug} />;
 }

@@ -570,7 +570,7 @@ function _MemberDrawerPlaceholder({ member, onClose, onUpdated }: {
 }
 
 // ── Main Members Panel ────────────────────────────────────────────────────────
-export default function AdminMembersPanel() {
+export default function AdminMembersPanel({ onOpenMember }: { onOpenMember?: (id: string) => void } = {}) {
   const [members, setMembers] = useState<Member[]>([]);
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState<Filters>({ search: "", status: "", type: "", country: "", gender: "", from: "", to: "" });
@@ -636,7 +636,7 @@ export default function AdminMembersPanel() {
               {filtered.map(m => {
                 const st = STATUS_LABELS[m.status] ?? STATUS_LABELS.pending;
                 return (
-                  <tr key={m.id} style={{ cursor: "pointer" }} onClick={() => openMember(m.id)}>
+                  <tr key={m.id} style={{ cursor: "pointer" }} onClick={() => (onOpenMember ? onOpenMember(m.id) : openMember(m.id))}>
                     <td>
                       <div style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
                         <div style={{ width: 34, height: 34, borderRadius: "50%", background: "#eff6ff", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700, color: "#2563eb", fontSize: "0.9rem", flexShrink: 0, overflow: "hidden" }}>
@@ -658,7 +658,7 @@ export default function AdminMembersPanel() {
                     <td style={{ fontSize: "0.8rem", color: "#64748b" }}>{fmt(m.created_at)}</td>
                     <td onClick={e => e.stopPropagation()}>
                       <div style={{ display: "flex", gap: "0.35rem" }}>
-                        <button className="adm-btn-edit" onClick={() => openMember(m.id)}>فتح</button>
+                        <button className="adm-btn-edit" onClick={() => (onOpenMember ? onOpenMember(m.id) : openMember(m.id))}>فتح</button>
                         <button className="adm-btn-danger" onClick={() => setConfirmId(m.id)}>حذف</button>
                       </div>
                     </td>

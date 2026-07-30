@@ -213,7 +213,7 @@ function PayForm({ memberId, subs, item, onSave, onCancel }: {
 }
 
 // ── Main Page ─────────────────────────────────────────────────────────────────
-export default function AdminMemberDetail({ memberId }: { memberId: string }) {
+export default function AdminMemberDetail({ memberId, onBack }: { memberId: string; onBack?: () => void }) {
   const [member, setMember] = useState<Member | null>(null);
   const [subs, setSubs] = useState<Subscription[]>([]);
   const [payments, setPayments] = useState<Payment[]>([]);
@@ -275,20 +275,18 @@ export default function AdminMemberDetail({ memberId }: { memberId: string }) {
   };
 
   const goBack = () => {
-    window.history.pushState({}, "", "/admin");
-    window.dispatchEvent(new PopStateEvent("popstate"));
+    if (onBack) { onBack(); return; }
+    window.history.back();
   };
 
   if (loading) return (
-    <div className="adm-app" dir="rtl">
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: "100vh" }}>
-        <div className="portal-spinner" />
-      </div>
+    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: "300px" }}>
+      <div className="portal-spinner" />
     </div>
   );
 
   if (!member || !form) return (
-    <div className="adm-app" dir="rtl" style={{ padding: "3rem", textAlign: "center" }}>
+    <div style={{ padding: "3rem", textAlign: "center" }}>
       <p style={{ color: "#94a3b8" }}>لم يتم العثور على هذا العضو</p>
       <button onClick={goBack} className="adm-btn-primary" style={{ marginTop: "1rem" }}>العودة للقائمة</button>
     </div>
@@ -300,22 +298,14 @@ export default function AdminMemberDetail({ memberId }: { memberId: string }) {
   const activeSubs = subs.filter(s => s.status === "active").length;
 
   return (
-    <div className="adm-app" dir="rtl">
-      {/* ── Top Bar ── */}
-      <header className="detail-topbar">
-        <div className="detail-topbar-inner">
+    <>
+      <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
+        <div>
           <button onClick={goBack} className="detail-back-btn">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M9 18l6-6-6-6"/></svg>
-            العودة إلى قائمة الأعضاء
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M9 18l6-6-6-6"/></svg>
+            العودة لقائمة الأعضاء
           </button>
-          <div className="detail-topbar-brand">
-            <img src="/assets/ChatGPT_Image_Jul_21,_2026,_05_25_20_PM.png" alt="شعار" />
-            <span>لوحة التحكم — ملف العضو</span>
-          </div>
         </div>
-      </header>
-
-      <div className="detail-page">
         {/* ── Hero Card ── */}
         <div className="detail-hero-card">
           <div className="detail-hero-avatar">
@@ -592,6 +582,6 @@ export default function AdminMemberDetail({ memberId }: { memberId: string }) {
           onCancel={() => setDelConfirm(null)}
         />
       )}
-    </div>
+    </>
   );
 }

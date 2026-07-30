@@ -1988,8 +1988,8 @@ select.inv-input{cursor:pointer}
 /* ── Member Detail Page ──────────────────────────────────────────────────────── */
 .detail-topbar{background:#1e293b;padding:0;border-bottom:1px solid #334155;position:sticky;top:0;z-index:50}
 .detail-topbar-inner{max-width:1200px;margin:0 auto;padding:.75rem 1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem}
-.detail-back-btn{display:flex;align-items:center;gap:.4rem;padding:.45rem .9rem;border-radius:.5rem;border:1px solid #334155;background:transparent;color:#94a3b8;font-size:.83rem;font-family:Cairo,sans-serif;cursor:pointer;transition:all .2s}
-.detail-back-btn:hover{background:#334155;color:#e2e8f0}
+.detail-back-btn{display:inline-flex;align-items:center;gap:.4rem;padding:.45rem .9rem;border-radius:.5rem;border:1px solid #e2e8f0;background:#fff;color:#475569;font-size:.83rem;font-family:Cairo,sans-serif;cursor:pointer;transition:all .2s}
+.detail-back-btn:hover{background:#f1f5f9;color:#1e293b;border-color:#cbd5e1}
 .detail-back-btn svg{transform:rotate(180deg)}
 .detail-topbar-brand{display:flex;align-items:center;gap:.5rem;color:#e2e8f0;font-size:.85rem;font-weight:600}
 .detail-topbar-brand img{width:28px;height:28px;border-radius:50%}

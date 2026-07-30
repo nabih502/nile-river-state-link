@@ -5,8 +5,9 @@ import CulturePanel from "./admin-culture";
 import { SocialPanel } from "./admin-social";
 import AdminContact from "./admin-contact";
 import AdminMembersPanel from "./admin-members";
+import AdminMemberDetail from "./admin-member-detail";
 
-type Section = "dashboard" | "news" | "events" | "members" | "messages" | "investment" | "culture" | "social" | "contact" | "settings";
+type Section = "dashboard" | "news" | "events" | "members" | "member-detail" | "messages" | "investment" | "culture" | "social" | "contact" | "settings";
 
 interface NewsRow { id: string; title: string; slug: string; excerpt: string; body: string; image_url: string; category: string; published: boolean; published_at: string | null; created_at: string; author_name: string; author_image_url: string; read_time: number; seo_title: string; seo_description: string; seo_image: string; }
 interface EventRow { id: string; title: string; slug: string; excerpt: string; body: string; image_url: string; location: string; event_date: string; event_end_date: string | null; published: boolean; created_at: string; author_name: string; author_image_url: string; organizer: string; seo_title: string; seo_description: string; seo_image: string; }
@@ -316,9 +317,10 @@ function SettingsPanel() {
 }
 
 // ─── Main Admin App ───────────────────────────────────────────────────────────
-export default function AdminApp() {
+export default function AdminApp({ memberId }: { memberId?: string } = {}) {
   const [authed, setAuthed] = useState(() => sessionStorage.getItem("admin_auth") === "1");
-  const [section, setSection] = useState<Section>("dashboard");
+  const [section, setSection] = useState<Section>(memberId ? "member-detail" : "dashboard");
+  const [activeMemberId, setActiveMemberId] = useState<string | undefined>(memberId);
   const [stats, setStats] = useState<Stats>({ news: 0, events: 0, members: 0, messages: 0, unread: 0, inquiries: 0, newInquiries: 0 });
   const [news, setNews] = useState<NewsRow[]>([]);
   const [events, setEvents] = useState<EventRow[]>([]);
@@ -400,7 +402,7 @@ export default function AdminApp() {
     { key: "dashboard", label: "الرئيسية" },
     { key: "news", label: "الأخبار", badge: stats.news },
     { key: "events", label: "الفعاليات", badge: stats.events },
-    { key: "members", label: "الأعضاء", badge: stats.members },
+    { key: "members", label: "الأعضاء", badge: stats.members }, // member-detail highlights this
     { key: "messages", label: "الرسائل", badge: stats.unread || undefined },
     { key: "investment", label: "الاستثمار", badge: stats.newInquiries || undefined },
     { key: "culture", label: "الثقافة" },
@@ -427,8 +429,8 @@ export default function AdminApp() {
           {navItems.map(item => (
             <button
               key={item.key}
-              className={section === item.key ? "active" : ""}
-              onClick={() => { setSection(item.key); setSideOpen(false); setSearch(""); }}
+              className={(section === item.key || (section === "member-detail" && item.key === "members")) ? "active" : ""}
+              onClick={() => { setActiveMemberId(undefined); setSection(item.key); setSideOpen(false); setSearch(""); }}
             >
               {item.label}
               {item.badge ? <em>{item.badge}</em> : null}
@@ -445,7 +447,7 @@ export default function AdminApp() {
       <div className="adm-main">
         <header className="adm-topbar">
           <button className="adm-hamburger" onClick={() => setSideOpen(!sideOpen)}>☰</button>
-          <h1>{navItems.find(x => x.key === section)?.label}</h1>
+          <h1>{section === "member-detail" ? "ملف العضو" : navItems.find(x => x.key === section)?.label}</h1>
           {["news", "events", "members", "messages", "investment"].includes(section) && (
             <input className="adm-search" placeholder="بحث..." value={search} onChange={e => setSearch(e.target.value)} />
           )}
@@ -544,7 +546,15 @@ export default function AdminApp() {
           )}
 
           {/* ── Members ── */}
-          {section === "members" && <AdminMembersPanel />}
+          {section === "members" && <AdminMembersPanel onOpenMember={id => { setActiveMemberId(id); setSection("member-detail"); }} />}
+
+          {/* ── Member Detail ── */}
+          {section === "member-detail" && activeMemberId && (
+            <AdminMemberDetail
+              memberId={activeMemberId}
+              onBack={() => { setActiveMemberId(undefined); setSection("members"); window.history.pushState({}, "", "/admin"); }}
+            />
+          )}
 
           {/* ── Messages ── */}
           {section === "messages" && (
