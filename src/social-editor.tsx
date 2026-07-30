@@ -1,7 +1,7 @@
 import { SeoImageUpload } from "./admin-seo";
 import React, { useState, useRef } from "react";
 import { supabase } from "./supabase";
-import { SocialService, SocialInitiative, SocialStat, SocialValue } from "./supabase";
+import type { SocialService, SocialInitiative, SocialStat, SocialValue } from "./supabase";
 
 // ── Image Upload ───────────────────────────────────────────────────────────────
 async function uploadImageFile(file: File): Promise<string> {
@@ -90,7 +90,31 @@ export function ImageUpload({
   );
 }
 
-// ── SectionNav ─────────────────────────────────────────────────────────────────
+// ── Publish Toggle ─────────────────────────────────────────────────────────────
+export function PublishToggle({ checked, onChange }: { checked: boolean; onChange: (v: boolean) => void }) {
+  return (
+    <label className="inv-pub-toggle" onClick={() => onChange(!checked)}>
+      <div className={`inv-toggle-track ${checked ? "on" : ""}`}>
+        <div className="inv-toggle-thumb" />
+      </div>
+      <span className={checked ? "inv-toggle-label-on" : "inv-toggle-label-off"}>
+        {checked ? "منشور" : "مخفي"}
+      </span>
+    </label>
+  );
+}
+
+// ── Form Section ───────────────────────────────────────────────────────────────
+function FormSection({ title, id, children }: { title: string; id?: string; children: React.ReactNode }) {
+  return (
+    <div className="inv-form-section" id={id}>
+      <div className="inv-form-section-header">{title}</div>
+      <div className="inv-form-section-body">{children}</div>
+    </div>
+  );
+}
+
+// ── Section Nav ────────────────────────────────────────────────────────────────
 function SectionNav({ sections }: { sections: { id: string; label: string }[] }) {
   const scrollTo = (id: string) =>
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -105,7 +129,7 @@ function SectionNav({ sections }: { sections: { id: string; label: string }[] })
   );
 }
 
-// ── CharCounter ────────────────────────────────────────────────────────────────
+// ── Char Counter ───────────────────────────────────────────────────────────────
 function CharCounter({ value, max }: { value: string; max: number }) {
   const near = value.length > max * 0.85;
   return (
@@ -115,56 +139,51 @@ function CharCounter({ value, max }: { value: string; max: number }) {
   );
 }
 
-// ── Shared Drawer ──────────────────────────────────────────────────────────────
-function Drawer({
-  title, open, onClose, footer, children,
+// ── Drawer ─────────────────────────────────────────────────────────────────────
+export function Drawer({
+  title, open, onClose, children, footer,
 }: {
   title: string; open: boolean; onClose: () => void;
-  footer: React.ReactNode; children: React.ReactNode;
+  children: React.ReactNode; footer?: React.ReactNode;
 }) {
-  if (!open) return null;
   return (
-    <div className="adm-overlay" onClick={(e) => e.target === e.currentTarget && onClose()}>
-      <div className="adm-drawer">
-        <div className="adm-drawer-head">
+    <>
+      <div className={`inv-drawer-backdrop${open ? " open" : ""}`} onClick={onClose} />
+      <div className={`inv-drawer${open ? " open" : ""}`} role="dialog" aria-modal="true">
+        <div className="inv-drawer-head">
           <h2>{title}</h2>
-          <button type="button" className="adm-drawer-close" onClick={onClose}>✕</button>
+          <button type="button" className="inv-drawer-close" onClick={onClose}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <path d="M18 6 6 18M6 6l12 12" />
+            </svg>
+          </button>
         </div>
         <div className="inv-drawer-body">{children}</div>
-        {footer}
+        {footer && <div className="inv-drawer-foot">{footer}</div>}
       </div>
-    </div>
+    </>
   );
 }
 
+// ── Drawer Footer ──────────────────────────────────────────────────────────────
 function DrawerFoot({
   formId, saving, isEdit, onClose, published, onTogglePublish, error,
 }: {
   formId: string; saving: boolean; isEdit: boolean; onClose: () => void;
-  published: boolean; onTogglePublish: (v: boolean) => void; error: string;
+  published: boolean; onTogglePublish: (v: boolean) => void; error?: string;
 }) {
   return (
-    <div className="adm-drawer-foot">
-      {error && <p className="inv-err">{error}</p>}
-      <label className="inv-toggle">
-        <input type="checkbox" checked={published} onChange={(e) => onTogglePublish(e.target.checked)} />
-        <span>{published ? "منشور" : "مسودة"}</span>
-      </label>
-      <div className="adm-drawer-foot-actions">
-        <button type="button" className="inv-btn-ghost" onClick={onClose}>إلغاء</button>
-        <button type="submit" form={formId} className="inv-btn-primary" disabled={saving}>
-          {saving ? "جاري الحفظ..." : isEdit ? "تحديث" : "إضافة"}
-        </button>
+    <div className="inv-dfoot-wrap">
+      {error && <p className="inv-form-err">{error}</p>}
+      <div className="inv-dfoot-row">
+        <PublishToggle checked={published} onChange={onTogglePublish} />
+        <div className="inv-dfoot-btns">
+          <button type="button" onClick={onClose} className="inv-btn-cancel">إلغاء</button>
+          <button type="submit" form={formId} disabled={saving} className="inv-btn-save">
+            {saving ? "جاري الحفظ..." : isEdit ? "حفظ التعديلات" : "إضافة"}
+          </button>
+        </div>
       </div>
-    </div>
-  );
-}
-
-function FormSection({ title, id, children }: { title: string; id?: string; children: React.ReactNode }) {
-  return (
-    <div className="inv-form-section" id={id}>
-      <div className="inv-form-section-title">{title}</div>
-      <div className="inv-form-section-body">{children}</div>
     </div>
   );
 }
@@ -184,7 +203,6 @@ export function ServiceEditor({
       icon: "HeartHandshake", title: "", lead: "", bullet_1: "", bullet_2: "",
       bullet_3: "", bullet_4: "", action_label: "تواصل معنا", slug: "",
       full_description: "", image_url: "", published: true,
-      seo_title: "", seo_description: "", seo_image: "",
     }
   );
   const [saving, setSaving] = useState(false);
@@ -296,7 +314,7 @@ export function ServiceEditor({
               value={form.lead || ""}
               className="inv-input"
               rows={2}
-              placeholder="وصف موجز يظهر في البطاقة..."
+              placeholder="وصف موجز يظهر في بطاقة الخدمة..."
               style={{ resize: "vertical" }}
               onChange={(e) => set("lead", e.target.value)}
             />
@@ -308,7 +326,7 @@ export function ServiceEditor({
               value={form.full_description || ""}
               className="inv-input"
               rows={5}
-              placeholder="وصف تفصيلي يظهر في صفحة الخدمة عند فتحها..."
+              placeholder="وصف تفصيلي يظهر في صفحة الخدمة..."
               style={{ resize: "vertical" }}
               onChange={(e) => set("full_description", e.target.value)}
             />
@@ -317,7 +335,7 @@ export function ServiceEditor({
 
         <FormSection title="ما تشمله الخدمة (4 نقاط)" id="svc-bullets">
           <p style={{ fontSize: "0.82rem", color: "#64748b", margin: "0 0 0.75rem" }}>
-            يمكنك ملء نقطة أو أكثر — أي نقطة فارغة لن تُعرض للزوار.
+            أي نقطة فارغة لن تُعرض للزوار.
           </p>
           {(["bullet_1", "bullet_2", "bullet_3", "bullet_4"] as const).map((k, i) => (
             <label className="inv-label" key={k}>
@@ -385,8 +403,7 @@ export function SocialInitiativeEditor({
   const [form, setForm] = useState<Partial<SocialInitiative>>(
     item ?? {
       image_url: "", title: "", text: "", full_description: "", slug: "",
-      progress: 0, amount: "", icon: "♡", action_label: "ساهم الآن",
-      published: true, seo_title: "", seo_description: "", seo_image: "",
+      progress: 0, amount: "", icon: "♡", action_label: "ساهم الآن", published: true,
     }
   );
   const [saving, setSaving] = useState(false);
@@ -489,7 +506,7 @@ export function SocialInitiativeEditor({
               value={form.full_description || ""}
               className="inv-input"
               rows={5}
-              placeholder="وصف تفصيلي يظهر في صفحة المبادرة عند فتحها..."
+              placeholder="وصف تفصيلي يظهر في صفحة المبادرة..."
               style={{ resize: "vertical" }}
               onChange={(e) => set("full_description", e.target.value)}
             />
@@ -537,10 +554,7 @@ export function SocialInitiativeEditor({
                 style={{ flex: 1, accentColor: "#2563eb" }}
                 onChange={(e) => set("progress", Number(e.target.value))}
               />
-              <span style={{
-                minWidth: "3rem", textAlign: "center", fontWeight: 700,
-                color: "#2563eb", fontSize: "1rem",
-              }}>
+              <span style={{ minWidth: "3rem", textAlign: "center", fontWeight: 700, color: "#2563eb", fontSize: "1rem" }}>
                 {progress}%
               </span>
             </div>
@@ -627,13 +641,16 @@ export function StatEditor({
       open={open}
       onClose={onClose}
       footer={
-        <div className="adm-drawer-foot">
-          {error && <p className="inv-err">{error}</p>}
-          <div className="adm-drawer-foot-actions">
-            <button type="button" className="inv-btn-ghost" onClick={onClose}>إلغاء</button>
-            <button type="submit" form="stat-form" className="inv-btn-primary" disabled={saving}>
-              {saving ? "جاري الحفظ..." : form.id ? "تحديث" : "إضافة"}
-            </button>
+        <div className="inv-dfoot-wrap">
+          {error && <p className="inv-form-err">{error}</p>}
+          <div className="inv-dfoot-row">
+            <div />
+            <div className="inv-dfoot-btns">
+              <button type="button" onClick={onClose} className="inv-btn-cancel">إلغاء</button>
+              <button type="submit" form="stat-form" disabled={saving} className="inv-btn-save">
+                {saving ? "جاري الحفظ..." : form.id ? "حفظ التعديلات" : "إضافة"}
+              </button>
+            </div>
           </div>
         </div>
       }
