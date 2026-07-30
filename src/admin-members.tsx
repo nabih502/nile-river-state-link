@@ -277,8 +277,14 @@ function PaymentForm({ memberId, subscriptions, item, onSave, onCancel }: {
   );
 }
 
-// ── Member Profile Drawer ─────────────────────────────────────────────────────
-function MemberDrawer({ member, onClose, onUpdated }: {
+// ── Navigate to member detail page ───────────────────────────────────────────
+function openMember(id: string) {
+  window.history.pushState({}, "", `/admin/member/${id}`);
+  window.dispatchEvent(new PopStateEvent("popstate"));
+}
+
+// ── (drawer removed — replaced by full detail page) ───────────────────────────
+function _MemberDrawerPlaceholder({ member, onClose, onUpdated }: {
   member: Member; onClose: () => void; onUpdated: (m: Member) => void;
 }) {
   const [tab, setTab] = useState<"personal" | "subs" | "payments">("personal");
@@ -568,7 +574,6 @@ export default function AdminMembersPanel() {
   const [members, setMembers] = useState<Member[]>([]);
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState<Filters>({ search: "", status: "", type: "", country: "", gender: "", from: "", to: "" });
-  const [activeMember, setActiveMember] = useState<Member | null>(null);
   const [confirmId, setConfirmId] = useState<string | null>(null);
 
   const load = async () => {
@@ -631,7 +636,7 @@ export default function AdminMembersPanel() {
               {filtered.map(m => {
                 const st = STATUS_LABELS[m.status] ?? STATUS_LABELS.pending;
                 return (
-                  <tr key={m.id} style={{ cursor: "pointer" }} onClick={() => setActiveMember(m)}>
+                  <tr key={m.id} style={{ cursor: "pointer" }} onClick={() => openMember(m.id)}>
                     <td>
                       <div style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
                         <div style={{ width: 34, height: 34, borderRadius: "50%", background: "#eff6ff", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700, color: "#2563eb", fontSize: "0.9rem", flexShrink: 0, overflow: "hidden" }}>
@@ -653,7 +658,7 @@ export default function AdminMembersPanel() {
                     <td style={{ fontSize: "0.8rem", color: "#64748b" }}>{fmt(m.created_at)}</td>
                     <td onClick={e => e.stopPropagation()}>
                       <div style={{ display: "flex", gap: "0.35rem" }}>
-                        <button className="adm-btn-edit" onClick={() => setActiveMember(m)}>فتح</button>
+                        <button className="adm-btn-edit" onClick={() => openMember(m.id)}>فتح</button>
                         <button className="adm-btn-danger" onClick={() => setConfirmId(m.id)}>حذف</button>
                       </div>
                     </td>
@@ -667,17 +672,6 @@ export default function AdminMembersPanel() {
           </table>
         )}
       </div>
-
-      {activeMember && (
-        <MemberDrawer
-          member={activeMember}
-          onClose={() => setActiveMember(null)}
-          onUpdated={updated => {
-            setActiveMember(updated);
-            setMembers(ms => ms.map(m => m.id === updated.id ? updated : m));
-          }}
-        />
-      )}
 
       {confirmId && (
         <div className="adm-overlay" style={{ zIndex: 400 }}>

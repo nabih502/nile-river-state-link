@@ -10,6 +10,7 @@ import "./globals.css";
 import NileSite from "./site";
 import AdminApp from "./admin";
 import MemberPortal from "./portal";
+import AdminMemberDetail from "./admin-member-detail";
 
 function parseRoute(): { page: string; slug?: string } {
   const raw = window.location.pathname.replace(/^\/+|\/+$/g, "") || "home";
@@ -28,6 +29,9 @@ function parseRoute(): { page: string; slug?: string } {
   }
   if (parts[0] === "social" && parts.length >= 3 && parts[1] === "service") {
     return { page: "social-service-detail", slug: parts[2] };
+  }
+  if (parts[0] === "admin" && parts[1] === "member" && parts[2]) {
+    return { page: "admin-member", slug: parts[2] };
   }
   return { page: parts[0] };
 }
@@ -64,6 +68,7 @@ function App() {
   }, []);
 
   if (route.page === "admin") return <AdminApp />;
+  if (route.page === "admin-member") return <AdminMemberDetail memberId={route.slug!} />;
   if (route.page === "portal") return <MemberPortal />;
   return <NileSite page={route.page} slug={route.slug} />;
 }
