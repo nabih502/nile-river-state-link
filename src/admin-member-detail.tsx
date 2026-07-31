@@ -224,6 +224,8 @@ export default function AdminMemberDetail({ memberId, onBack }: { memberId: stri
   const [form, setForm] = useState<Member | null>(null);
   const [saving, setSaving] = useState(false);
   const [saveMsg, setSaveMsg] = useState("");
+  const [photoUploading, setPhotoUploading] = useState(false);
+  const [photoErr, setPhotoErr] = useState("");
 
   // sub / pay form
   const [addSub, setAddSub] = useState(false);
@@ -231,6 +233,18 @@ export default function AdminMemberDetail({ memberId, onBack }: { memberId: stri
   const [addPay, setAddPay] = useState(false);
   const [editPay, setEditPay] = useState<Payment | null>(null);
   const [delConfirm, setDelConfirm] = useState<{ table: string; id: string } | null>(null);
+
+  const handlePhotoUpload = async (file: File) => {
+    setPhotoUploading(true);
+    setPhotoErr("");
+    const ext = file.name.split(".").pop()?.toLowerCase() || "jpg";
+    const path = `members/${memberId}/photo-${Date.now()}.${ext}`;
+    const { error: upErr } = await supabase.storage.from("images").upload(path, file, { upsert: true, contentType: file.type });
+    if (upErr) { setPhotoErr("فشل الرفع: " + upErr.message); setPhotoUploading(false); return; }
+    const { data } = supabase.storage.from("images").getPublicUrl(path);
+    setF("photo_url", data.publicUrl);
+    setPhotoUploading(false);
+  };
 
   const loadMember = async () => {
     const { data } = await supabase.from("members").select("*").eq("id", memberId).maybeSingle();
@@ -443,13 +457,44 @@ export default function AdminMemberDetail({ memberId, onBack }: { memberId: stri
               {/* Photo */}
               <div className="detail-card">
                 <h3 className="detail-card-title">الصورة الشخصية</h3>
-                <div style={{ display: "flex", alignItems: "center", gap: "1rem", flexWrap: "wrap" }}>
-                  {form.photo_url && (
-                    <img src={form.photo_url} alt="" style={{ width: 64, height: 64, borderRadius: "50%", objectFit: "cover", border: "2px solid #e2e8f0" }} />
-                  )}
-                  <label className="detail-label" style={{ flex: 1, minWidth: 240 }}>رابط الصورة
-                    <input value={form.photo_url || ""} onChange={e => setF("photo_url", e.target.value)} className="detail-input" dir="ltr" placeholder="https://..." />
-                  </label>
+                <div style={{ display: "flex", alignItems: "center", gap: "1.25rem", flexWrap: "wrap" }}>
+                  {/* Avatar preview */}
+                  <div className="photo-avatar-preview">
+                    {form.photo_url
+                      ? <img src={form.photo_url} alt="" />
+                      : <span>{form.full_name.trim()[0] || "؟"}</span>}
+                  </div>
+
+                  {/* Upload area */}
+                  <div style={{ flex: 1, minWidth: 220 }}>
+                    <label className="photo-upload-label">
+                      <input
+                        type="file"
+                        accept="image/*"
+                        style={{ display: "none" }}
+                        onChange={e => { const f = e.target.files?.[0]; if (f) handlePhotoUpload(f); }}
+                        disabled={photoUploading}
+                      />
+                      {photoUploading ? (
+                        <span className="photo-upload-uploading">جاري الرفع...</span>
+                      ) : (
+                        <>
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                          <span>{form.photo_url ? "تغيير الصورة" : "رفع صورة من الجهاز"}</span>
+                        </>
+                      )}
+                    </label>
+                    {photoErr && <p className="detail-err" style={{ marginTop: "0.4rem" }}>{photoErr}</p>}
+                    {form.photo_url && (
+                      <button
+                        type="button"
+                        className="photo-remove-btn"
+                        onClick={() => { setF("photo_url", ""); setPhotoErr(""); }}
+                      >
+                        حذف الصورة
+                      </button>
+                    )}
+                  </div>
                 </div>
               </div>
 

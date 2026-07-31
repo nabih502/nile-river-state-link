@@ -2052,3 +2052,11 @@ select.inv-input{cursor:pointer}
   .detail-list-item{flex-direction:column}
   .detail-list-item-actions{flex-direction:row}
 }
+/* Photo upload */
+.photo-avatar-preview{width:80px;height:80px;border-radius:50%;background:#eff6ff;display:flex;align-items:center;justify-content:center;font-size:2rem;font-weight:800;color:#2563eb;overflow:hidden;border:3px solid #e2e8f0;flex-shrink:0}
+.photo-avatar-preview img{width:100%;height:100%;object-fit:cover}
+.photo-upload-label{display:inline-flex;align-items:center;gap:.5rem;padding:.55rem 1.1rem;border-radius:.5rem;border:1.5px dashed #93c5fd;background:#eff6ff;color:#2563eb;font-size:.85rem;font-family:Cairo,sans-serif;font-weight:600;cursor:pointer;transition:all .2s;user-select:none}
+.photo-upload-label:hover{background:#dbeafe;border-color:#2563eb}
+.photo-upload-uploading{color:#64748b;font-size:.85rem}
+.photo-remove-btn{display:inline-flex;align-items:center;margin-top:.5rem;padding:.3rem .75rem;border-radius:.4rem;border:1px solid #fecaca;background:#fff;color:#dc2626;font-size:.78rem;font-family:Cairo,sans-serif;cursor:pointer;transition:all .2s}
+.photo-remove-btn:hover{background:#fee2e2}
