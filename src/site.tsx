@@ -601,7 +601,7 @@ function SocialPage(){
     {icon:MessageCircle,title:"واتساب",text:"+249 912 345 678"},
   ];
 
-  return (<><div className="social-redesign">
+  return <div className="social-redesign">
     <section className="ss-hero">
       <div className="ss-hero-visual motion"><img src="/assets/social-hero.jpg" alt="أسرة في أيدٍ متكاتفة"/></div>
       <div className="ss-hero-copy motion"><span className="ss-people-mark"><UsersRound/></span><div className="ss-hero-text"><h1>الخدمات الاجتماعية</h1><h2>معاً.. نرعى ونساند</h2><p>نقدم برامج ومبادرات اجتماعية وإنسانية تهدف إلى دعم<br/>أبناء مجتمعنا في مختلف الظروف، لبناء مجتمع متماسك<br/>ومتكافل.</p></div></div>
@@ -620,8 +620,6 @@ function SocialPage(){
 
     <section className="ss-values page-width motion">{values.map(item=>{const Icon=ssIconMap[item.icon]||HandHeart;return <article key={item.id}><Icon aria-hidden="true"/><h3>{item.title}</h3><p>{item.text}</p></article>;})}</section>
   </div>
-  <PageGallery contentType="page_social" title="لحظات العطاء والتكافل" accentColor="#16a34a"/>
-  </>);
 }
 
 function EducationPage(){
@@ -780,7 +778,7 @@ const ICON_MAP: Record<string, React.ComponentType<{size?:number|string}>> = {
 };
 function DynIcon({name,fallback:Fallback}:{name:string;fallback:React.ComponentType<{size?:number|string}>}){const C=ICON_MAP[name]||Fallback;return <C/>;}
 
-function InvestmentPage(){const _placeholderInv=null;
+function InvestmentPage(){
   const heroMenu=[
     {icon:ChartNoAxesCombined,label:"فرص الاستثمار",href:"#investment-opportunities"},
     {icon:LayoutGrid,label:"القطاعات الاستثمارية",href:"#inv-sectors"},
@@ -852,7 +850,7 @@ function InvestmentPage(){const _placeholderInv=null;
   const opps      = dbOpps.length      ? dbOpps      : staticOpps;
   const incentives= dbIncentives.length? dbIncentives: staticIncentives;
 
-  return (<><div className="investment-redesign">
+  return <div className="investment-redesign">
     <section className="inv-hero">
       <div className="inv-hero-visual motion"><img src="/assets/investment-hero-hq.webp" alt="نهر النيل والأراضي الزراعية"/><article className="inv-hero-opportunity"><span>فرصة استثمارية مميزة</span><img src="/assets/investment-hero-hq.webp" alt="مشروع زراعة محورية متكامل"/><h3>مشروع زراعة محورية متكامل</h3><p>المساحة: 5,000 هكتار<br/>العائد المتوقع: 25% سنوياً</p><a href="#investment-opportunities">عرض التفاصيل <ChevronLeft/></a></article></div>
       <div className="inv-hero-copy motion"><h1>الاستثمار في<br/><span>ولاية نهر النيل</span></h1><h2>فرص واعدة .. مستقبل مستدام</h2><p>بيئة استثمارية جاذبة بموارد طبيعية غنية، موقع استراتيجي<br/>يدعم التنمية ويحقق عوائد مجزية للمستثمرين.</p><div className="inv-hero-features">{features.map(item=>{const Icon=item.icon;return <a className="inv-feature-link" href={item.href} key={item.title}><Icon/><b>{item.title}</b><small>{item.text}</small></a>})}</div></div>
@@ -882,8 +880,6 @@ function InvestmentPage(){const _placeholderInv=null;
 
     <section className="inv-trust motion">{trust.slice().reverse().map(item=>{const Icon=item.icon;return <article key={item.title}><Icon/><span><b>{item.title}</b><small>{item.text}</small></span></article>})}</section>
   </div>
-  <PageGallery contentType="page_investment" title="مشاريعنا على الأرض" accentColor="#b45309"/>
-  </>);
 }
 
 function CulturePage(){
@@ -1011,7 +1007,7 @@ function CulturePage(){
       if(data&&data.length>0) setMedia(data.map(r=>({id:r.id,image:r.image_url||"/assets/culture-folk-hq.webp",type:r.type,title:r.title,date:r.media_date,link:r.link_url||""})));
     });
   },[]);
-  return (<><div className="culture-redesign">
+  return <div className="culture-redesign">
     <section className="cul-hero">
       <div className="cul-hero-visual motion"><img src="/assets/culture-hero-hq.webp" alt="العود والكتب وعلم السودان في مشهد يعبر عن الثقافة السودانية"/></div>
       <div className="cul-hero-copy motion"><div><h1>الثقافة .. هوية وإبداع</h1><h2>نصون تراثنا .. ونبدع لمستقبلنا</h2><p>منصة ثقافية رقمية شاملة تهدف إلى إبراز التراث السوداني الأصيل<br/>ودعم المواهب والإبداع في جميع المجالات الثقافية والفنية.</p></div><div className="cul-hero-features">{heroFeatures.map(item=>{const Icon=item.icon;return <article key={item.title}><Icon/><b>{item.title}</b><small>{item.text}</small></article>})}</div></div>
@@ -1051,8 +1047,6 @@ function CulturePage(){
 
     <section className="cul-trust motion">{trust.map(item=>{const Icon=item.icon;return <article key={item.title}><Icon/><span><b>{item.title}</b><small>{item.text}</small></span></article>})}</section>
   </div>
-  <PageGallery contentType="page_culture" title="من ذاكرة ولاية نهر النيل" accentColor="#7c3aed" borderColor="#7c3aed"/>
-</>);
 }
 
 function CulturePanelHead({title,href="/culture"}:{title:string;href?:string}){return <header className="cul-panel-head"><a href={href}>عرض الكل</a><h2>{title}</h2></header>}
@@ -2184,165 +2178,7 @@ function InvestmentOpportunityDetailPage({slug}:{slug?:string}){
           </div>}
         </aside>
       </div>
-      {opp?.id&&<div style={{maxWidth:"900px",margin:"0 auto",padding:"0 1.5rem 3rem"}}><ContentGallery contentType="investment_opportunity" contentId={opp.id} accentColor="#b45309"/></div>}
     </div>
-  );
-}
-
-// ─── Content Gallery Component ────────────────────────────────────────────────
-function ContentGallery({contentType,contentId,accentColor="#2563eb"}:{contentType:string;contentId?:string;accentColor?:string}) {
-  type GalleryItem={id:string;image_url:string;caption:string;sort_order:number};
-  const [items,setItems]=useState<GalleryItem[]>([]);
-  const [lightbox,setLightbox]=useState<number|null>(null);
-
-  useEffect(()=>{
-    let q=supabase.from("content_gallery").select("id,image_url,caption,sort_order").eq("content_type",contentType).eq("published",true);
-    if(contentId) q=q.eq("content_id",contentId);
-    else q=q.is("content_id",null);
-    q.order("sort_order").then(({data})=>setItems(data??[]));
-  },[contentType,contentId]);
-
-  useEffect(()=>{
-    if(lightbox===null) return;
-    const onKey=(e:KeyboardEvent)=>{
-      if(e.key==="Escape") setLightbox(null);
-      if(e.key==="ArrowLeft") setLightbox(l=>l===null?null:(l+1)%items.length);
-      if(e.key==="ArrowRight") setLightbox(l=>l===null?null:(l-1+items.length)%items.length);
-    };
-    window.addEventListener("keydown",onKey);
-    return ()=>window.removeEventListener("keydown",onKey);
-  },[lightbox,items.length]);
-
-  if(items.length===0) return null;
-
-  const light=accentColor;
-  const lightBg=accentColor==="2563eb"?"#eff6ff":accentColor==="16a34a"?"#f0fdf4":"#f0fdfa";
-
-  return(
-    <div style={{marginTop:"2.5rem"}}>
-      {/* Header */}
-      <div style={{display:"flex",alignItems:"center",gap:"0.75rem",marginBottom:"1.25rem"}}>
-        <div style={{width:4,height:32,background:accentColor,borderRadius:2}}/>
-        <h2 style={{margin:0,fontSize:"1.2rem",fontWeight:800,color:"#0f172a"}}>معرض الصور</h2>
-        <span style={{background:lightBg,color:accentColor,fontSize:"0.75rem",fontWeight:700,padding:"0.2rem 0.65rem",borderRadius:"9999px",border:`1px solid ${accentColor}22`}}>{items.length} صورة</span>
-      </div>
-      {/* Grid: first image large, rest in 3-col */}
-      <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gridTemplateRows:"auto",gap:"0.6rem"}}>
-        {items.map((img,i)=>(
-          <div key={img.id}
-            style={{gridColumn:i===0?"1/3":"auto",gridRow:i===0?"1/3":"auto",position:"relative",overflow:"hidden",borderRadius:"0.75rem",cursor:"pointer",aspectRatio:i===0?"16/9":"4/3",background:"#e2e8f0"}}
-            onClick={()=>setLightbox(i)}>
-            <img src={img.image_url} alt={img.caption} loading="lazy"
-              style={{width:"100%",height:"100%",objectFit:"cover",transition:"transform 0.4s ease",display:"block"}}
-              onMouseEnter={e=>(e.currentTarget.style.transform="scale(1.05)")}
-              onMouseLeave={e=>(e.currentTarget.style.transform="scale(1)")}/>
-            {img.caption && (
-              <div style={{position:"absolute",inset:0,background:"linear-gradient(to top,rgba(0,0,0,0.72) 0%,transparent 60%)",display:"flex",alignItems:"flex-end",padding:"0.75rem",opacity:0,transition:"opacity 0.3s"}}
-                onMouseEnter={e=>{e.currentTarget.style.opacity="1";}} onMouseLeave={e=>{e.currentTarget.style.opacity="0";}}>
-                <p style={{color:"#fff",fontSize:"0.78rem",fontWeight:600,margin:0,lineHeight:1.3}}>{img.caption}</p>
-              </div>
-            )}
-          </div>
-        ))}
-      </div>
-      {/* Lightbox */}
-      {lightbox!==null && (
-        <div style={{position:"fixed",inset:0,zIndex:9999,background:"rgba(0,0,0,0.95)",display:"flex",alignItems:"center",justifyContent:"center"}}
-          onClick={()=>setLightbox(null)}>
-          <button style={{position:"absolute",top:"1rem",left:"1rem",background:"rgba(255,255,255,0.15)",border:"none",color:"#fff",borderRadius:"50%",width:44,height:44,fontSize:"1.3rem",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}
-            onClick={e=>{e.stopPropagation();setLightbox(null);}}>✕</button>
-          {items.length>1&&<>
-            <button style={{position:"absolute",left:"1rem",top:"50%",transform:"translateY(-50%)",background:"rgba(255,255,255,0.15)",border:"none",color:"#fff",borderRadius:"50%",width:48,height:48,fontSize:"1.5rem",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}
-              onClick={e=>{e.stopPropagation();setLightbox(l=>l===null?null:(l+1)%items.length);}}>‹</button>
-            <button style={{position:"absolute",right:"1rem",top:"50%",transform:"translateY(-50%)",background:"rgba(255,255,255,0.15)",border:"none",color:"#fff",borderRadius:"50%",width:48,height:48,fontSize:"1.5rem",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}
-              onClick={e=>{e.stopPropagation();setLightbox(l=>l===null?null:(l-1+items.length)%items.length);}}>›</button>
-          </>}
-          <div style={{maxWidth:"90vw",maxHeight:"85vh",display:"flex",flexDirection:"column",gap:"1rem",alignItems:"center"}} onClick={e=>e.stopPropagation()}>
-            <img src={items[lightbox].image_url} alt={items[lightbox].caption} style={{maxWidth:"100%",maxHeight:"75vh",objectFit:"contain",borderRadius:"0.75rem"}}/>
-            {items[lightbox].caption&&<p style={{color:"rgba(255,255,255,0.85)",fontSize:"0.9rem",margin:0,textAlign:"center"}}>{items[lightbox].caption}</p>}
-            <p style={{color:"rgba(255,255,255,0.4)",fontSize:"0.78rem",margin:0}}>{lightbox+1} / {items.length}</p>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
-
-// ─── Page Gallery (for main section pages) ────────────────────────────────────
-function PageGallery({contentType,title,accentColor="#2563eb",borderColor}:{contentType:string;title:string;accentColor?:string;borderColor?:string}) {
-  type GalleryItem={id:string;image_url:string;caption:string;sort_order:number};
-  const [items,setItems]=useState<GalleryItem[]>([]);
-  const [lightbox,setLightbox]=useState<number|null>(null);
-  const bc=borderColor||accentColor;
-
-  useEffect(()=>{
-    supabase.from("content_gallery").select("id,image_url,caption,sort_order").eq("content_type",contentType).is("content_id",null).eq("published",true).order("sort_order").then(({data})=>setItems(data??[]));
-  },[contentType]);
-
-  useEffect(()=>{
-    if(lightbox===null) return;
-    const onKey=(e:KeyboardEvent)=>{
-      if(e.key==="Escape") setLightbox(null);
-      if(e.key==="ArrowLeft") setLightbox(l=>l===null?null:(l+1)%items.length);
-      if(e.key==="ArrowRight") setLightbox(l=>l===null?null:(l-1+items.length)%items.length);
-    };
-    window.addEventListener("keydown",onKey);
-    return ()=>window.removeEventListener("keydown",onKey);
-  },[lightbox,items.length]);
-
-  if(items.length===0) return null;
-
-  return(
-    <section style={{padding:"5rem 1.5rem",background:"#0f172a",position:"relative",overflow:"hidden"}}>
-      {/* Decorative background */}
-      <div style={{position:"absolute",top:0,left:0,right:0,height:"3px",background:`linear-gradient(to right, transparent, ${accentColor}, transparent)`}}/>
-      <div style={{maxWidth:"1200px",margin:"0 auto"}}>
-        <div style={{textAlign:"center",marginBottom:"3rem"}}>
-          <span style={{display:"inline-block",background:`${accentColor}22`,color:accentColor,fontSize:"0.78rem",fontWeight:700,padding:"0.35rem 1rem",borderRadius:"9999px",border:`1px solid ${accentColor}44`,marginBottom:"0.75rem",textTransform:"uppercase",letterSpacing:"0.08em"}}>من الذاكرة</span>
-          <h2 style={{color:"#fff",fontSize:"clamp(1.6rem,3vw,2.2rem)",fontWeight:900,margin:0}}>{title}</h2>
-        </div>
-        {/* Masonry-style 3-col grid */}
-        <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:"0.75rem"}}>
-          {items.map((img,i)=>{
-            const tall=i===0||i===3;
-            return(
-              <div key={img.id}
-                style={{position:"relative",overflow:"hidden",borderRadius:"1rem",cursor:"pointer",aspectRatio:tall?"3/4":"4/3",background:"#1e293b",border:`1px solid ${bc}33`}}
-                onClick={()=>setLightbox(i)}>
-                <img src={img.image_url} alt={img.caption} loading="lazy"
-                  style={{width:"100%",height:"100%",objectFit:"cover",transition:"transform 0.5s ease"}}
-                  onMouseEnter={e=>(e.currentTarget.style.transform="scale(1.08)")}
-                  onMouseLeave={e=>(e.currentTarget.style.transform="scale(1)")}/>
-                <div style={{position:"absolute",inset:0,background:"linear-gradient(to top,rgba(0,0,0,0.8) 0%,transparent 55%)",display:"flex",alignItems:"flex-end",padding:"1rem"}}>
-                  {img.caption&&<p style={{color:"#fff",fontSize:"0.8rem",fontWeight:600,margin:0,lineHeight:1.4}}>{img.caption}</p>}
-                </div>
-                <div style={{position:"absolute",top:"0.75rem",right:"0.75rem",width:32,height:32,background:`${accentColor}cc`,borderRadius:"50%",display:"flex",alignItems:"center",justifyContent:"center"}}>
-                  <span style={{color:"#fff",fontSize:"0.7rem",fontWeight:700}}>{i+1}</span>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-        {lightbox!==null && (
-          <div style={{position:"fixed",inset:0,zIndex:9999,background:"rgba(0,0,0,0.97)",display:"flex",alignItems:"center",justifyContent:"center"}}
-            onClick={()=>setLightbox(null)}>
-            <button style={{position:"absolute",top:"1rem",left:"1rem",background:"rgba(255,255,255,0.1)",border:"none",color:"#fff",borderRadius:"50%",width:44,height:44,fontSize:"1.3rem",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}
-              onClick={e=>{e.stopPropagation();setLightbox(null);}}>✕</button>
-            {items.length>1&&<>
-              <button style={{position:"absolute",left:"1rem",top:"50%",transform:"translateY(-50%)",background:"rgba(255,255,255,0.12)",border:"none",color:"#fff",borderRadius:"50%",width:52,height:52,fontSize:"1.6rem",cursor:"pointer"}}
-                onClick={e=>{e.stopPropagation();setLightbox(l=>l===null?null:(l+1)%items.length);}}>‹</button>
-              <button style={{position:"absolute",right:"1rem",top:"50%",transform:"translateY(-50%)",background:"rgba(255,255,255,0.12)",border:"none",color:"#fff",borderRadius:"50%",width:52,height:52,fontSize:"1.6rem",cursor:"pointer"}}
-                onClick={e=>{e.stopPropagation();setLightbox(l=>l===null?null:(l-1+items.length)%items.length);}}>›</button>
-            </>}
-            <div style={{maxWidth:"90vw",maxHeight:"85vh",display:"flex",flexDirection:"column",gap:"1rem",alignItems:"center"}} onClick={e=>e.stopPropagation()}>
-              <img src={items[lightbox].image_url} alt={items[lightbox].caption} style={{maxWidth:"100%",maxHeight:"75vh",objectFit:"contain",borderRadius:"0.75rem"}}/>
-              {items[lightbox].caption&&<p style={{color:"rgba(255,255,255,0.85)",fontSize:"0.95rem",margin:0,textAlign:"center"}}>{items[lightbox].caption}</p>}
-              <p style={{color:"rgba(255,255,255,0.35)",fontSize:"0.8rem",margin:0}}>{lightbox+1} / {items.length}</p>
-            </div>
-          </div>
-        )}
-      </div>
-    </section>
   );
 }
 
@@ -2492,12 +2328,6 @@ function NewsDetailPage({slug}:{slug?:string}) {
           </div>
         </aside>
       </div>
-      {/* Gallery */}
-      {news?.id && (
-        <div style={{maxWidth:"900px",margin:"0 auto",padding:"0 1.5rem 3rem"}}>
-          <ContentGallery contentType="news" contentId={news.id} accentColor="#2563eb"/>
-        </div>
-      )}
     </div>
   );
 }
@@ -2809,12 +2639,6 @@ function EventDetailPage({slug}:{slug?:string}) {
           </div>
         </aside>
       </div>
-      {/* Gallery */}
-      {item?.id && (
-        <div style={{maxWidth:"900px",margin:"0 auto",padding:"0 1.5rem 3rem"}}>
-          <ContentGallery contentType="events" contentId={item.id} accentColor="#16a34a"/>
-        </div>
-      )}
     </div>
   );
 }
@@ -2952,7 +2776,6 @@ function CultureEventDetailPage({slug}:{slug?:string}){
         {item.description&&<div className="detail-body" dangerouslySetInnerHTML={{__html:item.description.replace(/\n/g,"<br/>")}}/>}
         <a href="/culture" className="detail-back">← العودة للثقافة</a>
       </article>
-      {item?.id&&<div style={{maxWidth:"900px",margin:"0 auto",padding:"0 1.5rem 3rem"}}><ContentGallery contentType="culture_events" contentId={item.id} accentColor="#7c3aed"/></div>}
     </div>
   );
 }
@@ -2977,7 +2800,6 @@ function CultureNewsDetailPage({slug}:{slug?:string}){
         {item.body&&<div className="detail-body" dangerouslySetInnerHTML={{__html:item.body.replace(/\n/g,"<br/>")}}/>}
         <a href="/culture" className="detail-back">← العودة للثقافة</a>
       </article>
-      {item?.id&&<div style={{maxWidth:"900px",margin:"0 auto",padding:"0 1.5rem 3rem"}}><ContentGallery contentType="culture_news" contentId={item.id} accentColor="#0e7490"/></div>}
     </div>
   );
 }
@@ -3010,7 +2832,6 @@ function CultureArtistDetailPage({slug}:{slug?:string}){
           <div style={{color:"#374151",lineHeight:1.9,fontSize:"0.95rem"}} dangerouslySetInnerHTML={{__html:item.bio.replace(/\n/g,"<br/>")}}/>  
         </div>}
         <a href="/culture" style={{display:"inline-flex",alignItems:"center",gap:"0.5rem",color:"#0e7490",fontWeight:600,textDecoration:"none",fontSize:"0.9rem"}}><ArrowLeft size={16}/> العودة للثقافة</a>
-        {item?.id&&<ContentGallery contentType="culture_artist" contentId={item.id} accentColor="#0e7490"/>}
       </div>
     </div>
   );
@@ -3124,7 +2945,6 @@ function SocialServiceDetailPage({slug}:{slug?:string}){
           </div>
         </div>
       </div>
-      {item?.id&&<div style={{maxWidth:"900px",margin:"0 auto",padding:"0 1.5rem 3rem"}}><ContentGallery contentType="social_service" contentId={item.id} accentColor="#0f766e"/></div>}
     </div>
   );
 }
@@ -3249,7 +3069,6 @@ function SocialInitiativeDetailPage({slug}:{slug?:string}){
           </div>
         </div>
       </div>
-      {item?.id&&<div style={{maxWidth:"900px",margin:"0 auto",padding:"0 1.5rem 3rem"}}><ContentGallery contentType="social_initiative" contentId={item.id} accentColor="#16a34a"/></div>}
     </div>
   );
 }
