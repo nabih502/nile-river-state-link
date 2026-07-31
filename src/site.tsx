@@ -1396,19 +1396,20 @@ function Register(){
     const city=get("المدينة");
     const state=get("الولاية");
     const locality=get("المحلية");
-    const maritalStatus=getRadio("الحالة");
+    const maritalStatus=get("الحالة الاجتماعية")||getRadio("الحالة");
     const specialization=get("التخصص");
     const jobTitle=get("المسمى الوظيفي");
     const defaultPassword=phone.replace(/\D/g,"").slice(-6)||"123456";
-    const {error}=await supabase.from("members").insert({
+    const {data:inserted,error}=await supabase.from("members").insert({
       full_name:fullName,email,phone,gender:gender==="أنثى"?"female":"male",
       birth_date:birthDate||null,country,city,state,locality,
       marital_status:maritalStatus,specialization,job_title:jobTitle,
       membership_type:planNames[planIndex]||"basic",status:"pending",
       password_hash:defaultPassword,
-    });
+    }).select("id").maybeSingle();
     setSubmitting(false);
     if(error){setSubmitError("حدث خطأ أثناء التسجيل: "+error.message);return;}
+    if(inserted?.id) sessionStorage.setItem("new_member_id",inserted.id);
     location.href="/photo";
   };
 
@@ -1489,15 +1490,42 @@ function Register(){
 function MemberStepShell({children,className=""}:{children:React.ReactNode;className?:string}){return <main className={`member-step-page ${className}`}><div className="member-step-shell"><span className="step-curve top"/><span className="step-dots"/>{children}<span className="step-curve bottom"/></div></main>}
 
 function PhotoUpload(){
-  const input=useRef<HTMLInputElement>(null);const [preview,setPreview]=useState<string>();
-  const pick=(file?:File)=>{if(file)setPreview(URL.createObjectURL(file))};
+  const input=useRef<HTMLInputElement>(null);
+  const [preview,setPreview]=useState<string>();
+  const [uploading,setUploading]=useState(false);
+  const [uploaded,setUploaded]=useState(false);
+  const [err,setErr]=useState("");
+
+  const handleFile=async(file?:File)=>{
+    if(!file)return;
+    if(file.size>2*1024*1024){setErr("الحجم الأقصى للصورة 2MB");return;}
+    setErr("");
+    setPreview(URL.createObjectURL(file));
+    const memberId=sessionStorage.getItem("new_member_id");
+    if(!memberId){setUploaded(true);return;}// no id yet — just preview, let them continue
+    setUploading(true);
+    const ext=file.name.split(".").pop()?.toLowerCase()||"jpg";
+    const path=`members/${memberId}/photo.${ext}`;
+    const{error:upErr}=await supabase.storage.from("images").upload(path,file,{upsert:true,contentType:file.type});
+    if(upErr){setErr("فشل الرفع: "+upErr.message);setUploading(false);return;}
+    const{data:urlData}=supabase.storage.from("images").getPublicUrl(path);
+    const{error:dbErr}=await supabase.from("members").update({photo_url:urlData.publicUrl}).eq("id",memberId);
+    setUploading(false);
+    if(dbErr){setErr("تم رفع الصورة لكن فشل الحفظ: "+dbErr.message);return;}
+    setUploaded(true);
+  };
+
   const methods=[{icon:Aperture,title:"التقاط من الاستديو",text:"باستخدام إضاءة الاستديو",action:"الذهاب للاستديو"},{icon:Camera,title:"التقاط صورة",text:"باستخدام الكاميرا",action:"التقاط الآن",active:true},{icon:FileImage,title:"إرفاق ملف",text:"اختر صورة من جهازك",action:"JPG, JPEG, PNG"}];
   return <MemberStepShell className="photo-step"><div className="step-mark"><img src="/assets/membership-mark-transparent-v2.png" alt="شعار الرابطة"/></div><header className="step-heading"><h1>إرفاق صورة شخصية</h1><h2>لإصدار البطاقة الإلكترونية</h2><p>يرجى إرفاق صورة شخصية حديثة وواضحة لاستخراج بطاقتك الإلكترونية</p></header>
-    <section className="photo-preview"><div className="face-frame">{preview?<img src={preview} alt="معاينة الصورة الشخصية"/>:<div className="face-silhouette" aria-hidden="true"><i/><b/></div>}</div><b>معاينة الصورة</b><p>تأكد من وضوح الصورة قبل رفعها<br/>ستستخدم لطباعة البطاقة الإلكترونية</p></section>
-    <h3 className="step-section-title"><span/>اختر طريقة الإرفاق<span/></h3><section className="photo-methods">{methods.map(item=>{const Icon=item.icon;return <button type="button" className={item.active?"active":""} key={item.title} onClick={()=>input.current?.click()}><Icon/><b>{item.title}</b><small>{item.text}</small><span>{item.action}</span></button>})}</section><input ref={input} hidden type="file" accept="image/jpeg,image/png" capture="user" onChange={event=>pick(event.target.files?.[0])}/>
+    <section className="photo-preview"><div className="face-frame">{preview?<img src={preview} alt="معاينة الصورة الشخصية"/>:<div className="face-silhouette" aria-hidden="true"><i/><b/></div>}</div>
+      {uploading&&<p style={{color:"#2563eb",fontWeight:600,margin:"0.5rem 0"}}>جاري رفع الصورة...</p>}
+      {uploaded&&!uploading&&<p style={{color:"#16a34a",fontWeight:600,margin:"0.5rem 0"}}>✓ تم رفع الصورة وحفظها بنجاح</p>}
+      {err&&<p style={{color:"#dc2626",fontWeight:600,margin:"0.5rem 0"}}>{err}</p>}
+      <b>معاينة الصورة</b><p>تأكد من وضوح الصورة قبل رفعها<br/>ستستخدم لطباعة البطاقة الإلكترونية</p></section>
+    <h3 className="step-section-title"><span/>اختر طريقة الإرفاق<span/></h3><section className="photo-methods">{methods.map(item=>{const Icon=item.icon;return <button type="button" className={item.active?"active":""} key={item.title} onClick={()=>input.current?.click()} disabled={uploading}><Icon/><b>{item.title}</b><small>{item.text}</small><span>{item.action}</span></button>})}</section><input ref={input} hidden type="file" accept="image/jpeg,image/png" capture="user" onChange={event=>handleFile(event.target.files?.[0])}/>
     <section className="photo-conditions"><h3><span/>شروط الصورة <ShieldCheck/><span/></h3><div><ul><li>صورة حديثة وواضحة</li><li>خلفية بيضاء أو فاتحة</li><li>إظهار الوجه بوضوح</li><li>بدون نظارات شمسية</li><li>بدون فلاتر أو تعديلات</li></ul><article><p><UserCheck/>أن تكون الصورة ملونة وواضحة</p><p><ScanFace/>يجب أن يظهر الوجه كاملاً من الأمام مع فتح العينين</p><p><FileImage/><b>الصيغ المدعومة:</b><br/>JPG, JPEG, PNG<br/>الحد الأقصى للحجم: 2MB</p></article></div></section>
     <section className="step-warning"><CircleAlert/><div><b>تنبيه مهم</b><p>يتم استخدام هذه الصورة فقط لإصدار بطاقتك الإلكترونية<br/>ولا يتم نشرها أو مشاركتها مع أي جهة خارجية</p></div></section>
-    {preview&&<a className="step-continue" href="/payment">المتابعة إلى السداد <ArrowLeft/></a>}
+    {(uploaded||preview)&&!uploading&&<a className="step-continue" href="/payment">المتابعة إلى السداد <ArrowLeft/></a>}
   </MemberStepShell>
 }
 
