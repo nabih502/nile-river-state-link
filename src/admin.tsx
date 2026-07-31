@@ -8,16 +8,17 @@ import AdminMembersPanel from "./admin-members";
 import AdminMemberDetail from "./admin-member-detail";
 import AdminStaffPanel from "./admin-staff";
 import AdminChatPanel from "./admin-chat";
+import AdminVisitorChat from "./admin-visitor-chat";
 import { SeoImageUpload } from "./admin-seo";
 import { callAdminAuth, loadSession, saveSession, clearSession, type AdminSession } from "./admin-auth-client";
 
-type Section = "dashboard" | "news" | "events" | "members" | "member-detail" | "messages" | "investment" | "culture" | "social" | "contact" | "settings" | "staff" | "chat";
+type Section = "dashboard" | "news" | "events" | "members" | "member-detail" | "messages" | "investment" | "culture" | "social" | "contact" | "settings" | "staff" | "chat" | "visitor-chat";
 
 interface NewsRow { id: string; title: string; slug: string; excerpt: string; body: string; image_url: string; category: string; published: boolean; published_at: string | null; created_at: string; author_name: string; author_image_url: string; read_time: number; seo_title: string; seo_description: string; seo_image: string; }
 interface EventRow { id: string; title: string; slug: string; excerpt: string; body: string; image_url: string; location: string; event_date: string; event_end_date: string | null; published: boolean; created_at: string; author_name: string; author_image_url: string; organizer: string; seo_title: string; seo_description: string; seo_image: string; }
 interface MemberRow { id: string; full_name: string; email: string; phone: string; national_id: string; gender: string; country: string; state: string; membership_type: string; status: string; created_at: string; }
 interface MessageRow { id: string; name: string; email: string; phone: string; subject: string; message: string; read: boolean; created_at: string; }
-interface Stats { news: number; events: number; members: number; messages: number; unread: number; inquiries: number; newInquiries: number; }
+interface Stats { news: number; events: number; members: number; messages: number; unread: number; inquiries: number; newInquiries: number; visitorWaiting: number; }
 
 function formatDate(d: string | null) {
   if (!d) return "-";
@@ -354,7 +355,7 @@ export default function AdminApp({ memberId }: { memberId?: string } = {}) {
   const [verifying, setVerifying] = useState(true);
   const [section, setSection] = useState<Section>(memberId ? "member-detail" : "dashboard");
   const [activeMemberId, setActiveMemberId] = useState<string | undefined>(memberId);
-  const [stats, setStats] = useState<Stats>({ news: 0, events: 0, members: 0, messages: 0, unread: 0, inquiries: 0, newInquiries: 0 });
+  const [stats, setStats] = useState<Stats>({ news: 0, events: 0, members: 0, messages: 0, unread: 0, inquiries: 0, newInquiries: 0, visitorWaiting: 0 });
   const [news, setNews] = useState<NewsRow[]>([]);
   const [events, setEvents] = useState<EventRow[]>([]);
   const [members, setMembers] = useState<MemberRow[]>([]);
@@ -375,7 +376,8 @@ export default function AdminApp({ memberId }: { memberId?: string } = {}) {
     ]);
     const unread = (msg.data ?? []).filter(x => !x.read).length;
     const newInquiries = (inq.data ?? []).filter(x => x.status === "new").length;
-    setStats({ news: n.count ?? 0, events: ev.count ?? 0, members: m.count ?? 0, messages: msg.data?.length ?? 0, unread, inquiries: inq.data?.length ?? 0, newInquiries });
+    const visCnt = await supabase.from("visitor_conversations").select("*", { count: "exact", head: true }).eq("status", "waiting");
+    setStats({ news: n.count ?? 0, events: ev.count ?? 0, members: m.count ?? 0, messages: msg.data?.length ?? 0, unread, inquiries: inq.data?.length ?? 0, newInquiries, visitorWaiting: visCnt.count ?? 0 });
   };
 
   const loadNews = async () => {
@@ -466,7 +468,8 @@ export default function AdminApp({ memberId }: { memberId?: string } = {}) {
     { key: "social",     label: "الخدمات الاجتماعية",    perm: "social" },
     { key: "contact",    label: "تواصل معنا",             perm: "contact" },
     { key: "settings",   label: "الإعدادات",              perm: "settings" },
-    { key: "chat",       label: "الدردشة",               perm: "chat" },
+    { key: "chat",         label: "الدردشة",               perm: "chat" },
+    { key: "visitor-chat", label: "دعم الزوار", badge: stats.visitorWaiting || undefined, perm: "chat" },
     ...(isSuperAdmin ? [{ key: "staff" as Section, label: "الموظفون" }] : []),
   ];
   const navItems = allNavItems.filter(item => !item.perm || hasPermission(item.perm));
@@ -657,6 +660,7 @@ export default function AdminApp({ memberId }: { memberId?: string } = {}) {
           {/* ── Settings ── */}
           {section === "settings" && <SettingsPanel />}
           {section === "chat" && <AdminChatPanel session={session!} />}
+          {section === "visitor-chat" && <AdminVisitorChat adminName={session?.full_name ?? "الأدمن"} />}
           {section === "staff" && isSuperAdmin && <AdminStaffPanel session={session!} />}
         </div>
       </div>
