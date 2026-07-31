@@ -21,8 +21,32 @@ interface ChatMessage {
   sender_type: "member" | "admin";
   sender_name: string;
   body: string;
+  attachment_url: string | null;
+  attachment_name: string | null;
+  attachment_type: string | null;
   read: boolean;
   created_at: string;
+}
+
+function isImage(type: string | null) {
+  return !!type && type.startsWith("image/");
+}
+
+function AdminAttachment({ url, name, type }: { url: string; name: string | null; type: string | null }) {
+  if (isImage(type)) {
+    return (
+      <a href={url} target="_blank" rel="noreferrer" className="adm-attach-img-wrap">
+        <img src={url} alt={name ?? "صورة"} className="adm-attach-img" loading="lazy" />
+      </a>
+    );
+  }
+  return (
+    <a href={url} target="_blank" rel="noreferrer" className="adm-attach-file">
+      <span>📎</span>
+      <span className="adm-attach-file-name">{name ?? "ملف"}</span>
+      <span>⬇</span>
+    </a>
+  );
 }
 
 const STATUS_OPTS = [
@@ -241,7 +265,12 @@ export default function AdminChatPanel({ session }: Props) {
                     <span>{msg.sender_name || (msg.sender_type === "admin" ? "فريق الدعم" : "العضو")}</span>
                     <span className="adm-chat-msg-time">{formatTime(msg.created_at)}</span>
                   </div>
-                  <div className={`adm-chat-bubble ${msg.sender_type}`}>{msg.body}</div>
+                  {msg.attachment_url && (
+                    <AdminAttachment url={msg.attachment_url} name={msg.attachment_name} type={msg.attachment_type} />
+                  )}
+                  {msg.body && (
+                    <div className={`adm-chat-bubble ${msg.sender_type}`}>{msg.body}</div>
+                  )}
                 </div>
               ))
             )}
