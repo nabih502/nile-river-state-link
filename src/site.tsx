@@ -2066,8 +2066,105 @@ function InvestmentInquiryForm({type,slug,title}:{type:"sector"|"opportunity";sl
   );
 }
 
+// ─── Investment Stats Sidebar ────────────────────────────────────────────────
+function InvestmentStatsSidebar({accentStats}:{accentStats:{label:string;value:string;sub?:string}[]}){
+  const whyInvest=[
+    {icon:"🏛️",text:"إطار قانوني استثماري واضح وداعم"},
+    {icon:"🛡️",text:"ضمانات حكومية لحماية الاستثمار"},
+    {icon:"🌍",text:"موقع استراتيجي على ضفاف النيل"},
+    {icon:"⚡",text:"مشاريع بنية تحتية ضخمة جارية"},
+    {icon:"📈",text:"نمو اقتصادي متسارع في الولاية"},
+    {icon:"🤝",text:"شراكات دولية وإقليمية فعّالة"},
+  ];
+  const climate=[
+    {label:"تصنيف سهولة الأعمال",value:"ممتاز"},
+    {label:"إجراءات تسجيل الشركة",value:"5 أيام"},
+    {label:"الضريبة على الأرباح",value:"0% (أولى 5 سنوات)"},
+    {label:"تحويل الأرباح للخارج",value:"مضمون"},
+    {label:"نزاعات الملكية",value:"محكمة متخصصة"},
+  ];
+  return(
+    <div style={{display:"flex",flexDirection:"column",gap:"1.25rem"}}>
+
+      {/* Stats cards */}
+      <div style={{background:"linear-gradient(135deg,#0f766e 0%,#134e4a 100%)",borderRadius:"1rem",padding:"1.5rem",boxShadow:"0 8px 32px rgba(15,118,110,0.35)"}}>
+        <div style={{display:"flex",alignItems:"center",gap:"0.5rem",marginBottom:"1.25rem"}}>
+          <TrendingUp size={18} color="#5eead4"/>
+          <h3 style={{margin:0,fontSize:"0.95rem",fontWeight:800,color:"#fff"}}>مؤشرات الاستثمار</h3>
+        </div>
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"0.75rem"}}>
+          {accentStats.map((s,i)=>(
+            <div key={i} style={{background:"rgba(255,255,255,0.12)",borderRadius:"0.625rem",padding:"0.85rem 0.75rem",backdropFilter:"blur(4px)"}}>
+              <div style={{fontSize:"1.35rem",fontWeight:900,color:"#fff",lineHeight:1}}>{s.value}</div>
+              <div style={{fontSize:"0.65rem",color:"rgba(255,255,255,0.72)",marginTop:"0.25rem",lineHeight:1.4}}>{s.label}</div>
+              {s.sub&&<div style={{fontSize:"0.6rem",color:"#5eead4",marginTop:"0.15rem"}}>{s.sub}</div>}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Why invest */}
+      <div style={{background:"#fff",borderRadius:"1rem",padding:"1.5rem",boxShadow:"0 4px 16px rgba(0,0,0,0.06)",border:"1px solid #e2e8f0"}}>
+        <div style={{display:"flex",alignItems:"center",gap:"0.5rem",marginBottom:"1rem",paddingBottom:"0.75rem",borderBottom:"2px solid #f0fdfa"}}>
+          <ShieldCheck size={16} color="#0f766e"/>
+          <h3 style={{margin:0,fontSize:"0.9rem",fontWeight:800,color:"#0f172a"}}>لماذا تستثمر هنا؟</h3>
+        </div>
+        {whyInvest.map((w,i)=>(
+          <div key={i} style={{display:"flex",alignItems:"flex-start",gap:"0.6rem",marginBottom:"0.65rem"}}>
+            <span style={{fontSize:"1rem",lineHeight:1.2,flexShrink:0}}>{w.icon}</span>
+            <span style={{fontSize:"0.8rem",color:"#374151",lineHeight:1.5}}>{w.text}</span>
+          </div>
+        ))}
+      </div>
+
+      {/* Investment climate */}
+      <div style={{background:"#fff",borderRadius:"1rem",padding:"1.5rem",boxShadow:"0 4px 16px rgba(0,0,0,0.06)",border:"1px solid #e2e8f0"}}>
+        <div style={{display:"flex",alignItems:"center",gap:"0.5rem",marginBottom:"1rem",paddingBottom:"0.75rem",borderBottom:"2px solid #f0fdfa"}}>
+          <ChartPie size={16} color="#0f766e"/>
+          <h3 style={{margin:0,fontSize:"0.9rem",fontWeight:800,color:"#0f172a"}}>مناخ الاستثمار</h3>
+        </div>
+        {climate.map((c,i)=>(
+          <div key={i} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"0.5rem 0",borderBottom:i<climate.length-1?"1px solid #f8fafc":"none",gap:"0.5rem"}}>
+            <span style={{fontSize:"0.75rem",color:"#64748b"}}>{c.label}</span>
+            <span style={{fontSize:"0.75rem",fontWeight:700,color:"#0f766e",textAlign:"left",flexShrink:0}}>{c.value}</span>
+          </div>
+        ))}
+      </div>
+
+      {/* General investment stat bar */}
+      <div style={{background:"linear-gradient(135deg,#1e3a5f 0%,#1e40af 100%)",borderRadius:"1rem",padding:"1.25rem 1.5rem",display:"flex",flexDirection:"column",gap:"0.6rem"}}>
+        <div style={{fontSize:"0.7rem",color:"rgba(255,255,255,0.65)",textTransform:"uppercase",letterSpacing:"0.05em"}}>الإنجازات التنموية</div>
+        {[
+          {label:"مشاريع مكتملة",val:47,max:60},
+          {label:"نسبة التوظيف المحلي",val:82,max:100},
+          {label:"رضا المستثمرين",val:91,max:100},
+        ].map((b,i)=>(
+          <div key={i}>
+            <div style={{display:"flex",justifyContent:"space-between",marginBottom:"0.25rem"}}>
+              <span style={{fontSize:"0.72rem",color:"rgba(255,255,255,0.8)"}}>{b.label}</span>
+              <span style={{fontSize:"0.72rem",fontWeight:700,color:"#93c5fd"}}>{b.val}{b.max===100?"%":""}</span>
+            </div>
+            <div style={{height:5,background:"rgba(255,255,255,0.15)",borderRadius:9999,overflow:"hidden"}}>
+              <div style={{height:"100%",width:`${(b.val/b.max)*100}%`,background:"#93c5fd",borderRadius:9999}}/>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* CTA */}
+      <a href="/contact" style={{display:"flex",alignItems:"center",justifyContent:"center",gap:"0.5rem",background:"#d97706",color:"#fff",padding:"0.9rem",borderRadius:"0.75rem",fontWeight:800,textDecoration:"none",fontSize:"0.9rem",boxShadow:"0 4px 16px rgba(217,119,6,0.35)",transition:"background 0.2s"}}
+        onMouseEnter={e=>e.currentTarget.style.background="#b45309"}
+        onMouseLeave={e=>e.currentTarget.style.background="#d97706"}
+      >
+        <Phone size={16}/> تواصل مع فريق الاستثمار
+      </a>
+    </div>
+  );
+}
+
+// ─── Investment Sector Detail Page ───────────────────────────────────────────
 function InvestmentSectorDetailPage({slug}:{slug?:string}){
-  type Sector = {id:string;name:string;slug:string;description:string;highlight:string;icon:string;image_url:string};
+  type Sector = {id:string;name:string;slug:string;description:string;highlight:string;highlight2?:string;highlight3?:string;icon:string;image_url:string;seo_title?:string;seo_description?:string;seo_image?:string};
   type Opp = {id:string;title:string;slug:string;image_url:string;min_investment:string;expected_return:string;duration:string;location:string;status:string};
   const [sector,setSector] = useState<Sector|null>(null);
   const [opps,setOpps] = useState<Opp[]>([]);
@@ -2083,55 +2180,151 @@ function InvestmentSectorDetailPage({slug}:{slug?:string}){
       setLoading(false);
     });
   },[slug]);
+
   if(loading) return <div className="inv-detail-loading"><div className="inv-detail-spinner"/></div>;
   if(!sector) return <div className="inv-detail-empty"><h2>القطاع غير موجود</h2><a href="/investment">العودة للاستثمار</a></div>;
+
+  const sectorStats:{[k:string]:{label:string;value:string;sub?:string}[]}={
+    agriculture:[
+      {label:"مساحة أراضي صالحة",value:"6.5M","sub":"فدان"},
+      {label:"العائد السنوي المتوسط",value:"28%"},
+      {label:"مشاريع قائمة",value:"120+"},
+      {label:"حجم الصادرات",value:"$180M"},
+    ],
+    mining:[
+      {label:"احتياطي ذهبي",value:"500 طن"},
+      {label:"العائد المتوقع",value:"40%"},
+      {label:"مناطق تعدين",value:"23 منطقة"},
+      {label:"نمو القطاع",value:"+35%"},
+    ],
+    industry:[
+      {label:"مناطق صناعية",value:"4 مناطق"},
+      {label:"العائد المتوقع",value:"22%"},
+      {label:"مشاريع مرخصة",value:"85+"},
+      {label:"توظيف محلي",value:"12,000"},
+    ],
+    tourism:[
+      {label:"مواقع أثرية",value:"200+ موقع"},
+      {label:"العائد المتوقع",value:"25%"},
+      {label:"زوار سنويا",value:"50,000+"},
+      {label:"نمو سنوي",value:"+18%"},
+    ],
+    energy:[
+      {label:"طاقة شمسية متاحة",value:"3,200h/سنة"},
+      {label:"العائد المتوقع",value:"18%"},
+      {label:"مشاريع منجزة",value:"15 مشروع"},
+      {label:"طاقة مولّدة",value:"120MW"},
+    ],
+  };
+  const stats = sectorStats[sector.slug] || [
+    {label:"فرص استثمارية",value:opps.length+"+"},{label:"عائد متوسط",value:"25%"},{label:"مشاريع قائمة",value:"50+"},{label:"نمو سنوي",value:"+20%"},
+  ];
+
   return (
-    <div className="inv-detail-page" dir="rtl">
-      <div className="inv-detail-hero" style={{backgroundImage:`url(${sector.image_url||"/assets/investment-hero-hq.webp"})`}}>
-        <div className="inv-detail-hero-overlay"/>
-        <div className="inv-detail-hero-content page-width motion">
-          <a href="/investment" className="inv-detail-back"><ChevronLeft/> القطاعات الاستثمارية</a>
-          <span className="inv-detail-badge"><DynIcon name={sector.icon} fallback={Sprout}/> قطاع استثماري</span>
-          <h1>{sector.name}</h1>
-          {sector.highlight&&<p className="inv-detail-highlight"><Gem/> {sector.highlight}</p>}
+    <div dir="rtl" style={{background:"#f8fafc",minHeight:"100vh"}}>
+
+      {/* ── Hero ── */}
+      <div style={{position:"relative",overflow:"hidden",background:"#0c1a2e"}}>
+        <img src={sector.image_url||"/assets/investment-hero-hq.webp"} alt={sector.name}
+          style={{display:"block",width:"100%",height:"480px",objectFit:"cover",opacity:0.5}}/>
+        <div style={{position:"absolute",inset:0,background:"linear-gradient(to top,rgba(0,0,0,0.88) 0%,rgba(0,0,0,0.5) 50%,rgba(0,0,0,0.1) 100%)",pointerEvents:"none"}}/>
+        <div style={{position:"absolute",bottom:0,left:0,right:0,maxWidth:1200,margin:"0 auto",padding:"2.5rem clamp(1rem,4vw,2rem)"}}>
+          <a href="/investment" style={{display:"inline-flex",alignItems:"center",gap:"0.35rem",color:"rgba(255,255,255,0.65)",textDecoration:"none",fontSize:"0.8rem",marginBottom:"0.9rem",transition:"color .15s"}}
+            onMouseEnter={e=>e.currentTarget.style.color="#fff"} onMouseLeave={e=>e.currentTarget.style.color="rgba(255,255,255,0.65)"}>
+            <ArrowLeft size={13}/> القطاعات الاستثمارية
+          </a>
+          <div style={{display:"flex",alignItems:"center",gap:"0.6rem",marginBottom:"0.75rem"}}>
+            <span style={{background:"#d97706",color:"#fff",padding:"0.3rem 0.9rem",borderRadius:"9999px",fontSize:"0.75rem",fontWeight:700,display:"inline-flex",alignItems:"center",gap:"0.4rem"}}>
+              <DynIcon name={sector.icon} fallback={Sprout} size={13}/> قطاع استثماري
+            </span>
+          </div>
+          <h1 style={{color:"#fff",fontSize:"clamp(1.8rem,4.5vw,2.8rem)",fontWeight:900,margin:"0 0 0.6rem",lineHeight:1.1,textShadow:"0 2px 16px rgba(0,0,0,0.6)"}}>{sector.name}</h1>
+          {sector.highlight&&<p style={{color:"rgba(255,255,255,0.85)",fontSize:"1rem",margin:0,display:"flex",alignItems:"center",gap:"0.5rem"}}><Gem size={15} color="#fbbf24"/>{sector.highlight}</p>}
         </div>
       </div>
-      <div className="inv-detail-body page-width motion">
-        <div className="inv-detail-main">
-          <section className="inv-detail-description motion">
-            <h2>عن هذا القطاع</h2>
-            <p>{sector.description}</p>
-          </section>
+
+      {/* ── Stat strip ── */}
+      <div style={{background:"#1e293b"}}>
+        <div style={{maxWidth:1200,margin:"0 auto",display:"flex",flexWrap:"wrap"}}>
+          {stats.map((s,i)=>(
+            <div key={i} style={{flex:"1 1 160px",padding:"1rem 1.5rem",borderLeft:"1px solid rgba(255,255,255,0.08)",textAlign:"center"}}>
+              <div style={{fontSize:"1.5rem",fontWeight:900,color:"#fbbf24",lineHeight:1}}>{s.value}</div>
+              <div style={{fontSize:"0.68rem",color:"rgba(255,255,255,0.55)",marginTop:"0.3rem"}}>{s.label}</div>
+              {s.sub&&<div style={{fontSize:"0.6rem",color:"rgba(255,255,255,0.35)"}}>{s.sub}</div>}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* ── Body ── */}
+      <div style={{maxWidth:1200,margin:"0 auto",padding:"2.5rem clamp(1rem,3vw,1.5rem)",display:"grid",gridTemplateColumns:"1fr min(360px,32%)",gap:"2rem",alignItems:"start"}}>
+
+        {/* Main */}
+        <div style={{display:"flex",flexDirection:"column",gap:"1.75rem"}}>
+
+          {/* Description */}
+          <div style={{background:"#fff",borderRadius:"1rem",padding:"2rem 2.25rem",boxShadow:"0 1px 8px rgba(0,0,0,0.06)"}}>
+            <h2 style={{fontSize:"1.05rem",fontWeight:800,color:"#0f172a",margin:"0 0 1.25rem",paddingBottom:"0.75rem",borderBottom:"2px solid #fef3c7",display:"flex",alignItems:"center",gap:"0.5rem"}}>
+              <span style={{color:"#d97706"}}>◈</span> عن هذا القطاع
+            </h2>
+            <p style={{color:"#374151",lineHeight:1.85,fontSize:"0.95rem",margin:0}}>{sector.description}</p>
+            {(sector.highlight2||sector.highlight3)&&(
+              <div style={{display:"flex",flexDirection:"column",gap:"0.65rem",marginTop:"1.25rem",paddingTop:"1.25rem",borderTop:"1px solid #f8fafc"}}>
+                {sector.highlight2&&<div style={{display:"flex",alignItems:"flex-start",gap:"0.6rem"}}><MapPin size={16} color="#d97706" style={{flexShrink:0,marginTop:2}}/><span style={{fontSize:"0.88rem",color:"#374151"}}>{sector.highlight2}</span></div>}
+                {sector.highlight3&&<div style={{display:"flex",alignItems:"flex-start",gap:"0.6rem"}}><ShieldCheck size={16} color="#15803d" style={{flexShrink:0,marginTop:2}}/><span style={{fontSize:"0.88rem",color:"#374151"}}>{sector.highlight3}</span></div>}
+              </div>
+            )}
+          </div>
+
+          {/* Gallery */}
+          <ContentGallery contentType="investment_sector" contentId={sector.id} accentColor="#d97706"/>
+
+          {/* Opportunities */}
           {opps.length>0&&(
-            <section className="inv-detail-opps motion">
-              <h2>الفرص الاستثمارية في هذا القطاع</h2>
-              <div className="inv-detail-opps-grid">
+            <div style={{background:"#fff",borderRadius:"1rem",padding:"2rem 2.25rem",boxShadow:"0 1px 8px rgba(0,0,0,0.06)"}}>
+              <h2 style={{fontSize:"1.05rem",fontWeight:800,color:"#0f172a",margin:"0 0 1.5rem",paddingBottom:"0.75rem",borderBottom:"2px solid #fef3c7",display:"flex",alignItems:"center",gap:"0.5rem"}}>
+                <span style={{color:"#d97706"}}>◈</span> الفرص الاستثمارية في هذا القطاع
+              </h2>
+              <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(260px,1fr))",gap:"1rem"}}>
                 {opps.map(o=>(
-                  <a href={`/investment/opportunity/${o.slug}`} key={o.id} className="inv-opp-card motion">
-                    <img src={o.image_url||"/assets/investment-hero-hq.webp"} alt={o.title}/>
-                    <div>
-                      <span className="inv-opp-tag">{o.status==="available"?"فرصة متاحة":o.status==="in_progress"?"قيد التنفيذ":"مغلقة"}</span>
-                      <h3>{o.title}</h3>
-                      <p><MapPin size={14}/> {o.location||"ولاية نهر النيل"}</p>
-                      {o.min_investment&&<p><WalletCards size={14}/> الحد الأدنى: {o.min_investment}</p>}
-                      {o.expected_return&&<p><ChartNoAxesCombined size={14}/> العائد: {o.expected_return}</p>}
-                      <span className="inv-opp-cta">عرض التفاصيل <ChevronLeft size={14}/></span>
+                  <a href={`/investment/opportunity/${o.slug}`} key={o.id}
+                    style={{display:"flex",flexDirection:"column",borderRadius:"0.75rem",overflow:"hidden",border:"1px solid #e2e8f0",textDecoration:"none",background:"#fafafa",transition:"box-shadow 0.2s,transform 0.2s"}}
+                    onMouseEnter={e=>{e.currentTarget.style.boxShadow="0 8px 24px rgba(0,0,0,0.1)";e.currentTarget.style.transform="translateY(-2px)"}}
+                    onMouseLeave={e=>{e.currentTarget.style.boxShadow="none";e.currentTarget.style.transform="none"}}
+                  >
+                    <div style={{height:140,overflow:"hidden",position:"relative"}}>
+                      <img src={o.image_url||"/assets/investment-hero-hq.webp"} alt={o.title}
+                        style={{width:"100%",height:"100%",objectFit:"cover"}}/>
+                      <span style={{position:"absolute",top:8,right:8,background:o.status==="available"?"#15803d":"#d97706",color:"#fff",padding:"0.2rem 0.6rem",borderRadius:"9999px",fontSize:"0.65rem",fontWeight:700}}>
+                        {o.status==="available"?"متاح":o.status==="in_progress"?"جارٍ":"مغلق"}
+                      </span>
+                    </div>
+                    <div style={{padding:"0.875rem 1rem",flex:1,display:"flex",flexDirection:"column",gap:"0.4rem"}}>
+                      <h3 style={{margin:0,fontSize:"0.88rem",fontWeight:700,color:"#0f172a",lineHeight:1.3}}>{o.title}</h3>
+                      {o.location&&<p style={{margin:0,fontSize:"0.75rem",color:"#64748b",display:"flex",alignItems:"center",gap:"0.3rem"}}><MapPin size={12}/>{o.location}</p>}
+                      <div style={{display:"flex",gap:"0.75rem",marginTop:"auto",paddingTop:"0.5rem",borderTop:"1px solid #f1f5f9"}}>
+                        {o.expected_return&&<span style={{fontSize:"0.72rem",color:"#15803d",fontWeight:700,display:"flex",alignItems:"center",gap:"0.25rem"}}><TrendingUp size={12}/>{o.expected_return}</span>}
+                        {o.min_investment&&<span style={{fontSize:"0.72rem",color:"#64748b",display:"flex",alignItems:"center",gap:"0.25rem"}}><WalletCards size={12}/>{o.min_investment}</span>}
+                      </div>
                     </div>
                   </a>
                 ))}
               </div>
-            </section>
+            </div>
           )}
+
+          <a href="/investment" style={{display:"inline-flex",alignItems:"center",gap:"0.5rem",color:"#d97706",fontWeight:700,textDecoration:"none",fontSize:"0.9rem"}}>
+            <ArrowLeft size={16}/> العودة لجميع القطاعات الاستثمارية
+          </a>
         </div>
-        <aside className="inv-detail-aside motion">
-          <InvestmentInquiryForm type="sector" slug={sector.slug} title={sector.name}/>
-          <div className="inv-detail-meta motion">
-            <h3><Info/> معلومات القطاع</h3>
-            {sector.highlight&&<p><Gem/> {sector.highlight}</p>}
-            {sector.highlight2&&<p><MapPin/> {sector.highlight2}</p>}
-            {sector.highlight3&&<p><ShieldCheck/> {sector.highlight3}</p>}
+
+        {/* Sidebar */}
+        <div style={{position:"sticky",top:"6rem"}}>
+          <InvestmentStatsSidebar accentStats={stats}/>
+          <div style={{marginTop:"1.25rem"}}>
+            <InvestmentInquiryForm type="sector" slug={sector.slug} title={sector.name}/>
           </div>
-        </aside>
+        </div>
       </div>
     </div>
   );
@@ -2139,50 +2332,126 @@ function InvestmentSectorDetailPage({slug}:{slug?:string}){
 
 // ─── Investment Opportunity Detail Page ───────────────────────────────────────
 function InvestmentOpportunityDetailPage({slug}:{slug?:string}){
-  type Opp = {id:string;title:string;slug:string;description:string;details:string;image_url:string;min_investment:string;expected_return:string;duration:string;location:string;status:string};
+  type Opp = {id:string;title:string;slug:string;description:string;details:string;image_url:string;min_investment:string;expected_return:string;duration:string;location:string;status:string;show_specs?:boolean;seo_title?:string;seo_description?:string;seo_image?:string};
   const [opp,setOpp] = useState<Opp|null>(null);
   const [loading,setLoading] = useState(true);
   useEffect(()=>{
     if(!slug){setLoading(false);return;}
-    supabase.from("investment_opportunities").select("*").eq("slug",slug).eq("published",true).maybeSingle().then(({data})=>{setOpp(data);if(data){applyItemSeo({title:data.seo_title||"",fallbackTitle:data.title||"",description:data.seo_description||"",fallbackDescription:data.description||"",image:data.seo_image||"",fallbackImage:data.image_url||""});}setLoading(false);});
+    supabase.from("investment_opportunities").select("*").eq("slug",slug).eq("published",true).maybeSingle().then(({data})=>{
+      setOpp(data);
+      if(data){applyItemSeo({title:data.seo_title||"",fallbackTitle:data.title||"",description:data.seo_description||"",fallbackDescription:data.description||"",image:data.seo_image||"",fallbackImage:data.image_url||""});}
+      setLoading(false);
+    });
   },[slug]);
+
   if(loading) return <div className="inv-detail-loading"><div className="inv-detail-spinner"/></div>;
   if(!opp) return <div className="inv-detail-empty"><h2>الفرصة غير موجودة</h2><a href="/investment">العودة للاستثمار</a></div>;
+
+  const statusColor = opp.status==="available"?"#15803d":opp.status==="in_progress"?"#d97706":"#64748b";
+  const statusLabel = opp.status==="available"?"فرصة متاحة للاستثمار":opp.status==="in_progress"?"قيد التنفيذ":"مغلقة مؤقتاً";
+
+  const oppStats = [
+    {label:"الحد الأدنى للاستثمار",value:opp.min_investment||"—"},
+    {label:"العائد السنوي المتوقع",value:opp.expected_return||"—"},
+    {label:"مدة المشروع",value:opp.duration||"—"},
+    {label:"الموقع الجغرافي",value:opp.location||"ولاية نهر النيل"},
+  ];
+
   return (
-    <div className="inv-detail-page" dir="rtl">
-      <div className="inv-detail-hero" style={{backgroundImage:`url(${opp.image_url||"/assets/investment-hero-hq.webp"})`}}>
-        <div className="inv-detail-hero-overlay"/>
-        <div className="inv-detail-hero-content page-width motion">
-          <a href="/investment" className="inv-detail-back"><ChevronLeft/> الفرص الاستثمارية</a>
-          <span className="inv-detail-badge"><ChartNoAxesCombined/> {opp.status==="available"?"فرصة متاحة":opp.status==="in_progress"?"قيد التنفيذ":"مغلقة"}</span>
-          <h1>{opp.title}</h1>
-          {opp.location&&<p className="inv-detail-highlight"><MapPin/> {opp.location}</p>}
+    <div dir="rtl" style={{background:"#f8fafc",minHeight:"100vh"}}>
+
+      {/* ── Hero ── */}
+      <div style={{position:"relative",overflow:"hidden",background:"#0c1a2e"}}>
+        <img src={opp.image_url||"/assets/investment-hero-hq.webp"} alt={opp.title}
+          style={{display:"block",width:"100%",height:"480px",objectFit:"cover",opacity:0.5}}/>
+        <div style={{position:"absolute",inset:0,background:"linear-gradient(to top,rgba(0,0,0,0.92) 0%,rgba(0,0,0,0.5) 50%,rgba(0,0,0,0.05) 100%)",pointerEvents:"none"}}/>
+        <div style={{position:"absolute",bottom:0,left:0,right:0,maxWidth:1200,margin:"0 auto",padding:"2.5rem clamp(1rem,4vw,2rem)"}}>
+          <a href="/investment" style={{display:"inline-flex",alignItems:"center",gap:"0.35rem",color:"rgba(255,255,255,0.65)",textDecoration:"none",fontSize:"0.8rem",marginBottom:"0.9rem",transition:"color .15s"}}
+            onMouseEnter={e=>e.currentTarget.style.color="#fff"} onMouseLeave={e=>e.currentTarget.style.color="rgba(255,255,255,0.65)"}>
+            <ArrowLeft size={13}/> الفرص الاستثمارية
+          </a>
+          <div style={{display:"flex",flexWrap:"wrap",alignItems:"center",gap:"0.6rem",marginBottom:"0.75rem"}}>
+            <span style={{background:statusColor,color:"#fff",padding:"0.3rem 0.9rem",borderRadius:"9999px",fontSize:"0.75rem",fontWeight:700,display:"inline-flex",alignItems:"center",gap:"0.4rem"}}>
+              <Target size={13}/> {statusLabel}
+            </span>
+          </div>
+          <h1 style={{color:"#fff",fontSize:"clamp(1.8rem,4.5vw,2.8rem)",fontWeight:900,margin:"0 0 0.5rem",lineHeight:1.1,textShadow:"0 2px 16px rgba(0,0,0,0.6)"}}>{opp.title}</h1>
+          {opp.location&&<p style={{color:"rgba(255,255,255,0.8)",fontSize:"0.9rem",margin:0,display:"flex",alignItems:"center",gap:"0.4rem"}}><MapPin size={14} color="#fbbf24"/>{opp.location}</p>}
         </div>
       </div>
-      <div className="inv-detail-body page-width motion">
-        <div className="inv-detail-main">
-          <section className="inv-detail-description motion">
-            <h2>تفاصيل الفرصة الاستثمارية</h2>
-            <p>{opp.description}</p>
-            {opp.details&&<p>{opp.details}</p>}
-          </section>
-          {opp.show_specs!==false&&<div className="inv-detail-specs motion">
-            {opp.min_investment&&<div><WalletCards/><b>الحد الأدنى للاستثمار</b><span>{opp.min_investment}</span></div>}
-            {opp.expected_return&&<div><ChartNoAxesCombined/><b>العائد المتوقع</b><span>{opp.expected_return} سنوياً</span></div>}
-            {opp.duration&&<div><Clock3/><b>مدة المشروع</b><span>{opp.duration}</span></div>}
-            {opp.location&&<div><MapPin/><b>الموقع</b><span>{opp.location}</span></div>}
-          </div>}
+
+      {/* ── Specs strip ── */}
+      {opp.show_specs!==false&&(
+        <div style={{background:"#1e293b"}}>
+          <div style={{maxWidth:1200,margin:"0 auto",display:"flex",flexWrap:"wrap"}}>
+            {oppStats.filter(s=>s.value&&s.value!=="—").map((s,i)=>(
+              <div key={i} style={{flex:"1 1 180px",padding:"1rem 1.5rem",borderLeft:"1px solid rgba(255,255,255,0.08)",textAlign:"center"}}>
+                <div style={{fontSize:"1.1rem",fontWeight:900,color:"#fbbf24",lineHeight:1.1}}>{s.value}</div>
+                <div style={{fontSize:"0.65rem",color:"rgba(255,255,255,0.5)",marginTop:"0.3rem"}}>{s.label}</div>
+              </div>
+            ))}
+          </div>
         </div>
-        <aside className="inv-detail-aside motion">
-          <InvestmentInquiryForm type="opportunity" slug={opp.slug} title={opp.title}/>
-          {opp.show_specs!==false&&<div className="inv-detail-meta motion">
-            <h3><Info/> ملخص الفرصة</h3>
-            {opp.min_investment&&<p><WalletCards/> الحد الأدنى: {opp.min_investment}</p>}
-            {opp.expected_return&&<p><Percent/> العائد: {opp.expected_return}</p>}
-            {opp.duration&&<p><Clock3/> المدة: {opp.duration}</p>}
-            <p><ShieldCheck/> فرصة مدعومة من الولاية</p>
-          </div>}
-        </aside>
+      )}
+
+      {/* ── Body ── */}
+      <div style={{maxWidth:1200,margin:"0 auto",padding:"2.5rem clamp(1rem,3vw,1.5rem)",display:"grid",gridTemplateColumns:"1fr min(360px,32%)",gap:"2rem",alignItems:"start"}}>
+
+        {/* Main */}
+        <div style={{display:"flex",flexDirection:"column",gap:"1.75rem"}}>
+
+          {/* Description */}
+          <div style={{background:"#fff",borderRadius:"1rem",padding:"2rem 2.25rem",boxShadow:"0 1px 8px rgba(0,0,0,0.06)"}}>
+            <h2 style={{fontSize:"1.05rem",fontWeight:800,color:"#0f172a",margin:"0 0 1.25rem",paddingBottom:"0.75rem",borderBottom:"2px solid #fef3c7",display:"flex",alignItems:"center",gap:"0.5rem"}}>
+              <span style={{color:"#d97706"}}>◈</span> تفاصيل الفرصة الاستثمارية
+            </h2>
+            <p style={{color:"#374151",lineHeight:1.85,fontSize:"0.95rem",margin:0}}>{opp.description}</p>
+            {opp.details&&(
+              <div style={{marginTop:"1.25rem",paddingTop:"1.25rem",borderTop:"1px solid #f8fafc",color:"#374151",lineHeight:1.85,fontSize:"0.95rem",whiteSpace:"pre-wrap"}}
+                dangerouslySetInnerHTML={{__html:opp.details.replace(/\n/g,"<br/>")}}/>
+            )}
+          </div>
+
+          {/* Specs card */}
+          {opp.show_specs!==false&&(
+            <div style={{background:"#fff",borderRadius:"1rem",padding:"2rem 2.25rem",boxShadow:"0 1px 8px rgba(0,0,0,0.06)"}}>
+              <h2 style={{fontSize:"1.05rem",fontWeight:800,color:"#0f172a",margin:"0 0 1.25rem",paddingBottom:"0.75rem",borderBottom:"2px solid #fef3c7",display:"flex",alignItems:"center",gap:"0.5rem"}}>
+                <span style={{color:"#d97706"}}>◈</span> المواصفات المالية والتشغيلية
+              </h2>
+              <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(220px,1fr))",gap:"1rem"}}>
+                {[
+                  {icon:<WalletCards size={20} color="#d97706"/>,label:"الحد الأدنى للاستثمار",val:opp.min_investment},
+                  {icon:<TrendingUp size={20} color="#15803d"/>,label:"العائد السنوي المتوقع",val:opp.expected_return},
+                  {icon:<Clock3 size={20} color="#2563eb"/>,label:"مدة المشروع",val:opp.duration},
+                  {icon:<MapPin size={20} color="#7c3aed"/>,label:"الموقع الجغرافي",val:opp.location},
+                ].filter(r=>r.val).map((r,i)=>(
+                  <div key={i} style={{background:"#f8fafc",borderRadius:"0.75rem",padding:"1.1rem",display:"flex",alignItems:"flex-start",gap:"0.75rem",border:"1px solid #e2e8f0"}}>
+                    <span style={{flexShrink:0,marginTop:"0.1rem"}}>{r.icon}</span>
+                    <div>
+                      <div style={{fontSize:"0.68rem",color:"#94a3b8",marginBottom:"0.25rem"}}>{r.label}</div>
+                      <div style={{fontSize:"0.95rem",fontWeight:800,color:"#0f172a"}}>{r.val}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Gallery */}
+          <ContentGallery contentType="investment_opportunity" contentId={opp.id} accentColor="#d97706"/>
+
+          <a href="/investment" style={{display:"inline-flex",alignItems:"center",gap:"0.5rem",color:"#d97706",fontWeight:700,textDecoration:"none",fontSize:"0.9rem"}}>
+            <ArrowLeft size={16}/> العودة لجميع الفرص الاستثمارية
+          </a>
+        </div>
+
+        {/* Sidebar */}
+        <div style={{position:"sticky",top:"6rem"}}>
+          <InvestmentStatsSidebar accentStats={oppStats.filter(s=>s.value&&s.value!=="—").map(s=>({label:s.label,value:s.value}))}/>
+          <div style={{marginTop:"1.25rem"}}>
+            <InvestmentInquiryForm type="opportunity" slug={opp.slug} title={opp.title}/>
+          </div>
+        </div>
       </div>
     </div>
   );
