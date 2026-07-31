@@ -545,9 +545,9 @@ function SocialPage(){
 
     <section className="ss-quick page-width motion">{services.map(svc=>{const Icon=ssIconMap[svc.icon]||HeartHandshake;return <a href="#social-services" key={svc.id}><span className="ss-quick-icon" aria-hidden="true"><Icon/></span><span><b>{svc.title}</b><small>{svc.lead.slice(0,28)}...</small></span></a>;})}</section>
 
-    <section id="social-services" className="ss-services page-width"><div className="ss-title motion"><span/><h2>خدماتنا الاجتماعية</h2><span/></div><div className="ss-service-grid">{services.map(svc=>{const Icon=ssIconMap[svc.icon]||HeartHandshake;return <article className="ss-service-card motion" key={svc.id}><div className="ss-service-icon" aria-hidden="true"><Icon/></div><h3>{svc.title}</h3><p>{svc.lead}</p><ul>{[svc.bullet_1,svc.bullet_2,svc.bullet_3,svc.bullet_4].filter(Boolean).map(b=><li key={b}>{b}</li>)}</ul><a href={svc.slug?`/social/service/${svc.slug}`:"/contact"}>{svc.action_label}<ArrowLeft/></a></article>;})}</div></section>
+    <section id="social-services" className="ss-services page-width motion"><div className="ss-title motion"><span/><h2>خدماتنا الاجتماعية</h2><span/></div><div className="ss-service-grid">{services.map(svc=>{const Icon=ssIconMap[svc.icon]||HeartHandshake;return <article className="ss-service-card motion" key={svc.id}><div className="ss-service-icon" aria-hidden="true"><Icon/></div><h3>{svc.title}</h3><p>{svc.lead}</p><ul>{[svc.bullet_1,svc.bullet_2,svc.bullet_3,svc.bullet_4].filter(Boolean).map(b=><li key={b}>{b}</li>)}</ul><a href={svc.slug?`/social/service/${svc.slug}`:"/contact"}>{svc.action_label}<ArrowLeft/></a></article>;})}</div></section>
 
-    <section className="ss-initiatives page-width"><div className="ss-title motion"><span/><h2>مبادراتنا الحالية</h2><span/></div><div className="ss-initiative-grid">{initiatives.map(item=><article className="ss-initiative-card motion" key={item.id}><img src={item.image_url} alt={item.title}/><div><h3>{item.title}</h3><p>{item.text}</p><small>تم جمع {item.progress}%</small><span className="ss-progress"><i style={{width:`${item.progress}%`}}/></span><footer><b>{item.amount}</b><a href={item.slug?`/social/initiative/${item.slug}`:"/contact"}>{item.action_label}</a></footer></div></article>)}</div><a className="ss-all-initiatives" href="/contact">عرض جميع المبادرات <ArrowLeft/></a></section>
+    <section className="ss-initiatives page-width motion"><div className="ss-title motion"><span/><h2>مبادراتنا الحالية</h2><span/></div><div className="ss-initiative-grid">{initiatives.map(item=><article className="ss-initiative-card motion" key={item.id}><img src={item.image_url} alt={item.title}/><div><h3>{item.title}</h3><p>{item.text}</p><small>تم جمع {item.progress}%</small><span className="ss-progress"><i style={{width:`${item.progress}%`}}/></span><footer><b>{item.amount}</b><a href={item.slug?`/social/initiative/${item.slug}`:"/contact"}>{item.action_label}</a></footer></div></article>)}</div><a className="ss-all-initiatives" href="/contact">عرض جميع المبادرات <ArrowLeft/></a></section>
 
     <section className="ss-stats page-width motion"><div className="ss-family-art" aria-label="التكافل الأسري"><HeartHandshake/></div>{stats.map(item=>{const Icon=ssIconMap[item.icon]||UsersRound;return <div key={item.id}><Icon aria-hidden="true"/><b>{item.value}</b><small>{item.label}</small></div>;})}</section>
 
@@ -613,25 +613,25 @@ function EducationPage(){
           ].map(([icon,title,text])=>{const Icon=icon as typeof BookOpen;return <article key={String(title)}><Icon/><b>{String(title)}</b><small>{String(text)}</small></article>})}</div><a href="#courses">استعراض جميع المراحل <ArrowLeft/></a></div>
         </section>
 
-        <section id="courses" className="edu-courses"><header><a href={TRAINING_URL} target="_blank" rel="noopener noreferrer">عرض الكل ↗</a><h2>الدورات وكورسات التقوية</h2></header><div>{courses.map(course=><article className="motion" key={course.title}><div className="edu-course-photo"><img src={course.image} alt={course.title}/><span className="edu-course-badge">{course.category}</span></div><h3>{course.title}</h3><p>{course.meta}</p><footer><b>{course.price}</b><a href={TRAINING_URL} target="_blank" rel="noopener noreferrer" aria-label={`فتح دورة ${course.title} في مركز التدريب`}>ابدأ الآن <ArrowLeft/></a></footer></article>)}</div><span className="edu-dots">● ● ●</span></section>
+        <section id="courses" className="edu-courses motion"><header><a href={TRAINING_URL} target="_blank" rel="noopener noreferrer">عرض الكل ↗</a><h2>الدورات وكورسات التقوية</h2></header><div>{courses.map(course=><article className="motion" key={course.title}><div className="edu-course-photo"><img src={course.image} alt={course.title}/><span className="edu-course-badge">{course.category}</span></div><h3>{course.title}</h3><p>{course.meta}</p><footer><b>{course.price}</b><a href={TRAINING_URL} target="_blank" rel="noopener noreferrer" aria-label={`فتح دورة ${course.title} في مركز التدريب`}>ابدأ الآن <ArrowLeft/></a></footer></article>)}</div><span className="edu-dots">● ● ●</span></section>
       </div>
 
       <aside className="edu-side-column">
-        <section className="edu-quick-links"><h3>روابط سريعة</h3>{["دليل الطالب","دليل المعلم","الجدول الدراسي","التقويم الأكاديمي","الرسوم والمصروفات"].map(item=><a href="/contact" key={item}><ChevronLeft/>{item}</a>)}</section>
-        <section className="edu-help"><h3>تحتاج مساعدة؟</h3><p>فريق الدعم التعليمي<br/>جاهز لمساعدتك</p><a href="/contact">تواصل معنا <MessageCircle/></a></section>
-        <section className="edu-scholarships"><GraduationCap/><h3>المنح الدراسية</h3><p>فرص دراسية في أفضل<br/>الجامعات والمؤسسات التعليمية</p><ul><li>منح دراسية محلية</li><li>منح دراسية خارجية</li><li>إسناد الطلاب</li><li>إرشاد ومتابعة</li></ul><a href="/contact">استعراض المنح</a></section>
+        <section className="edu-quick-links motion"><h3>روابط سريعة</h3>{["دليل الطالب","دليل المعلم","الجدول الدراسي","التقويم الأكاديمي","الرسوم والمصروفات"].map(item=><a href="/contact" key={item}><ChevronLeft/>{item}</a>)}</section>
+        <section className="edu-help motion"><h3>تحتاج مساعدة؟</h3><p>فريق الدعم التعليمي<br/>جاهز لمساعدتك</p><a href="/contact">تواصل معنا <MessageCircle/></a></section>
+        <section className="edu-scholarships motion"><GraduationCap/><h3>المنح الدراسية</h3><p>فرص دراسية في أفضل<br/>الجامعات والمؤسسات التعليمية</p><ul><li>منح دراسية محلية</li><li>منح دراسية خارجية</li><li>إسناد الطلاب</li><li>إرشاد ومتابعة</li></ul><a href="/contact">استعراض المنح</a></section>
       </aside>
     </div>
 
     <section className="edu-library page-width motion"><div className="edu-library-promo"><img src="/assets/education-reference-library-books.png" alt="كتب المكتبة الرقمية"/><div><h3>محتوى تعليمي ثري ومتجدد</h3><p>مصادر متنوعة تدعم تعلمك<br/>وتجعل المعرفة أقرب إليك</p><a href="/library">تصفح المكتبة <ArrowLeft/></a></div></div><div className="edu-library-items">{library.map(item=>{const Icon=item.icon;return <article key={item.label}><Icon/><b>{item.label}</b><small>{item.n}</small></article>})}</div><h2>المكتبة الرقمية</h2></section>
 
-    <section className="edu-information page-width">
+    <section className="edu-information page-width motion">
       <article className="edu-news motion"><header><a href="/news">عرض الكل <ArrowLeft/></a><h2>الأخبار التعليمية</h2></header>{news.map(item=><div key={item.title}><img src={item.image} alt=""/><p><b>{item.title}</b><small>{item.date}</small></p></div>)}</article>
       <article className="edu-events motion"><header><a href="/news">عرض الكل <ArrowLeft/></a><h2>الفعاليات القادمة</h2></header>{[["28","مايو","ورشة استراتيجيات التعليم الحديثة"],["05","يونيو","ندوة مستجدات التعليم في السودان"],["15","يونيو","ملتقى الطلاب والمعلمين"]].map(([day,month,title])=><div key={title}><time><b>{day}</b>{month}</time><p>{title}<small>قاعة التدريب الافتراضية</small></p></div>)}<a href="/news">اعرض كل الفعاليات</a></article>
       <article className="edu-consult motion"><img src="/assets/social-reference-help-transparent.png" alt="الدعم التعليمي"/><h2>هل لديك استفسار؟</h2><p>فريقنا التعليمي جاهز<br/>لمساعدتك</p><a href="/contact">تواصل معنا</a></article>
     </section>
 
-    <section className="edu-quality">{[
+    <section className="edu-quality motion">{[
       [Award,"شهادات معتمدة","شهادات مصدقة قابلة للتحقق"],
       [Clock3,"تعلّم مدى الحياة","طور مهاراتك باستمرار"],
       [ShieldCheck,"بيئة آمنة","حماية بياناتك وخصوصيتك"],
@@ -679,7 +679,7 @@ function HealthPage(){
 
     <section className="health-trust page-width motion">{trust.map(item=>{const Icon=item.icon;return <a href="#health-services" key={item.title}><Icon/><span><b>{item.title}</b><small>{item.text}</small></span></a>})}</section>
 
-    <section id="health-services" className="health-services page-width">
+    <section id="health-services" className="health-services page-width motion">
       <div className="health-section-title motion"><span/><h2>خدماتنا الصحية</h2><span/></div>
       <div className="health-service-grid">{medicalServices.map(service=>{const Icon=service.icon;return <article className={`health-service-card ${service.tone} ${service.featured?"featured":""} motion`} key={service.title}>
         <div className="health-service-photo"><img src={service.image} alt={service.title}/>{service.featured&&<b>الأكثر استخداماً <HeartPulse/></b>}</div>
@@ -689,14 +689,14 @@ function HealthPage(){
       </article>})}</div>
     </section>
 
-    <section className="health-secondary page-width">
+    <section className="health-secondary page-width motion">
       <article className="health-pharmacy motion"><div className="health-pharmacy-photo"><img src="/assets/health-pharmacy-hq.webp" alt="الصيدلية الخيرية"/></div><div><header><Pill/><h2>الصيدلية الخيرية</h2></header><p>توفير الأدوية للمحتاجين وأسر الأعضاء</p><ul><li>أدوية أساسية ومزمنة</li><li>أسعار رمزية للطلبة</li><li>شراكات مع صيدليات معتمدة</li></ul><a href="/contact">طلب دواء <ChevronLeft/></a></div></article>
       <article className="health-help-new motion"><header><HeartHandshake/><div><h2>طلب المساعدة والتواصل مع الرابطة</h2><p>نحن معك في الحالات الصحية والإنسانية</p></div></header><div>{helpOptions.map(item=>{const Icon=item.icon;return <a href="/contact" key={item.title}><Icon/><span><b>{item.title}</b>{item.text&&<small>{item.text}</small>}</span></a>})}</div><a className="health-help-cta" href="/contact">إرسال طلب المساعدة <ArrowLeft/></a></article>
     </section>
 
     <section className="health-reasons page-width motion"><div className="health-inline-title"><span/><h2>لماذا تستخدم خدمات الرابطة الصحية؟</h2><span/></div><div>{reasons.map(item=>{const Icon=item.icon;return <article key={item.title}><Icon/><b>{item.title}</b></article>})}</div></section>
 
-    <section className="health-tips-new page-width"><div className="health-inline-title motion"><span/><h2>نصائح صحية</h2><span/></div><div>{tips.map(item=>{const Icon=item.icon;return <a className="motion" href="/contact" key={item.title}><Icon/><span><b>{item.title}</b><small>{item.text}</small></span><ChevronLeft/></a>})}</div></section>
+    <section className="health-tips-new page-width motion"><div className="health-inline-title motion"><span/><h2>نصائح صحية</h2><span/></div><div>{tips.map(item=>{const Icon=item.icon;return <a className="motion" href="/contact" key={item.title}><Icon/><span><b>{item.title}</b><small>{item.text}</small></span><ChevronLeft/></a>})}</div></section>
 
     <section className="health-privacy page-width motion"><ShieldCheck/><div><h2>خصوصيتك تهمنا</h2><p>جميع بياناتك الصحية سرية وآمنة، ولا تتم مشاركتها مع أي جهة خارجية.</p></div><span><b><Clock3/> خدمة على مدار الساعة</b><b><Stethoscope/> أطباء معتمدون</b><b><LockKeyhole/> سرية تامة</b><b><ShieldCheck/> أمان البيانات</b></span></section>
 
@@ -796,16 +796,16 @@ function InvestmentPage(){
 
     <div className="inv-dashboard page-width">
       <div className="inv-main-column">
-        <section id="inv-sectors" className="inv-sectors"><header><a href="#inv-sectors">عرض الكل</a><h2>القطاعات الاستثمارية</h2></header><div className="inv-sector-grid">{sectors.map(item=><article className="motion" key={item.name}><div><img src={item.image_url||"/assets/investment-hero-hq.webp"} alt={item.name}/><span><DynIcon name={item.icon} fallback={Sprout}/></span></div><h3>{item.name}</h3><p>{item.description}</p><a href={`/investment/sector/${item.slug}`}>استعرض الفرص</a></article>)}</div></section>
+        <section id="inv-sectors" className="inv-sectors motion"><header><a href="#inv-sectors">عرض الكل</a><h2>القطاعات الاستثمارية</h2></header><div className="inv-sector-grid">{sectors.map(item=><article className="motion" key={item.name}><div><img src={item.image_url||"/assets/investment-hero-hq.webp"} alt={item.name}/><span><DynIcon name={item.icon} fallback={Sprout}/></span></div><h3>{item.name}</h3><p>{item.description}</p><a href={`/investment/sector/${item.slug}`}>استعرض الفرص</a></article>)}</div></section>
 
         <section className="inv-solar motion"><img src="/assets/investment-solar-hq.webp" alt="مشروع الطاقة الشمسية"/><span>مساحة إعلانية</span><div><h2>استثمر في الطاقة الشمسية</h2><p>مشروع محطة طاقة شمسية بقدرة 50 ميجاوات</p><aside><b><Clock3/> عقد طويل الأجل</b><b><Percent/> عائد مستقر</b><b><ChartNoAxesCombined/> دعم حكومي</b></aside><a href="/contact">اعرف المزيد</a></div></section>
 
-        <section id="investment-opportunities" className="inv-opportunities"><header><a href="#investment-opportunities">عرض الكل</a><h2>أحدث الفرص الاستثمارية</h2></header><div>{opps.map(item=><article className="motion" key={item.title}><div><img src={item.image_url||"/assets/investment-hero-hq.webp"} alt={item.title}/><span>{item.status==="available"?"فرصة جديدة":item.status==="in_progress"?"قيد التنفيذ":"مغلقة"}</span></div><h3>{item.title}</h3><p>الموقع: {item.location||"—"}<br/>الحد الأدنى: {item.min_investment||"—"}</p><a href={`/investment/opportunity/${item.slug}`}>عرض التفاصيل</a></article>)}</div><small>● ● ●</small></section>
+        <section id="investment-opportunities" className="inv-opportunities motion"><header><a href="#investment-opportunities">عرض الكل</a><h2>أحدث الفرص الاستثمارية</h2></header><div>{opps.map(item=><article className="motion" key={item.title}><div><img src={item.image_url||"/assets/investment-hero-hq.webp"} alt={item.title}/><span>{item.status==="available"?"فرصة جديدة":item.status==="in_progress"?"قيد التنفيذ":"مغلقة"}</span></div><h3>{item.title}</h3><p>الموقع: {item.location||"—"}<br/>الحد الأدنى: {item.min_investment||"—"}</p><a href={`/investment/opportunity/${item.slug}`}>عرض التفاصيل</a></article>)}</div><small>● ● ●</small></section>
 
         <section id="inv-incentives" className="inv-benefits motion"><h2>مزايا المستثمر</h2><div>{incentives.slice().reverse().map(item=><a className="inv-benefit-link" href="/contact" key={item.title}><DynIcon name={item.icon} fallback={ShieldCheck}/><b>{item.title}</b></a>)}</div></section>
       </div>
 
-      <aside className="inv-side-column">
+      <aside className="inv-side-column motion">
         <section className="inv-featured motion"><header><a href="#investment-opportunities">عرض الكل</a><h2>إعلانات فرص استثمارية مميزة</h2></header><img src="/assets/invest-industry-hq.webp" alt="مشروع مصنع زيوت نباتية"/><h3>مشروع مصنع زيوت نباتية</h3><p>الموقع: عطبرة<br/>المساحة: 10 هكتار<br/>العائد المتوقع: 22% سنوياً</p><a href="/contact">عرض التفاصيل</a></section>
         <section className="inv-resort motion"><img src="/assets/invest-tourism-hq.webp" alt="مشروع منتجع سياحي متكامل"/><h3>مشروع منتجع سياحي متكامل</h3><p>الموقع: المنطقة السياحية<br/>المساحة: 15 هكتار<br/>العائد المتوقع: 18% سنوياً</p><a href="#inv-sectors" className="inv-resort-link">استعرض القطاع السياحي</a><span>مساحة إعلانية</span></section>
         <section className="inv-partner motion"><img src="/assets/investment-partner-plant.jpg" alt="يدان تحتضنان نبتة ترمز للشراكة والتنمية"/><div><h2>شراكة .. تنمية .. ازدهار</h2><p>كن شريكاً في تطوير ولاية نهر النيل<br/>واستثمر في مستقبل واعد</p><a href="/contact">تواصل معنا</a></div><footer><b><ChartNoAxesCombined/> فرصة</b><b><Handshake/> شراكة</b><b><UsersRound/> تنمية</b></footer></section>
@@ -953,29 +953,29 @@ function CulturePage(){
       <div className="cul-main-column">
         <section className="cul-stats motion"><h2><ChartNoAxesCombined/> أرقام وإحصائيات<br/>الثقافة</h2>{stats.map(item=>{const Icon=item.icon;return <article key={item.label}><Icon/><span><b>{item.n}</b><small>{item.label}</small></span></article>})}</section>
 
-        <section id="culture-activities" className="cul-panel cul-activities"><CulturePanelHead title="الفعاليات والأنشطة الثقافية" href="/culture#culture-activities"/><div className="cul-activity-grid">{activities.map(item=><article className="motion" key={item.title}><div><img src={item.image} alt={item.title}/><span>{item.tag}</span></div><h3>{item.title}</h3><p><CalendarDays/> {item.date}</p><p><MapPin/> {item.location}</p><a href={item.id?`/culture/event/${item.id}`:"#"}>تفاصيل الفعالية</a></article>)}</div><small className="cul-dots">● ● ● ●</small></section>
+        <section id="culture-activities" className="cul-panel cul-activities motion"><CulturePanelHead title="الفعاليات والأنشطة الثقافية" href="/culture#culture-activities"/><div className="cul-activity-grid">{activities.map(item=><article className="motion" key={item.title}><div><img src={item.image} alt={item.title}/><span>{item.tag}</span></div><h3>{item.title}</h3><p><CalendarDays/> {item.date}</p><p><MapPin/> {item.location}</p><a href={item.id?`/culture/event/${item.id}`:"#"}>تفاصيل الفعالية</a></article>)}</div><small className="cul-dots">● ● ● ●</small></section>
 
         <div className="cul-library-arts">
           <section id="culture-library" className="cul-panel cul-library motion"><CulturePanelHead title="المكتبة الرقمية" href="/contact"/><div><img src="/assets/education-reference-library-books.png" alt="كتب وجهاز قراءة إلكتروني"/><article><h3>آلاف الكتب والمراجع<br/>الثقافية في متناول يدك</h3><ul><li><BookOpen/> كتب التراث السوداني</li><li><FileText/> الدراسات والبحوث</li><li><Newspaper/> المجلات الثقافية</li><li><FileImage/> الكتب المصورة</li></ul><a href="/contact">استكشف المكتبة <ChevronLeft/></a></article></div></section>
-          <section id="culture-arts" className="cul-panel cul-arts"><CulturePanelHead title="الفنون والأدب" href="/culture#culture-arts"/><div>{arts.map(item=>{const Icon=item.icon;return <a className="motion" href={`/culture/art/${item.slug}`} key={item.title}><span><img src={item.image} alt=""/><Icon/></span><b>{item.title}</b><small>{item.text}</small></a>})}</div></section>
+          <section id="culture-arts" className="cul-panel cul-arts motion"><CulturePanelHead title="الفنون والأدب" href="/culture#culture-arts"/><div>{arts.map(item=>{const Icon=item.icon;return <a className="motion" href={`/culture/art/${item.slug}`} key={item.title}><span><img src={item.image} alt=""/><Icon/></span><b>{item.title}</b><small>{item.text}</small></a>})}</div></section>
         </div>
 
         <div className="cul-assoc-initiatives">
-          <section id="culture-associations" className="cul-panel cul-associations"><CulturePanelHead title="الفرق والجمعيات الثقافية" href="/culture#culture-associations"/><div>{associations.map(item=>{const Icon=item.icon;return <a className="motion" href={item.slug?`/culture/association/${item.slug}`:"#"} onClick={item.slug?undefined:(e)=>e.preventDefault()} key={item.title}><Icon/><b>{item.title}</b><small>{item.place}</small></a>})}</div></section>
-          <section id="culture-initiatives" className="cul-panel cul-initiatives"><CulturePanelHead title="المبادرات والمشاريع" href="/culture#culture-initiatives"/><div>{initiatives.map(item=><a className="motion" href={item.slug?`/culture/initiative/${item.slug}`:"#"} key={item.title}><img src={item.image} alt=""/><span><b>{item.title}</b><small>{item.text}</small></span><i>+</i></a>)}</div><a className="cul-panel-action" href="/culture#culture-initiatives">عرض جميع المبادرات</a></section>
+          <section id="culture-associations" className="cul-panel cul-associations motion"><CulturePanelHead title="الفرق والجمعيات الثقافية" href="/culture#culture-associations"/><div>{associations.map(item=>{const Icon=item.icon;return <a className="motion" href={item.slug?`/culture/association/${item.slug}`:"#"} onClick={item.slug?undefined:(e)=>e.preventDefault()} key={item.title}><Icon/><b>{item.title}</b><small>{item.place}</small></a>})}</div></section>
+          <section id="culture-initiatives" className="cul-panel cul-initiatives motion"><CulturePanelHead title="المبادرات والمشاريع" href="/culture#culture-initiatives"/><div>{initiatives.map(item=><a className="motion" href={item.slug?`/culture/initiative/${item.slug}`:"#"} key={item.title}><img src={item.image} alt=""/><span><b>{item.title}</b><small>{item.text}</small></span><i>+</i></a>)}</div><a className="cul-panel-action" href="/culture#culture-initiatives">عرض جميع المبادرات</a></section>
         </div>
 
         <div className="cul-bottom-panels">
-          <section id="culture-news" className="cul-panel cul-news"><CulturePanelHead title="أحدث الأخبار الثقافية" href="/culture#culture-news"/>{news.map(item=><a className="motion" href={item.id?`/culture/news/${item.id}`:"#"} key={item.title}><img src={item.image} alt=""/><span><b>{item.title}</b><small>{item.date}</small></span></a>)}</section>
-          <section className="cul-panel cul-media"><CulturePanelHead title="ميديا الثقافة" href="/culture"/>{media.map(item=><a className="motion" href={item.id?`/culture/media/${item.id}`:"#"} onClick={item.id?undefined:(e)=>e.preventDefault()} key={item.title}><span><img src={item.image} alt=""/><PlayCircle/></span><p><em>{item.type}</em><b>{item.title}</b><small>{item.date}</small></p></a>)}</section>
-          <section className="cul-panel cul-calendar"><CulturePanelHead title="التقويم الثقافي" href="/events"/>{calendar.map(item=><a className="motion" href="/events" key={`${item.day}-${item.title}`}><time><b>{item.day}</b><small>{item.month}</small></time><span><b>{item.title}</b><small><MapPin/> {item.place}</small></span></a>)}</section>
+          <section id="culture-news" className="cul-panel cul-news motion"><CulturePanelHead title="أحدث الأخبار الثقافية" href="/culture#culture-news"/>{news.map(item=><a className="motion" href={item.id?`/culture/news/${item.id}`:"#"} key={item.title}><img src={item.image} alt=""/><span><b>{item.title}</b><small>{item.date}</small></span></a>)}</section>
+          <section className="cul-panel cul-media motion"><CulturePanelHead title="ميديا الثقافة" href="/culture"/>{media.map(item=><a className="motion" href={item.id?`/culture/media/${item.id}`:"#"} onClick={item.id?undefined:(e)=>e.preventDefault()} key={item.title}><span><img src={item.image} alt=""/><PlayCircle/></span><p><em>{item.type}</em><b>{item.title}</b><small>{item.date}</small></p></a>)}</section>
+          <section className="cul-panel cul-calendar motion"><CulturePanelHead title="التقويم الثقافي" href="/events"/>{calendar.map(item=><a className="motion" href="/events" key={`${item.day}-${item.title}`}><time><b>{item.day}</b><small>{item.month}</small></time><span><b>{item.title}</b><small><MapPin/> {item.place}</small></span></a>)}</section>
         </div>
       </div>
 
-      <aside className="cul-side-column">
+      <aside className="cul-side-column motion">
         <section className="cul-panel cul-artists motion"><CulturePanelHead title="أبرز الفنانين والأدباء" href="/culture#cul-artists"/><div>{artists.map(item=><a href={item.slug?`/culture/artist/${item.slug}`:"#"} key={item.name}><img src={item.image} alt={item.name}/><span><b>{item.name}</b><small>{item.role}</small></span></a>)}</div></section>
         <section className="cul-join motion"><h2>انضم إلى مجتمع الثقافة</h2><p>شارك في المنتديات والأنشطة<br/>الثقافية وكن جزءاً من مجتمعنا</p><a href="/membership">انضم الآن <UsersRound/></a></section>
-        <section id="culture-contests" className="cul-panel cul-contests"><CulturePanelHead title="المسابقات والجوائز" href="/culture#culture-contests"/><div>{contests.map(item=><a className="motion" href="/contact" key={item.title}><Trophy/><span><b>{item.title}</b><small>{item.date}</small></span></a>)}</div><a className="cul-panel-action" href="/contact">المزيد من المسابقات</a></section>
+        <section id="culture-contests" className="cul-panel cul-contests motion"><CulturePanelHead title="المسابقات والجوائز" href="/culture#culture-contests"/><div>{contests.map(item=><a className="motion" href="/contact" key={item.title}><Trophy/><span><b>{item.title}</b><small>{item.date}</small></span></a>)}</div><a className="cul-panel-action" href="/contact">المزيد من المسابقات</a></section>
         <section className="cul-share motion"><h2>شارك محتواك الثقافي</h2><p>لديك موهبة أو محتوى ثقافي؟<br/>شاركنا وكن مبدعاً</p><div><span><Feather/><b>تدوينة</b></span><span><Video/><b>فيديو</b></span><span><FileImage/><b>صورة</b></span><span><FileText/><b>مقال</b></span></div><a href="/contact">أرسل محتواك</a></section>
       </aside>
     </div>
@@ -2018,7 +2018,7 @@ function InvestmentSectorDetailPage({slug}:{slug?:string}){
     <div className="inv-detail-page" dir="rtl">
       <div className="inv-detail-hero" style={{backgroundImage:`url(${sector.image_url||"/assets/investment-hero-hq.webp"})`}}>
         <div className="inv-detail-hero-overlay"/>
-        <div className="inv-detail-hero-content page-width">
+        <div className="inv-detail-hero-content page-width motion">
           <a href="/investment" className="inv-detail-back"><ChevronLeft/> القطاعات الاستثمارية</a>
           <span className="inv-detail-badge"><DynIcon name={sector.icon} fallback={Sprout}/> قطاع استثماري</span>
           <h1>{sector.name}</h1>
@@ -2027,16 +2027,16 @@ function InvestmentSectorDetailPage({slug}:{slug?:string}){
       </div>
       <div className="inv-detail-body page-width motion">
         <div className="inv-detail-main">
-          <section className="inv-detail-description">
+          <section className="inv-detail-description motion">
             <h2>عن هذا القطاع</h2>
             <p>{sector.description}</p>
           </section>
           {opps.length>0&&(
-            <section className="inv-detail-opps">
+            <section className="inv-detail-opps motion">
               <h2>الفرص الاستثمارية في هذا القطاع</h2>
               <div className="inv-detail-opps-grid">
                 {opps.map(o=>(
-                  <a href={`/investment/opportunity/${o.slug}`} key={o.id} className="inv-opp-card">
+                  <a href={`/investment/opportunity/${o.slug}`} key={o.id} className="inv-opp-card motion">
                     <img src={o.image_url||"/assets/investment-hero-hq.webp"} alt={o.title}/>
                     <div>
                       <span className="inv-opp-tag">{o.status==="available"?"فرصة متاحة":o.status==="in_progress"?"قيد التنفيذ":"مغلقة"}</span>
@@ -2052,9 +2052,9 @@ function InvestmentSectorDetailPage({slug}:{slug?:string}){
             </section>
           )}
         </div>
-        <aside className="inv-detail-aside">
+        <aside className="inv-detail-aside motion">
           <InvestmentInquiryForm type="sector" slug={sector.slug} title={sector.name}/>
-          <div className="inv-detail-meta">
+          <div className="inv-detail-meta motion">
             <h3><Info/> معلومات القطاع</h3>
             {sector.highlight&&<p><Gem/> {sector.highlight}</p>}
             {sector.highlight2&&<p><MapPin/> {sector.highlight2}</p>}
@@ -2081,7 +2081,7 @@ function InvestmentOpportunityDetailPage({slug}:{slug?:string}){
     <div className="inv-detail-page" dir="rtl">
       <div className="inv-detail-hero" style={{backgroundImage:`url(${opp.image_url||"/assets/investment-hero-hq.webp"})`}}>
         <div className="inv-detail-hero-overlay"/>
-        <div className="inv-detail-hero-content page-width">
+        <div className="inv-detail-hero-content page-width motion">
           <a href="/investment" className="inv-detail-back"><ChevronLeft/> الفرص الاستثمارية</a>
           <span className="inv-detail-badge"><ChartNoAxesCombined/> {opp.status==="available"?"فرصة متاحة":opp.status==="in_progress"?"قيد التنفيذ":"مغلقة"}</span>
           <h1>{opp.title}</h1>
@@ -2090,21 +2090,21 @@ function InvestmentOpportunityDetailPage({slug}:{slug?:string}){
       </div>
       <div className="inv-detail-body page-width motion">
         <div className="inv-detail-main">
-          <section className="inv-detail-description">
+          <section className="inv-detail-description motion">
             <h2>تفاصيل الفرصة الاستثمارية</h2>
             <p>{opp.description}</p>
             {opp.details&&<p>{opp.details}</p>}
           </section>
-          {opp.show_specs!==false&&<div className="inv-detail-specs">
+          {opp.show_specs!==false&&<div className="inv-detail-specs motion">
             {opp.min_investment&&<div><WalletCards/><b>الحد الأدنى للاستثمار</b><span>{opp.min_investment}</span></div>}
             {opp.expected_return&&<div><ChartNoAxesCombined/><b>العائد المتوقع</b><span>{opp.expected_return} سنوياً</span></div>}
             {opp.duration&&<div><Clock3/><b>مدة المشروع</b><span>{opp.duration}</span></div>}
             {opp.location&&<div><MapPin/><b>الموقع</b><span>{opp.location}</span></div>}
           </div>}
         </div>
-        <aside className="inv-detail-aside">
+        <aside className="inv-detail-aside motion">
           <InvestmentInquiryForm type="opportunity" slug={opp.slug} title={opp.title}/>
-          {opp.show_specs!==false&&<div className="inv-detail-meta">
+          {opp.show_specs!==false&&<div className="inv-detail-meta motion">
             <h3><Info/> ملخص الفرصة</h3>
             {opp.min_investment&&<p><WalletCards/> الحد الأدنى: {opp.min_investment}</p>}
             {opp.expected_return&&<p><Percent/> العائد: {opp.expected_return}</p>}
@@ -2603,14 +2603,14 @@ function CultureArtDetailPage({slug}:{slug?:string}){
       </div>
       <div style={{maxWidth:"1200px",margin:"0 auto",padding:"2.5rem 1.5rem",display:"grid",gridTemplateColumns:"1fr 280px",gap:"2rem",alignItems:"start"}} className="soc-svc-grid motion">
         <div>
-          <div style={{background:"#fff",borderRadius:"1rem",padding:"2rem",boxShadow:"0 1px 6px rgba(0,0,0,0.06)",marginBottom:"1.5rem"}}>
+          <div className="motion" style={{background:"#fff",borderRadius:"1rem",padding:"2rem",boxShadow:"0 1px 6px rgba(0,0,0,0.06)",marginBottom:"1.5rem"}}>
             <div style={{color:"#374151",lineHeight:1.9,fontSize:"0.95rem"}} dangerouslySetInnerHTML={{__html:item.description.replace(/\n/g,"<br/>")}}/>
           </div>
           <a href="/culture" style={{display:"inline-flex",alignItems:"center",gap:"0.5rem",color:"#0e7490",fontWeight:600,textDecoration:"none",fontSize:"0.9rem"}}>
             <ArrowLeft size={16}/> العودة للثقافة
           </a>
         </div>
-        {acts.length>0&&<div style={{background:"#fff",borderRadius:"1rem",padding:"1.75rem",boxShadow:"0 4px 20px rgba(0,0,0,0.1)",border:"1px solid #e2e8f0"}}>
+        {acts.length>0&&<div className="motion" style={{background:"#fff",borderRadius:"1rem",padding:"1.75rem",boxShadow:"0 4px 20px rgba(0,0,0,0.1)",border:"1px solid #e2e8f0"}}>
           <h3 style={{fontSize:"0.95rem",fontWeight:700,color:"#0f172a",marginBottom:"1.25rem",paddingBottom:"0.75rem",borderBottom:"2px solid #ecfeff"}}>الفعاليات والأنشطة</h3>
           {acts.map(a=><div key={a} style={{display:"flex",alignItems:"flex-start",gap:"0.5rem",marginBottom:"0.625rem"}}><span style={{color:"#0e7490",fontWeight:700,flexShrink:0}}>◈</span><span style={{fontSize:"0.85rem",color:"#374151",lineHeight:1.5}}>{a}</span></div>)}
         </div>}
@@ -2631,7 +2631,7 @@ function CultureAssociationDetailPage({slug}:{slug?:string}){
   if(!item)return(<div style={{minHeight:"60vh",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:"1rem"}}><h2 style={{color:"#0f172a"}}>الجمعية غير موجودة</h2><a href="/culture" style={{background:"#0e7490",color:"#fff",padding:"0.6rem 1.5rem",borderRadius:"0.5rem",textDecoration:"none",fontWeight:600}}>العودة للثقافة</a></div>);
   return(
     <div dir="rtl" style={{background:"#f8fafc",minHeight:"100vh"}}>
-      <div style={{position:"relative",height:"380px",overflow:"hidden"}}>
+      <div className="motion" style={{position:"relative",height:"380px",overflow:"hidden"}}>
         {item.image_url?<img src={item.image_url} alt={item.title} style={{width:"100%",height:"100%",objectFit:"cover"}}/>:<div style={{width:"100%",height:"100%",background:"linear-gradient(135deg,#134e4a,#0e7490,#0891b2)"}}/>}
         <div style={{position:"absolute",inset:0,background:"linear-gradient(to top,rgba(0,0,0,0.78),rgba(0,0,0,0.2))"}}/>
         <div style={{position:"absolute",inset:0,display:"flex",flexDirection:"column",justifyContent:"flex-end",padding:"2.5rem",maxWidth:"1200px",margin:"0 auto",left:0,right:0}}>
@@ -2655,7 +2655,7 @@ function CultureAssociationDetailPage({slug}:{slug?:string}){
           </div>}
           <a href="/culture" style={{display:"inline-flex",alignItems:"center",gap:"0.5rem",color:"#0e7490",fontWeight:600,textDecoration:"none",fontSize:"0.9rem"}}><ArrowLeft size={16}/> العودة للثقافة</a>
         </div>
-        {(item.email||item.phone)&&<div style={{background:"#fff",borderRadius:"1rem",padding:"1.75rem",boxShadow:"0 4px 20px rgba(0,0,0,0.1)",border:"1px solid #e2e8f0"}}>
+        {(item.email||item.phone)&&<div className="motion" style={{background:"#fff",borderRadius:"1rem",padding:"1.75rem",boxShadow:"0 4px 20px rgba(0,0,0,0.1)",border:"1px solid #e2e8f0"}}>
           <h3 style={{fontSize:"0.95rem",fontWeight:700,color:"#0f172a",marginBottom:"1.25rem"}}>التواصل مع الجمعية</h3>
           {item.email&&<a href={`mailto:${item.email}`} style={{display:"flex",alignItems:"center",gap:"0.5rem",color:"#0e7490",textDecoration:"none",marginBottom:"0.75rem",fontSize:"0.9rem"}}><Mail size={16}/>{item.email}</a>}
           {item.phone&&<a href={`tel:${item.phone}`} style={{display:"flex",alignItems:"center",gap:"0.5rem",color:"#0e7490",textDecoration:"none",fontSize:"0.9rem"}}><Phone size={16}/>{item.phone}</a>}
@@ -2676,7 +2676,7 @@ function CultureMediaDetailPage({slug}:{slug?:string}){
   if(!item)return <div style={{padding:"6rem 1rem",textAlign:"center"}}><h2 style={{color:"#dc2626"}}>العنصر غير موجود</h2><a href="/culture" style={{color:"#2563eb"}}>العودة للثقافة</a></div>;
   return(
     <div dir="rtl">
-      {item.image_url&&<div className="detail-hero-img" style={{position:"relative"}}><img src={item.image_url} alt={item.title}/>{item.link_url&&<a href={item.link_url} target="_blank" rel="noopener noreferrer" style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center",background:"rgba(0,0,0,.35)"}}><svg width="72" height="72" viewBox="0 0 72 72" fill="none"><circle cx="36" cy="36" r="36" fill="rgba(255,255,255,.9)"/><polygon points="28,20 56,36 28,52" fill="#0e7490"/></svg></a>}</div>}
+      {item.image_url&&<div className="detail-hero-img motion" style={{position:"relative"}}><img src={item.image_url} alt={item.title}/>{item.link_url&&<a href={item.link_url} target="_blank" rel="noopener noreferrer" style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center",background:"rgba(0,0,0,.35)"}}><svg width="72" height="72" viewBox="0 0 72 72" fill="none"><circle cx="36" cy="36" r="36" fill="rgba(255,255,255,.9)"/><polygon points="28,20 56,36 28,52" fill="#0e7490"/></svg></a>}</div>}
       <article className="detail-article page-width motion">
         <span className="news-cat" style={{background:item.type==="بودكاست"?"#7c3aed":"#0e7490"}}>{item.type}</span>
         <h1>{item.title}</h1>
@@ -2700,11 +2700,11 @@ function CultureEventDetailPage({slug}:{slug?:string}){
   if(!item)return <div style={{padding:"6rem 1rem",textAlign:"center"}}><h2 style={{color:"#dc2626"}}>الفعالية غير موجودة</h2><a href="/culture" style={{color:"#2563eb"}}>العودة للثقافة</a></div>;
   return(
     <div dir="rtl">
-      {item.image_url&&<div className="detail-hero-img"><img src={item.image_url} alt={item.title}/></div>}
+      {item.image_url&&<div className="detail-hero-img motion"><img src={item.image_url} alt={item.title}/></div>}
       <article className="detail-article page-width motion">
         <span className="news-cat" style={{background:"#7c3aed"}}>{item.tag||"فعالية ثقافية"}</span>
         <h1>{item.title}</h1>
-        <div className="detail-meta">
+        <div className="detail-meta motion">
           {item.event_date&&<span><CalendarDays size={15}/> {item.event_date}</span>}
           {item.location&&<span><MapPin size={15}/> {item.location}</span>}
         </div>
@@ -2726,7 +2726,7 @@ function CultureNewsDetailPage({slug}:{slug?:string}){
   if(!item)return <div style={{padding:"6rem 1rem",textAlign:"center"}}><h2 style={{color:"#dc2626"}}>الخبر غير موجود</h2><a href="/culture" style={{color:"#2563eb"}}>العودة للثقافة</a></div>;
   return(
     <div dir="rtl">
-      {item.image_url&&<div className="detail-hero-img"><img src={item.image_url} alt={item.title}/></div>}
+      {item.image_url&&<div className="detail-hero-img motion"><img src={item.image_url} alt={item.title}/></div>}
       <article className="detail-article page-width motion">
         <span className="news-cat" style={{background:"#0e7490"}}>أخبار ثقافية</span>
         <h1>{item.title}</h1>
@@ -2751,7 +2751,7 @@ function CultureArtistDetailPage({slug}:{slug?:string}){
   return(
     <div dir="rtl" style={{background:"#f8fafc",minHeight:"100vh"}}>
       {/* ── Hero full-width ── */}
-      <div style={{position:"relative",height:"420px",overflow:"hidden"}}>
+      <div className="motion" style={{position:"relative",height:"420px",overflow:"hidden"}}>
         {item.image_url?<img src={item.image_url} alt={item.name} style={{width:"100%",height:"100%",objectFit:"cover",objectPosition:"top"}}/>:<div style={{width:"100%",height:"100%",background:"linear-gradient(135deg,#134e4a,#0e7490)"}}/>}
         <div style={{position:"absolute",inset:0,background:"linear-gradient(to top,rgba(0,0,0,0.82) 0%,rgba(0,0,0,0.3) 55%,transparent 100%)"}}/>
         <div style={{position:"absolute",inset:0,display:"flex",flexDirection:"column",justifyContent:"flex-end",padding:"2.5rem",maxWidth:"1200px",margin:"0 auto",left:0,right:0}}>
@@ -2762,7 +2762,7 @@ function CultureArtistDetailPage({slug}:{slug?:string}){
       </div>
       {/* ── Bio ── */}
       <div className="motion" style={{maxWidth:"900px",margin:"0 auto",padding:"2.5rem 1.5rem"}}>
-        {item.bio&&<div style={{background:"#fff",borderRadius:"1rem",padding:"2rem",boxShadow:"0 1px 6px rgba(0,0,0,0.06)",marginBottom:"1.5rem"}}>
+        {item.bio&&<div className="motion" style={{background:"#fff",borderRadius:"1rem",padding:"2rem",boxShadow:"0 1px 6px rgba(0,0,0,0.06)",marginBottom:"1.5rem"}}>
           <h2 style={{fontSize:"1.05rem",fontWeight:700,color:"#0f172a",marginBottom:"1.25rem",paddingBottom:"0.75rem",borderBottom:"2px solid #ecfeff",display:"flex",alignItems:"center",gap:"0.5rem"}}><span style={{color:"#0e7490"}}>◈</span> السيرة الذاتية</h2>
           <div style={{color:"#374151",lineHeight:1.9,fontSize:"0.95rem"}} dangerouslySetInnerHTML={{__html:item.bio.replace(/\n/g,"<br/>")}}/>  
         </div>}
@@ -2802,7 +2802,7 @@ function SocialServiceDetailPage({slug}:{slug?:string}){
   return(
     <div dir="rtl" style={{background:"#f8fafc",minHeight:"100vh"}}>
       {/* ── Hero ── */}
-      <div style={{position:"relative",height:"380px",overflow:"hidden"}}>
+      <div className="motion" style={{position:"relative",height:"380px",overflow:"hidden"}}>
         {item.image_url
           ? <img src={item.image_url} alt={item.title} style={{width:"100%",height:"100%",objectFit:"cover"}}/>
           : <div style={{width:"100%",height:"100%",background:"linear-gradient(135deg,#064e3b,#0f766e,#14b8a6)"}}/>
@@ -2825,7 +2825,7 @@ function SocialServiceDetailPage({slug}:{slug?:string}){
         {/* Left */}
         <div>
           {item.full_description&&(
-            <div style={{background:"#fff",borderRadius:"1rem",padding:"2rem",boxShadow:"0 1px 6px rgba(0,0,0,0.06)",marginBottom:"1.5rem"}}>
+            <div className="motion" style={{background:"#fff",borderRadius:"1rem",padding:"2rem",boxShadow:"0 1px 6px rgba(0,0,0,0.06)",marginBottom:"1.5rem"}}>
               <h2 style={{fontSize:"1.05rem",fontWeight:700,color:"#0f172a",marginBottom:"1.25rem",paddingBottom:"0.75rem",borderBottom:"2px solid #f0fdfa",display:"flex",alignItems:"center",gap:"0.5rem"}}>
                 <span style={{color:"#0f766e",fontSize:"1.1rem"}}>◈</span> تفاصيل الخدمة
               </h2>
@@ -2833,13 +2833,13 @@ function SocialServiceDetailPage({slug}:{slug?:string}){
             </div>
           )}
           {!item.full_description&&(
-            <div style={{background:"#fff",borderRadius:"1rem",padding:"2rem",boxShadow:"0 1px 6px rgba(0,0,0,0.06)",marginBottom:"1.5rem"}}>
+            <div className="motion" style={{background:"#fff",borderRadius:"1rem",padding:"2rem",boxShadow:"0 1px 6px rgba(0,0,0,0.06)",marginBottom:"1.5rem"}}>
               <p style={{color:"#64748b",lineHeight:1.8,fontSize:"0.95rem"}}>{item.lead}</p>
             </div>
           )}
           {/* Bullets as feature cards */}
           {bullets.length>0&&(
-            <div style={{background:"#fff",borderRadius:"1rem",padding:"1.75rem",boxShadow:"0 1px 6px rgba(0,0,0,0.06)",marginBottom:"1.5rem"}}>
+            <div className="motion" style={{background:"#fff",borderRadius:"1rem",padding:"1.75rem",boxShadow:"0 1px 6px rgba(0,0,0,0.06)",marginBottom:"1.5rem"}}>
               <h3 style={{fontSize:"0.95rem",fontWeight:700,color:"#0f172a",marginBottom:"1.25rem"}}>ما تشمله هذه الخدمة</h3>
               <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(180px,1fr))",gap:"0.75rem"}}>
                 {bullets.map(b=>(
@@ -2857,8 +2857,8 @@ function SocialServiceDetailPage({slug}:{slug?:string}){
         </div>
 
         {/* Right — action card */}
-        <div style={{position:"sticky",top:"6rem"}}>
-          <div style={{background:"#fff",borderRadius:"1rem",padding:"1.75rem",boxShadow:"0 4px 20px rgba(0,0,0,0.1)",border:"1px solid #e2e8f0"}}>
+        <div className="motion" style={{position:"sticky",top:"6rem"}}>
+          <div className="motion" style={{background:"#fff",borderRadius:"1rem",padding:"1.75rem",boxShadow:"0 4px 20px rgba(0,0,0,0.1)",border:"1px solid #e2e8f0"}}>
             <div style={{display:"flex",alignItems:"center",justifyContent:"center",width:64,height:64,background:"linear-gradient(135deg,#0f766e,#14b8a6)",borderRadius:"1rem",margin:"0 auto 1.25rem",boxShadow:"0 4px 12px rgba(15,118,110,0.35)"}}>
               <Icon size={32} color="#fff"/>
             </div>
@@ -2913,7 +2913,7 @@ function SocialInitiativeDetailPage({slug}:{slug?:string}){
   return(
     <div dir="rtl" style={{background:"#f8fafc",minHeight:"100vh"}}>
       {/* ── Hero ── */}
-      <div style={{position:"relative",height:"420px",overflow:"hidden"}}>
+      <div className="motion" style={{position:"relative",height:"420px",overflow:"hidden"}}>
         {item.image_url
           ? <img src={item.image_url} alt={item.title} style={{width:"100%",height:"100%",objectFit:"cover"}}/>
           : <div style={{width:"100%",height:"100%",background:"linear-gradient(135deg,#0f766e,#14b8a6)"}}/>
@@ -2929,7 +2929,7 @@ function SocialInitiativeDetailPage({slug}:{slug?:string}){
       </div>
 
       {/* ── Stats bar ── */}
-      <div style={{background:"#0f766e",padding:"0 2rem"}}>
+      <div className="motion" style={{background:"#0f766e",padding:"0 2rem"}}>
         <div style={{maxWidth:"1200px",margin:"0 auto",display:"flex",gap:0,flexWrap:"wrap"}}>
           {[
             {label:"المبلغ المستهدف",value:item.amount,icon:"💰"},
@@ -2952,7 +2952,7 @@ function SocialInitiativeDetailPage({slug}:{slug?:string}){
         {/* Left — description */}
         <div>
           {item.full_description&&(
-            <div style={{background:"#fff",borderRadius:"1rem",padding:"2rem",boxShadow:"0 1px 6px rgba(0,0,0,0.06)",marginBottom:"1.5rem"}}>
+            <div className="motion" style={{background:"#fff",borderRadius:"1rem",padding:"2rem",boxShadow:"0 1px 6px rgba(0,0,0,0.06)",marginBottom:"1.5rem"}}>
               <h2 style={{fontSize:"1.1rem",fontWeight:700,color:"#0f172a",marginBottom:"1.25rem",paddingBottom:"0.75rem",borderBottom:"2px solid #f0fdfa",display:"flex",alignItems:"center",gap:"0.5rem"}}>
                 <span style={{color:"#0f766e"}}>◈</span> تفاصيل المبادرة
               </h2>
@@ -2960,7 +2960,7 @@ function SocialInitiativeDetailPage({slug}:{slug?:string}){
             </div>
           )}
           {!item.full_description&&item.text&&(
-            <div style={{background:"#fff",borderRadius:"1rem",padding:"2rem",boxShadow:"0 1px 6px rgba(0,0,0,0.06)",marginBottom:"1.5rem"}}>
+            <div className="motion" style={{background:"#fff",borderRadius:"1rem",padding:"2rem",boxShadow:"0 1px 6px rgba(0,0,0,0.06)",marginBottom:"1.5rem"}}>
               <div style={{color:"#374151",lineHeight:1.85,fontSize:"0.95rem"}} dangerouslySetInnerHTML={{__html:item.text.replace(/\n/g,"<br/>")}}/>
             </div>
           )}
@@ -2970,8 +2970,8 @@ function SocialInitiativeDetailPage({slug}:{slug?:string}){
         </div>
 
         {/* Right — progress card */}
-        <div style={{position:"sticky",top:"6rem"}}>
-          <div style={{background:"#fff",borderRadius:"1rem",padding:"1.75rem",boxShadow:"0 4px 20px rgba(0,0,0,0.1)",border:"1px solid #e2e8f0"}}>
+        <div className="motion" style={{position:"sticky",top:"6rem"}}>
+          <div className="motion" style={{background:"#fff",borderRadius:"1rem",padding:"1.75rem",boxShadow:"0 4px 20px rgba(0,0,0,0.1)",border:"1px solid #e2e8f0"}}>
             <h3 style={{fontSize:"1rem",fontWeight:700,color:"#0f172a",marginBottom:"1.25rem"}}>حالة جمع التبرعات</h3>
 
             {/* Progress circle */}
@@ -3019,7 +3019,7 @@ function CultureInitiativeDetailPage({slug}:{slug?:string}){
   if(!item)return <div style={{padding:"6rem 1rem",textAlign:"center"}}><h2 style={{color:"#dc2626"}}>المبادرة غير موجودة</h2><a href="/culture" style={{color:"#2563eb"}}>العودة للثقافة</a></div>;
   return(
     <div dir="rtl">
-      {item.image_url&&<div className="detail-hero-img"><img src={item.image_url} alt={item.title}/></div>}
+      {item.image_url&&<div className="detail-hero-img motion"><img src={item.image_url} alt={item.title}/></div>}
       <article className="detail-article page-width motion">
         <span className="news-cat" style={{background:"#15803d"}}>مبادرة ثقافية</span>
         <h1>{item.title}</h1>
