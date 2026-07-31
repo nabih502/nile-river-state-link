@@ -1432,6 +1432,64 @@ function Register(){
   ];
   const TOTAL=wizardSteps.length;
 
+  const demoNames=["أحمد محمد عبدالله النيل","فاطمة عمر حسن إبراهيم","يوسف إدريس محمد علي","مريم خالد حسين الطيب","محمد الأمين عبدالرحمن بشير"];
+  const demoEmails=["ahmed.demo@gmail.com","fatima.demo@gmail.com","yousif.demo@gmail.com","mariam.demo@gmail.com","mohamad.demo@gmail.com"];
+  const demoPhones=["0912345678","0923456789","0934567890","0945678901","0956789012"];
+  const demoSpecializations=["هندسة الحاسوب","الطب البشري","إدارة الأعمال","التربية والتعليم","الهندسة المدنية"];
+  const demoJobs=["مهندس برمجيات","طبيب استشاري","مدير مشاريع","معلم أول","مهندس إنشاءات"];
+
+  const fillDemo=()=>{
+    const form=formRef.current;
+    if(!form)return;
+    const ri=Math.floor(Math.random()*5);
+    const set=(label:string,value:string)=>{
+      const el=form.querySelector<HTMLInputElement|HTMLSelectElement|HTMLTextAreaElement>(`[aria-label="${label}"]`);
+      if(!el)return;
+      if(el instanceof HTMLSelectElement){
+        el.value=value;
+        el.dispatchEvent(new Event("change",{bubbles:true}));
+        return;
+      }
+      const nativeSetter=Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype,"value")?.set||Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype,"value")?.set;
+      nativeSetter?.call(el,value);
+      el.dispatchEvent(new Event("input",{bubbles:true}));
+      el.dispatchEvent(new Event("change",{bubbles:true}));
+    };
+    const setRadio=(name:string,value:string)=>{
+      form.querySelectorAll<HTMLInputElement>(`input[name="${name}"]`).forEach(el=>{
+        const nativeSetter=Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype,"checked")?.set;
+        nativeSetter?.call(el,el.value===value);
+        el.dispatchEvent(new Event("change",{bubbles:true}));
+      });
+    };
+    set("الاسم الرباعي",demoNames[ri]);
+    set("الاسم وفق الجواز",demoNames[ri].split(" ").slice(0,3).join(" "));
+    setRadio("الجنس",ri%2===0?"ذكر":"أنثى");
+    set("تاريخ الميلاد",`${1975+ri}-0${(ri%9)+1}-15`);
+    set("الجنسية",ri%2===0?"سوداني":"سودانية");
+    set("الحالة الاجتماعية","متزوج");
+    set("الدولة","السودان");
+    set("المدينة","الخرطوم");
+    set("الحي","الرياض");
+    set("العنوان بالتفصيل","شارع الجامعة - الطابق الثاني");
+    set("رقم الجوال",demoPhones[ri]);
+    set("البريد الإلكتروني",demoEmails[ri]);
+    set("الولاية","نهر النيل");
+    set("المحلية","عطبرة");
+    set("الوحدة الإدارية","وحدة المركز");
+    set("القرية / الحي","حي النيل");
+    set("أصل القرية / الحي","عطبرة القديمة");
+    set("المرحلة التعليمية","بكالوريوس");
+    set("التخصص",demoSpecializations[ri]);
+    set("اسم الجامعة","جامعة الخرطوم");
+    set("سنة التخرج",String(2000+ri));
+    set("المجال المهني","الهندسة");
+    set("المسمى الوظيفي",demoJobs[ri]);
+    set("سنوات الخبرة",String(5+ri));
+    set("رقم بديل","0111222333");
+    set("واتساب",demoPhones[ri]);
+  };
+
   const goNext=()=>{
     const form=formRef.current;
     if(!form)return;
@@ -1509,6 +1567,7 @@ function Register(){
       <header className="reg-wizard-header">
         <h2>نموذج تسجيل العضوية</h2>
         <p>يرجى تعبئة البيانات التالية بدقة — الخطوة <strong>{step+1}</strong> من <strong>{TOTAL}</strong></p>
+        <button type="button" className="rwz-demo-btn" onClick={fillDemo} title="ملء تجريبي سريع للعرض"><Sparkles size={15}/>بيانات تجريبية</button>
       </header>
 
       <div className="rwz-progress" role="tablist" aria-label="خطوات التسجيل">

@@ -525,7 +525,7 @@ body{font-family:"Cairo",Tahoma,Arial,sans-serif}
 
 /* ===== REGISTRATION WIZARD ===== */
 .reg-wizard-shell{width:min(960px,calc(100% - 40px));margin:0 auto;padding:3rem 0 4rem}
-.reg-wizard-header{text-align:center;margin-bottom:2.75rem}
+.reg-wizard-header{text-align:center;margin-bottom:2.75rem;position:relative}.rwz-demo-btn{position:absolute;left:0;top:50%;transform:translateY(-50%);display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 14px;border-radius:20px;border:1.5px dashed #c7a36e;background:rgba(255,165,0,.07);color:#b87a30;font-size:12px;font-weight:700;cursor:pointer;transition:.18s;white-space:nowrap}.rwz-demo-btn:hover{background:rgba(255,165,0,.15);border-color:#e89030;color:#a06020}.rwz-demo-btn svg{width:14px}
 .reg-wizard-header h2{font-size:2rem;font-weight:900;color:#1b2735;margin:0 0 .5rem}
 .reg-wizard-header p{font-size:1rem;color:#6b7480;margin:0}
 .reg-wizard-header strong{color:#c27a00}
