@@ -1433,8 +1433,6 @@ function Register(){
   const TOTAL=wizardSteps.length;
 
   const demoNames=["أحمد محمد عبدالله النيل","فاطمة عمر حسن إبراهيم","يوسف إدريس محمد علي","مريم خالد حسين الطيب","محمد الأمين عبدالرحمن بشير"];
-  const demoEmails=["ahmed.demo@gmail.com","fatima.demo@gmail.com","yousif.demo@gmail.com","mariam.demo@gmail.com","mohamad.demo@gmail.com"];
-  const demoPhones=["0912345678","0923456789","0934567890","0945678901","0956789012"];
   const demoSpecializations=["هندسة الحاسوب","الطب البشري","إدارة الأعمال","التربية والتعليم","الهندسة المدنية"];
   const demoJobs=["مهندس برمجيات","طبيب استشاري","مدير مشاريع","معلم أول","مهندس إنشاءات"];
 
@@ -1442,6 +1440,9 @@ function Register(){
     const form=formRef.current;
     if(!form)return;
     const ri=Math.floor(Math.random()*5);
+    const uid=Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+    const demoEmail=`demo.${uid}@test.nile`;
+    const demoPhone=`09${Math.floor(10000000+Math.random()*89999999)}`;
     const set=(label:string,value:string)=>{
       const el=form.querySelector<HTMLInputElement|HTMLSelectElement|HTMLTextAreaElement>(`[aria-label="${label}"]`);
       if(!el)return;
@@ -1472,8 +1473,8 @@ function Register(){
     set("المدينة","الخرطوم");
     set("الحي","الرياض");
     set("العنوان بالتفصيل","شارع الجامعة - الطابق الثاني");
-    set("رقم الجوال",demoPhones[ri]);
-    set("البريد الإلكتروني",demoEmails[ri]);
+    set("رقم الجوال",demoPhone);
+    set("البريد الإلكتروني",demoEmail);
     set("الولاية","نهر النيل");
     set("المحلية","عطبرة");
     set("الوحدة الإدارية","وحدة المركز");
@@ -1487,7 +1488,7 @@ function Register(){
     set("المسمى الوظيفي",demoJobs[ri]);
     set("سنوات الخبرة",String(5+ri));
     set("رقم بديل","0111222333");
-    set("واتساب",demoPhones[ri]);
+    set("واتساب",demoPhone);
   };
 
   const goNext=()=>{
