@@ -3126,12 +3126,16 @@ function SocialServiceDetailPage({slug}:{slug?:string}){
 }
 
 function SocialInitiativeDetailPage({slug}:{slug?:string}){
-  type InitRow = {id:string;title:string;image_url:string;text:string;full_description:string;progress:number;amount:string;icon:string;action_label:string;published:boolean};
+  type InitRow = {id:string;title:string;image_url:string;text:string;full_description:string;progress:number;amount:string;icon:string;action_label:string;published:boolean;seo_title?:string;seo_description?:string;seo_image?:string};
   const [item,setItem]=useState<InitRow|null>(null);
   const [loading,setLoading]=useState(true);
   useEffect(()=>{
     if(!slug){setLoading(false);return;}
-    supabase.from("social_initiatives").select("*").eq("slug",slug).maybeSingle().then(({data})=>{setItem(data as InitRow|null);if(data){applyItemSeo({title:data.seo_title||"",fallbackTitle:data.title||"",description:data.seo_description||"",fallbackDescription:data.full_description||data.text||"",image:data.seo_image||"",fallbackImage:data.image_url||""});}setLoading(false);});
+    supabase.from("social_initiatives").select("*").eq("slug",slug).maybeSingle().then(({data})=>{
+      setItem(data as InitRow|null);
+      if(data){applyItemSeo({title:data.seo_title||"",fallbackTitle:data.title||"",description:data.seo_description||"",fallbackDescription:data.full_description||data.text||"",image:data.seo_image||"",fallbackImage:data.image_url||""});}
+      setLoading(false);
+    });
   },[slug]);
 
   if(loading)return(
@@ -3144,107 +3148,135 @@ function SocialInitiativeDetailPage({slug}:{slug?:string}){
   );
   if(!item)return(
     <div style={{minHeight:"60vh",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:"1rem"}}>
-      <div style={{fontSize:"3rem"}}>🔍</div>
       <h2 style={{color:"#0f172a",fontSize:"1.25rem"}}>المبادرة غير موجودة</h2>
       <a href="/social" style={{background:"#0f766e",color:"#fff",padding:"0.6rem 1.5rem",borderRadius:"0.5rem",textDecoration:"none",fontWeight:600}}>العودة للخدمات الاجتماعية</a>
     </div>
   );
 
   const progressColor = item.progress >= 75 ? "#15803d" : item.progress >= 40 ? "#0f766e" : "#d97706";
+  const body = item.full_description || item.text || "";
+
   return(
     <div dir="rtl" style={{background:"#f8fafc",minHeight:"100vh"}}>
+
       {/* ── Hero ── */}
-      <div className="motion" style={{position:"relative",height:"420px",overflow:"hidden"}}>
-        {item.image_url
-          ? <img src={item.image_url} alt={item.title} style={{width:"100%",height:"100%",objectFit:"cover"}}/>
-          : <div style={{width:"100%",height:"100%",background:"linear-gradient(135deg,#0f766e,#14b8a6)"}}/>
-        }
-        <div style={{position:"absolute",inset:0,background:"linear-gradient(to top,rgba(0,0,0,0.75) 0%,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.1) 100%)"}}/>
-        <div style={{position:"absolute",inset:0,display:"flex",flexDirection:"column",justifyContent:"flex-end",padding:"2.5rem",maxWidth:"1200px",margin:"0 auto",left:0,right:0}}>
-          <span style={{display:"inline-flex",alignItems:"center",gap:"0.4rem",background:"#0f766e",color:"#fff",padding:"0.3rem 0.9rem",borderRadius:"9999px",fontSize:"0.78rem",fontWeight:700,marginBottom:"0.75rem",width:"fit-content"}}>
-            <HeartHandshake size={14}/> مبادرة اجتماعية
+      <div style={{position:"relative",overflow:"hidden",background:"#0f172a"}}>
+        {item.image_url && (
+          <img
+            src={item.image_url}
+            alt={item.title}
+            style={{display:"block",width:"100%",height:"420px",objectFit:"cover",opacity:0.55}}
+          />
+        )}
+        {!item.image_url && (
+          <div style={{height:"420px",background:"linear-gradient(135deg,#0f766e 0%,#134e4a 100%)"}}/>
+        )}
+        {/* Gradient overlay */}
+        <div style={{position:"absolute",inset:0,background:"linear-gradient(to top,rgba(0,0,0,0.85) 0%,rgba(0,0,0,0.4) 55%,rgba(0,0,0,0.1) 100%)",pointerEvents:"none"}}/>
+        {/* Text overlay */}
+        <div style={{position:"absolute",bottom:0,left:0,right:0,padding:"2.5rem clamp(1rem,4vw,3rem)",maxWidth:"900px",margin:"0 auto"}}>
+          <a href="/social" style={{display:"inline-flex",alignItems:"center",gap:"0.35rem",color:"rgba(255,255,255,0.7)",textDecoration:"none",fontSize:"0.8rem",marginBottom:"1rem",transition:"color 0.15s"}}
+            onMouseEnter={e=>e.currentTarget.style.color="#fff"}
+            onMouseLeave={e=>e.currentTarget.style.color="rgba(255,255,255,0.7)"}
+          >
+            <ArrowLeft size={13}/> الخدمات الاجتماعية
+          </a>
+          <span style={{display:"inline-flex",alignItems:"center",gap:"0.4rem",background:"#0f766e",color:"#fff",padding:"0.28rem 0.85rem",borderRadius:"9999px",fontSize:"0.75rem",fontWeight:700,marginBottom:"0.75rem"}}>
+            <HeartHandshake size={13}/> مبادرة اجتماعية
           </span>
-          <h1 style={{color:"#fff",fontSize:"clamp(1.6rem,4vw,2.4rem)",fontWeight:800,margin:"0 0 0.5rem",textShadow:"0 2px 8px rgba(0,0,0,0.4)"}}>{item.title}</h1>
-          <p style={{color:"rgba(255,255,255,0.85)",fontSize:"1rem",maxWidth:"600px",margin:0,lineHeight:1.55}}>{item.text}</p>
+          <h1 style={{color:"#fff",fontSize:"clamp(1.6rem,4vw,2.5rem)",fontWeight:900,margin:"0 0 0.6rem",lineHeight:1.15,textShadow:"0 2px 12px rgba(0,0,0,0.5)"}}>{item.title}</h1>
+          <p style={{color:"rgba(255,255,255,0.85)",fontSize:"1rem",margin:0,lineHeight:1.65,maxWidth:"580px"}}>{item.text}</p>
         </div>
       </div>
 
       {/* ── Stats bar ── */}
-      <div className="motion" style={{background:"#0f766e",padding:"0 2rem"}}>
-        <div style={{maxWidth:"1200px",margin:"0 auto",display:"flex",gap:0,flexWrap:"wrap"}}>
+      <div style={{background:"#0f766e"}}>
+        <div style={{maxWidth:"1200px",margin:"0 auto",display:"flex",flexWrap:"wrap"}}>
           {[
             {label:"المبلغ المستهدف",value:item.amount,icon:"💰"},
             {label:"نسبة الإنجاز",value:`${item.progress}%`,icon:"📊"},
             {label:"حالة المبادرة",value:item.progress>=100?"مكتملة":item.progress>0?"جارية":"قيد التخطيط",icon:"✅"},
           ].map((s,i)=>(
-            <div key={i} style={{flex:"1 1 200px",padding:"1.25rem 1.5rem",borderRight:"1px solid rgba(255,255,255,0.15)",display:"flex",alignItems:"center",gap:"0.75rem"}}>
-              <span style={{fontSize:"1.5rem"}}>{s.icon}</span>
+            <div key={i} style={{flex:"1 1 180px",padding:"1.25rem 1.75rem",borderLeft:"1px solid rgba(255,255,255,0.12)",display:"flex",alignItems:"center",gap:"0.65rem"}}>
+              <span style={{fontSize:"1.4rem",lineHeight:1}}>{s.icon}</span>
               <div>
-                <div style={{fontSize:"0.7rem",color:"rgba(255,255,255,0.7)",marginBottom:"0.15rem"}}>{s.label}</div>
-                <div style={{fontSize:"1.1rem",fontWeight:800,color:"#fff"}}>{s.value}</div>
+                <div style={{fontSize:"0.68rem",color:"rgba(255,255,255,0.65)",marginBottom:"0.15rem"}}>{s.label}</div>
+                <div style={{fontSize:"1.05rem",fontWeight:800,color:"#fff"}}>{s.value}</div>
               </div>
             </div>
           ))}
         </div>
       </div>
 
-      {/* ── Main content ── */}
-      <div style={{maxWidth:"1200px",margin:"0 auto",padding:"2.5rem 1.5rem",display:"grid",gridTemplateColumns:"1fr 340px",gap:"2rem",alignItems:"start"}} className="soc-init-grid motion">
-        {/* Left — description */}
-        <div>
-          {item.full_description&&(
-            <div className="motion" style={{background:"#fff",borderRadius:"1rem",padding:"2rem",boxShadow:"0 1px 6px rgba(0,0,0,0.06)",marginBottom:"1.5rem"}}>
-              <h2 style={{fontSize:"1.1rem",fontWeight:700,color:"#0f172a",marginBottom:"1.25rem",paddingBottom:"0.75rem",borderBottom:"2px solid #f0fdfa",display:"flex",alignItems:"center",gap:"0.5rem"}}>
-                <span style={{color:"#0f766e"}}>◈</span> تفاصيل المبادرة
+      {/* ── Body ── */}
+      <div style={{maxWidth:"1200px",margin:"0 auto",padding:"2.5rem clamp(1rem,3vw,1.5rem)",display:"grid",gridTemplateColumns:"1fr min(340px,35%)",gap:"2rem",alignItems:"start"}}>
+
+        {/* Main content */}
+        <div style={{display:"flex",flexDirection:"column",gap:"1.5rem"}}>
+          {body && (
+            <div style={{background:"#fff",borderRadius:"1rem",padding:"2rem 2.25rem",boxShadow:"0 1px 8px rgba(0,0,0,0.06)"}}>
+              <h2 style={{fontSize:"1.05rem",fontWeight:800,color:"#0f172a",margin:"0 0 1.25rem",paddingBottom:"0.75rem",borderBottom:"2px solid #f0fdfa",display:"flex",alignItems:"center",gap:"0.5rem"}}>
+                <span style={{color:"#0f766e",fontSize:"1.1rem"}}>◈</span> تفاصيل المبادرة
               </h2>
-              <div style={{color:"#374151",lineHeight:1.85,fontSize:"0.95rem"}} dangerouslySetInnerHTML={{__html:item.full_description.replace(/\n/g,"<br/>")}}/>
+              <div
+                style={{color:"#374151",lineHeight:1.9,fontSize:"0.95rem",whiteSpace:"pre-wrap"}}
+                dangerouslySetInnerHTML={{__html:body.replace(/\n/g,"<br/>")}}
+              />
             </div>
           )}
-          {!item.full_description&&item.text&&(
-            <div className="motion" style={{background:"#fff",borderRadius:"1rem",padding:"2rem",boxShadow:"0 1px 6px rgba(0,0,0,0.06)",marginBottom:"1.5rem"}}>
-              <div style={{color:"#374151",lineHeight:1.85,fontSize:"0.95rem"}} dangerouslySetInnerHTML={{__html:item.text.replace(/\n/g,"<br/>")}}/>
+
+          {/* Progress bar */}
+          <div style={{background:"#fff",borderRadius:"1rem",padding:"1.5rem 2rem",boxShadow:"0 1px 8px rgba(0,0,0,0.06)"}}>
+            <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:"0.65rem"}}>
+              <span style={{fontSize:"0.85rem",fontWeight:700,color:"#374151"}}>تقدم جمع التبرعات</span>
+              <span style={{fontSize:"0.9rem",fontWeight:800,color:progressColor}}>{item.progress}%</span>
             </div>
-          )}
-          <a href="/social" style={{display:"inline-flex",alignItems:"center",gap:"0.5rem",color:"#0f766e",fontWeight:600,textDecoration:"none",fontSize:"0.9rem"}}>
+            <div style={{height:10,background:"#f0fdfa",borderRadius:9999,overflow:"hidden"}}>
+              <div style={{height:"100%",width:`${item.progress}%`,background:progressColor,borderRadius:9999,transition:"width 1s ease"}}/>
+            </div>
+            <p style={{margin:"0.6rem 0 0",fontSize:"0.75rem",color:"#64748b"}}>تم جمع {item.progress}% من المبلغ المستهدف ({item.amount})</p>
+          </div>
+
+          <a href="/social" style={{display:"inline-flex",alignItems:"center",gap:"0.5rem",color:"#0f766e",fontWeight:700,textDecoration:"none",fontSize:"0.9rem",marginTop:"0.25rem"}}>
             <ArrowLeft size={16}/> العودة لجميع الخدمات الاجتماعية
           </a>
         </div>
 
-        {/* Right — progress card */}
-        <div className="motion" style={{position:"sticky",top:"6rem"}}>
-          <div className="motion" style={{background:"#fff",borderRadius:"1rem",padding:"1.75rem",boxShadow:"0 4px 20px rgba(0,0,0,0.1)",border:"1px solid #e2e8f0"}}>
-            <h3 style={{fontSize:"1rem",fontWeight:700,color:"#0f172a",marginBottom:"1.25rem"}}>حالة جمع التبرعات</h3>
-
-            {/* Progress circle */}
+        {/* Sidebar */}
+        <div style={{position:"sticky",top:"6rem",display:"flex",flexDirection:"column",gap:"1rem"}}>
+          {/* Donut card */}
+          <div style={{background:"#fff",borderRadius:"1rem",padding:"1.75rem",boxShadow:"0 4px 24px rgba(0,0,0,0.08)",border:"1px solid #e2e8f0"}}>
+            <h3 style={{fontSize:"1rem",fontWeight:800,color:"#0f172a",margin:"0 0 1.25rem",borderBottom:"1px solid #f1f5f9",paddingBottom:"0.75rem"}}>حالة جمع التبرعات</h3>
             <div style={{display:"flex",flexDirection:"column",alignItems:"center",marginBottom:"1.5rem"}}>
-              <svg width="120" height="120" viewBox="0 0 120 120" style={{marginBottom:"0.75rem"}}>
+              <svg width="120" height="120" viewBox="0 0 120 120">
                 <circle cx="60" cy="60" r="52" fill="none" stroke="#f0fdfa" strokeWidth="12"/>
                 <circle cx="60" cy="60" r="52" fill="none" stroke={progressColor} strokeWidth="12"
                   strokeDasharray={`${2*Math.PI*52}`}
                   strokeDashoffset={`${2*Math.PI*52*(1-item.progress/100)}`}
                   strokeLinecap="round"
                   transform="rotate(-90 60 60)"
-                  style={{transition:"stroke-dashoffset 0.8s ease"}}
+                  style={{transition:"stroke-dashoffset 1s ease"}}
                 />
-                <text x="60" y="56" textAnchor="middle" fill={progressColor} fontSize="22" fontWeight="800" fontFamily="Cairo,sans-serif">{item.progress}%</text>
+                <text x="60" y="57" textAnchor="middle" fill={progressColor} fontSize="22" fontWeight="800" fontFamily="Cairo,sans-serif">{item.progress}%</text>
                 <text x="60" y="72" textAnchor="middle" fill="#94a3b8" fontSize="11" fontFamily="Cairo,sans-serif">مكتمل</text>
               </svg>
-              <div style={{fontSize:"0.8rem",color:"#64748b",textAlign:"center"}}>تم جمع {item.progress}% من المبلغ المستهدف</div>
             </div>
-
-            <div style={{background:"#f8fafc",borderRadius:"0.625rem",padding:"1rem",marginBottom:"1.25rem",textAlign:"center"}}>
-              <div style={{fontSize:"0.72rem",color:"#64748b",marginBottom:"0.25rem"}}>المبلغ المستهدف</div>
+            <div style={{background:"#f8fafc",borderRadius:"0.625rem",padding:"1rem",marginBottom:"1.25rem",textAlign:"center",border:"1px solid #e2e8f0"}}>
+              <div style={{fontSize:"0.7rem",color:"#64748b",marginBottom:"0.3rem"}}>المبلغ المستهدف</div>
               <div style={{fontSize:"1.5rem",fontWeight:800,color:"#0f766e"}}>{item.amount}</div>
             </div>
-
-            <a href="/contact" style={{display:"block",background:"#0f766e",color:"#fff",padding:"0.85rem",borderRadius:"0.625rem",textAlign:"center",fontWeight:700,textDecoration:"none",fontSize:"0.95rem",transition:"background 0.2s"}}
+            <a href="/contact"
+              style={{display:"block",background:"#0f766e",color:"#fff",padding:"0.875rem",borderRadius:"0.625rem",textAlign:"center",fontWeight:700,textDecoration:"none",fontSize:"0.9rem",transition:"background 0.2s"}}
               onMouseEnter={e=>(e.currentTarget.style.background="#0d6460")}
               onMouseLeave={e=>(e.currentTarget.style.background="#0f766e")}
-            >{item.action_label}</a>
-            <p style={{fontSize:"0.72rem",color:"#94a3b8",textAlign:"center",marginTop:"0.625rem"}}>يمكنك التواصل معنا لمزيد من المعلومات</p>
+            >{item.action_label||"دعم المبادرة"}</a>
+            <p style={{fontSize:"0.7rem",color:"#94a3b8",textAlign:"center",margin:"0.6rem 0 0"}}>يمكنك التواصل معنا لمزيد من المعلومات</p>
           </div>
         </div>
       </div>
+
+      {/* responsive grid fix */}
+      <style>{`@media(max-width:700px){.soc-init-body-grid{grid-template-columns:1fr!important}}`}</style>
     </div>
   );
 }
