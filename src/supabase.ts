@@ -3,7 +3,69 @@ import { createClient } from "@supabase/supabase-js";
 const url = import.meta.env.VITE_SUPABASE_URL as string;
 const key = import.meta.env.VITE_SUPABASE_ANON_KEY as string;
 
-export const supabase = createClient(url, key);
+/* ── Session identity ────────────────────────────────────────────────────────
+   This app does not use Supabase Auth, so the database cannot tell an
+   administrator or a signed-in member from an anonymous visitor unless we send
+   the session token with every request. The tokens below are opaque, issued and
+   validated server-side (admin_sessions / member_sessions) and used by the
+   database policies through is_admin() / current_member_id(). A forged or
+   expired token simply resolves to "nobody".                                */
+
+export const ADMIN_SESSION_KEY  = "admin_session_v2";
+export const MEMBER_TOKEN_KEY   = "portal_member_token";
+export const VISITOR_TOKEN_KEY  = "visitor_chat_token";
+
+function safeGet(store: "session" | "local", k: string): string | null {
+  try { return (store === "session" ? sessionStorage : localStorage).getItem(k); }
+  catch { return null; }
+}
+
+function adminToken(): string | null {
+  const raw = safeGet("session", ADMIN_SESSION_KEY);
+  if (!raw) return null;
+  try { return (JSON.parse(raw) as { token?: string }).token ?? null; } catch { return null; }
+}
+
+/** Stable per-browser token that scopes a website visitor to their own chat. */
+export function visitorToken(): string {
+  let t = safeGet("local", VISITOR_TOKEN_KEY);
+  if (!t) {
+    const bytes = new Uint8Array(24);
+    crypto.getRandomValues(bytes);
+    t = Array.from(bytes, b => b.toString(16).padStart(2, "0")).join("");
+    try { localStorage.setItem(VISITOR_TOKEN_KEY, t); } catch { /* ignore */ }
+  }
+  return t;
+}
+
+const identityFetch: typeof fetch = (input, init) => {
+  const headers = new Headers(init?.headers ?? {});
+  const at = adminToken();
+  if (at) headers.set("x-admin-token", at);
+  const mt = safeGet("session", MEMBER_TOKEN_KEY);
+  if (mt) headers.set("x-member-token", mt);
+  const vt = safeGet("local", VISITOR_TOKEN_KEY);
+  if (vt) headers.set("x-visitor-token", vt);
+  return fetch(input, { ...init, headers });
+};
+
+export const supabase = createClient(url, key, { global: { fetch: identityFetch } });
+
+/* Chat attachments live in a private bucket, so they are reached through a
+   short-lived signed link that the database only issues to the conversation's
+   own member or to staff. Older rows stored a full public URL; the path is
+   recovered from it so those keep working. */
+export function chatAttachmentPath(stored: string): string {
+  const m = stored.match(/chat-attachments\/(.+)$/);
+  return m ? decodeURIComponent(m[1]) : stored;
+}
+
+export async function signedChatAttachmentUrl(stored: string): Promise<string | null> {
+  const { data } = await supabase.storage
+    .from("chat-attachments")
+    .createSignedUrl(chatAttachmentPath(stored), 3600);
+  return data?.signedUrl ?? null;
+}
 
 export type NewsItem = {
   id: string;

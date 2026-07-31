@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { supabase } from "./supabase";
+import { supabase, MEMBER_TOKEN_KEY } from "./supabase";
 import PortalChat from "./portal-chat";
 import PortalServices from "./portal-services";
 import PortalActivities from "./portal-activities";
@@ -92,17 +92,28 @@ function PortalLogin({ onLogin }: { onLogin: (m: Member) => void }) {
     e.preventDefault();
     setError("");
     setLoading(true);
-    const val = identifier.trim();
-    const { data, error: dbErr } = await supabase
-      .from("members")
-      .select("*")
-      .or(`email.eq.${val},phone.eq.${val},member_number.eq.${val}`)
-      .maybeSingle();
+    // The password is verified inside the database (member_login), which returns an
+    // opaque session token. The identifier is passed as a parameter, never spliced
+    // into a filter string, and both failure cases return the same message so the
+    // form cannot be used to discover which accounts exist.
+    const { data: session, error: loginErr } = await supabase.rpc("member_login", {
+      p_identifier: identifier.trim(),
+      p_password: password,
+    });
 
+    if (loginErr || !session?.token) {
+      setLoading(false);
+      setError("بيانات الدخول غير صحيحة");
+      return;
+    }
+
+    sessionStorage.setItem(MEMBER_TOKEN_KEY, session.token as string);
+    sessionStorage.setItem("portal_member_id", session.member_id as string);
+
+    const { data, error: dbErr } = await supabase
+      .from("members").select("*").eq("id", session.member_id).maybeSingle();
     setLoading(false);
-    if (dbErr || !data) { setError("لم يتم العثور على حساب بهذه البيانات"); return; }
-    if (data.password_hash !== password) { setError("كلمة المرور غير صحيحة"); return; }
-    sessionStorage.setItem("portal_member_id", data.id);
+    if (dbErr || !data) { setError("بيانات الدخول غير صحيحة"); return; }
     onLogin(data as Member);
   };
 
@@ -143,7 +154,7 @@ function PortalLogin({ onLogin }: { onLogin: (m: Member) => void }) {
             {loading ? "جاري التحقق..." : "دخول"}
           </button>
         </form>
-        <p className="portal-hint">كلمة المرور الافتراضية هي آخر 6 أرقام من رقم جوالك</p>
+        <p className="portal-hint">كلمة المرور تُسلَّم لك عند اكتمال التسجيل — إذا فقدتها تواصل مع إدارة الرابطة لإعادة تعيينها</p>
         <div className="portal-login-links">
           <a href="/register">تسجيل عضوية جديدة</a>
           <span>|</span>
@@ -502,7 +513,7 @@ function EditTab({ member, onUpdated }: { member: Member; onUpdated: (m: Member)
     e.preventDefault();
     setError("");
     if (form.password_hash && form.password_hash !== form.password_confirm) { setError("كلمتا المرور غير متطابقتين"); return; }
-    if (form.password_hash && form.password_hash.length < 4) { setError("كلمة المرور يجب أن تكون 4 أحرف على الأقل"); return; }
+    if (form.password_hash && form.password_hash.length < 8) { setError("كلمة المرور يجب أن تكون 8 أحرف على الأقل"); return; }
     setSaving(true);
     const payload: Record<string, string> = {
       email: form.email, phone: form.phone, city: form.city,
@@ -513,7 +524,13 @@ function EditTab({ member, onUpdated }: { member: Member; onUpdated: (m: Member)
     if (form.password_hash) payload.password_hash = form.password_hash;
     const { data, error: err } = await supabase.from("members").update(payload).eq("id", member.id).select().maybeSingle();
     setSaving(false);
-    if (err) { setError("فشل الحفظ: " + err.message); return; }
+    if (err) {
+      console.error(err);
+      setError(err.message === "WEAK_PASSWORD" || /WEAK_PASSWORD/.test(err.message)
+        ? "كلمة المرور يجب أن تكون 8 أحرف على الأقل"
+        : "تعذر حفظ البيانات، يرجى المحاولة مرة أخرى");
+      return;
+    }
     if (data) onUpdated(data as Member);
     setSaved(true);
     setTimeout(() => setSaved(false), 3000);
@@ -549,7 +566,7 @@ function EditTab({ member, onUpdated }: { member: Member; onUpdated: (m: Member)
         <div className="portal-edit-grid">
           <div className="portal-field">
             <label>كلمة المرور الجديدة</label>
-            <input type="password" value={form.password_hash} onChange={e => set("password_hash", e.target.value)} placeholder="اتركه فارغاً للإبقاء على كلمة المرور الحالية" />
+            <input type="password" minLength={8} value={form.password_hash} onChange={e => set("password_hash", e.target.value)} placeholder="8 أحرف على الأقل — اتركه فارغاً للإبقاء على كلمة المرور الحالية" />
           </div>
           <div className="portal-field">
             <label>تأكيد كلمة المرور</label>
@@ -573,10 +590,14 @@ export default function MemberPortal() {
   const [sideOpen, setSideOpen]     = useState(false);
 
   useEffect(() => {
-    const id = sessionStorage.getItem("portal_member_id");
-    if (!id) { setLoading(false); return; }
+    // A session only exists if the server-issued token is still valid: the row fetch
+    // below is filtered by the database to the member that token belongs to.
+    const token = sessionStorage.getItem(MEMBER_TOKEN_KEY);
+    const id    = sessionStorage.getItem("portal_member_id");
+    if (!token || !id) { setLoading(false); return; }
     supabase.from("members").select("*").eq("id", id).maybeSingle().then(({ data }) => {
       if (data) setMember(data as Member);
+      else { sessionStorage.removeItem(MEMBER_TOKEN_KEY); sessionStorage.removeItem("portal_member_id"); }
       setLoading(false);
     });
   }, []);
@@ -592,10 +613,16 @@ export default function MemberPortal() {
     const ch = supabase.channel(`portal-unread-${member.id}`)
       .on("postgres_changes", { event: "*", schema: "public", table: "chat_conversations", filter: `member_id=eq.${member.id}` }, refresh)
       .subscribe();
-    return () => { supabase.removeChannel(ch); };
+    const iv = window.setInterval(refresh, 15000);
+    return () => { supabase.removeChannel(ch); window.clearInterval(iv); };
   }, [member?.id]);
 
-  const logout = () => { sessionStorage.removeItem("portal_member_id"); setMember(null); };
+  const logout = () => {
+    supabase.rpc("member_logout").then(() => {}, () => {});
+    sessionStorage.removeItem(MEMBER_TOKEN_KEY);
+    sessionStorage.removeItem("portal_member_id");
+    setMember(null);
+  };
 
   if (loading) return <div className="portal-loading"><div className="portal-spinner" /></div>;
   if (!member) return <PortalLogin onLogin={m => { setMember(m); setTab("dashboard"); }} />;

@@ -65,7 +65,8 @@ export function ImageUpload({
       const url = await uploadImageFile(file);
       onChange(url);
     } catch (e: unknown) {
-      setUploadError(e instanceof Error ? e.message : "فشل رفع الصورة");
+      console.error(e);
+      setUploadError("فشل رفع الصورة");
     } finally {
       setUploading(false);
     }
@@ -417,7 +418,8 @@ export function SectorEditor({
       : await supabase.from("investment_sectors").insert(payload);
     setSaving(false);
     if (err) {
-      setError(err.message);
+      console.error(err);
+      setError("تعذر تنفيذ العملية، يرجى المحاولة مرة أخرى");
       return;
     }
     onSave();
@@ -637,7 +639,8 @@ export function OpportunityEditor({
       : await supabase.from("investment_opportunities").insert(payload);
     setSaving(false);
     if (err) {
-      setError(err.message);
+      console.error(err);
+      setError("تعذر تنفيذ العملية، يرجى المحاولة مرة أخرى");
       return;
     }
     onSave();
@@ -884,7 +887,8 @@ export function IncentiveEditor({
       : await supabase.from("investment_incentives").insert(payload);
     setSaving(false);
     if (err) {
-      setError(err.message);
+      console.error(err);
+      setError("تعذر تنفيذ العملية، يرجى المحاولة مرة أخرى");
       return;
     }
     onSave();
@@ -1035,7 +1039,8 @@ export function StoryEditor({
       : await supabase.from("investment_success_stories").insert(payload);
     setSaving(false);
     if (err) {
-      setError(err.message);
+      console.error(err);
+      setError("تعذر تنفيذ العملية، يرجى المحاولة مرة أخرى");
       return;
     }
     onSave();
@@ -1185,7 +1190,8 @@ export function PartnerEditor({
       : await supabase.from("investment_partners").insert(payload);
     setSaving(false);
     if (err) {
-      setError(err.message);
+      console.error(err);
+      setError("تعذر تنفيذ العملية، يرجى المحاولة مرة أخرى");
       return;
     }
     onSave();
@@ -1325,7 +1331,8 @@ export function StatEditor({
       : await supabase.from("investment_stats").insert(payload);
     setSaving(false);
     if (err) {
-      setError(err.message);
+      console.error(err);
+      setError("تعذر تنفيذ العملية، يرجى المحاولة مرة أخرى");
       return;
     }
     onSave();

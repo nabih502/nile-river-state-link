@@ -88,7 +88,7 @@ function SubForm({ memberId, item, onSave, onCancel }: {
       ? await supabase.from("member_subscriptions").update(payload).eq("id", item.id)
       : await supabase.from("member_subscriptions").insert(payload);
     setSaving(false);
-    if (error) { setErr(error.message); return; }
+    if (error) { console.error(error); setErr("تعذر تنفيذ العملية، يرجى المحاولة مرة أخرى"); return; }
     onSave();
   };
 
@@ -154,7 +154,7 @@ function PayForm({ memberId, subs, item, onSave, onCancel }: {
       ? await supabase.from("member_payments").update(payload).eq("id", item.id)
       : await supabase.from("member_payments").insert(payload);
     setSaving(false);
-    if (error) { setErr(error.message); return; }
+    if (error) { console.error(error); setErr("تعذر تنفيذ العملية، يرجى المحاولة مرة أخرى"); return; }
     onSave();
   };
 
@@ -240,7 +240,7 @@ export default function AdminMemberDetail({ memberId, onBack }: { memberId: stri
     const ext = file.name.split(".").pop()?.toLowerCase() || "jpg";
     const path = `members/${memberId}/photo-${Date.now()}.${ext}`;
     const { error: upErr } = await supabase.storage.from("images").upload(path, file, { upsert: true, contentType: file.type });
-    if (upErr) { setPhotoErr("فشل الرفع: " + upErr.message); setPhotoUploading(false); return; }
+    if (upErr) { console.error(upErr); setPhotoErr("فشل الرفع"); setPhotoUploading(false); return; }
     const { data } = supabase.storage.from("images").getPublicUrl(path);
     setF("photo_url", data.publicUrl);
     setPhotoUploading(false);
@@ -275,7 +275,7 @@ export default function AdminMemberDetail({ memberId, onBack }: { memberId: stri
       status: form!.status, member_number: form!.member_number, photo_url: form!.photo_url,
     }).eq("id", memberId).select().maybeSingle();
     setSaving(false);
-    if (error) { setSaveMsg("خطأ: " + error.message); return; }
+    if (error) { console.error(error); setSaveMsg("خطأ: تعذر حفظ البيانات"); return; }
     if (data) { setMember(data as Member); setForm(data as Member); }
     setSaveMsg("تم حفظ البيانات بنجاح");
     setTimeout(() => setSaveMsg(""), 3000);

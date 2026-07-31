@@ -52,7 +52,8 @@ function Login({ onLogin }: { onLogin: (s: AdminSession) => void }) {
       saveSession(data);
       onLogin(data);
     } catch (e: unknown) {
-      setErrorMsg(e instanceof Error ? e.message : "حدث خطأ");
+      console.error(e);
+      setErrorMsg("تعذر تسجيل الدخول، يرجى التحقق من البيانات");
     } finally {
       setLoading(false);
     }
@@ -148,7 +149,7 @@ function NewsEditor({ item, onSave, onCancel }: { item: Partial<NewsRow> | null;
       ? await supabase.from("news").update(payload).eq("id", form.id).select("id").single()
       : await supabase.from("news").insert(payload).select("id").single();
     setSaving(false);
-    if (err) { setError(err.message); return; }
+    if (err) { console.error(err); setError("تعذر تنفيذ العملية، يرجى المحاولة مرة أخرى"); return; }
     const newId = saved?.id || form.id;
     if (newId && !form.id) { setForm(f => ({ ...f, id: newId })); setSavedId(newId); }
     else if (newId) setSavedId(newId);
@@ -264,7 +265,7 @@ function EventEditor({ item, onSave, onCancel }: { item: Partial<EventRow> | nul
       ? await supabase.from("events").update(payload).eq("id", form.id).select("id").single()
       : await supabase.from("events").insert(payload).select("id").single();
     setSaving(false);
-    if (err) { setError(err.message); return; }
+    if (err) { console.error(err); setError("تعذر تنفيذ العملية، يرجى المحاولة مرة أخرى"); return; }
     const newId = saved?.id || form.id;
     if (newId && !form.id) { setForm(f => ({ ...f, id: newId })); setSavedId(newId); }
     else if (newId) setSavedId(newId);

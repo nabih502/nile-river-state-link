@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { supabase } from "./supabase";
+import { supabase, signedChatAttachmentUrl } from "./supabase";
 
 interface Member {
   id: string;
@@ -62,7 +62,19 @@ function formatTime(d: string) {
 }
 
 // ─── Attachment renderer ──────────────────────────────────────────────────────
-function Attachment({ url, name, type, mine }: { url: string; name: string | null; type: string | null; mine: boolean }) {
+function useSignedAttachment(stored: string) {
+  const [url, setUrl] = useState<string | null>(null);
+  useEffect(() => {
+    let alive = true;
+    signedChatAttachmentUrl(stored).then(u => { if (alive) setUrl(u); }, () => {});
+    return () => { alive = false; };
+  }, [stored]);
+  return url;
+}
+
+function Attachment({ url: stored, name, type, mine }: { url: string; name: string | null; type: string | null; mine: boolean }) {
+  const url = useSignedAttachment(stored);
+  if (!url) return <span className="pchat-attach-file">جارٍ تحميل المرفق...</span>;
   if (isImage(type)) {
     return (
       <a href={url} target="_blank" rel="noreferrer" className={`pchat-attach-img-wrap ${mine ? "mine" : ""}`}>
@@ -99,6 +111,7 @@ export default function PortalChat({ member }: Props) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const bottomRef    = useRef<HTMLDivElement>(null);
   const channelRef   = useRef<ReturnType<typeof supabase.channel> | null>(null);
+  const msgPollRef   = useRef<number | null>(null);
 
   const loadConversations = async () => {
     const { data } = await supabase
@@ -111,6 +124,10 @@ export default function PortalChat({ member }: Props) {
 
   useEffect(() => {
     loadConversations();
+    // Conversations are readable only with a verified session token, which the
+    // realtime socket cannot present, so refresh on a timer as well.
+    const iv = window.setInterval(() => { void loadConversations(); }, 8000);
+    return () => window.clearInterval(iv);
   }, [member.id]);
 
   const openConversation = async (conv: Conversation) => {
@@ -128,13 +145,18 @@ export default function PortalChat({ member }: Props) {
         .eq("id", conv.id);
     }
 
-    const { data } = await supabase
-      .from("chat_messages")
-      .select("*")
-      .eq("conversation_id", conv.id)
-      .order("created_at", { ascending: true });
-    setMessages((data ?? []) as ChatMessage[]);
+    const reloadMessages = async () => {
+      const { data } = await supabase
+        .from("chat_messages")
+        .select("*")
+        .eq("conversation_id", conv.id)
+        .order("created_at", { ascending: true });
+      setMessages((data ?? []) as ChatMessage[]);
+    };
+    await reloadMessages();
     setTimeout(() => bottomRef.current?.scrollIntoView({ behavior: "smooth" }), 80);
+    if (msgPollRef.current) window.clearInterval(msgPollRef.current);
+    msgPollRef.current = window.setInterval(() => { void reloadMessages(); }, 8000);
 
     if (channelRef.current) supabase.removeChannel(channelRef.current);
     const ch = supabase.channel(`member-chat-${conv.id}`)
@@ -155,7 +177,10 @@ export default function PortalChat({ member }: Props) {
     channelRef.current = ch;
   };
 
-  useEffect(() => () => { if (channelRef.current) supabase.removeChannel(channelRef.current); }, []);
+  useEffect(() => () => {
+    if (channelRef.current) supabase.removeChannel(channelRef.current);
+    if (msgPollRef.current) window.clearInterval(msgPollRef.current);
+  }, []);
 
   // ─── file picking ─────────────────────────────────────────────────────────
   const pickFile = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -210,13 +235,13 @@ export default function PortalChat({ member }: Props) {
         .from("chat-attachments")
         .upload(path, attachFile, { contentType: attachFile.type, upsert: false });
       if (upErr) {
-        setAttachError("فشل رفع الملف: " + upErr.message);
+        console.error(upErr);
+        setAttachError("فشل رفع الملف، تأكد من نوع الملف وحجمه");
         setUploadProgress("error");
         setSending(false);
         return;
       }
-      const { data: urlData } = supabase.storage.from("chat-attachments").getPublicUrl(path);
-      attachmentUrl  = urlData.publicUrl;
+      attachmentUrl  = path;
       attachmentName = attachFile.name;
       attachmentType = attachFile.type;
       setUploadProgress("done");

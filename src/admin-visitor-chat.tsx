@@ -301,6 +301,7 @@ function ConversationsPanel({ adminName }: { adminName: string }) {
   const bottomRef  = useRef<HTMLDivElement>(null);
   const channelRef = useRef<ReturnType<typeof supabase.channel> | null>(null);
   const listChanRef = useRef<ReturnType<typeof supabase.channel> | null>(null);
+  const msgPollRef = useRef<number | null>(null);
 
   const loadConvs = async () => {
     const { data } = await supabase
@@ -319,7 +320,10 @@ function ConversationsPanel({ adminName }: { adminName: string }) {
       })
       .subscribe();
     listChanRef.current = ch;
-    return () => { supabase.removeChannel(ch); };
+    // These rows require a verified staff session, which the realtime socket cannot
+    // present, so poll as a fallback.
+    const iv = window.setInterval(() => { void loadConvs(); }, 8000);
+    return () => { supabase.removeChannel(ch); window.clearInterval(iv); };
   }, []);
 
   const openConv = async (conv: VisitorConv) => {
@@ -331,13 +335,18 @@ function ConversationsPanel({ adminName }: { adminName: string }) {
       await supabase.from("visitor_conversations").update({ admin_unread: 0 }).eq("id", conv.id);
     }
 
-    const { data } = await supabase
-      .from("visitor_messages")
-      .select("*")
-      .eq("conversation_id", conv.id)
-      .order("created_at", { ascending: true });
-    setMessages((data ?? []) as VisitorMsg[]);
+    const reloadMessages = async () => {
+      const { data } = await supabase
+        .from("visitor_messages")
+        .select("*")
+        .eq("conversation_id", conv.id)
+        .order("created_at", { ascending: true });
+      setMessages((data ?? []) as VisitorMsg[]);
+    };
+    await reloadMessages();
     setTimeout(() => bottomRef.current?.scrollIntoView({ behavior: "smooth" }), 80);
+    if (msgPollRef.current) window.clearInterval(msgPollRef.current);
+    msgPollRef.current = window.setInterval(() => { void reloadMessages(); }, 8000);
 
     // subscribe realtime
     if (channelRef.current) supabase.removeChannel(channelRef.current);
@@ -356,6 +365,7 @@ function ConversationsPanel({ adminName }: { adminName: string }) {
   useEffect(() => () => {
     if (channelRef.current) supabase.removeChannel(channelRef.current);
     if (listChanRef.current) supabase.removeChannel(listChanRef.current);
+    if (msgPollRef.current) window.clearInterval(msgPollRef.current);
   }, []);
 
   const sendReply = async (e: React.FormEvent) => {
@@ -561,7 +571,8 @@ export default function AdminVisitorChat({ adminName }: Props) {
     const ch = supabase.channel("admin-vis-waiting")
       .on("postgres_changes", { event: "*", schema: "public", table: "visitor_conversations" }, load)
       .subscribe();
-    return () => { supabase.removeChannel(ch); };
+    const iv = window.setInterval(() => { void load(); }, 8000);
+    return () => { supabase.removeChannel(ch); window.clearInterval(iv); };
   }, []);
 
   return (

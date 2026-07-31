@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { supabase } from "./supabase";
+import { supabase, visitorToken } from "./supabase";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 interface VisitorConv {
@@ -80,6 +80,7 @@ export default function SiteChatWidget() {
   const bottomRef   = useRef<HTMLDivElement>(null);
   const channelRef  = useRef<ReturnType<typeof supabase.channel> | null>(null);
   const inputRef    = useRef<HTMLInputElement>(null);
+  const pollRef     = useRef<number | null>(null);
 
   // ── load FAQs once ─────────────────────────────────────────────────────────
   useEffect(() => {
@@ -120,6 +121,10 @@ export default function SiteChatWidget() {
 
   const subscribeRealtime = (convId: string) => {
     if (channelRef.current) supabase.removeChannel(channelRef.current);
+    // Live updates arrive over a socket that cannot carry the visitor token, so the
+    // transcript is also refreshed on a short timer as a fallback.
+    if (pollRef.current) window.clearInterval(pollRef.current);
+    pollRef.current = window.setInterval(() => { void loadMessages(convId); }, 8000);
     const ch = supabase.channel(`vchat-${convId}`)
       .on("postgres_changes", {
         event: "INSERT", schema: "public", table: "visitor_messages",
@@ -145,6 +150,7 @@ export default function SiteChatWidget() {
 
   useEffect(() => () => {
     if (channelRef.current) supabase.removeChannel(channelRef.current);
+    if (pollRef.current) window.clearInterval(pollRef.current);
   }, []);
 
   // ── open/close ─────────────────────────────────────────────────────────────
@@ -174,7 +180,7 @@ export default function SiteChatWidget() {
 
     const { data: convData, error } = await supabase
       .from("visitor_conversations")
-      .insert({ visitor_name: name.trim(), visitor_phone: phone.trim(), status: "bot" })
+      .insert({ visitor_name: name.trim(), visitor_phone: phone.trim(), status: "bot", visitor_token: visitorToken() })
       .select()
       .maybeSingle();
 

@@ -80,7 +80,8 @@ function StaffForm({ session, user, onSave, onCancel }: StaffFormProps) {
       }
       onSave();
     } catch (e: unknown) {
-      setError(e instanceof Error ? e.message : "حدث خطأ");
+      console.error(e);
+      setError("تعذر تنفيذ العملية، يرجى المحاولة مرة أخرى");
     } finally {
       setSaving(false);
     }
@@ -206,7 +207,8 @@ export default function AdminStaffPanel({ session }: Props) {
       const data = await callAdminAuth({ action: "list-staff", token: session.token });
       setStaff(data as StaffUser[]);
     } catch (e: unknown) {
-      setActionError(e instanceof Error ? e.message : "حدث خطأ");
+      console.error(e);
+      setActionError("تعذر تنفيذ العملية، يرجى المحاولة مرة أخرى");
     } finally {
       setLoading(false);
     }
@@ -220,7 +222,8 @@ export default function AdminStaffPanel({ session }: Props) {
       await callAdminAuth({ action: "update-staff", token: session.token, id: user.id, isActive: !user.is_active });
       load();
     } catch (e: unknown) {
-      setActionError(e instanceof Error ? e.message : "حدث خطأ");
+      console.error(e);
+      setActionError("تعذر تنفيذ العملية، يرجى المحاولة مرة أخرى");
     }
   };
 
@@ -231,7 +234,8 @@ export default function AdminStaffPanel({ session }: Props) {
       setConfirmId(null);
       load();
     } catch (e: unknown) {
-      setActionError(e instanceof Error ? e.message : "حدث خطأ");
+      console.error(e);
+      setActionError("تعذر تنفيذ العملية، يرجى المحاولة مرة أخرى");
     }
   };
 

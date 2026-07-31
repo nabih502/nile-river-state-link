@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { supabase } from "./supabase";
+import { supabase, signedChatAttachmentUrl } from "./supabase";
 import type { AdminSession } from "./admin-auth-client";
 
 interface Conversation {
@@ -32,7 +32,14 @@ function isImage(type: string | null) {
   return !!type && type.startsWith("image/");
 }
 
-function AdminAttachment({ url, name, type }: { url: string; name: string | null; type: string | null }) {
+function AdminAttachment({ url: stored, name, type }: { url: string; name: string | null; type: string | null }) {
+  const [url, setUrl] = useState<string | null>(null);
+  useEffect(() => {
+    let alive = true;
+    signedChatAttachmentUrl(stored).then(u => { if (alive) setUrl(u); }, () => {});
+    return () => { alive = false; };
+  }, [stored]);
+  if (!url) return <span className="adm-attach-file">جارٍ تحميل المرفق...</span>;
   if (isImage(type)) {
     return (
       <a href={url} target="_blank" rel="noreferrer" className="adm-attach-img-wrap">
@@ -81,6 +88,7 @@ export default function AdminChatPanel({ session }: Props) {
   const [search, setSearch]               = useState("");
   const bottomRef  = useRef<HTMLDivElement>(null);
   const channelRef = useRef<ReturnType<typeof supabase.channel> | null>(null);
+  const msgPollRef = useRef<number | null>(null);
 
   const loadConversations = async () => {
     const q = supabase.from("chat_conversations").select("*").order("last_message_at", { ascending: false });
@@ -94,7 +102,10 @@ export default function AdminChatPanel({ session }: Props) {
     const ch = supabase.channel("admin-chat-conv-updates")
       .on("postgres_changes", { event: "*", schema: "public", table: "chat_conversations" }, loadConversations)
       .subscribe();
-    return () => { supabase.removeChannel(ch); };
+    // Conversations are now readable only with a verified staff session, which the
+    // realtime socket cannot present, so refresh on a timer as well.
+    const iv = window.setInterval(loadConversations, 8000);
+    return () => { supabase.removeChannel(ch); window.clearInterval(iv); };
   }, []);
 
   const openConversation = async (conv: Conversation) => {
@@ -108,10 +119,15 @@ export default function AdminChatPanel({ session }: Props) {
       await supabase.from("chat_conversations").update({ admin_unread: 0 }).eq("id", conv.id);
     }
 
-    const { data } = await supabase.from("chat_messages").select("*")
-      .eq("conversation_id", conv.id).order("created_at", { ascending: true });
-    setMessages((data ?? []) as ChatMessage[]);
+    const reloadMessages = async () => {
+      const { data } = await supabase.from("chat_messages").select("*")
+        .eq("conversation_id", conv.id).order("created_at", { ascending: true });
+      setMessages((data ?? []) as ChatMessage[]);
+    };
+    await reloadMessages();
     setLoadingMsgs(false);
+    if (msgPollRef.current) window.clearInterval(msgPollRef.current);
+    msgPollRef.current = window.setInterval(() => { void reloadMessages(); }, 8000);
     setTimeout(() => bottomRef.current?.scrollIntoView({ behavior: "smooth" }), 100);
 
     // Realtime for this conversation
@@ -136,7 +152,10 @@ export default function AdminChatPanel({ session }: Props) {
     channelRef.current = msgCh;
   };
 
-  useEffect(() => () => { if (channelRef.current) supabase.removeChannel(channelRef.current); }, []);
+  useEffect(() => () => {
+    if (channelRef.current) supabase.removeChannel(channelRef.current);
+    if (msgPollRef.current) window.clearInterval(msgPollRef.current);
+  }, []);
 
   const sendReply = async (e: React.FormEvent) => {
     e.preventDefault();

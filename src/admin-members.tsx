@@ -166,7 +166,7 @@ function SubscriptionForm({ memberId, item, onSave, onCancel }: {
       ? await supabase.from("member_subscriptions").update(payload).eq("id", (item as any).id)
       : await supabase.from("member_subscriptions").insert(payload);
     setSaving(false);
-    if (error) { setErr(error.message); return; }
+    if (error) { console.error(error); setErr("تعذر تنفيذ العملية، يرجى المحاولة مرة أخرى"); return; }
     onSave();
   };
 
@@ -226,7 +226,7 @@ function PaymentForm({ memberId, subscriptions, item, onSave, onCancel }: {
       ? await supabase.from("member_payments").update(payload).eq("id", (item as any).id)
       : await supabase.from("member_payments").insert(payload);
     setSaving(false);
-    if (error) { setErr(error.message); return; }
+    if (error) { console.error(error); setErr("تعذر تنفيذ العملية، يرجى المحاولة مرة أخرى"); return; }
     onSave();
   };
 
@@ -324,7 +324,7 @@ function _MemberDrawerPlaceholder({ member, onClose, onUpdated }: {
     };
     const { data, error } = await supabase.from("members").update(payload).eq("id", member.id).select().maybeSingle();
     setSaving(false);
-    if (error) { setSaveMsg("خطأ: " + error.message); return; }
+    if (error) { console.error(error); setSaveMsg("خطأ: تعذر حفظ البيانات"); return; }
     if (data) { onUpdated(data as Member); }
     setSaveMsg("تم الحفظ بنجاح"); setTimeout(() => setSaveMsg(""), 3000);
   };

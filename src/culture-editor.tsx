@@ -40,7 +40,8 @@ export function ImageUpload({
       const url = await uploadImageFile(file);
       onChange(url);
     } catch (e: unknown) {
-      setUploadError(e instanceof Error ? e.message : "فشل رفع الصورة");
+      console.error(e);
+      setUploadError("فشل رفع الصورة");
     } finally {
       setUploading(false);
     }
@@ -386,7 +387,8 @@ export function EventEditor({
       : await supabase.from("culture_events").insert(payload);
     setSaving(false);
     if (err) {
-      setError(err.message);
+      console.error(err);
+      setError("تعذر تنفيذ العملية، يرجى المحاولة مرة أخرى");
       return;
     }
     onSave();
@@ -571,7 +573,8 @@ export function CultureNewsEditor({
       : await supabase.from("culture_news").insert(payload);
     setSaving(false);
     if (err) {
-      setError(err.message);
+      console.error(err);
+      setError("تعذر تنفيذ العملية، يرجى المحاولة مرة أخرى");
       return;
     }
     onSave();
@@ -751,7 +754,8 @@ export function ArtistEditor({
       : await supabase.from("culture_artists").insert(payload);
     setSaving(false);
     if (err) {
-      setError(err.message);
+      console.error(err);
+      setError("تعذر تنفيذ العملية، يرجى المحاولة مرة أخرى");
       return;
     }
     onSave();
@@ -931,7 +935,8 @@ export function AssociationEditor({
       : await supabase.from("culture_associations").insert(payload);
     setSaving(false);
     if (err) {
-      setError(err.message);
+      console.error(err);
+      setError("تعذر تنفيذ العملية، يرجى المحاولة مرة أخرى");
       return;
     }
     onSave();
@@ -1147,7 +1152,8 @@ export function InitiativeEditor({
       : await supabase.from("culture_initiatives").insert(payload);
     setSaving(false);
     if (err) {
-      setError(err.message);
+      console.error(err);
+      setError("تعذر تنفيذ العملية، يرجى المحاولة مرة أخرى");
       return;
     }
     onSave();
@@ -1285,7 +1291,8 @@ export function ContestEditor({
       : await supabase.from("culture_contests").insert(payload);
     setSaving(false);
     if (err) {
-      setError(err.message);
+      console.error(err);
+      setError("تعذر تنفيذ العملية، يرجى المحاولة مرة أخرى");
       return;
     }
     onSave();
@@ -1401,7 +1408,8 @@ export function CultureMediaEditor({
       : await supabase.from("culture_media").insert(payload);
     setSaving(false);
     if (err) {
-      setError(err.message);
+      console.error(err);
+      setError("تعذر تنفيذ العملية، يرجى المحاولة مرة أخرى");
       return;
     }
     onSave();
@@ -1562,7 +1570,7 @@ export function ArtCategoryEditor({ item, open, onSave, onClose }: {
       ? await supabase.from("culture_art_categories").update(payload).eq("id", form.id)
       : await supabase.from("culture_art_categories").insert(payload);
     setSaving(false);
-    if (err) { setError(err.message); return; }
+    if (err) { console.error(err); setError("تعذر تنفيذ العملية، يرجى المحاولة مرة أخرى"); return; }
     onSave();
   };
 

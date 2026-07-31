@@ -33,7 +33,8 @@ export function ImageUpload({
       const url = await uploadImageFile(file);
       onChange(url);
     } catch (e: unknown) {
-      setUploadError(e instanceof Error ? e.message : "فشل رفع الصورة");
+      console.error(e);
+      setUploadError("فشل رفع الصورة");
     } finally {
       setUploading(false);
     }
@@ -235,7 +236,7 @@ export function ServiceEditor({
       ? await supabase.from("social_services").update(payload).eq("id", form.id)
       : await supabase.from("social_services").insert(payload);
     setSaving(false);
-    if (err) { setError(err.message); return; }
+    if (err) { console.error(err); setError("تعذر تنفيذ العملية، يرجى المحاولة مرة أخرى"); return; }
     onSave();
   };
 
@@ -434,7 +435,7 @@ export function SocialInitiativeEditor({
       ? await supabase.from("social_initiatives").update(payload).eq("id", form.id)
       : await supabase.from("social_initiatives").insert(payload);
     setSaving(false);
-    if (err) { setError(err.message); return; }
+    if (err) { console.error(err); setError("تعذر تنفيذ العملية، يرجى المحاولة مرة أخرى"); return; }
     onSave();
   };
 
@@ -631,7 +632,7 @@ export function StatEditor({
       ? await supabase.from("social_stats").update(payload).eq("id", form.id)
       : await supabase.from("social_stats").insert(payload);
     setSaving(false);
-    if (err) { setError(err.message); return; }
+    if (err) { console.error(err); setError("تعذر تنفيذ العملية، يرجى المحاولة مرة أخرى"); return; }
     onSave();
   };
 
@@ -715,7 +716,7 @@ export function ValueEditor({
       ? await supabase.from("social_values").update(payload).eq("id", form.id)
       : await supabase.from("social_values").insert(payload);
     setSaving(false);
-    if (err) { setError(err.message); return; }
+    if (err) { console.error(err); setError("تعذر تنفيذ العملية، يرجى المحاولة مرة أخرى"); return; }
     onSave();
   };
 

@@ -1,5 +1,5 @@
 import { FormEvent, useCallback, useEffect, useRef, useState } from "react";
-import { supabase } from "./supabase";
+import { supabase, MEMBER_TOKEN_KEY } from "./supabase";
 import { useSeo, applyItemSeo } from "./useSeo";
 import SiteChatWidget from "./site-chat-widget";
 import { Aperture, ArrowLeft, Award, BadgeCheck, BadgePercent, Banknote, BookOpen, BriefcaseBusiness, Building2, Calendar, CalendarDays, Camera, ChartNoAxesCombined, ChartPie, Check, ChevronLeft, ChevronRight, CircleAlert, CircleCheckBig, Circle as CircleHelp, Clock3, CreditCard, Crown, Eye, Factory, Feather, FileImage, FileText, FileUp, Gem, Gift, Globe as Globe2, GraduationCap, HandHeart, Handshake, Headphones, HeartHandshake, HeartPulse, Landmark, LayoutDashboard, LayoutGrid, LibraryBig, Lightbulb, Menu, Megaphone, MonitorCheck, Music2, Network, Newspaper, MessageCircle, Info, LockKeyhole, Mail, MapPin, Paperclip, Percent, Phone, QrCode, ReceiptText, Palette, Pill, CirclePlay as PlayCircle, RefreshCw, ScanFace, Search, Settings2, Share2, Shield, ShieldCheck, Stethoscope, Send, ShoppingCart, Sparkles, Sprout, Store, Tags, Target, TrendingUp, Trophy, Truck, Upload, UserCheck, UserPlus, UserRound, UsersRound, Video, WalletCards, X } from "lucide-react";
@@ -1470,17 +1470,27 @@ function Register(){
     const maritalStatus=get("الحالة الاجتماعية")||getRadio("الحالة");
     const specialization=get("التخصص");
     const jobTitle=get("المسمى الوظيفي");
-    const defaultPassword=phone.replace(/\D/g,"").slice(-6)||"123456";
-    const {data:inserted,error}=await supabase.from("members").insert({
+    // Registration runs through member_register on the server: it assigns the
+    // membership status, generates a random initial password (never derived from the
+    // phone number) and returns a session token so the next steps act as this member.
+    const {data:result,error}=await supabase.rpc("member_register",{p:{
       full_name:fullName,email,phone,gender:gender==="أنثى"?"female":"male",
       birth_date:birthDate||null,country,city,state,locality,
       marital_status:maritalStatus,specialization,job_title:jobTitle,
-      membership_type:planNames[planIndex]||"basic",status:"pending",
-      password_hash:defaultPassword,
-    }).select("id").maybeSingle();
+      membership_type:planNames[planIndex]||"basic",
+    }});
     setSubmitting(false);
-    if(error){setSubmitError("حدث خطأ أثناء التسجيل: "+error.message);return;}
-    if(inserted?.id) sessionStorage.setItem("new_member_id",inserted.id);
+    if(error||!result?.member_id){
+      console.error(error);
+      const duplicate=/duplicate key|members_email_lower_uniq|members_national_id_uniq/i.test(error?.message||"");
+      setSubmitError(duplicate
+        ?"يوجد تسجيل سابق بنفس البريد الإلكتروني أو الرقم الوطني"
+        :"تعذر إكمال التسجيل، يرجى التحقق من البيانات والمحاولة مرة أخرى");
+      return;
+    }
+    sessionStorage.setItem("new_member_id",result.member_id as string);
+    sessionStorage.setItem(MEMBER_TOKEN_KEY,result.token as string);
+    if(result.initial_password) sessionStorage.setItem("new_member_password",result.initial_password as string);
     location.href="/photo";
   };
 
@@ -1570,19 +1580,21 @@ function PhotoUpload(){
   const handleFile=async(file?:File)=>{
     if(!file)return;
     if(file.size>2*1024*1024){setErr("الحجم الأقصى للصورة 2MB");return;}
+    if(!/^image\/(jpeg|png|webp)$/.test(file.type)){setErr("يُقبل فقط JPG أو PNG");return;}
     setErr("");
     setPreview(URL.createObjectURL(file));
     const memberId=sessionStorage.getItem("new_member_id");
     if(!memberId){setUploaded(true);return;}// no id yet — just preview, let them continue
     setUploading(true);
-    const ext=file.name.split(".").pop()?.toLowerCase()||"jpg";
+    // extension is derived from the verified MIME type, not from the file name
+    const ext=file.type==="image/png"?"png":file.type==="image/webp"?"webp":"jpg";
     const path=`members/${memberId}/photo.${ext}`;
     const{error:upErr}=await supabase.storage.from("images").upload(path,file,{upsert:true,contentType:file.type});
-    if(upErr){setErr("فشل الرفع: "+upErr.message);setUploading(false);return;}
+    if(upErr){console.error(upErr);setErr("تعذر رفع الصورة، يرجى المحاولة مرة أخرى");setUploading(false);return;}
     const{data:urlData}=supabase.storage.from("images").getPublicUrl(path);
     const{error:dbErr}=await supabase.from("members").update({photo_url:urlData.publicUrl}).eq("id",memberId);
     setUploading(false);
-    if(dbErr){setErr("تم رفع الصورة لكن فشل الحفظ: "+dbErr.message);return;}
+    if(dbErr){console.error(dbErr);setErr("تم رفع الصورة لكن تعذر حفظها");return;}
     setUploaded(true);
   };
 
@@ -1610,7 +1622,20 @@ function Payment(){
   </section><section className="payment-notice"><CircleAlert/><p>سيتم التحقق من مستندات السداد وتأكيدها خلال 24 ساعة عمل<br/>وسيصل إشعار بعد اعتماد السداد وتفعيل عضويتك</p></section><p className="payment-help"><Phone/> تحتاج مساعدة؟ تواصل معنا</p>{Object.keys(receipts).length>0&&<a className="step-continue" href="/success">إرسال المستندات <ArrowLeft/></a>}</MemberStepShell>
 }
 
-function Success(){return <MemberStepShell className="success-step"><header className="success-brand"><img src="/assets/membership-mark-transparent-v2.png" alt="شعار الرابطة"/><div><h2>رابطة ولاية نهر النيل</h2><b>الإلكترونية</b></div></header><section className="success-hero"><div className="success-check"><CircleCheckBig/></div><h1>مبروك</h1><h2>أنت الآن عضو</h2><p>في رابطة ولاية نهر النيل الإلكترونية</p></section><section className="success-member-card"><div className="success-user"><UserRound/></div><h3>رقم العضوية</h3><strong>NRN-2025-000123</strong><span/><h3>الباركود</h3><div className="success-barcode"/><small>N R N 2 0 2 5 0 0 0 1 2 3</small></section><section className="success-thanks"><ShieldCheck/><div><h2>شكراً لانضمامك إلينا</h2><p>معاً نبني مجتمعاً رقمياً قوياً ومتكافلاً لخدمة أبناء الولاية</p><b>وحدتنا .. قوتنا&nbsp;&nbsp;&nbsp; ومستقبلنا .. مسؤوليتنا</b></div></section></MemberStepShell>}
+function Success(){
+  // The initial password is generated on the server and shown to the member exactly
+  // once, here, then removed from the browser. It is never derived from their phone
+  // number and never stored anywhere a visitor can read.
+  const [credentials]=useState(()=>{
+    try{
+      const pw=sessionStorage.getItem("new_member_password");
+      if(pw) sessionStorage.removeItem("new_member_password");
+      return pw;
+    }catch{return null}
+  });
+  return <MemberStepShell className="success-step">
+  {credentials&&<section className="step-warning" style={{background:"#ecfdf5",borderColor:"#10b981"}}><ShieldCheck/><div><b>كلمة المرور الخاصة بك</b><p>احفظ كلمة المرور التالية في مكان آمن، فهي تُعرض لمرة واحدة فقط وتستخدمها لدخول بوابة الأعضاء:</p><strong style={{display:"inline-block",marginTop:"0.5rem",fontSize:"1.35rem",letterSpacing:"0.15em",fontFamily:"monospace",background:"#fff",padding:"0.4rem 0.9rem",borderRadius:"0.5rem"}}>{credentials}</strong></div></section>}
+  <header className="success-brand"><img src="/assets/membership-mark-transparent-v2.png" alt="شعار الرابطة"/><div><h2>رابطة ولاية نهر النيل</h2><b>الإلكترونية</b></div></header><section className="success-hero"><div className="success-check"><CircleCheckBig/></div><h1>مبروك</h1><h2>أنت الآن عضو</h2><p>في رابطة ولاية نهر النيل الإلكترونية</p></section><section className="success-member-card"><div className="success-user"><UserRound/></div><h3>رقم العضوية</h3><strong>NRN-2025-000123</strong><span/><h3>الباركود</h3><div className="success-barcode"/><small>N R N 2 0 2 5 0 0 0 1 2 3</small></section><section className="success-thanks"><ShieldCheck/><div><h2>شكراً لانضمامك إلينا</h2><p>معاً نبني مجتمعاً رقمياً قوياً ومتكافلاً لخدمة أبناء الولاية</p><b>وحدتنا .. قوتنا&nbsp;&nbsp;&nbsp; ومستقبلنا .. مسؤوليتنا</b></div></section></MemberStepShell>}
 
 function Contact(){
   // ── types ──

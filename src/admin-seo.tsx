@@ -386,7 +386,8 @@ export function SeoImageUpload({ value, onChange }: { value: string; onChange: (
       const { data } = supabase.storage.from("images").getPublicUrl(path);
       onChange(data.publicUrl);
     } catch (e: unknown) {
-      setErr(e instanceof Error ? e.message : "فشل رفع الصورة");
+      console.error(e);
+      setErr("فشل رفع الصورة");
     } finally {
       setUploading(false);
     }
