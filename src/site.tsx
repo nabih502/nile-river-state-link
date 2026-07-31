@@ -109,11 +109,43 @@ function Motion(){
       return;
     }
 
+    const animateCountEl=(el:HTMLElement)=>{
+      if(el.dataset.counted||el.dataset.abCount||el.closest("time")||el.closest(".member-card-css"))return;
+      const text=(el.textContent||"").trim();
+      if(text.includes("/")||text.includes(":")||/^\D/.test(text))return;
+      const m=text.match(/^([\d,]+\.?\d*)(.*?)$/);
+      if(!m)return;
+      const raw=parseFloat(m[1].replace(/,/g,""));
+      if(isNaN(raw)||raw<=0)return;
+      const suffix=m[2]||"";
+      const useCommas=/,/.test(m[1]);
+      const isDecimal=m[1].includes(".")&&raw!==Math.floor(raw);
+      el.dataset.counted="1";
+      const dur=Math.min(2000,Math.max(900,Math.sqrt(raw)*100));
+      const t0=performance.now();
+      const fmt=(v:number)=>{
+        const r=isDecimal?+(v.toFixed(1)):Math.round(v);
+        return useCommas?r.toLocaleString("en-US"):String(r);
+      };
+      const tick=(now:number)=>{
+        const p=Math.min((now-t0)/dur,1);
+        const ease=1-Math.pow(1-p,3);
+        el.textContent=fmt(ease*raw)+suffix;
+        if(p<1)requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    };
+    const triggerCounters=(container:HTMLElement)=>{
+      const els:HTMLElement[]=container.tagName==="B"||container.tagName==="STRONG"
+        ?[container]
+        :Array.from(container.querySelectorAll<HTMLElement>("b,strong"));
+      els.forEach(animateCountEl);
+    };
     const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{
       if(!entry.isIntersecting)return;
       const target=entry.target as HTMLElement;
-      if(target.classList.contains("site-hero-motion")||target.classList.contains("site-section-motion"))target.classList.add("site-section-in");
-      if(target.classList.contains("motion"))target.classList.add("in");
+      if(target.classList.contains("site-hero-motion")||target.classList.contains("site-section-motion")){target.classList.add("site-section-in");triggerCounters(target);}
+      if(target.classList.contains("motion")){target.classList.add("in");triggerCounters(target);}
       const settleDelay=target===hero?1550:target.classList.contains("motion")?980:1150;
       settleTimers.push(window.setTimeout(()=>target.classList.add("site-settled"),settleDelay));
       observer.unobserve(target);
@@ -131,12 +163,12 @@ function Motion(){
       item.style.setProperty("--site-item-x",`${dir*72}px`);
       item.style.setProperty("--site-item-delay",`${Math.min(motionCount%4,3)*.07}s`);
       motionCount++;
-      if(reduced){item.classList.add("in","site-settled");return;}
+      if(reduced){item.classList.add("in","site-settled");triggerCounters(item);return;}
       observer.observe(item);
       requestAnimationFrame(()=>{
         if(!item.classList.contains("in")){
           const vr=item.getBoundingClientRect();
-          if(vr.top<window.innerHeight+150){item.classList.add("in");settleTimers.push(window.setTimeout(()=>item.classList.add("site-settled"),980));}
+          if(vr.top<window.innerHeight+150){item.classList.add("in");triggerCounters(item);settleTimers.push(window.setTimeout(()=>item.classList.add("site-settled"),980));}
         }
       });
     };
@@ -261,7 +293,7 @@ function CountUp({raw}:{raw:string}){
     if(ref.current)obs.observe(ref.current);
     return()=>{active=false;obs.disconnect();};
   },[raw]);
-  return <b ref={ref}>{val}</b>;
+  return <b ref={ref} data-counted="1">{val}</b>;
 }
 
 function Home(){
