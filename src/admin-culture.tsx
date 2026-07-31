@@ -23,6 +23,7 @@ import {
 } from "./culture-editor";
 
 import { SeoTabContent } from "./admin-seo";
+import { GalleryManager } from "./gallery-manager";
 type CultureTab =
   | "events"
   | "news"
@@ -32,6 +33,7 @@ type CultureTab =
   | "contests"
   | "media"
   | "art_categories"
+  | "gallery"
   | "seo";
 
 function formatDate(d: string | null) {
@@ -728,6 +730,7 @@ export default function CulturePanel() {
     { key: "contests", label: "المسابقات" },
     { key: "media", label: "الوسائط" },
     { key: "art_categories", label: "مجالات الفنون" },
+    { key: "gallery", label: "معرض الصفحة" },
     { key: "seo", label: "SEO" },
   ];
 
@@ -740,6 +743,7 @@ export default function CulturePanel() {
     contests: { title: "المسابقات الثقافية", addLabel: "إضافة مسابقة جديدة", count: contests.length, onAdd: () => setEditContest(null) },
     media: { title: "الوسائط الثقافية", addLabel: "إضافة وسيط جديد", count: media.length, onAdd: () => setEditMedia(null) },
     art_categories: { title: "مجالات الفنون", addLabel: "إضافة مجال فني جديد", count: artCategories.length, onAdd: () => setEditArtCategory(null) },
+    gallery: { title: "معرض وسائط الصفحة الثقافية", addLabel: "", count: 0, onAdd: () => {} },
   };
 
   const cfg = tabConfig[tab];
@@ -830,6 +834,11 @@ export default function CulturePanel() {
             onEdit={(r) => setEditArtCategory(r)}
             onDelete={(id) => setConfirmId({ table: "culture_art_categories", id })}
           />
+        )}
+        {tab === "gallery" && (
+          <div style={{ paddingTop: "1rem" }}>
+            <GalleryManager contentType="page_culture" contentId={null} accentColor="#7c3aed" />
+          </div>
         )}
         {tab === "seo" && <SeoTabContent slug="culture" />}
       </div>

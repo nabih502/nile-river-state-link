@@ -16,7 +16,8 @@ import {
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 import { SeoTabContent } from "./admin-seo";
-type SocialTab = "services" | "initiatives" | "stats" | "values" | "seo";
+import { GalleryManager } from "./gallery-manager";
+type SocialTab = "services" | "initiatives" | "stats" | "values" | "gallery" | "seo";
 
 // ── Icon map ──────────────────────────────────────────────────────────────────
 const iconMap: Record<string, React.ElementType> = {
@@ -349,6 +350,7 @@ export function SocialPanel() {
     { key: "initiatives", label: "المبادرات",   icon: TrendingUp },
     { key: "stats",       label: "الإحصائيات", icon: Users },
     { key: "values",      label: "القيم",       icon: Star },
+    { key: "gallery",     label: "معرض الصفحة", icon: Star },
     { key: "seo",         label: "SEO",         icon: Star },
   ];
 
@@ -357,10 +359,11 @@ export function SocialPanel() {
     initiatives: { title: "المبادرات والمشاريع",    addLabel: "إضافة مبادرة",    onAdd: () => setEditInitiative(null) },
     stats:       { title: "الإحصائيات والأرقام",   addLabel: "إضافة إحصائية",  onAdd: () => setEditStat(null) },
     values:      { title: "القيم المؤسسية",         addLabel: "إضافة قيمة",     onAdd: () => setEditValue(null) },
+    gallery:     { title: "معرض وسائط الصفحة",       addLabel: "",              onAdd: () => {} },
     seo:         { title: "SEO الخدمات الاجتماعية",   addLabel: "",              onAdd: () => {} },
   };
 
-  const counts = { services: services.length, initiatives: initiatives.length, stats: stats.length, values: values.length, seo: 0 };
+  const counts = { services: services.length, initiatives: initiatives.length, stats: stats.length, values: values.length, gallery: 0, seo: 0 };
 
   return (
     <div className="inv-panel">
@@ -409,6 +412,7 @@ export function SocialPanel() {
       {tab === "initiatives" && <InitiativesTab items={initiatives} setItems={setInitiatives} onEdit={setEditInitiative} onDelete={(id) => setConfirmId({ table: "social_initiatives", id })} />}
       {tab === "stats"       && <StatsTab       items={stats}       setItems={setStats}       onEdit={setEditStat}       onDelete={(id) => setConfirmId({ table: "social_stats",        id })} />}
       {tab === "values"      && <ValuesTab      items={values}      setItems={setValues}      onEdit={setEditValue}      onDelete={(id) => setConfirmId({ table: "social_values",       id })} />}
+      {tab === "gallery"     && <div style={{ paddingTop: "1rem" }}><GalleryManager contentType="page_social" contentId={null} accentColor="#16a34a" /></div>}
       {tab === "seo"        && <SeoTabContent slug="social" />}
 
       {/* ── Editors ── */}

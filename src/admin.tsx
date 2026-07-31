@@ -10,6 +10,7 @@ import AdminStaffPanel from "./admin-staff";
 import AdminChatPanel from "./admin-chat";
 import AdminVisitorChat from "./admin-visitor-chat";
 import { SeoImageUpload } from "./admin-seo";
+import { GalleryManager } from "./gallery-manager";
 import { callAdminAuth, loadSession, saveSession, clearSession, type AdminSession } from "./admin-auth-client";
 
 type Section = "dashboard" | "news" | "events" | "members" | "member-detail" | "messages" | "investment" | "culture" | "social" | "contact" | "settings" | "staff" | "chat" | "visitor-chat";
@@ -118,7 +119,8 @@ function NewsEditor({ item, onSave, onCancel }: { item: Partial<NewsRow> | null;
   const [form, setForm] = useState<Partial<NewsRow>>(item ?? blank);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
-  const [eTab, setETab] = useState<"content"|"seo">("content");
+  const [eTab, setETab] = useState<"content"|"seo"|"gallery">("content");
+  const [savedId, setSavedId] = useState<string|undefined>(item?.id);
 
   const set = (k: keyof NewsRow, v: string | boolean) => setForm(f => ({ ...f, [k]: v }));
 
@@ -142,12 +144,15 @@ function NewsEditor({ item, onSave, onCancel }: { item: Partial<NewsRow> | null;
       seo_description: form.seo_description || "",
       seo_image: form.seo_image || "",
     };
-    const { error: err } = form.id
-      ? await supabase.from("news").update(payload).eq("id", form.id)
-      : await supabase.from("news").insert(payload);
+    const { error: err, data: saved } = form.id
+      ? await supabase.from("news").update(payload).eq("id", form.id).select("id").single()
+      : await supabase.from("news").insert(payload).select("id").single();
     setSaving(false);
     if (err) { setError(err.message); return; }
-    onSave();
+    const newId = saved?.id || form.id;
+    if (newId && !form.id) { setForm(f => ({ ...f, id: newId })); setSavedId(newId); }
+    else if (newId) setSavedId(newId);
+    if (eTab !== "gallery") onSave();
   };
 
   return (
@@ -158,7 +163,7 @@ function NewsEditor({ item, onSave, onCancel }: { item: Partial<NewsRow> | null;
           <button type="button" onClick={onCancel} className="adm-close">✕</button>
         </div>
         <div style={{display:"flex",gap:"0.4rem",padding:"0.75rem 1.25rem",borderBottom:"1px solid #e2e8f0",background:"#f8fafc"}}>
-          {(["content","seo"] as const).map(t=><button key={t} type="button" onClick={()=>setETab(t)} style={{padding:"0.45rem 1.1rem",borderRadius:"0.45rem",border:"none",fontFamily:"inherit",fontWeight:eTab===t?800:500,color:eTab===t?"#2563eb":"#64748b",background:eTab===t?"#eff6ff":"transparent",cursor:"pointer",fontSize:"0.83rem"}}>{t==="content"?"المحتوى":"SEO"}</button>)}
+          {(["content","seo","gallery"] as const).map(t=><button key={t} type="button" onClick={()=>setETab(t)} style={{padding:"0.45rem 1.1rem",borderRadius:"0.45rem",border:"none",fontFamily:"inherit",fontWeight:eTab===t?800:500,color:eTab===t?"#2563eb":"#64748b",background:eTab===t?"#eff6ff":"transparent",cursor:"pointer",fontSize:"0.83rem"}}>{t==="content"?"المحتوى":t==="seo"?"SEO":"المعرض"}</button>)}
         </div>
         {error && <p className="adm-err">{error}</p>}
         {eTab==="content" && <>
@@ -202,6 +207,18 @@ function NewsEditor({ item, onSave, onCancel }: { item: Partial<NewsRow> | null;
             <SeoImageUpload value={form.seo_image||""} onChange={url=>set("seo_image",url)} />
           </div>
         </div>}
+        {eTab==="gallery" && (
+          <div style={{padding:"0.25rem 0"}}>
+            {savedId ? (
+              <GalleryManager contentType="news" contentId={savedId} accentColor="#2563eb" />
+            ) : (
+              <div style={{textAlign:"center",padding:"2rem",color:"#64748b",fontSize:"0.85rem"}}>
+                <p style={{margin:0}}>احفظ الخبر أولاً لتتمكن من إضافة وسائط للمعرض.</p>
+                <button type="submit" disabled={saving} style={{marginTop:"0.75rem",padding:"0.55rem 1.5rem",background:"#2563eb",color:"#fff",border:"none",borderRadius:"0.5rem",cursor:"pointer",fontSize:"0.85rem",fontWeight:700,fontFamily:"inherit"}}>{saving?"جاري الحفظ...":"حفظ الآن"}</button>
+              </div>
+            )}
+          </div>
+        )}
         <div className="adm-editor-foot">
           <button type="submit" disabled={saving}>{saving ? "جاري الحفظ..." : "حفظ"}</button>
           <button type="button" onClick={onCancel}>إلغاء</button>
@@ -217,7 +234,8 @@ function EventEditor({ item, onSave, onCancel }: { item: Partial<EventRow> | nul
   const [form, setForm] = useState<Partial<EventRow>>(item ?? blank);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
-  const [eTab, setETab] = useState<"content"|"seo">("content");
+  const [eTab, setETab] = useState<"content"|"seo"|"gallery">("content");
+  const [savedId, setSavedId] = useState<string|undefined>(item?.id);
 
   const set = (k: keyof EventRow, v: string | boolean | null) => setForm(f => ({ ...f, [k]: v }));
 
@@ -242,12 +260,15 @@ function EventEditor({ item, onSave, onCancel }: { item: Partial<EventRow> | nul
       seo_description: form.seo_description || "",
       seo_image: form.seo_image || "",
     };
-    const { error: err } = form.id
-      ? await supabase.from("events").update(payload).eq("id", form.id)
-      : await supabase.from("events").insert(payload);
+    const { error: err, data: saved } = form.id
+      ? await supabase.from("events").update(payload).eq("id", form.id).select("id").single()
+      : await supabase.from("events").insert(payload).select("id").single();
     setSaving(false);
     if (err) { setError(err.message); return; }
-    onSave();
+    const newId = saved?.id || form.id;
+    if (newId && !form.id) { setForm(f => ({ ...f, id: newId })); setSavedId(newId); }
+    else if (newId) setSavedId(newId);
+    if (eTab !== "gallery") onSave();
   };
 
   return (
@@ -258,7 +279,7 @@ function EventEditor({ item, onSave, onCancel }: { item: Partial<EventRow> | nul
           <button type="button" onClick={onCancel} className="adm-close">✕</button>
         </div>
         <div style={{display:"flex",gap:"0.4rem",padding:"0.75rem 1.25rem",borderBottom:"1px solid #e2e8f0",background:"#f8fafc"}}>
-          {(["content","seo"] as const).map(t=><button key={t} type="button" onClick={()=>setETab(t)} style={{padding:"0.45rem 1.1rem",borderRadius:"0.45rem",border:"none",fontFamily:"inherit",fontWeight:eTab===t?800:500,color:eTab===t?"#2563eb":"#64748b",background:eTab===t?"#eff6ff":"transparent",cursor:"pointer",fontSize:"0.83rem"}}>{t==="content"?"المحتوى":"SEO"}</button>)}
+          {(["content","seo","gallery"] as const).map(t=><button key={t} type="button" onClick={()=>setETab(t)} style={{padding:"0.45rem 1.1rem",borderRadius:"0.45rem",border:"none",fontFamily:"inherit",fontWeight:eTab===t?800:500,color:eTab===t?"#2563eb":"#64748b",background:eTab===t?"#eff6ff":"transparent",cursor:"pointer",fontSize:"0.83rem"}}>{t==="content"?"المحتوى":t==="seo"?"SEO":"المعرض"}</button>)}
         </div>
         {error && <p className="adm-err">{error}</p>}
         {eTab==="content" && <>
@@ -302,6 +323,18 @@ function EventEditor({ item, onSave, onCancel }: { item: Partial<EventRow> | nul
             <SeoImageUpload value={form.seo_image||""} onChange={url=>set("seo_image",url)} />
           </div>
         </div>}
+        {eTab==="gallery" && (
+          <div style={{padding:"0.25rem 0"}}>
+            {savedId ? (
+              <GalleryManager contentType="events" contentId={savedId} accentColor="#16a34a" />
+            ) : (
+              <div style={{textAlign:"center",padding:"2rem",color:"#64748b",fontSize:"0.85rem"}}>
+                <p style={{margin:0}}>احفظ الفعالية أولاً لتتمكن من إضافة وسائط للمعرض.</p>
+                <button type="submit" disabled={saving} style={{marginTop:"0.75rem",padding:"0.55rem 1.5rem",background:"#16a34a",color:"#fff",border:"none",borderRadius:"0.5rem",cursor:"pointer",fontSize:"0.85rem",fontWeight:700,fontFamily:"inherit"}}>{saving?"جاري الحفظ...":"حفظ الآن"}</button>
+              </div>
+            )}
+          </div>
+        )}
         <div className="adm-editor-foot">
           <button type="submit" disabled={saving}>{saving ? "جاري الحفظ..." : "حفظ"}</button>
           <button type="button" onClick={onCancel}>إلغاء</button>

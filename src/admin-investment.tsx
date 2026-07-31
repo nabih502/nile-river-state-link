@@ -19,6 +19,7 @@ import {
 } from "./investment-editor";
 
 import { SeoTabContent } from "./admin-seo";
+import { GalleryManager } from "./gallery-manager";
 type InvTab =
   | "sectors"
   | "opportunities"
@@ -27,6 +28,7 @@ type InvTab =
   | "partners"
   | "stats"
   | "inquiries"
+  | "gallery"
   | "seo";
 
 function formatDate(d: string | null) {
@@ -722,6 +724,7 @@ export default function InvestmentPanel() {
     { key: "partners", label: "الشركاء" },
     { key: "stats", label: "الإحصاءات" },
     { key: "inquiries", label: "الطلبات", badge: tab !== "inquiries" ? newInquiriesCount : undefined },
+    { key: "gallery", label: "معرض الصفحة" },
     { key: "seo", label: "SEO" },
   ];
 
@@ -825,6 +828,11 @@ export default function InvestmentPanel() {
             onUpdateStatus={updateInquiryStatus}
             onDelete={(id) => setConfirmId({ table: "investment_inquiries", id })}
           />
+        )}
+        {tab === "gallery" && (
+          <div style={{ paddingTop: "1rem" }}>
+            <GalleryManager contentType="page_investment" contentId={null} accentColor="#b45309" />
+          </div>
         )}
         {tab === "seo" && <SeoTabContent slug="investment" />}
       </div>

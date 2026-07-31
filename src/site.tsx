@@ -2188,117 +2188,170 @@ function InvestmentOpportunityDetailPage({slug}:{slug?:string}){
   );
 }
 
+// ─── Gallery helpers (shared by ContentGallery + PageGallery) ─────────────────
+type GItem={id:string;image_url:string;video_url:string|null;thumbnail_url:string|null;media_type:string;caption:string;sort_order:number};
+
+function parseYtId(url:string){const m=url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);return m?m[1]:null;}
+function parseViId(url:string){const m=url.match(/vimeo\.com\/([0-9]+)/);return m?m[1]:null;}
+function embedUrl(videoUrl:string):string{
+  const yt=parseYtId(videoUrl); if(yt) return `https://www.youtube.com/embed/${yt}?autoplay=1&rel=0`;
+  const vi=parseViId(videoUrl); if(vi) return `https://player.vimeo.com/video/${vi}?autoplay=1`;
+  return videoUrl;
+}
+function thumbFromVideo(item:GItem):string{
+  if(item.thumbnail_url) return item.thumbnail_url;
+  if(item.video_url){const yt=parseYtId(item.video_url);if(yt) return `https://img.youtube.com/vi/${yt}/hqdefault.jpg`;}
+  return item.image_url||"";
+}
+function GalleryLightbox({items,idx,onClose,onNav}:{items:GItem[];idx:number;onClose:()=>void;onNav:(d:number)=>void}){
+  const item=items[idx];
+  const isVideo=item.media_type==="video";
+  const embed=isVideo&&item.video_url?embedUrl(item.video_url):"";
+  const isDirect=isVideo&&item.video_url&&!parseYtId(item.video_url)&&!parseViId(item.video_url);
+  useEffect(()=>{
+    const h=(e:KeyboardEvent)=>{if(e.key==="Escape")onClose();if(e.key==="ArrowLeft")onNav(1);if(e.key==="ArrowRight")onNav(-1);};
+    window.addEventListener("keydown",h);return()=>window.removeEventListener("keydown",h);
+  },[]);
+  return(
+    <div onClick={onClose} style={{position:"fixed",inset:0,zIndex:9999,background:"rgba(0,0,0,0.97)",display:"flex",alignItems:"center",justifyContent:"center"}}>
+      <button onClick={e=>{e.stopPropagation();onClose();}} style={{position:"absolute",top:"1.25rem",left:"1.25rem",background:"rgba(255,255,255,0.12)",border:"none",color:"#fff",borderRadius:"50%",width:44,height:44,fontSize:"1.2rem",cursor:"pointer",zIndex:10}}>✕</button>
+      {items.length>1&&<>
+        <button onClick={e=>{e.stopPropagation();onNav(1);}} style={{position:"absolute",left:"1rem",top:"50%",transform:"translateY(-50%)",background:"rgba(255,255,255,0.1)",border:"none",color:"#fff",borderRadius:"50%",width:52,height:52,fontSize:"1.8rem",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",lineHeight:1}}>‹</button>
+        <button onClick={e=>{e.stopPropagation();onNav(-1);}} style={{position:"absolute",right:"1rem",top:"50%",transform:"translateY(-50%)",background:"rgba(255,255,255,0.1)",border:"none",color:"#fff",borderRadius:"50%",width:52,height:52,fontSize:"1.8rem",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",lineHeight:1}}>›</button>
+      </>}
+      <div onClick={e=>e.stopPropagation()} style={{display:"flex",flexDirection:"column",alignItems:"center",gap:"0.85rem",maxWidth:"92vw",width:"100%",padding:"0 4rem"}}>
+        {isVideo?(
+          isDirect&&item.video_url?(
+            <video src={item.video_url} controls autoPlay style={{maxHeight:"78vh",maxWidth:"100%",borderRadius:"0.75rem",background:"#000"}}/>
+          ):(
+            <div style={{width:"100%",maxWidth:900,aspectRatio:"16/9",borderRadius:"0.75rem",overflow:"hidden"}}>
+              <iframe src={embed} style={{width:"100%",height:"100%",border:"none"}} allow="autoplay;fullscreen"/>
+            </div>
+          )
+        ):(
+          <img src={item.image_url} alt={item.caption||""} style={{maxHeight:"80vh",maxWidth:"100%",objectFit:"contain",borderRadius:"0.65rem"}}/>
+        )}
+        {item.caption&&<p style={{color:"rgba(255,255,255,0.88)",fontSize:"0.92rem",margin:0,textAlign:"center",maxWidth:700}}>{item.caption}</p>}
+        <p style={{color:"rgba(255,255,255,0.3)",fontSize:"0.72rem",margin:0}}>{idx+1} / {items.length}</p>
+      </div>
+    </div>
+  );
+}
+
 // ─── Content Gallery ─────────────────────────────────────────────────────────
 function ContentGallery({contentType,contentId,accentColor="#2563eb"}:{contentType:string;contentId?:string;accentColor?:string}) {
-  type GItem={id:string;image_url:string;caption:string;sort_order:number};
   const [items,setItems]=useState<GItem[]>([]);
   const [lb,setLb]=useState<number|null>(null);
   useEffect(()=>{
     if(!contentId) return;
-    supabase.from("content_gallery").select("id,image_url,caption,sort_order")
+    supabase.from("content_gallery").select("id,image_url,video_url,thumbnail_url,media_type,caption,sort_order")
       .eq("content_type",contentType).eq("content_id",contentId).eq("published",true)
       .order("sort_order").then(({data})=>setItems(data??[]));
   },[contentType,contentId]);
-  useEffect(()=>{
-    if(lb===null) return;
-    const h=(e:KeyboardEvent)=>{
-      if(e.key==="Escape") setLb(null);
-      if(e.key==="ArrowLeft") setLb(l=>l===null?null:(l+1)%items.length);
-      if(e.key==="ArrowRight") setLb(l=>l===null?null:(l-1+items.length)%items.length);
-    };
-    window.addEventListener("keydown",h); return ()=>window.removeEventListener("keydown",h);
-  },[lb,items.length]);
   if(items.length===0) return null;
-  return (
-    <section style={{padding:"2.5rem 1.5rem 3rem",maxWidth:"900px",margin:"0 auto"}}>
-      <div style={{display:"flex",alignItems:"center",gap:"0.75rem",marginBottom:"1.25rem"}}>
-        <div style={{width:4,height:28,background:accentColor,borderRadius:2}}/>
-        <h2 style={{margin:0,fontSize:"1.15rem",fontWeight:800,color:"#0f172a"}}>معرض الصور</h2>
-        <span style={{background:`${accentColor}18`,color:accentColor,fontSize:"0.72rem",fontWeight:700,padding:"0.2rem 0.6rem",borderRadius:"9999px",border:`1px solid ${accentColor}33`}}>{items.length} صورة</span>
-      </div>
-      <div style={{display:"grid",gridTemplateColumns:items.length===1?"1fr":items.length===2?"1fr 1fr":"2fr 1fr",gridTemplateRows:items.length>=3?"1fr 1fr":"auto",gap:"0.6rem"}}>
-        {items.map((img,i)=>(
-          <div key={img.id} onClick={()=>setLb(i)} style={{gridRow:i===0&&items.length>=3?"1/3":"auto",position:"relative",overflow:"hidden",borderRadius:"0.75rem",cursor:"zoom-in",background:"#e2e8f0",aspectRatio:i===0&&items.length>=3?"auto":"4/3"}}>
-            <img src={img.image_url} alt={img.caption||""} loading="lazy" style={{width:"100%",height:"100%",objectFit:"cover",display:"block",transition:"transform 0.35s"}}
-              onMouseEnter={e=>(e.currentTarget.style.transform="scale(1.06)")} onMouseLeave={e=>(e.currentTarget.style.transform="scale(1)")}/>
-            {img.caption&&<div style={{position:"absolute",bottom:0,left:0,right:0,background:"linear-gradient(to top,rgba(0,0,0,0.7),transparent)",padding:"0.6rem 0.75rem",pointerEvents:"none"}}>
-              <p style={{color:"#fff",fontSize:"0.72rem",fontWeight:600,margin:0,lineHeight:1.3}}>{img.caption}</p>
-            </div>}
-          </div>
-        ))}
-      </div>
-      {lb!==null&&(
-        <div onClick={()=>setLb(null)} style={{position:"fixed",inset:0,zIndex:9999,background:"rgba(0,0,0,0.95)",display:"flex",alignItems:"center",justifyContent:"center"}}>
-          <button onClick={e=>{e.stopPropagation();setLb(null);}} style={{position:"absolute",top:"1rem",left:"1rem",background:"rgba(255,255,255,0.15)",border:"none",color:"#fff",borderRadius:"50%",width:40,height:40,fontSize:"1.1rem",cursor:"pointer"}}>✕</button>
-          {items.length>1&&<>
-            <button onClick={e=>{e.stopPropagation();setLb(l=>l===null?null:(l+1)%items.length);}} style={{position:"absolute",left:"1rem",top:"50%",transform:"translateY(-50%)",background:"rgba(255,255,255,0.12)",border:"none",color:"#fff",borderRadius:"50%",width:48,height:48,fontSize:"1.4rem",cursor:"pointer"}}>‹</button>
-            <button onClick={e=>{e.stopPropagation();setLb(l=>l===null?null:(l-1+items.length)%items.length);}} style={{position:"absolute",right:"1rem",top:"50%",transform:"translateY(-50%)",background:"rgba(255,255,255,0.12)",border:"none",color:"#fff",borderRadius:"50%",width:48,height:48,fontSize:"1.4rem",cursor:"pointer"}}>›</button>
-          </>}
-          <div onClick={e=>e.stopPropagation()} style={{display:"flex",flexDirection:"column",alignItems:"center",gap:"0.75rem",maxWidth:"90vw"}}>
-            <img src={items[lb].image_url} alt={items[lb].caption||""} style={{maxHeight:"78vh",maxWidth:"90vw",objectFit:"contain",borderRadius:"0.5rem"}}/>
-            {items[lb].caption&&<p style={{color:"rgba(255,255,255,0.85)",fontSize:"0.9rem",margin:0}}>{items[lb].caption}</p>}
-            <p style={{color:"rgba(255,255,255,0.35)",fontSize:"0.75rem",margin:0}}>{lb+1} / {items.length}</p>
-          </div>
+  const hasVideo=items.some(i=>i.media_type==="video");
+  const gridCols=items.length===1?"1fr":items.length===2?"1fr 1fr":"2fr 1fr";
+  return(
+    <section style={{padding:"3rem 1.5rem 3.5rem",borderTop:"1px solid #e2e8f0",marginTop:"1rem"}}>
+      <div style={{maxWidth:"860px",margin:"0 auto"}}>
+        <div style={{display:"flex",alignItems:"center",gap:"0.85rem",marginBottom:"1.5rem"}}>
+          <div style={{width:3,height:26,background:accentColor,borderRadius:2,flexShrink:0}}/>
+          <h2 style={{margin:0,fontSize:"1.1rem",fontWeight:800,color:"#0f172a"}}>{hasVideo?"معرض الوسائط":"معرض الصور"}</h2>
+          <span style={{background:`${accentColor}15`,color:accentColor,fontSize:"0.7rem",fontWeight:700,padding:"0.18rem 0.6rem",borderRadius:"9999px",border:`1px solid ${accentColor}30`}}>{items.length} {hasVideo?"عنصر":"صورة"}</span>
         </div>
-      )}
+        <div style={{display:"grid",gridTemplateColumns:gridCols,gridTemplateRows:items.length>=3?"1fr 1fr":"auto",gap:"0.55rem"}}>
+          {items.map((img,i)=>{
+            const thumb=img.media_type==="video"?thumbFromVideo(img):img.image_url;
+            const isV=img.media_type==="video";
+            return(
+              <div key={img.id} onClick={()=>setLb(i)} style={{gridRow:i===0&&items.length>=3?"1/3":"auto",position:"relative",overflow:"hidden",borderRadius:"0.85rem",cursor:"pointer",background:"#e2e8f0",aspectRatio:i===0&&items.length>=3?"auto":"4/3",minHeight:0}}>
+                {thumb?(
+                  <img src={thumb} alt={img.caption||""} loading="lazy" style={{width:"100%",height:"100%",objectFit:"cover",display:"block",transition:"transform 0.4s"}}
+                    onMouseEnter={e=>(e.currentTarget.style.transform="scale(1.05)")} onMouseLeave={e=>(e.currentTarget.style.transform="scale(1)")}/>
+                ):(
+                  <div style={{width:"100%",height:"100%",minHeight:120,background:"#1e293b",display:"flex",alignItems:"center",justifyContent:"center"}}>
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth="1.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                  </div>
+                )}
+                {isV&&(
+                  <div style={{position:"absolute",inset:0,background:"rgba(0,0,0,0.35)",display:"flex",alignItems:"center",justifyContent:"center",pointerEvents:"none"}}>
+                    <div style={{width:48,height:48,borderRadius:"50%",background:"rgba(255,255,255,0.9)",display:"flex",alignItems:"center",justifyContent:"center",boxShadow:"0 4px 16px rgba(0,0,0,0.4)"}}>
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="#0f172a"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                    </div>
+                  </div>
+                )}
+                {isV&&<span style={{position:"absolute",top:"0.55rem",right:"0.55rem",background:"rgba(0,0,0,0.65)",color:"#fff",fontSize:"0.62rem",fontWeight:700,padding:"0.18rem 0.5rem",borderRadius:"0.3rem",letterSpacing:"0.04em"}}>فيديو</span>}
+                {img.caption&&<div style={{position:"absolute",bottom:0,left:0,right:0,background:"linear-gradient(to top,rgba(0,0,0,0.75),transparent)",padding:"0.7rem 0.8rem",pointerEvents:"none"}}>
+                  <p style={{color:"#fff",fontSize:"0.72rem",fontWeight:600,margin:0,lineHeight:1.35}}>{img.caption}</p>
+                </div>}
+              </div>
+            );
+          })}
+        </div>
+        {items.length>4&&<button onClick={()=>setLb(4)} style={{marginTop:"0.75rem",width:"100%",padding:"0.65rem",border:`1px solid ${accentColor}30`,background:`${accentColor}08`,color:accentColor,borderRadius:"0.65rem",cursor:"pointer",fontFamily:"inherit",fontSize:"0.83rem",fontWeight:700}}>عرض كل الوسائط ({items.length})</button>}
+      </div>
+      {lb!==null&&<GalleryLightbox items={items} idx={lb} onClose={()=>setLb(null)} onNav={d=>setLb(l=>l===null?null:(l+d+items.length)%items.length)}/>}
     </section>
   );
 }
 
 // ─── Page Gallery (main section pages) ───────────────────────────────────────
 function PageGallery({contentType,title,accentColor="#2563eb"}:{contentType:string;title:string;accentColor?:string}) {
-  type GItem={id:string;image_url:string;caption:string;sort_order:number};
   const [items,setItems]=useState<GItem[]>([]);
   const [lb,setLb]=useState<number|null>(null);
   useEffect(()=>{
-    supabase.from("content_gallery").select("id,image_url,caption,sort_order")
+    supabase.from("content_gallery").select("id,image_url,video_url,thumbnail_url,media_type,caption,sort_order")
       .eq("content_type",contentType).is("content_id",null).eq("published",true)
       .order("sort_order").then(({data})=>setItems(data??[]));
   },[contentType]);
-  useEffect(()=>{
-    if(lb===null) return;
-    const h=(e:KeyboardEvent)=>{
-      if(e.key==="Escape") setLb(null);
-      if(e.key==="ArrowLeft") setLb(l=>l===null?null:(l+1)%items.length);
-      if(e.key==="ArrowRight") setLb(l=>l===null?null:(l-1+items.length)%items.length);
-    };
-    window.addEventListener("keydown",h); return ()=>window.removeEventListener("keydown",h);
-  },[lb,items.length]);
   if(items.length===0) return null;
-  return (
-    <section style={{padding:"5rem 1.5rem",background:"#0f172a",position:"relative"}}>
-      <div style={{position:"absolute",top:0,left:0,right:0,height:3,background:`linear-gradient(to right,transparent,${accentColor},transparent)`}}/>
-      <div style={{maxWidth:"1200px",margin:"0 auto"}}>
-        <div style={{textAlign:"center",marginBottom:"2.5rem"}}>
-          <span style={{display:"inline-block",background:`${accentColor}22`,color:accentColor,fontSize:"0.75rem",fontWeight:700,padding:"0.3rem 0.9rem",borderRadius:"9999px",border:`1px solid ${accentColor}44`,marginBottom:"0.6rem",letterSpacing:"0.06em"}}>من الذاكرة</span>
-          <h2 style={{color:"#fff",fontSize:"clamp(1.5rem,2.5vw,2rem)",fontWeight:900,margin:0}}>{title}</h2>
+  const hasVideo=items.some(i=>i.media_type==="video");
+  // Masonry-style: first item tall, alternate tall/wide
+  const spanPattern=[{col:"span 1",row:"span 2"},{col:"span 1",row:"span 1"},{col:"span 1",row:"span 1"},{col:"span 1",row:"span 2"},{col:"span 1",row:"span 1"},{col:"span 1",row:"span 1"}];
+  return(
+    <section style={{padding:"5rem 1.5rem 5.5rem",background:"#0f172a",position:"relative",overflow:"hidden"}}>
+      {/* Decorative top line */}
+      <div style={{position:"absolute",top:0,left:0,right:0,height:3,background:`linear-gradient(to right,transparent 5%,${accentColor} 50%,transparent 95%)`}}/>
+      {/* Subtle grid bg */}
+      <div style={{position:"absolute",inset:0,backgroundImage:"radial-gradient(rgba(255,255,255,0.02) 1px,transparent 1px)",backgroundSize:"32px 32px",pointerEvents:"none"}}/>
+      <div style={{maxWidth:"1280px",margin:"0 auto",position:"relative"}}>
+        <div style={{textAlign:"center",marginBottom:"2.75rem"}}>
+          <span style={{display:"inline-block",background:`${accentColor}20`,color:accentColor,fontSize:"0.72rem",fontWeight:800,padding:"0.28rem 0.9rem",borderRadius:"9999px",border:`1px solid ${accentColor}40`,marginBottom:"0.75rem",letterSpacing:"0.08em",textTransform:"uppercase"}}>{hasVideo?"صور وفيديوهات":"معرض الصور"}</span>
+          <h2 style={{color:"#fff",fontSize:"clamp(1.5rem,3vw,2.1rem)",fontWeight:900,margin:0,lineHeight:1.15}}>{title}</h2>
         </div>
-        <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:"0.75rem"}}>
-          {items.map((img,i)=>(
-            <div key={img.id} onClick={()=>setLb(i)} style={{position:"relative",overflow:"hidden",borderRadius:"1rem",cursor:"zoom-in",aspectRatio:i===0||i===3?"3/4":"4/3",background:"#1e293b",border:`1px solid ${accentColor}33`}}>
-              <img src={img.image_url} alt={img.caption||""} loading="lazy" style={{width:"100%",height:"100%",objectFit:"cover",transition:"transform 0.45s"}}
-                onMouseEnter={e=>(e.currentTarget.style.transform="scale(1.07)")} onMouseLeave={e=>(e.currentTarget.style.transform="scale(1)")}/>
-              <div style={{position:"absolute",inset:0,background:"linear-gradient(to top,rgba(0,0,0,0.75),transparent 55%)",display:"flex",alignItems:"flex-end",padding:"1rem"}}>
-                {img.caption&&<p style={{color:"#fff",fontSize:"0.78rem",fontWeight:600,margin:0,lineHeight:1.35}}>{img.caption}</p>}
+        <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gridAutoRows:"200px",gap:"0.65rem"}}>
+          {items.map((img,i)=>{
+            const thumb=img.media_type==="video"?thumbFromVideo(img):img.image_url;
+            const isV=img.media_type==="video";
+            const sp=spanPattern[i%spanPattern.length];
+            return(
+              <div key={img.id} onClick={()=>setLb(i)} style={{gridColumn:sp.col,gridRow:sp.row,position:"relative",overflow:"hidden",borderRadius:"1.1rem",cursor:"pointer",background:"#1e293b",border:`1px solid ${accentColor}22`}}>
+                {thumb?(
+                  <img src={thumb} alt={img.caption||""} loading="lazy" style={{width:"100%",height:"100%",objectFit:"cover",transition:"transform 0.5s"}}
+                    onMouseEnter={e=>(e.currentTarget.style.transform="scale(1.08)")} onMouseLeave={e=>(e.currentTarget.style.transform="scale(1)")}/>
+                ):(
+                  <div style={{width:"100%",height:"100%",background:"#1e293b",display:"flex",alignItems:"center",justifyContent:"center"}}>
+                    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#475569" strokeWidth="1.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                  </div>
+                )}
+                <div style={{position:"absolute",inset:0,background:"linear-gradient(to top,rgba(0,0,0,0.8) 0%,rgba(0,0,0,0.1) 50%,transparent 100%)"}}/>
+                {isV&&(
+                  <div style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center",pointerEvents:"none"}}>
+                    <div style={{width:56,height:56,borderRadius:"50%",background:"rgba(255,255,255,0.12)",backdropFilter:"blur(6px)",border:"2px solid rgba(255,255,255,0.3)",display:"flex",alignItems:"center",justifyContent:"center",boxShadow:"0 8px 32px rgba(0,0,0,0.5)"}}>
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                    </div>
+                  </div>
+                )}
+                {isV&&<span style={{position:"absolute",top:"0.6rem",right:"0.6rem",background:`${accentColor}cc`,color:"#fff",fontSize:"0.63rem",fontWeight:800,padding:"0.2rem 0.55rem",borderRadius:"0.35rem",letterSpacing:"0.05em"}}>فيديو</span>}
+                <div style={{position:"absolute",bottom:0,left:0,right:0,padding:"1rem",pointerEvents:"none"}}>
+                  {img.caption&&<p style={{color:"#fff",fontSize:"0.78rem",fontWeight:600,margin:0,lineHeight:1.4}}>{img.caption}</p>}
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
-        {lb!==null&&(
-          <div onClick={()=>setLb(null)} style={{position:"fixed",inset:0,zIndex:9999,background:"rgba(0,0,0,0.97)",display:"flex",alignItems:"center",justifyContent:"center"}}>
-            <button onClick={e=>{e.stopPropagation();setLb(null);}} style={{position:"absolute",top:"1rem",left:"1rem",background:"rgba(255,255,255,0.1)",border:"none",color:"#fff",borderRadius:"50%",width:40,height:40,fontSize:"1.1rem",cursor:"pointer"}}>✕</button>
-            {items.length>1&&<>
-              <button onClick={e=>{e.stopPropagation();setLb(l=>l===null?null:(l+1)%items.length);}} style={{position:"absolute",left:"1rem",top:"50%",transform:"translateY(-50%)",background:"rgba(255,255,255,0.1)",border:"none",color:"#fff",borderRadius:"50%",width:52,height:52,fontSize:"1.5rem",cursor:"pointer"}}>‹</button>
-              <button onClick={e=>{e.stopPropagation();setLb(l=>l===null?null:(l-1+items.length)%items.length);}} style={{position:"absolute",right:"1rem",top:"50%",transform:"translateY(-50%)",background:"rgba(255,255,255,0.1)",border:"none",color:"#fff",borderRadius:"50%",width:52,height:52,fontSize:"1.5rem",cursor:"pointer"}}>›</button>
-            </>}
-            <div onClick={e=>e.stopPropagation()} style={{display:"flex",flexDirection:"column",alignItems:"center",gap:"0.75rem",maxWidth:"90vw"}}>
-              <img src={items[lb].image_url} alt={items[lb].caption||""} style={{maxHeight:"78vh",maxWidth:"90vw",objectFit:"contain",borderRadius:"0.5rem"}}/>
-              {items[lb].caption&&<p style={{color:"rgba(255,255,255,0.85)",fontSize:"0.9rem",margin:0,textAlign:"center"}}>{items[lb].caption}</p>}
-              <p style={{color:"rgba(255,255,255,0.35)",fontSize:"0.75rem",margin:0}}>{lb+1} / {items.length}</p>
-            </div>
-          </div>
-        )}
       </div>
+      {lb!==null&&<GalleryLightbox items={items} idx={lb} onClose={()=>setLb(null)} onNav={d=>setLb(l=>l===null?null:(l+d+items.length)%items.length)}/>}
     </section>
   );
 }
