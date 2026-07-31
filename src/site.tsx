@@ -2856,6 +2856,7 @@ function CultureArtDetailPage({slug}:{slug?:string}){
           {acts.map(a=><div key={a} style={{display:"flex",alignItems:"flex-start",gap:"0.5rem",marginBottom:"0.625rem"}}><span style={{color:"#0e7490",fontWeight:700,flexShrink:0}}>◈</span><span style={{fontSize:"0.85rem",color:"#374151",lineHeight:1.5}}>{a}</span></div>)}
         </div>}
       </div>
+      <ContentGallery contentType="culture_art" contentId={item.id} accentColor="#0e7490"/>
     </div>
   );
 }
@@ -2902,6 +2903,7 @@ function CultureAssociationDetailPage({slug}:{slug?:string}){
           {item.phone&&<a href={`tel:${item.phone}`} style={{display:"flex",alignItems:"center",gap:"0.5rem",color:"#0e7490",textDecoration:"none",fontSize:"0.9rem"}}><Phone size={16}/>{item.phone}</a>}
         </div>}
       </div>
+      <ContentGallery contentType="culture_association" contentId={item.id} accentColor="#0e7490"/>
     </div>
   );
 }
@@ -2926,6 +2928,7 @@ function CultureMediaDetailPage({slug}:{slug?:string}){
         {item.link_url&&<a href={item.link_url} target="_blank" rel="noopener noreferrer" style={{display:"inline-flex",alignItems:"center",gap:".5rem",marginTop:"1.5rem",padding:".75rem 1.5rem",background:"#0e7490",color:"#fff",borderRadius:".5rem",fontWeight:600,textDecoration:"none"}}>مشاهدة / استماع <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a>}
         <a href="/culture" className="detail-back" style={{display:"block",marginTop:"2rem"}}>← العودة للثقافة</a>
       </article>
+      <ContentGallery contentType="culture_media" contentId={item.id} accentColor="#0e7490"/>
     </div>
   );
 }
@@ -2952,6 +2955,7 @@ function CultureEventDetailPage({slug}:{slug?:string}){
         {item.description&&<div className="detail-body" dangerouslySetInnerHTML={{__html:item.description.replace(/\n/g,"<br/>")}}/>}
         <a href="/culture" className="detail-back">← العودة للثقافة</a>
       </article>
+      <ContentGallery contentType="culture_event" contentId={item.id} accentColor="#7c3aed"/>
     </div>
   );
 }
@@ -2976,6 +2980,7 @@ function CultureNewsDetailPage({slug}:{slug?:string}){
         {item.body&&<div className="detail-body" dangerouslySetInnerHTML={{__html:item.body.replace(/\n/g,"<br/>")}}/>}
         <a href="/culture" className="detail-back">← العودة للثقافة</a>
       </article>
+      <ContentGallery contentType="culture_news" contentId={item.id} accentColor="#0e7490"/>
     </div>
   );
 }
@@ -3009,6 +3014,7 @@ function CultureArtistDetailPage({slug}:{slug?:string}){
         </div>}
         <a href="/culture" style={{display:"inline-flex",alignItems:"center",gap:"0.5rem",color:"#0e7490",fontWeight:600,textDecoration:"none",fontSize:"0.9rem"}}><ArrowLeft size={16}/> العودة للثقافة</a>
       </div>
+      <ContentGallery contentType="culture_artist" contentId={item.id} accentColor="#0e7490"/>
     </div>
   );
 }
@@ -3092,6 +3098,7 @@ function SocialServiceDetailPage({slug}:{slug?:string}){
               </div>
             </div>
           )}
+          <ContentGallery contentType="social_service" contentId={item.id} accentColor="#0f766e"/>
           <a href="/social" style={{display:"inline-flex",alignItems:"center",gap:"0.5rem",color:"#0f766e",fontWeight:600,textDecoration:"none",fontSize:"0.9rem"}}>
             <ArrowLeft size={16}/> العودة لجميع الخدمات الاجتماعية
           </a>
@@ -3237,6 +3244,7 @@ function SocialInitiativeDetailPage({slug}:{slug?:string}){
             <p style={{margin:"0.6rem 0 0",fontSize:"0.75rem",color:"#64748b"}}>تم جمع {item.progress}% من المبلغ المستهدف ({item.amount})</p>
           </div>
 
+          <ContentGallery contentType="social_initiative" contentId={item.id} accentColor="#0f766e"/>
           <a href="/social" style={{display:"inline-flex",alignItems:"center",gap:"0.5rem",color:"#0f766e",fontWeight:700,textDecoration:"none",fontSize:"0.9rem",marginTop:"0.25rem"}}>
             <ArrowLeft size={16}/> العودة لجميع الخدمات الاجتماعية
           </a>
@@ -3299,6 +3307,7 @@ function CultureInitiativeDetailPage({slug}:{slug?:string}){
         {item.text&&<div className="detail-body" dangerouslySetInnerHTML={{__html:item.text.replace(/\n/g,"<br/>")}}/>}
         <a href="/culture" className="detail-back">← العودة للثقافة</a>
       </article>
+      <ContentGallery contentType="culture_initiative" contentId={item.id} accentColor="#15803d"/>
     </div>
   );
 }
