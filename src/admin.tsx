@@ -6,16 +6,17 @@ import { SocialPanel } from "./admin-social";
 import AdminContact from "./admin-contact";
 import AdminMembersPanel from "./admin-members";
 import AdminMemberDetail from "./admin-member-detail";
+import AdminStaffPanel from "./admin-staff";
+import { SeoImageUpload } from "./admin-seo";
+import { callAdminAuth, loadSession, saveSession, clearSession, type AdminSession } from "./admin-auth-client";
 
-type Section = "dashboard" | "news" | "events" | "members" | "member-detail" | "messages" | "investment" | "culture" | "social" | "contact" | "settings";
+type Section = "dashboard" | "news" | "events" | "members" | "member-detail" | "messages" | "investment" | "culture" | "social" | "contact" | "settings" | "staff";
 
 interface NewsRow { id: string; title: string; slug: string; excerpt: string; body: string; image_url: string; category: string; published: boolean; published_at: string | null; created_at: string; author_name: string; author_image_url: string; read_time: number; seo_title: string; seo_description: string; seo_image: string; }
 interface EventRow { id: string; title: string; slug: string; excerpt: string; body: string; image_url: string; location: string; event_date: string; event_end_date: string | null; published: boolean; created_at: string; author_name: string; author_image_url: string; organizer: string; seo_title: string; seo_description: string; seo_image: string; }
 interface MemberRow { id: string; full_name: string; email: string; phone: string; national_id: string; gender: string; country: string; state: string; membership_type: string; status: string; created_at: string; }
 interface MessageRow { id: string; name: string; email: string; phone: string; subject: string; message: string; read: boolean; created_at: string; }
 interface Stats { news: number; events: number; members: number; messages: number; unread: number; inquiries: number; newInquiries: number; }
-
-const ADMIN_PASSWORD = "admin2024";
 
 function formatDate(d: string | null) {
   if (!d) return "-";
@@ -31,14 +32,29 @@ function slugify(text: string) {
 }
 
 // ─── Login ────────────────────────────────────────────────────────────────────
-function Login({ onLogin }: { onLogin: () => void }) {
-  const [pw, setPw] = useState("admin2024");
-  const [err, setErr] = useState(false);
-  const submit = (e: React.FormEvent) => {
+function Login({ onLogin }: { onLogin: (s: AdminSession) => void }) {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPw, setShowPw] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
+
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (pw === ADMIN_PASSWORD) { sessionStorage.setItem("admin_auth", "1"); onLogin(); }
-    else { setErr(true); setPw(""); }
+    if (!username.trim() || !password) { setErrorMsg("يرجى إدخال اسم المستخدم وكلمة المرور"); return; }
+    setLoading(true);
+    setErrorMsg("");
+    try {
+      const data = await callAdminAuth({ action: "login", username: username.trim(), password }) as AdminSession;
+      saveSession(data);
+      onLogin(data);
+    } catch (e: unknown) {
+      setErrorMsg(e instanceof Error ? e.message : "حدث خطأ");
+    } finally {
+      setLoading(false);
+    }
   };
+
   return (
     <div className="adm-login">
       <div className="adm-login-card">
@@ -47,20 +63,35 @@ function Login({ onLogin }: { onLogin: () => void }) {
         <p>رابطة ولاية نهر النيل الرقمية</p>
         <form onSubmit={submit}>
           <input
-            type="password"
-            placeholder="كلمة المرور"
-            value={pw}
-            onChange={e => { setPw(e.target.value); setErr(false); }}
-            className={err ? "adm-input-err" : ""}
+            type="text"
+            placeholder="اسم المستخدم"
+            value={username}
+            onChange={e => { setUsername(e.target.value); setErrorMsg(""); }}
+            dir="ltr"
             autoFocus
+            autoComplete="username"
           />
-          {err && <span className="adm-err">كلمة المرور غير صحيحة</span>}
-          <button type="submit">دخول</button>
+          <div className="adm-pw-wrap">
+            <input
+              type={showPw ? "text" : "password"}
+              placeholder="كلمة المرور"
+              value={password}
+              onChange={e => { setPassword(e.target.value); setErrorMsg(""); }}
+              dir="ltr"
+              autoComplete="current-password"
+            />
+            <button type="button" className="adm-pw-toggle" onClick={() => setShowPw(s => !s)}>
+              {showPw ? "إخفاء" : "إظهار"}
+            </button>
+          </div>
+          {errorMsg && <span className="adm-err">{errorMsg}</span>}
+          <button type="submit" disabled={loading}>{loading ? "جاري الدخول..." : "دخول"}</button>
         </form>
       </div>
     </div>
   );
 }
+
 
 // ─── Stats cards ──────────────────────────────────────────────────────────────
 function StatCard({ label, value, color }: { label: string; value: number; color: string }) {
@@ -318,7 +349,8 @@ function SettingsPanel() {
 
 // ─── Main Admin App ───────────────────────────────────────────────────────────
 export default function AdminApp({ memberId }: { memberId?: string } = {}) {
-  const [authed, setAuthed] = useState(() => sessionStorage.getItem("admin_auth") === "1");
+  const [session, setSession] = useState<AdminSession | null>(null);
+  const [verifying, setVerifying] = useState(true);
   const [section, setSection] = useState<Section>(memberId ? "member-detail" : "dashboard");
   const [activeMemberId, setActiveMemberId] = useState<string | undefined>(memberId);
   const [stats, setStats] = useState<Stats>({ news: 0, events: 0, members: 0, messages: 0, unread: 0, inquiries: 0, newInquiries: 0 });
@@ -366,13 +398,36 @@ export default function AdminApp({ memberId }: { memberId?: string } = {}) {
   };
 
   useEffect(() => {
-    if (!authed) return;
+    const s = loadSession();
+    if (!s) { setVerifying(false); return; }
+    callAdminAuth({ action: "verify-session", token: s.token })
+      .then(data => {
+        const updated = { ...s, ...(data as Partial<AdminSession>) };
+        saveSession(updated);
+        setSession(updated);
+      })
+      .catch(() => { clearSession(); })
+      .finally(() => setVerifying(false));
+  }, []);
+
+  useEffect(() => {
+    if (!session) return;
     loadStats();
     if (section === "news") loadNews();
     if (section === "events") loadEvents();
     if (section === "members") loadMembers();
     if (section === "messages") loadMessages();
-  }, [authed, section]);
+  }, [session, section]);
+
+  const logout = async () => {
+    const s = loadSession();
+    if (s) { try { await callAdminAuth({ action: "logout", token: s.token }); } catch { /* ignore */ } }
+    clearSession();
+    setSession(null);
+  };
+
+  if (verifying) return <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100vh", fontSize: 18, color: "#666" }}>جاري التحقق...</div>;
+  if (!session) return <Login onLogin={(s) => { setSession(s); }} />;
 
   const deleteRow = async () => {
     if (!confirmId) return;
@@ -394,22 +449,25 @@ export default function AdminApp({ memberId }: { memberId?: string } = {}) {
     loadMembers();
   };
 
-  const logout = () => { sessionStorage.removeItem("admin_auth"); setAuthed(false); };
+  // session is used throughout — logout referenced in sidebar
 
-  if (!authed) return <Login onLogin={() => setAuthed(true)} />;
+  const isSuperAdmin = session?.role === "superadmin";
+  const hasPermission = (key: string) => isSuperAdmin || (session?.permissions ?? []).includes(key);
 
-  const navItems: { key: Section; label: string; badge?: number }[] = [
+  const allNavItems: { key: Section; label: string; badge?: number; perm?: string }[] = [
     { key: "dashboard", label: "الرئيسية" },
-    { key: "news", label: "الأخبار", badge: stats.news },
-    { key: "events", label: "الفعاليات", badge: stats.events },
-    { key: "members", label: "الأعضاء", badge: stats.members }, // member-detail highlights this
-    { key: "messages", label: "الرسائل", badge: stats.unread || undefined },
-    { key: "investment", label: "الاستثمار", badge: stats.newInquiries || undefined },
-    { key: "culture", label: "الثقافة" },
-    { key: "social", label: "الخدمات الاجتماعية" },
-    { key: "contact", label: "تواصل معنا" },
-    { key: "settings", label: "الإعدادات" },
+    { key: "news",       label: "الأخبار",               badge: stats.news,          perm: "news" },
+    { key: "events",     label: "الفعاليات",             badge: stats.events,        perm: "events" },
+    { key: "members",    label: "الأعضاء",               badge: stats.members,       perm: "members" },
+    { key: "messages",   label: "الرسائل",               badge: stats.unread || undefined, perm: "messages" },
+    { key: "investment", label: "الاستثمار",             badge: stats.newInquiries || undefined, perm: "investment" },
+    { key: "culture",    label: "الثقافة",                perm: "culture" },
+    { key: "social",     label: "الخدمات الاجتماعية",    perm: "social" },
+    { key: "contact",    label: "تواصل معنا",             perm: "contact" },
+    { key: "settings",   label: "الإعدادات",              perm: "settings" },
+    ...(isSuperAdmin ? [{ key: "staff" as Section, label: "الموظفون" }] : []),
   ];
+  const navItems = allNavItems.filter(item => !item.perm || hasPermission(item.perm));
 
   const filteredNews = news.filter(n => n.title.includes(search) || n.category.includes(search));
   const filteredEvents = events.filter(e => e.title.includes(search) || e.location.includes(search));
@@ -438,6 +496,14 @@ export default function AdminApp({ memberId }: { memberId?: string } = {}) {
           ))}
         </nav>
         <div className="adm-sidebar-foot">
+          <div className="adm-sidebar-user">
+            <div className="adm-user-avatar">{session?.fullName?.charAt(0) ?? "A"}</div>
+            <div>
+              <div className="adm-user-name">{session?.fullName}</div>
+              <div className="adm-user-role">{session?.role === "superadmin" ? "مدير عام" : "موظف"} &mdash; {session?.username}
+              </div>
+            </div>
+          </div>
           <a href="/" target="_blank" className="adm-view-site">عرض الموقع ↗</a>
           <button onClick={logout} className="adm-logout">تسجيل الخروج</button>
         </div>
@@ -588,6 +654,7 @@ export default function AdminApp({ memberId }: { memberId?: string } = {}) {
 
           {/* ── Settings ── */}
           {section === "settings" && <SettingsPanel />}
+          {section === "staff" && isSuperAdmin && <AdminStaffPanel session={session!} />}
         </div>
       </div>
 
