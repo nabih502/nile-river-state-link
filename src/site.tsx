@@ -1322,17 +1322,18 @@ function Membership(){
     <section className="mp-hero">
       <div className="mp-brand"><img src="/assets/ChatGPT_Image_Jul_21,_2026,_05_25_20_PM.png" alt="رابطة ولاية نهر النيل الرقمية"/></div>
       <div className="mp-photo"><img src="/assets/membership-hero-hq.webp" alt="معلم ولاية نهر النيل عند الغروب"/></div>
-      <div className="mp-copy motion"><h1>باقات العضوية</h1><h2>الاشتراكات السنوية</h2><p>اختر الباقة التي تناسبك واستمتع بمزايا حصرية<br/>تدعمك وتخدمك وتخدم أبناء ولايتك</p></div>
+      <div className="mp-copy motion"><h1>عضويتك في رابطتك</h1><h2>انضم إلى مجتمع أبناء ولاية نهر النيل</h2><p>سجّل الآن وكن جزءاً من رابطة تعمل من أجل تنمية الولاية وخدمة أبنائها</p></div>
       <div className="mp-card-wrap motion"><MemberCardArt/></div>
     </section>
     <section className="mp-benefits motion">{benefits.map(item=>{const Icon=item.icon;return <div key={item.title}><Icon/><h3>{item.title}</h3><p>{item.text}</p></div>})}</section>
-    <section className="mp-plans">{memberPlans.map((plan,index)=>{const Icon=planIcons[index];return <article key={plan.name} onClick={()=>setSelected(index)} className={`mp-plan motion ${plan.tone} ${selected===index?"selected":""}`}>
-      {index===1&&<span className="mp-popular">الأكثر اختياراً</span>}
-      <h2><Icon/>{plan.name}</h2><strong>{plan.price}</strong><small>ريال سنوياً</small><h4><span/>المميزات<span/></h4>
-      <ul>{plan.features.map(feature=><li key={feature}><Check/>{feature}</li>)}</ul>
-      <p className="mp-plan-caption"><Sparkles/>{plan.caption}</p>
-      <a href={`/register?plan=${index}`} className="mp-plan-button">اختر هذه الباقة</a>
-    </article>})}</section>
+    <section className="mp-register-cta motion">
+      <div className="mp-cta-inner">
+        <UsersRound size={48}/>
+        <h2>انضم إلى الرابطة اليوم</h2>
+        <p>سجّل عضويتك مجاناً الآن وابدأ الاستفادة من خدمات وأنشطة رابطة ولاية نهر النيل</p>
+        <a href="/register" className="mp-cta-button"><UserRound/>سجّل الآن</a>
+      </div>
+    </section>
     <section className="mp-all"><h2><span/>مزايا لجميع الأعضاء<span/></h2><div>{allBenefits.map(item=>{const Icon=item.icon;return <article key={item.title}><Icon/><b>{item.title}</b><small>{item.text}</small></article>})}</div></section>
     <section className="mp-support"><div className="mp-help"><Phone/><span><b>تحتاج مساعدة؟</b><small>فريقنا جاهز للرد على استفساراتك</small><strong dir="ltr">+249 912 345 678</strong></span></div><div className="mp-together"><UsersRound/><span><b>معاً نصنع الفرق ..</b><strong>انضم الآن وكن جزءاً من التغيير</strong></span></div><div className="mp-qr"><QrCode/><span><b>امسح الكود</b><small>للتسجيل المباشر</small></span></div></section>
     <footer className="mp-footer"><span><Globe2/> www.nilenilelink.org</span><span><Mail/> info@nilenilelink.org</span><span><MapPin/> ولاية نهر النيل - السودان</span><b>f&nbsp;&nbsp;𝕏&nbsp;&nbsp;▶&nbsp;&nbsp;◎</b></footer>
