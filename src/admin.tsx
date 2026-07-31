@@ -7,10 +7,11 @@ import AdminContact from "./admin-contact";
 import AdminMembersPanel from "./admin-members";
 import AdminMemberDetail from "./admin-member-detail";
 import AdminStaffPanel from "./admin-staff";
+import AdminChatPanel from "./admin-chat";
 import { SeoImageUpload } from "./admin-seo";
 import { callAdminAuth, loadSession, saveSession, clearSession, type AdminSession } from "./admin-auth-client";
 
-type Section = "dashboard" | "news" | "events" | "members" | "member-detail" | "messages" | "investment" | "culture" | "social" | "contact" | "settings" | "staff";
+type Section = "dashboard" | "news" | "events" | "members" | "member-detail" | "messages" | "investment" | "culture" | "social" | "contact" | "settings" | "staff" | "chat";
 
 interface NewsRow { id: string; title: string; slug: string; excerpt: string; body: string; image_url: string; category: string; published: boolean; published_at: string | null; created_at: string; author_name: string; author_image_url: string; read_time: number; seo_title: string; seo_description: string; seo_image: string; }
 interface EventRow { id: string; title: string; slug: string; excerpt: string; body: string; image_url: string; location: string; event_date: string; event_end_date: string | null; published: boolean; created_at: string; author_name: string; author_image_url: string; organizer: string; seo_title: string; seo_description: string; seo_image: string; }
@@ -465,6 +466,7 @@ export default function AdminApp({ memberId }: { memberId?: string } = {}) {
     { key: "social",     label: "الخدمات الاجتماعية",    perm: "social" },
     { key: "contact",    label: "تواصل معنا",             perm: "contact" },
     { key: "settings",   label: "الإعدادات",              perm: "settings" },
+    { key: "chat",       label: "الدردشة",               perm: "chat" },
     ...(isSuperAdmin ? [{ key: "staff" as Section, label: "الموظفون" }] : []),
   ];
   const navItems = allNavItems.filter(item => !item.perm || hasPermission(item.perm));
@@ -654,6 +656,7 @@ export default function AdminApp({ memberId }: { memberId?: string } = {}) {
 
           {/* ── Settings ── */}
           {section === "settings" && <SettingsPanel />}
+          {section === "chat" && <AdminChatPanel session={session!} />}
           {section === "staff" && isSuperAdmin && <AdminStaffPanel session={session!} />}
         </div>
       </div>

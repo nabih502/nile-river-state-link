@@ -22,6 +22,7 @@ const ALL_PERMISSIONS: { key: string; label: string }[] = [
   { key: "social",     label: "الخدمات الاجتماعية" },
   { key: "contact",    label: "تواصل معنا" },
   { key: "settings",   label: "الإعدادات" },
+  { key: "chat",       label: "الدردشة" },
 ];
 
 function formatDate(d: string | null) {
