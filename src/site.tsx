@@ -121,6 +121,37 @@ function Motion(){
     sections.forEach(section=>observer.observe(section));
     items.forEach(item=>observer.observe(item));
 
+    let motionCount=items.length;
+    const applyMotionItem=(item:HTMLElement)=>{
+      if(item.classList.contains("site-directional"))return;
+      const r=item.getBoundingClientRect();
+      const cx=r.left+r.width/2;
+      const dir=Math.abs(cx-window.innerWidth/2)<window.innerWidth*.12?(motionCount%2===0?-1:1):(cx<window.innerWidth/2?-1:1);
+      item.classList.add("site-directional");
+      item.style.setProperty("--site-item-x",`${dir*72}px`);
+      item.style.setProperty("--site-item-delay",`${Math.min(motionCount%4,3)*.07}s`);
+      motionCount++;
+      if(reduced){item.classList.add("in","site-settled");return;}
+      observer.observe(item);
+      requestAnimationFrame(()=>{
+        if(!item.classList.contains("in")){
+          const vr=item.getBoundingClientRect();
+          if(vr.top<window.innerHeight+150){item.classList.add("in");settleTimers.push(window.setTimeout(()=>item.classList.add("site-settled"),980));}
+        }
+      });
+    };
+    const mutObs=new MutationObserver(mutations=>{
+      const seen=new Set<HTMLElement>();
+      mutations.forEach(m=>m.addedNodes.forEach(node=>{
+        if(!(node instanceof HTMLElement))return;
+        const newSections=(node.tagName==="SECTION"?[node as HTMLElement]:Array.from(node.querySelectorAll<HTMLElement>("section"))).filter(s=>!s.closest(".about-redesign")&&!s.classList.contains("site-section-motion")&&!s.classList.contains("site-hero-motion"));
+        newSections.forEach(s=>{s.classList.add("site-section-motion");observer.observe(s);});
+        const newItems=node.classList.contains("motion")?[node]:Array.from(node.querySelectorAll<HTMLElement>(".motion"));
+        newItems.forEach(item=>{if(!seen.has(item)){seen.add(item);applyMotionItem(item);}});
+      }));
+    });
+    mutObs.observe(main,{childList:true,subtree:true});
+
     requestAnimationFrame(()=>{
       if(hero&&!hero.classList.contains("site-section-in")){
         hero.classList.add("site-section-in");
@@ -166,6 +197,7 @@ function Motion(){
 
     return()=>{
       observer.disconnect();
+      mutObs.disconnect();
       settleTimers.forEach(timer=>window.clearTimeout(timer));
       window.clearTimeout(fallbackTimer);
       hero?.removeEventListener("pointermove",moveHero);
