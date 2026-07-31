@@ -1629,6 +1629,7 @@ function Contact(){
           <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(190px,1fr))",gap:"1rem"}}>
             {info.map(item=>(
               <a key={item.id} href={item.link_url||"#"} target={item.link_url?.startsWith("http")?"_blank":"_self"} rel="noopener noreferrer"
+                className="motion"
                 style={{background:"#fff",borderRadius:"1rem",padding:"1.5rem 1.25rem",boxShadow:"0 8px 30px rgba(0,0,0,0.1)",textDecoration:"none",display:"flex",flexDirection:"column",alignItems:"flex-start",gap:"0.75rem",border:"1px solid #e2e8f0",transition:"all 0.25s",borderTop:`3px solid ${item.color}`}}
                 onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-4px)";e.currentTarget.style.boxShadow="0 16px 40px rgba(0,0,0,0.13)";}}
                 onMouseLeave={e=>{e.currentTarget.style.transform="translateY(0)";e.currentTarget.style.boxShadow="0 8px 30px rgba(0,0,0,0.1)";}}>
@@ -1649,7 +1650,7 @@ function Contact(){
       <div id="contact-form" style={{maxWidth:"1200px",margin:"4rem auto 0",padding:"0 1.5rem",display:"grid",gridTemplateColumns:"1fr 380px",gap:"2.5rem",alignItems:"start"}} className="contact-main-grid">
 
         {/* Form */}
-        <div style={{background:"#fff",borderRadius:"1.25rem",overflow:"hidden",boxShadow:"0 4px 24px rgba(0,0,0,0.08)",border:"1px solid #e2e8f0"}}>
+        <div className="motion" style={{background:"#fff",borderRadius:"1.25rem",overflow:"hidden",boxShadow:"0 4px 24px rgba(0,0,0,0.08)",border:"1px solid #e2e8f0"}}>
           <div style={{background:"linear-gradient(135deg,#1e3a5f,#2563eb)",padding:"2rem 2.25rem"}}>
             <h2 style={{color:"#fff",fontWeight:900,fontSize:"1.35rem",margin:"0 0 0.4rem"}}>{s("form_title","أرسل لنا رسالة")}</h2>
             <p style={{color:"rgba(255,255,255,0.72)",margin:0,fontSize:"0.88rem"}}>{s("form_subtitle","نسعد بتواصلكم")}</p>
@@ -1733,6 +1734,7 @@ function Contact(){
           {/* Quick info */}
           {info.slice(0,4).map(item=>(
             <a key={item.id} href={item.link_url||"#"} target={item.link_url?.startsWith("http")?"_blank":"_self"} rel="noopener noreferrer"
+              className="motion"
               style={{background:"#fff",borderRadius:"1rem",padding:"1.25rem 1.5rem",boxShadow:"0 2px 12px rgba(0,0,0,0.06)",textDecoration:"none",display:"flex",alignItems:"center",gap:"1rem",border:"1px solid #e2e8f0",transition:"all 0.2s",borderRight:`3px solid ${item.color}`}}
               onMouseEnter={e=>{e.currentTarget.style.transform="translateX(-3px)";e.currentTarget.style.boxShadow="0 8px 24px rgba(0,0,0,0.1)";}}
               onMouseLeave={e=>{e.currentTarget.style.transform="translateX(0)";e.currentTarget.style.boxShadow="0 2px 12px rgba(0,0,0,0.06)";}}>
@@ -1748,11 +1750,11 @@ function Contact(){
           ))}
           {/* Map placeholder or embed */}
           {s("map_embed_url") ? (
-            <div style={{borderRadius:"1rem",overflow:"hidden",border:"1px solid #e2e8f0",boxShadow:"0 2px 12px rgba(0,0,0,0.06)"}}>
+            <div className="motion" style={{borderRadius:"1rem",overflow:"hidden",border:"1px solid #e2e8f0",boxShadow:"0 2px 12px rgba(0,0,0,0.06)"}}>
               <iframe src={s("map_embed_url")} width="100%" height="220" style={{border:0,display:"block"}} allowFullScreen loading="lazy" title="الموقع على الخريطة"/>
             </div>
           ) : (
-            <div style={{background:"#fff",borderRadius:"1rem",padding:"1.75rem 1.5rem",boxShadow:"0 2px 12px rgba(0,0,0,0.06)",border:"1px solid #e2e8f0",textAlign:"center"}}>
+            <div className="motion" style={{background:"#fff",borderRadius:"1rem",padding:"1.75rem 1.5rem",boxShadow:"0 2px 12px rgba(0,0,0,0.06)",border:"1px solid #e2e8f0",textAlign:"center"}}>
               <MapPin size={32} color="#cbd5e1" style={{margin:"0 auto 0.75rem",display:"block"}}/>
               <p style={{color:"#94a3b8",fontSize:"0.82rem",margin:0}}>يمكن إضافة خريطة الموقع من لوحة التحكم</p>
             </div>
@@ -1770,6 +1772,7 @@ function Contact(){
           <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(260px,1fr))",gap:"1rem"}}>
             {faq.map(item=>(
               <a key={item.id} href={item.link_url||"#contact-form"}
+                className="motion"
                 style={{background:"#fff",borderRadius:"1rem",padding:"1.5rem",boxShadow:"0 2px 12px rgba(0,0,0,0.06)",textDecoration:"none",display:"flex",gap:"1rem",alignItems:"flex-start",border:"1px solid #e2e8f0",transition:"all 0.25s"}}
                 onMouseEnter={e=>{e.currentTarget.style.borderColor="#2563eb";e.currentTarget.style.boxShadow="0 8px 24px rgba(37,99,235,0.12)";e.currentTarget.style.transform="translateY(-2px)";}}
                 onMouseLeave={e=>{e.currentTarget.style.borderColor="#e2e8f0";e.currentTarget.style.boxShadow="0 2px 12px rgba(0,0,0,0.06)";e.currentTarget.style.transform="translateY(0)";}}>
@@ -1787,7 +1790,7 @@ function Contact(){
       )}
 
       {/* ══ NEWSLETTER ════════════════════════════════════════════════════ */}
-      <section style={{maxWidth:"1200px",margin:"4rem auto",padding:"0 1.5rem"}}>
+      <section className="motion" style={{maxWidth:"1200px",margin:"4rem auto",padding:"0 1.5rem"}}>
         <div style={{background:"linear-gradient(135deg,#1e3a5f 0%,#2563eb 50%,#1d4ed8 100%)",borderRadius:"1.5rem",padding:"3rem 2.5rem",display:"flex",alignItems:"center",gap:"2.5rem",flexWrap:"wrap",boxShadow:"0 8px 32px rgba(37,99,235,0.3)"}}>
           <div style={{flex:1,minWidth:"240px"}}>
             <h3 style={{color:"#fff",fontWeight:900,fontSize:"1.3rem",margin:"0 0 0.5rem"}}>{s("newsletter_title","كن على تواصل دائم")}</h3>
@@ -1925,7 +1928,7 @@ function NewsListPage() {
       )}
 
       {/* ── News grid ── */}
-      <section style={{maxWidth:"1200px",margin:"0 auto",padding:"2.5rem 1.5rem"}}>
+      <section className="motion" style={{maxWidth:"1200px",margin:"0 auto",padding:"2.5rem 1.5rem"}}>
         <div style={{display:"flex",alignItems:"center",gap:"0.75rem",marginBottom:"2rem"}}>
           <div style={{width:4,height:32,background:"#2563eb",borderRadius:2}}/>
           <h2 style={{fontSize:"1.25rem",fontWeight:800,color:"#0f172a",margin:0}}>جميع الأخبار</h2>
@@ -1935,7 +1938,7 @@ function NewsListPage() {
         {!loading && items.length===0 && <p style={{textAlign:"center",color:"#64748b",padding:"3rem"}}>لا توجد أخبار منشورة حالياً</p>}
         <div className="news-grid">
           {items.map(item=>(
-            <a key={item.id} href={`/news/${item.slug}`} className="news-card">
+            <a key={item.id} href={`/news/${item.slug}`} className="news-card motion">
               {item.image_url ? <img src={item.image_url} alt={item.title}/> : <div className="news-card-placeholder"/>}
               <div className="news-card-body">
                 <span className="news-cat">{item.category}</span>
@@ -2022,7 +2025,7 @@ function InvestmentSectorDetailPage({slug}:{slug?:string}){
           {sector.highlight&&<p className="inv-detail-highlight"><Gem/> {sector.highlight}</p>}
         </div>
       </div>
-      <div className="inv-detail-body page-width">
+      <div className="inv-detail-body page-width motion">
         <div className="inv-detail-main">
           <section className="inv-detail-description">
             <h2>عن هذا القطاع</h2>
@@ -2085,7 +2088,7 @@ function InvestmentOpportunityDetailPage({slug}:{slug?:string}){
           {opp.location&&<p className="inv-detail-highlight"><MapPin/> {opp.location}</p>}
         </div>
       </div>
-      <div className="inv-detail-body page-width">
+      <div className="inv-detail-body page-width motion">
         <div className="inv-detail-main">
           <section className="inv-detail-description">
             <h2>تفاصيل الفرصة الاستثمارية</h2>
@@ -2196,14 +2199,13 @@ function NewsDetailPage({slug}:{slug?:string}) {
 
       {/* ── Content + Sidebar ── */}
       <div style={{maxWidth:"1200px",margin:"0 auto",padding:"2.5rem 1.5rem",display:"grid",gridTemplateColumns:"1fr 300px",gap:"2.5rem",alignItems:"start"}} className="news-detail-grid">
-        {/* Main article */}
-        <div>
+        <div className="motion">
           {item.excerpt && (
-            <div style={{background:"linear-gradient(135deg,#eff6ff,#dbeafe)",borderRight:"4px solid #2563eb",borderRadius:"0 0.75rem 0.75rem 0",padding:"1.25rem 1.5rem",marginBottom:"2rem"}}>
+            <div className="motion" style={{background:"linear-gradient(135deg,#eff6ff,#dbeafe)",borderRight:"4px solid #2563eb",borderRadius:"0 0.75rem 0.75rem 0",padding:"1.25rem 1.5rem",marginBottom:"2rem"}}>
               <p style={{color:"#1e3a5f",fontSize:"1.05rem",lineHeight:1.7,margin:0,fontWeight:500}}>{item.excerpt}</p>
             </div>
           )}
-          <div style={{background:"#fff",borderRadius:"1rem",padding:"2rem 2.25rem",boxShadow:"0 1px 6px rgba(0,0,0,0.06)",lineHeight:1.95,color:"#374151",fontSize:"1rem"}}
+          <div className="motion" style={{background:"#fff",borderRadius:"1rem",padding:"2rem 2.25rem",boxShadow:"0 1px 6px rgba(0,0,0,0.06)",lineHeight:1.95,color:"#374151",fontSize:"1rem"}}
             dangerouslySetInnerHTML={{__html:item.body.replace(/\n/g,"<br/>")}}/>
 
           {/* Tags + back */}
@@ -2217,7 +2219,7 @@ function NewsDetailPage({slug}:{slug?:string}) {
         </div>
 
         {/* Sidebar */}
-        <aside style={{display:"flex",flexDirection:"column",gap:"1.5rem",position:"sticky",top:"5rem"}}>
+        <aside className="motion" style={{display:"flex",flexDirection:"column",gap:"1.5rem",position:"sticky",top:"5rem"}}>
           {/* Author card */}
           {item.author_name && (
             <div style={{background:"#fff",borderRadius:"1rem",padding:"1.5rem",boxShadow:"0 4px 20px rgba(0,0,0,0.08)",border:"1px solid #e2e8f0",textAlign:"center"}}>
@@ -2371,7 +2373,7 @@ function EventsListPage() {
       {loading && <div style={{height:540,display:"flex",alignItems:"center",justifyContent:"center",background:"#0a2a1a"}}><div style={{width:40,height:40,border:"3px solid #16a34a",borderTopColor:"transparent",borderRadius:"50%",animation:"spin 0.8s linear infinite"}}/></div>}
 
       {/* ── Events grid ── */}
-      <section style={{maxWidth:"1200px",margin:"0 auto",padding:"2.5rem 1.5rem"}}>
+      <section className="motion" style={{maxWidth:"1200px",margin:"0 auto",padding:"2.5rem 1.5rem"}}>
         <div style={{display:"flex",alignItems:"center",gap:"0.75rem",marginBottom:"2rem"}}>
           <div style={{width:4,height:32,background:"#16a34a",borderRadius:2}}/>
           <h2 style={{fontSize:"1.25rem",fontWeight:800,color:"#0f172a",margin:0}}>جميع الفعاليات</h2>
@@ -2380,7 +2382,7 @@ function EventsListPage() {
         {!loading && items.length===0 && <p style={{textAlign:"center",color:"#64748b",padding:"3rem"}}>لا توجد فعاليات منشورة حالياً</p>}
         <div className="news-grid">
           {items.map(item=>(
-            <a key={item.id} href={`/events/${item.slug}`} className="news-card">
+            <a key={item.id} href={`/events/${item.slug}`} className="news-card motion">
               {item.image_url?<img src={item.image_url} alt={item.title}/>:<div className="news-card-placeholder" style={{background:"linear-gradient(135deg,#14532d,#16a34a)"}}/>}
               <div className="news-card-body">
                 <span className="news-cat" style={{background:"#16a34a"}}><CalendarDays size={11}/> {fmtDate(item.event_date)}</span>
@@ -2489,7 +2491,7 @@ function EventDetailPage({slug}:{slug?:string}) {
               <p style={{color:"#14532d",fontSize:"1.05rem",lineHeight:1.7,margin:0,fontWeight:500}}>{item.excerpt}</p>
             </div>
           )}
-          <div style={{background:"#fff",borderRadius:"1rem",padding:"2rem 2.25rem",boxShadow:"0 1px 6px rgba(0,0,0,0.06)",lineHeight:1.95,color:"#374151",fontSize:"1rem"}}
+          <div className="motion" style={{background:"#fff",borderRadius:"1rem",padding:"2rem 2.25rem",boxShadow:"0 1px 6px rgba(0,0,0,0.06)",lineHeight:1.95,color:"#374151",fontSize:"1rem"}}
             dangerouslySetInnerHTML={{__html:item.body.replace(/\n/g,"<br/>")}}/>
 
           <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginTop:"2rem",flexWrap:"wrap",gap:"1rem"}}>
@@ -2501,7 +2503,7 @@ function EventDetailPage({slug}:{slug?:string}) {
         </div>
 
         {/* Sidebar */}
-        <aside style={{display:"flex",flexDirection:"column",gap:"1.5rem",position:"sticky",top:"5rem"}}>
+        <aside className="motion" style={{display:"flex",flexDirection:"column",gap:"1.5rem",position:"sticky",top:"5rem"}}>
           {/* Event details card */}
           <div style={{background:"#fff",borderRadius:"1rem",overflow:"hidden",boxShadow:"0 4px 20px rgba(0,0,0,0.08)",border:"1px solid #e2e8f0"}}>
             <div style={{background:"linear-gradient(135deg,#16a34a,#15803d)",padding:"1rem 1.25rem"}}>
@@ -2599,7 +2601,7 @@ function CultureArtDetailPage({slug}:{slug?:string}){
           <h1 style={{color:"#fff",fontSize:"clamp(1.6rem,4vw,2.4rem)",fontWeight:800,margin:0,textShadow:"0 2px 8px rgba(0,0,0,0.4)"}}>{item.title}</h1>
         </div>
       </div>
-      <div style={{maxWidth:"1200px",margin:"0 auto",padding:"2.5rem 1.5rem",display:"grid",gridTemplateColumns:"1fr 280px",gap:"2rem",alignItems:"start"}} className="soc-svc-grid">
+      <div style={{maxWidth:"1200px",margin:"0 auto",padding:"2.5rem 1.5rem",display:"grid",gridTemplateColumns:"1fr 280px",gap:"2rem",alignItems:"start"}} className="soc-svc-grid motion">
         <div>
           <div style={{background:"#fff",borderRadius:"1rem",padding:"2rem",boxShadow:"0 1px 6px rgba(0,0,0,0.06)",marginBottom:"1.5rem"}}>
             <div style={{color:"#374151",lineHeight:1.9,fontSize:"0.95rem"}} dangerouslySetInnerHTML={{__html:item.description.replace(/\n/g,"<br/>")}}/>
@@ -2645,7 +2647,7 @@ function CultureAssociationDetailPage({slug}:{slug?:string}){
           </div>
         </div>
       </div>
-      <div style={{maxWidth:"1200px",margin:"0 auto",padding:"2.5rem 1.5rem",display:"grid",gridTemplateColumns:"1fr 300px",gap:"2rem",alignItems:"start"}} className="soc-svc-grid">
+      <div style={{maxWidth:"1200px",margin:"0 auto",padding:"2.5rem 1.5rem",display:"grid",gridTemplateColumns:"1fr 300px",gap:"2rem",alignItems:"start"}} className="soc-svc-grid motion">
         <div>
           {item.description&&<div style={{background:"#fff",borderRadius:"1rem",padding:"2rem",boxShadow:"0 1px 6px rgba(0,0,0,0.06)",marginBottom:"1.5rem"}}>
             <h2 style={{fontSize:"1.05rem",fontWeight:700,color:"#0f172a",marginBottom:"1.25rem",paddingBottom:"0.75rem",borderBottom:"2px solid #ecfeff",display:"flex",alignItems:"center",gap:"0.5rem"}}><span style={{color:"#0e7490"}}>◈</span> عن الجمعية</h2>
@@ -2675,7 +2677,7 @@ function CultureMediaDetailPage({slug}:{slug?:string}){
   return(
     <div dir="rtl">
       {item.image_url&&<div className="detail-hero-img" style={{position:"relative"}}><img src={item.image_url} alt={item.title}/>{item.link_url&&<a href={item.link_url} target="_blank" rel="noopener noreferrer" style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center",background:"rgba(0,0,0,.35)"}}><svg width="72" height="72" viewBox="0 0 72 72" fill="none"><circle cx="36" cy="36" r="36" fill="rgba(255,255,255,.9)"/><polygon points="28,20 56,36 28,52" fill="#0e7490"/></svg></a>}</div>}
-      <article className="detail-article page-width">
+      <article className="detail-article page-width motion">
         <span className="news-cat" style={{background:item.type==="بودكاست"?"#7c3aed":"#0e7490"}}>{item.type}</span>
         <h1>{item.title}</h1>
         {item.media_date&&<small className="detail-date">{item.media_date}</small>}
@@ -2699,7 +2701,7 @@ function CultureEventDetailPage({slug}:{slug?:string}){
   return(
     <div dir="rtl">
       {item.image_url&&<div className="detail-hero-img"><img src={item.image_url} alt={item.title}/></div>}
-      <article className="detail-article page-width">
+      <article className="detail-article page-width motion">
         <span className="news-cat" style={{background:"#7c3aed"}}>{item.tag||"فعالية ثقافية"}</span>
         <h1>{item.title}</h1>
         <div className="detail-meta">
@@ -2725,7 +2727,7 @@ function CultureNewsDetailPage({slug}:{slug?:string}){
   return(
     <div dir="rtl">
       {item.image_url&&<div className="detail-hero-img"><img src={item.image_url} alt={item.title}/></div>}
-      <article className="detail-article page-width">
+      <article className="detail-article page-width motion">
         <span className="news-cat" style={{background:"#0e7490"}}>أخبار ثقافية</span>
         <h1>{item.title}</h1>
         <small className="detail-date">{item.published_at?new Date(item.published_at).toLocaleDateString("ar-EG",{year:"numeric",month:"long",day:"numeric"}):new Date(item.created_at).toLocaleDateString("ar-EG",{year:"numeric",month:"long",day:"numeric"})}</small>
@@ -2759,7 +2761,7 @@ function CultureArtistDetailPage({slug}:{slug?:string}){
         </div>
       </div>
       {/* ── Bio ── */}
-      <div style={{maxWidth:"900px",margin:"0 auto",padding:"2.5rem 1.5rem"}}>
+      <div className="motion" style={{maxWidth:"900px",margin:"0 auto",padding:"2.5rem 1.5rem"}}>
         {item.bio&&<div style={{background:"#fff",borderRadius:"1rem",padding:"2rem",boxShadow:"0 1px 6px rgba(0,0,0,0.06)",marginBottom:"1.5rem"}}>
           <h2 style={{fontSize:"1.05rem",fontWeight:700,color:"#0f172a",marginBottom:"1.25rem",paddingBottom:"0.75rem",borderBottom:"2px solid #ecfeff",display:"flex",alignItems:"center",gap:"0.5rem"}}><span style={{color:"#0e7490"}}>◈</span> السيرة الذاتية</h2>
           <div style={{color:"#374151",lineHeight:1.9,fontSize:"0.95rem"}} dangerouslySetInnerHTML={{__html:item.bio.replace(/\n/g,"<br/>")}}/>  
@@ -2819,7 +2821,7 @@ function SocialServiceDetailPage({slug}:{slug?:string}){
       </div>
 
       {/* ── Main content ── */}
-      <div style={{maxWidth:"1200px",margin:"0 auto",padding:"2.5rem 1.5rem",display:"grid",gridTemplateColumns:"1fr 320px",gap:"2rem",alignItems:"start"}} className="soc-svc-grid">
+      <div style={{maxWidth:"1200px",margin:"0 auto",padding:"2.5rem 1.5rem",display:"grid",gridTemplateColumns:"1fr 320px",gap:"2rem",alignItems:"start"}} className="soc-svc-grid motion">
         {/* Left */}
         <div>
           {item.full_description&&(
@@ -2946,7 +2948,7 @@ function SocialInitiativeDetailPage({slug}:{slug?:string}){
       </div>
 
       {/* ── Main content ── */}
-      <div style={{maxWidth:"1200px",margin:"0 auto",padding:"2.5rem 1.5rem",display:"grid",gridTemplateColumns:"1fr 340px",gap:"2rem",alignItems:"start"}} className="soc-init-grid">
+      <div style={{maxWidth:"1200px",margin:"0 auto",padding:"2.5rem 1.5rem",display:"grid",gridTemplateColumns:"1fr 340px",gap:"2rem",alignItems:"start"}} className="soc-init-grid motion">
         {/* Left — description */}
         <div>
           {item.full_description&&(
@@ -3018,7 +3020,7 @@ function CultureInitiativeDetailPage({slug}:{slug?:string}){
   return(
     <div dir="rtl">
       {item.image_url&&<div className="detail-hero-img"><img src={item.image_url} alt={item.title}/></div>}
-      <article className="detail-article page-width">
+      <article className="detail-article page-width motion">
         <span className="news-cat" style={{background:"#15803d"}}>مبادرة ثقافية</span>
         <h1>{item.title}</h1>
         {item.text&&<div className="detail-body" dangerouslySetInnerHTML={{__html:item.text.replace(/\n/g,"<br/>")}}/>}
