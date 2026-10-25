@@ -1,0 +1,41 @@
+
+$$;
+GRANT EXECUTE ON FUNCTION public.member_register(jsonb) TO anon, authenticated;
+
+CREATE OR REPLACE FUNCTION public.member_submit_payment_receipt(p_path text,p_name text)
+RETURNS void LANGUAGE plpgsql SECURITY DEFINER SET search_path=public,pg_temp AS $$
+DECLARE v_member uuid:=public.current_member_id();
+BEGIN
+  IF v_member IS NULL THEN RAISE EXCEPTION 'UNAUTHENTICATED_MEMBER'; END IF;
+  IF coalesce(btrim(p_path),'')='' OR split_part(p_path,'/',1)<>v_member::text THEN RAISE EXCEPTION 'INVALID_RECEIPT_PATH'; END IF;
+  UPDATE public.members SET payment_receipt_path=p_path,payment_receipt_name=coalesce(p_name,''),receipt_status='pending',application_submitted_at=now() WHERE id=v_member;
+  IF NOT FOUND THEN RAISE EXCEPTION 'MEMBER_NOT_FOUND'; END IF;
+END;
+$$;
+GRANT EXECUTE ON FUNCTION public.member_submit_payment_receipt(text,text) TO anon, authenticated;
+
+CREATE OR REPLACE FUNCTION public.admin_review_membership_application(p_member_id uuid,p_decision text,p_notes text DEFAULT '')
+RETURNS void LANGUAGE plpgsql SECURITY DEFINER SET search_path=public,pg_temp AS $$
+DECLARE v_sub uuid; v_receipt text; v_receipt_name text;
+BEGIN
+  IF NOT public.is_admin() THEN RAISE EXCEPTION 'FORBIDDEN'; END IF;
+  IF p_decision NOT IN ('approved','rejected') THEN RAISE EXCEPTION 'INVALID_DECISION'; END IF;
+  SELECT payment_receipt_path,payment_receipt_name INTO v_receipt,v_receipt_name FROM public.members WHERE id=p_member_id FOR UPDATE;
+  IF coalesce(v_receipt,'')='' THEN RAISE EXCEPTION 'RECEIPT_REQUIRED'; END IF;
+  IF p_decision='approved' THEN
+    UPDATE public.members SET receipt_status='approved',receipt_review_notes=coalesce(p_notes,''),status='active' WHERE id=p_member_id;
+    SELECT id INTO v_sub FROM public.member_subscriptions WHERE member_id=p_member_id AND subscription_type='annual' AND status='active' ORDER BY created_at DESC LIMIT 1;
+    IF v_sub IS NULL THEN
+      INSERT INTO public.member_subscriptions(member_id,subscription_type,start_date,end_date,amount,currency,status,notes)
+      VALUES(p_member_id,'annual',current_date,current_date+interval '1 year',50,'SAR','active','تم إنشاؤه بعد اعتماد إيصال طلب العضوية') RETURNING id INTO v_sub;
+    END IF;
+    IF NOT EXISTS(SELECT 1 FROM public.member_payments WHERE member_id=p_member_id AND reference_number=coalesce(v_receipt_name,v_receipt)) THEN
+      INSERT INTO public.member_payments(member_id,subscription_id,amount,currency,payment_date,payment_method,reference_number,status,notes)
+      VALUES(p_member_id,v_sub,50,'SAR',current_date,'bank_transfer',coalesce(v_receipt_name,v_receipt),'paid','تم اعتماد إيصال التحويل البنكي من طلب العضوية');
+    END IF;
+  ELSE
+    UPDATE public.members SET receipt_status='rejected',receipt_review_notes=coalesce(p_notes,''),status='rejected' WHERE id=p_member_id;
+  END IF;
+END;
+$$;
+GRANT EXECUTE ON FUNCTION public.admin_review_membership_application(uuid,text,text) TO anon, authenticated;
