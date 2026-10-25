@@ -1516,6 +1516,13 @@ function Register(){
     event.preventDefault();
     setSubmitting(true);setSubmitError("");
     const form=event.target as HTMLFormElement;
+    const privacy=form.querySelector<HTMLInputElement>('input[aria-label="الموافقة على سياسة الخصوصية"]');
+    if(!privacy?.checked){
+      setSubmitting(false);
+      setSubmitError("يجب الموافقة على سياسة الخصوصية قبل إكمال التسجيل");
+      privacy?.focus();
+      return;
+    }
     const get=(label:string)=>{const el=form.querySelector<HTMLInputElement|HTMLSelectElement|HTMLTextAreaElement>(`[aria-label="${label}"]`);return el?.value||""};
     const getRadio=(name:string)=>{const el=form.querySelector<HTMLInputElement>(`input[name="${name}"]:checked`);return el?.value||""};
     const fullName=get("الاسم الرباعي");
