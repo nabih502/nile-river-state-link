@@ -1491,13 +1491,44 @@ function PhotoUpload(){
 }
 
 function Payment(){
-  const [receipts,setReceipts]=useState<Record<string,string>>({});
-  const options=[{n:"01",icon:Landmark,title:"إرفاق ما يعادلها ببنكك",text:"قم بإيداع المبلغ في حساب الرابطة وارفع ما يعادلها من كشف الحساب"},{n:"02",icon:ReceiptText,title:"إرفاق سند السداد",text:"قم برفع صورة أو ملف سند السداد الرسمي الصادر من الجهة"},{n:"03",icon:Banknote,title:"إرفاق التحويل البنكي",text:"قم برفع صورة أو ملف إثبات التحويل البنكي"}];
-  const setFile=(key:string,file?:File)=>{if(file)setReceipts(current=>({...current,[key]:file.name}))};
-  return <MemberStepShell className="payment-step"><div className="payment-brand"><img src="/assets/ChatGPT_Image_Jul_21,_2026,_05_25_20_PM.png" alt="رابطة ولاية نهر النيل الرقمية"/></div><header className="step-heading payment-title"><h1><span/>خيارات السداد<span/></h1><p>اختر طريقة السداد المناسبة لك وارفع المستندات المطلوبة</p></header><section className="payment-cards">
-    {options.map(option=>{const Icon=option.icon;return <article key={option.n}><label><FileUp/><strong>{receipts[option.n]||"اختر ملف أو اسحب وأفلت"}</strong><small>JPG, PNG, PDF (الحد الأقصى 5MB)</small><input type="file" accept="image/jpeg,image/png,application/pdf" onChange={event=>setFile(option.n,event.target.files?.[0])}/></label><div><h2>{option.title}</h2><p>{option.text}</p>{option.n==="01"&&<button type="button">عرض بيانات الحساب <ChevronLeft/></button>}</div><aside><b>{option.n}</b><Icon/></aside></article>})}
-    <article className="visa-card"><a href="/success"><CreditCard/><span>ادفع عبر فيزا</span><strong>VISA</strong></a><div><h2>السداد فيزا</h2><p>ادفع الآن مباشرة باستخدام بطاقتك البنكية عبر فيزا</p></div><aside><b>04</b><em>VISA</em></aside><footer><ShieldCheck/>دفع آمن <LockKeyhole/>تشفير SSL <BadgeCheck/>معتمد وآمن</footer></article>
-  </section><section className="payment-notice"><CircleAlert/><p>سيتم التحقق من مستندات السداد وتأكيدها خلال 24 ساعة عمل<br/>وسيصل إشعار بعد اعتماد السداد وتفعيل عضويتك</p></section><p className="payment-help"><Phone/> تحتاج مساعدة؟ تواصل معنا</p>{Object.keys(receipts).length>0&&<a className="step-continue" href="/success">إرسال المستندات <ArrowLeft/></a>}</MemberStepShell>
+  const [file,setFile]=useState<File|null>(null);
+  const [uploading,setUploading]=useState(false);
+  const [err,setErr]=useState("");
+  const [done,setDone]=useState(false);
+
+  const chooseFile=(next?:File)=>{
+    if(!next)return;
+    if(next.size>5*1024*1024){setErr("الحد الأقصى لحجم الإيصال 5MB");setFile(null);return;}
+    if(!/^(image\/(jpeg|png)|application\/pdf)$/.test(next.type)){setErr("يُقبل إيصال بصيغة JPG أو PNG أو PDF فقط");setFile(null);return;}
+    setErr("");setFile(next);
+  };
+
+  const submitReceipt=async()=>{
+    if(!file){setErr("إيصال التحويل البنكي مطلوب لإرسال الطلب");return;}
+    const memberId=sessionStorage.getItem("new_member_id");
+    if(!memberId){setErr("تعذر تحديد طلب العضوية. يرجى بدء التسجيل من جديد.");return;}
+    setUploading(true);setErr("");
+    const ext=file.type==="application/pdf"?"pdf":file.type==="image/png"?"png":"jpg";
+    const path=memberId+"/receipt-"+Date.now()+"."+ext;
+    const {error:uploadError}=await supabase.storage.from("membership-documents").upload(path,file,{upsert:false,contentType:file.type});
+    if(uploadError){console.error(uploadError);setUploading(false);setErr("تعذر رفع إيصال التحويل، يرجى المحاولة مرة أخرى");return;}
+    const {error:saveError}=await supabase.rpc("member_submit_payment_receipt",{p_path:path,p_name:file.name});
+    setUploading(false);
+    if(saveError){console.error(saveError);setErr("تم رفع الملف لكن تعذر ربطه بالطلب، يرجى التواصل مع الإدارة");return;}
+    setDone(true);setTimeout(()=>{location.href="/success"},900);
+  };
+
+  return <MemberStepShell className="payment-step">
+    <div className="payment-brand"><img src="/assets/ChatGPT_Image_Jul_21,_2026,_05_25_20_PM.png" alt="رابطة ولاية نهر النيل الرقمية"/></div>
+    <header className="step-heading payment-title"><h1><span/>إيصال التحويل البنكي<span/></h1><p>الخطوة الأخيرة لإرسال طلب العضوية إلى الإدارة</p></header>
+    <section className="payment-cards">
+      <article><label><FileUp/><strong>{file?.name||"اختر إيصال التحويل البنكي أو اسحبه وأفلته هنا"}</strong><small>JPG, PNG, PDF — الحد الأقصى 5MB</small><input required type="file" accept="image/jpeg,image/png,application/pdf" onChange={event=>chooseFile(event.target.files?.[0])}/></label><div><h2>اشتراك العضوية السنوي</h2><p>حوّل مبلغ الاشتراك إلى الحساب البنكي الرسمي المعتمد للرابطة، ثم أرفق صورة أو ملف الإيصال. يمكنك التواصل مع الرابطة للحصول على بيانات الحساب.</p><strong style={{display:"inline-block",marginTop:"0.75rem",fontSize:"1.35rem",color:"#f97316"}}>50 ريال سعودي</strong></div><aside><b>01</b><Landmark/></aside></article>
+    </section>
+    <section className="payment-notice"><CircleAlert/><p>إرفاق إيصال التحويل البنكي حقل مطلوب. لن ينتقل الطلب إلى المراجعة إلا بعد رفع الإيصال، وسيتم التحقق منه قبل تفعيل العضوية.</p></section>
+    {err&&<p className="rwz-error" style={{textAlign:"center"}}>{err}</p>}
+    {done?<p style={{textAlign:"center",color:"#16a34a",fontWeight:700}}>✓ تم إرسال الإيصال والطلب للمراجعة</p>:<button type="button" className="step-continue" onClick={submitReceipt} disabled={uploading}>{uploading?"جاري رفع الإيصال...":"إرسال الإيصال والطلب للمراجعة"} <ArrowLeft/></button>}
+    <p className="payment-help"><Phone/> تحتاج بيانات الحساب أو مساعدة؟ تواصل معنا</p>
+  </MemberStepShell>;
 }
 
 function Success(){
