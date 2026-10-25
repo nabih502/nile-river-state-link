@@ -1516,16 +1516,27 @@ function Register(){
     event.preventDefault();
     setSubmitting(true);setSubmitError("");
     const form=event.target as HTMLFormElement;
-    const privacy=form.querySelector<HTMLInputElement>('input[aria-label="الموافقة على سياسة الخصوصية"]');
-    if(!privacy?.checked){
+    const requiredConsents=Array.from(form.querySelectorAll<HTMLInputElement>("[data-required-consent]"));
+    const missingConsent=requiredConsents.find(item=>!item.checked);
+    if(missingConsent){
       setSubmitting(false);
-      setSubmitError("يجب الموافقة على سياسة الخصوصية قبل إكمال التسجيل");
-      privacy?.focus();
+      setSubmitError("يجب الموافقة على جميع بنود الإقرار قبل إكمال التسجيل");
+      missingConsent.focus();
       return;
     }
-    const get=(label:string)=>{const el=form.querySelector<HTMLInputElement|HTMLSelectElement|HTMLTextAreaElement>(`[aria-label="${label}"]`);return el?.value||""};
+    
+      const get=(label:string)=>{const el=form.querySelector<HTMLInputElement|HTMLSelectElement|HTMLTextAreaElement>(`[aria-label="${label}"]`);return el?.value||""};
     const getRadio=(name:string)=>{const el=form.querySelector<HTMLInputElement>(`input[name="${name}"]:checked`);return el?.value||""};
+    const formData=new FormData(form);
+    const applicationData:Record<string,string|string[]>={};
+    Array.from(new Set(Array.from(formData.keys()))).forEach(key=>{
+      const values=formData.getAll(key).filter((value):value is string=>typeof value==="string");
+      applicationData[key]=values.length>1?values:(values[0]||"");
+    });
     const fullName=get("الاسم الرباعي");
+    const nationalId=get("الرقم الوطني / رقم الجواز");
+    const signatureName=get("التوقيع الإلكتروني");
+    if(!signatureName.trim()){setSubmitting(false);setSubmitError("يرجى كتابة الاسم الكامل كتوقيع إلكتروني");return;}
     const email=get("البريد الإلكتروني");
     const phone=get("رقم الجوال");
     const gender=getRadio("الجنس");
@@ -1534,9 +1545,9 @@ function Register(){
     const city=get("المدينة");
     const state=get("الولاية");
     const locality=get("المحلية");
-    const maritalStatus=get("الحالة الاجتماعية")||getRadio("الحالة");
+    const maritalStatus=get("الحالة الاجتماعية");
     const specialization=get("التخصص");
-    const jobTitle=get("المسمى الوظيفي");
+    const jobTitle=get("المسمى الوظيفي / المهنة");
     // Registration runs through member_register on the server: it assigns the
     // membership status, generates a random initial password (never derived from the
     // phone number) and returns a session token so the next steps act as this member.
