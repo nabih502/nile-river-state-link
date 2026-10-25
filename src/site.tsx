@@ -1567,7 +1567,7 @@ function Register(){
     <section className="reg-wizard-shell">
       <header className="reg-wizard-header">
         <h2>نموذج تسجيل العضوية</h2>
-        <p>يرجى تعبئة البيانات التالية بدقة — الخطوة <strong>{step+1}</strong> من <strong>{TOTAL}</strong></p>
+        <p>يرجى تعبئة البيانات التالية بدقة — رسوم الاشتراك السنوي 50 ريال سعودي — الخطوة <strong>{step+1}</strong> من <strong>{TOTAL}</strong></p>
         <button type="button" className="rwz-demo-btn" onClick={fillDemo} title="ملء تجريبي سريع للعرض"><Sparkles size={15}/>بيانات تجريبية</button>
       </header>
 
