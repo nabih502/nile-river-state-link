@@ -8,7 +8,7 @@ interface Member {
   state: string; city: string; locality: string; country: string;
   marital_status: string; specialization: string; job_title: string;
   photo_url: string; membership_type: string; member_number: string;
-  status: string; created_at: string;
+  status: string; created_at: string; receipt_status: string; application_submitted_at: string | null;
 }
 interface Subscription {
   id: string; member_id: string; subscription_type: string;
@@ -60,13 +60,13 @@ const SUB_STATUS_LABELS: Record<string, { label: string; color: string }> = {
 
 // ── Export CSV ────────────────────────────────────────────────────────────────
 function exportCSV(members: Member[]) {
-  const headers = ["رقم العضوية","الاسم","البريد","الجوال","رقم الهوية","الجنس","الدولة","الولاية","المدينة","نوع العضوية","الحالة","تاريخ التسجيل"];
+  const headers = ["رقم العضوية","الاسم","البريد","الجوال","رقم الهوية","الجنس","الدولة","الولاية","المدينة","نوع العضوية","الحالة","حالة الإيصال","تاريخ التسجيل"];
   const rows = members.map(m => [
     m.member_number || "", m.full_name, m.email || "", m.phone || "",
     m.national_id || "", m.gender === "female" ? "أنثى" : "ذكر",
     m.country || "", m.state || "", m.city || "",
     TYPE_LABELS[m.membership_type] || m.membership_type,
-    STATUS_LABELS[m.status]?.label || m.status, fmt(m.created_at),
+    STATUS_LABELS[m.status]?.label || m.status, ({missing:"لم يرفق",pending:"بانتظار المراجعة",approved:"معتمد",rejected:"مرفوض"} as Record<string,string>)[m.receipt_status] || m.receipt_status || "لم يرفق", fmt(m.created_at),
   ]);
   const csv = [headers, ...rows].map(r => r.map(c => `"${String(c).replace(/"/g, '""')}"`).join(",")).join("\n");
   const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8;" });
@@ -628,6 +628,7 @@ export default function AdminMembersPanel({ onOpenMember }: { onOpenMember?: (id
                 <th>الدولة / الولاية</th>
                 <th>نوع العضوية</th>
                 <th>الحالة</th>
+                <th>الإيصال</th>
                 <th>تاريخ التسجيل</th>
                 <th>إجراءات</th>
               </tr>
@@ -655,6 +656,7 @@ export default function AdminMembersPanel({ onOpenMember }: { onOpenMember?: (id
                     <td>
                       <span style={{ fontSize: "0.76rem", padding: "0.2rem 0.6rem", borderRadius: "20px", fontWeight: 600, background: st.bg, color: st.color }}>{st.label}</span>
                     </td>
+                    <td><span style={{fontSize:"0.74rem",fontWeight:700,color:m.receipt_status==="approved"?"#15803d":m.receipt_status==="rejected"?"#b91c1c":"#c2410c"}}>{{missing:"لم يرفق",pending:"بانتظار المراجعة",approved:"معتمد",rejected:"مرفوض"} as Record<string,string>)[m.receipt_status]||"لم يرفق"}</span></td>
                     <td style={{ fontSize: "0.8rem", color: "#64748b" }}>{fmt(m.created_at)}</td>
                     <td onClick={e => e.stopPropagation()}>
                       <div style={{ display: "flex", gap: "0.35rem" }}>
@@ -666,7 +668,7 @@ export default function AdminMembersPanel({ onOpenMember }: { onOpenMember?: (id
                 );
               })}
               {filtered.length === 0 && (
-                <tr><td colSpan={8} className="adm-empty">لا يوجد أعضاء بهذه الفلاتر</td></tr>
+                <tr><td colSpan={9} className="adm-empty">لا يوجد أعضاء بهذه الفلاتر</td></tr>
               )}
             </tbody>
           </table>
