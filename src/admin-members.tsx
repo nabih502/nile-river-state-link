@@ -656,7 +656,7 @@ export default function AdminMembersPanel({ onOpenMember }: { onOpenMember?: (id
                     <td>
                       <span style={{ fontSize: "0.76rem", padding: "0.2rem 0.6rem", borderRadius: "20px", fontWeight: 600, background: st.bg, color: st.color }}>{st.label}</span>
                     </td>
-                    <td><span style={{fontSize:"0.74rem",fontWeight:700,color:m.receipt_status==="approved"?"#15803d":m.receipt_status==="rejected"?"#b91c1c":"#c2410c"}}>{{missing:"لم يرفق",pending:"بانتظار المراجعة",approved:"معتمد",rejected:"مرفوض"} as Record<string,string>)[m.receipt_status]||"لم يرفق"}</span></td>
+                    <td><span style={{fontSize:"0.74rem",fontWeight:700,color:m.receipt_status==="approved"?"#15803d":m.receipt_status==="rejected"?"#b91c1c":"#c2410c"}}>{({missing:"لم يرفق",pending:"بانتظار المراجعة",approved:"معتمد",rejected:"مرفوض"} as Record<string,string>)[m.receipt_status]||"لم يرفق"}</span></td>
                     <td style={{ fontSize: "0.8rem", color: "#64748b" }}>{fmt(m.created_at)}</td>
                     <td onClick={e => e.stopPropagation()}>
                       <div style={{ display: "flex", gap: "0.35rem" }}>
