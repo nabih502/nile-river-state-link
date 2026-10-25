@@ -1353,301 +1353,100 @@ function MemberField({field}:{field:MemberFieldSpec}){
 }
 
 function WizardField({field}:{field:MemberFieldSpec}){
-  const common={required:field.required,"aria-label":field.label};
-  if(field.kind==="radio") return(
-    <div className="wf">
-      <label className="wf-label">{field.label}{field.required&&<em>*</em>}</label>
-      <div className="wf-radios">
-        {field.options?.map(opt=>(
-          <label key={opt} className="wf-radio-opt">
-            <input name={field.label} type="radio" required={field.required} value={opt}/>
-            <span>{opt}</span>
-          </label>
-        ))}
-      </div>
-    </div>
-  );
-  if(field.kind==="toggle") return(
-    <div className="wf">
-      <label className="wf-toggle-row">
-        <span className="wf-toggle-track"><input type="checkbox"/><i/></span>
-        <span className="wf-toggle-text">{field.placeholder||field.label}</span>
-      </label>
-    </div>
-  );
-  if(field.kind==="file") return(
-    <div className="wf wf-full">
-      <label className="wf-label">{field.label}</label>
-      <label className="wf-file">
-        <Upload size={28}/>
-        <b>اختر صورة أو اسحبها هنا</b>
-        <small>JPG, PNG — الحجم الأقصى 2MB</small>
-        <input {...common} type="file" accept="image/*"/>
-      </label>
-    </div>
-  );
-  if(field.kind==="textarea") return(
-    <div className="wf wf-full">
-      <label className="wf-label">{field.label}{field.required&&<em>*</em>}</label>
-      <textarea className="wf-input" {...common} placeholder={field.placeholder||"أدخل التفاصيل"} rows={4}/>
-    </div>
-  );
-  return(
-    <div className="wf">
-      <label className="wf-label">{field.label}{field.required&&<em>*</em>}</label>
-      {field.kind==="select"
-        ?<select className="wf-input" {...common} defaultValue=""><option value="" disabled>اختر {field.label}</option>{field.options?.map(o=><option key={o}>{o}</option>)}</select>
-        :<input className="wf-input" {...common} type={field.kind==="email"?"email":field.kind==="date"?"date":field.kind==="number"?"number":"text"} placeholder={field.placeholder||`أدخل ${field.label}`}/>
-      }
-    </div>
-  );
+  const common={required:field.required,"aria-label":field.label,name:field.label};
+  if(field.kind==="radio") return <div className="wf"><label className="wf-label">{field.label}{field.required&&<em>*</em>}</label><div className="wf-radios">{field.options?.map(opt=><label key={opt} className="wf-radio-opt"><input name={field.label} type="radio" required={field.required} value={opt}/><span>{opt}</span></label>)}</div></div>;
+  if(field.kind==="toggle") return <div className="wf"><label className="wf-toggle-row"><span className="wf-toggle-track"><input type="checkbox" name={field.label} value="نعم"/><i/></span><span className="wf-toggle-text">{field.placeholder||field.label}</span></label></div>;
+  if(field.kind==="file") return <div className="wf wf-full"><label className="wf-label">{field.label}</label><label className="wf-file"><Upload size={28}/><b>اختر ملفاً أو اسحبه هنا</b><small>JPG, PNG, PDF — الحجم الأقصى 5MB</small><input {...common} type="file" accept="image/jpeg,image/png,application/pdf"/></label></div>;
+  if(field.kind==="textarea") return <div className="wf wf-full"><label className="wf-label">{field.label}{field.required&&<em>*</em>}</label><textarea className="wf-input" {...common} placeholder={field.placeholder||"أدخل التفاصيل"} rows={4}/></div>;
+  return <div className="wf"><label className="wf-label">{field.label}{field.required&&<em>*</em>}</label>{field.kind==="select"?<select className="wf-input" {...common} defaultValue=""><option value="" disabled>اختر {field.label}</option>{field.options?.map(o=><option key={o}>{o}</option>)}</select>:<input className="wf-input" {...common} type={field.kind==="email"?"email":field.kind==="date"?"date":field.kind==="number"?"number":"text"} placeholder={field.placeholder||"أدخل "+field.label}/>}</div>;
 }
 
 function Register(){
-  const params=new URLSearchParams(window.location.search);
-  const planIndex=Number(params.get("plan")||"1");
-  const planNames=["basic","premium","supporter"];
   const [step,setStep]=useState(0);
   const [submitting,setSubmitting]=useState(false);
   const [submitError,setSubmitError]=useState("");
   const formRef=useRef<HTMLFormElement>(null);
 
   const groups:MemberGroupSpec[]=[
-    {title:"البيانات الشخصية",icon:UserRound,fields:[{label:"الاسم الرباعي",required:true},{label:"الاسم وفق الجواز",required:true},{label:"الجنس",required:true,kind:"radio",options:["ذكر","أنثى"]},{label:"تاريخ الميلاد",required:true,kind:"date"},{label:"الجنسية",required:true,kind:"select",options:["سوداني","سودانية","أخرى"]},{label:"الحالة الاجتماعية",required:true,kind:"select",options:["أعزب","متزوج","أخرى"]},{label:"صورة شخصية حديثة",kind:"file"}]},
-    {title:"بيانات الإقامة",icon:MapPin,fields:[{label:"الدولة",required:true,kind:"select",options:["السودان","السعودية","الإمارات","قطر","مصر","أخرى"]},{label:"المدينة",required:true,kind:"select",options:["الخرطوم","الرياض","جدة","دبي","الدوحة","القاهرة"]},{label:"الحي"},{label:"العنوان بالتفصيل"},{label:"الرمز البريدي"},{label:"رقم الجوال",required:true},{label:"البريد الإلكتروني",required:true,kind:"email",placeholder:"example@mail.com"}]},
-    {title:"بيانات السودان",icon:BriefcaseBusiness,fields:[{label:"الولاية",required:true,kind:"select",options:["نهر النيل","الخرطوم","الشمالية","البحر الأحمر","أخرى"]},{label:"المحلية",required:true,kind:"select",options:["الدامر","عطبرة","بربر","شندي","المتمة"]},{label:"الوحدة الإدارية"},{label:"القرية / الحي"},{label:"أصل القرية / الحي"},{label:"جهة العمل (اختياري)"}]},
-    {title:"المؤهل العلمي",icon:GraduationCap,fields:[{label:"المرحلة التعليمية",required:true,kind:"select",options:["ثانوي","دبلوم","بكالوريوس","دراسات عليا"]},{label:"التخصص",required:true},{label:"اسم الجامعة",required:true},{label:"سنة التخرج",kind:"number"},{label:"الدورات والشهادات (اختياري)"},{label:"الخبرات العملية (اختياري)"}]},
-    {title:"بيانات الأسرة",icon:UsersRound,fields:[{label:"الحالة",kind:"radio",options:["متزوج","أعزب"]},{label:"عدد أفراد الأسرة",kind:"number"},{label:"أعمار الأبناء",placeholder:"مثال: 5، 10، 15"},{label:"بيانات إضافية (اختياري)",kind:"textarea"}]},
-    {title:"البيانات المهنية",icon:BriefcaseBusiness,fields:[{label:"المجال المهني",kind:"select",options:["التعليم","الصحة","الهندسة","التجارة","أخرى"]},{label:"المسمى الوظيفي"},{label:"سنوات الخبرة",required:true,kind:"number"},{label:"فرص العمل",kind:"toggle",placeholder:"أبحث عن فرصة عمل"},{label:"التطوع",kind:"toggle",placeholder:"مستعد للتطوع"}]},
-    {title:"الحالة الصحية (اختياري)",icon:HeartPulse,fields:[{label:"مستندات صحية مزمنة",kind:"select",options:["لا توجد","يوجد"]},{label:"هل تحتاج دعماً؟",kind:"radio",options:["نعم","لا"]},{label:"توضيح",kind:"textarea",placeholder:"أدخل التوضيح"}]},
-    {title:"التواصل",icon:Phone,fields:[{label:"رقم بديل"},{label:"واتساب",placeholder:"05XXXXXXXX"},{label:"البريد الإلكتروني البديل",kind:"email",placeholder:"example@mail.com"},{label:"حسابات التواصل الاجتماعي",placeholder:"@username"}]},
+    {title:"البيانات الشخصية",icon:UserRound,fields:[{label:"الاسم الرباعي",required:true},{label:"الاسم وفق الجواز",required:true},{label:"الجنس",required:true,kind:"radio",options:["ذكر","أنثى"]},{label:"تاريخ الميلاد",required:true,kind:"date"},{label:"الرقم الوطني / رقم الجواز",required:true},{label:"الجنسية",required:true},{label:"الحالة الاجتماعية",required:true,kind:"select",options:["أعزب","متزوج","مطلق","أرمل"]},{label:"عدد أفراد الأسرة",required:true,kind:"number"},{label:"البريد الإلكتروني",required:true,kind:"email",placeholder:"example@mail.com"},{label:"رقم الجوال",required:true}]},
+    {title:"بيانات بلد الإقامة",icon:MapPin,fields:[{label:"الدولة",required:true},{label:"المدينة",required:true},{label:"العنوان بالتفصيل في بلد الإقامة",required:true,kind:"textarea"},{label:"رقم الجوال في بلد الإقامة",required:true},{label:"البريد الإلكتروني في بلد الإقامة",required:true,kind:"email"}]},
+    {title:"بيانات السكن في السودان",icon:Landmark,fields:[{label:"الولاية",required:true},{label:"المحلية",required:true},{label:"المدينة / القرية",required:true},{label:"المركز / الوحدة الإدارية",required:true},{label:"العنوان بالتفصيل في السودان",required:true,kind:"textarea"}]},
+    {title:"المؤهلات العلمية",icon:GraduationCap,fields:[{label:"المؤهل العلمي",required:true},{label:"التخصص",required:true},{label:"الجامعة / الجهة",required:true},{label:"سنة التخرج",required:true,kind:"number"},{label:"الشهادات المهنية",kind:"textarea"},{label:"الدورات التدريبية",kind:"textarea"}]},
+    {title:"الخبرة والبيانات المهنية",icon:BriefcaseBusiness,fields:[{label:"إجمالي سنوات الخبرة",required:true,kind:"number"},{label:"مجال الخبرة الأساسي",required:true},{label:"تفاصيل الخبرة",required:true,kind:"textarea"},{label:"الوضع الوظيفي",required:true,kind:"select",options:["على رأس العمل","باحث عن عمل","متقاعد","عمل حر"]},{label:"طبيعة العمل",required:true,kind:"select",options:["موظف","عمل حر","صاحب عمل","غير ذلك"]},{label:"جهة العمل"},{label:"نشاط جهة العمل"},{label:"المسمى الوظيفي / المهنة",required:true},{label:"ملخص طبيعة العمل",kind:"textarea"},{label:"المشاركة في لجان تطوعية",required:true,kind:"radio",options:["نعم","لا"]}]},
+    {title:"المشاركة المجتمعية والمبادرات",icon:HandHeart,fields:[{label:"المبادرة المطلوبة 1"},{label:"المبادرة المطلوبة 2"},{label:"المبادرة المطلوبة 3"},{label:"المبادرة المطلوبة 4"},{label:"التجربة التطوعية 1 - الجهة والدور والفترة",kind:"textarea"},{label:"التجربة التطوعية 2 - الجهة والدور والفترة",kind:"textarea"},{label:"التجربة التطوعية 3 - الجهة والدور والفترة",kind:"textarea"},{label:"المقترحات والملاحظات",kind:"textarea"}]},
+    {title:"بيانات إضافية اختيارية",icon:Phone,fields:[{label:"رقم بديل"},{label:"واتساب"},{label:"البريد الإلكتروني البديل",kind:"email"},{label:"حسابات التواصل الاجتماعي"},{label:"هل تحتاج دعماً صحياً؟",kind:"radio",options:["نعم","لا"]},{label:"تفاصيل الدعم الصحي",kind:"textarea"}]}
   ];
-
   const wizardSteps=[
-    {title:"الشخصية",label:"البيانات الشخصية",desc:"هويتك ومعلوماتك الأساسية",icon:UserRound,groupIndices:[0]},
-    {title:"الإقامة",label:"بيانات الإقامة والسودان",desc:"مكان إقامتك وأصلك من الولاية",icon:MapPin,groupIndices:[1,2]},
-    {title:"التعليم والمهنة",label:"المؤهل العلمي والعمل",desc:"خبراتك ومؤهلاتك الأكاديمية",icon:GraduationCap,groupIndices:[3,5]},
-    {title:"الأسرة والصحة",label:"بيانات الأسرة والصحة",desc:"حالتك الاجتماعية والصحية",icon:UsersRound,groupIndices:[4,6]},
-    {title:"التواصل",label:"التواصل والاهتمامات",desc:"بيانات التواصل ومجالات الاهتمام",icon:Phone,groupIndices:[7]},
+    {title:"الشخصية",label:"البيانات الشخصية",desc:"الهوية ووسائل التواصل الأساسية",icon:UserRound,groupIndices:[0]},
+    {title:"العناوين",label:"الإقامة داخل السودان وخارجه",desc:"العنوان الحالي وبيانات الأصل في الولاية",icon:MapPin,groupIndices:[1,2]},
+    {title:"التعليم والمهنة",label:"المؤهلات والخبرات المهنية",desc:"التعليم والخبرة والعمل الحالي",icon:GraduationCap,groupIndices:[3,4]},
+    {title:"المشاركة",label:"الاهتمامات والمبادرات",desc:"مجالات المساهمة والخبرات التطوعية",icon:HandHeart,groupIndices:[5,6]},
+    {title:"الإقرار",label:"الإقرارات والتوقيع",desc:"مراجعة الالتزامات وإقرار صحة البيانات",icon:ShieldCheck,groupIndices:[]}
   ];
   const TOTAL=wizardSteps.length;
-
-  const demoNames=["أحمد محمد عبدالله النيل","فاطمة عمر حسن إبراهيم","يوسف إدريس محمد علي","مريم خالد حسين الطيب","محمد الأمين عبدالرحمن بشير"];
-  const demoSpecializations=["هندسة الحاسوب","الطب البشري","إدارة الأعمال","التربية والتعليم","الهندسة المدنية"];
-  const demoJobs=["مهندس برمجيات","طبيب استشاري","مدير مشاريع","معلم أول","مهندس إنشاءات"];
-
-  const fillDemo=()=>{
-    const form=formRef.current;
-    if(!form)return;
-    const ri=Math.floor(Math.random()*5);
-    const uid=Date.now().toString(36)+Math.random().toString(36).slice(2,6);
-    const demoEmail=`demo.${uid}@test.nile`;
-    const demoPhone=`09${Math.floor(10000000+Math.random()*89999999)}`;
-    const set=(label:string,value:string)=>{
-      const el=form.querySelector<HTMLInputElement|HTMLSelectElement|HTMLTextAreaElement>(`[aria-label="${label}"]`);
-      if(!el)return;
-      if(el instanceof HTMLSelectElement){
-        el.value=value;
-        el.dispatchEvent(new Event("change",{bubbles:true}));
-        return;
-      }
-      const nativeSetter=Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype,"value")?.set||Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype,"value")?.set;
-      nativeSetter?.call(el,value);
-      el.dispatchEvent(new Event("input",{bubbles:true}));
-      el.dispatchEvent(new Event("change",{bubbles:true}));
-    };
-    const setRadio=(name:string,value:string)=>{
-      form.querySelectorAll<HTMLInputElement>(`input[name="${name}"]`).forEach(el=>{
-        const nativeSetter=Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype,"checked")?.set;
-        nativeSetter?.call(el,el.value===value);
-        el.dispatchEvent(new Event("change",{bubbles:true}));
-      });
-    };
-    set("الاسم الرباعي",demoNames[ri]);
-    set("الاسم وفق الجواز",demoNames[ri].split(" ").slice(0,3).join(" "));
-    setRadio("الجنس",ri%2===0?"ذكر":"أنثى");
-    set("تاريخ الميلاد",`${1975+ri}-0${(ri%9)+1}-15`);
-    set("الجنسية",ri%2===0?"سوداني":"سودانية");
-    set("الحالة الاجتماعية","متزوج");
-    set("الدولة","السودان");
-    set("المدينة","الخرطوم");
-    set("الحي","الرياض");
-    set("العنوان بالتفصيل","شارع الجامعة - الطابق الثاني");
-    set("رقم الجوال",demoPhone);
-    set("البريد الإلكتروني",demoEmail);
-    set("الولاية","نهر النيل");
-    set("المحلية","عطبرة");
-    set("الوحدة الإدارية","وحدة المركز");
-    set("القرية / الحي","حي النيل");
-    set("أصل القرية / الحي","عطبرة القديمة");
-    set("المرحلة التعليمية","بكالوريوس");
-    set("التخصص",demoSpecializations[ri]);
-    set("اسم الجامعة","جامعة الخرطوم");
-    set("سنة التخرج",String(2000+ri));
-    set("المجال المهني","الهندسة");
-    set("المسمى الوظيفي",demoJobs[ri]);
-    set("سنوات الخبرة",String(5+ri));
-    set("رقم بديل","0111222333");
-    set("واتساب",demoPhone);
-  };
-
-  const goNext=()=>{
-    const form=formRef.current;
-    if(!form)return;
-    const stepEl=form.querySelector<HTMLElement>(`[data-step="${step}"]`);
-    if(stepEl){
-      const inputs=Array.from(stepEl.querySelectorAll<HTMLInputElement|HTMLSelectElement>("[required]"));
-      for(const inp of inputs){
-        if(inp instanceof HTMLInputElement&&inp.type==="radio"){
-          const name=inp.name;
-          if(!stepEl.querySelector<HTMLInputElement>(`input[name="${name}"]:checked`)){inp.reportValidity?.();return;}
-        } else if(!(inp as HTMLInputElement|HTMLSelectElement).value?.trim()){
-          (inp as HTMLElement).focus();inp.reportValidity?.();return;
-        }
-      }
-    }
-    setStep(s=>Math.min(s+1,TOTAL-1));
-    window.scrollTo({top:0,behavior:"smooth"});
-  };
-
-  const goPrev=()=>{setStep(s=>Math.max(s-1,0));window.scrollTo({top:0,behavior:"smooth"})};
-
-  const onSubmit=async(event:FormEvent)=>{
-    event.preventDefault();
-    setSubmitting(true);setSubmitError("");
-    const form=event.target as HTMLFormElement;
-    const requiredConsents=Array.from(form.querySelectorAll<HTMLInputElement>("[data-required-consent]"));
-    const missingConsent=requiredConsents.find(item=>!item.checked);
-    if(missingConsent){
-      setSubmitting(false);
-      setSubmitError("يجب الموافقة على جميع بنود الإقرار قبل إكمال التسجيل");
-      missingConsent.focus();
-      return;
-    }
-    
-      const get=(label:string)=>{const el=form.querySelector<HTMLInputElement|HTMLSelectElement|HTMLTextAreaElement>(`[aria-label="${label}"]`);return el?.value||""};
-    const getRadio=(name:string)=>{const el=form.querySelector<HTMLInputElement>(`input[name="${name}"]:checked`);return el?.value||""};
-    const formData=new FormData(form);
-    const applicationData:Record<string,string|string[]>={};
-    Array.from(new Set(Array.from(formData.keys()))).forEach(key=>{
-      const values=formData.getAll(key).filter((value):value is string=>typeof value==="string");
-      applicationData[key]=values.length>1?values:(values[0]||"");
-    });
-    const fullName=get("الاسم الرباعي");
-    const nationalId=get("الرقم الوطني / رقم الجواز");
-    const signatureName=get("التوقيع الإلكتروني");
-    if(!signatureName.trim()){setSubmitting(false);setSubmitError("يرجى كتابة الاسم الكامل كتوقيع إلكتروني");return;}
-    const email=get("البريد الإلكتروني");
-    const phone=get("رقم الجوال");
-    const gender=getRadio("الجنس");
-    const birthDate=get("تاريخ الميلاد");
-    const country=get("الدولة");
-    const city=get("المدينة");
-    const state=get("الولاية");
-    const locality=get("المحلية");
-    const maritalStatus=get("الحالة الاجتماعية");
-    const specialization=get("التخصص");
-    const jobTitle=get("المسمى الوظيفي / المهنة");
-    // Registration runs through member_register on the server: it assigns the
-    // membership status, generates a random initial password (never derived from the
-    // phone number) and returns a session token so the next steps act as this member.
-    const {data:result,error}=await supabase.rpc("member_register",{p:{
-      full_name:fullName,email,phone,gender:gender==="أنثى"?"female":"male",
-      birth_date:birthDate||null,country,city,state,locality,
-      marital_status:maritalStatus,specialization,job_title:jobTitle,
-      membership_type:planNames[planIndex]||"basic",
-    }});
-    setSubmitting(false);
-    if(error||!result?.member_id){
-      console.error(error);
-      const duplicate=/duplicate key|members_email_lower_uniq|members_national_id_uniq/i.test(error?.message||"");
-      setSubmitError(duplicate
-        ?"يوجد تسجيل سابق بنفس البريد الإلكتروني أو الرقم الوطني"
-        :"تعذر إكمال التسجيل، يرجى التحقق من البيانات والمحاولة مرة أخرى");
-      return;
-    }
-    sessionStorage.setItem("new_member_id",result.member_id as string);
-    sessionStorage.setItem(MEMBER_TOKEN_KEY,result.token as string);
-    if(result.initial_password) sessionStorage.setItem("new_member_password",result.initial_password as string);
-    location.href="/photo";
-  };
-
-  const interests=[{icon:GraduationCap,label:"التعليم"},{icon:MonitorCheck,label:"المباشر"},{icon:TrendingUp,label:"ريادة الأعمال"},{icon:UsersRound,label:"المرأة"},{icon:ChartNoAxesCombined,label:"الاستثمار"},{icon:Landmark,label:"الثقافة"},{icon:Handshake,label:"الاستشارات"},{icon:HandHeart,label:"اليوم العام"},{icon:Sparkles,label:"أخرى"}];
+  const interests=[
+    {icon:GraduationCap,label:"التعليم والتدريب"},{icon:Megaphone,label:"الإعلام والعلاقات العامة"},{icon:Landmark,label:"الثقافة والتراث"},{icon:TrendingUp,label:"ريادة الأعمال"},{icon:ChartNoAxesCombined,label:"الاستثمار"},{icon:MonitorCheck,label:"التحول الرقمي"},{icon:HeartPulse,label:"الصحة"},{icon:UsersRound,label:"العمل الاجتماعي"},{icon:HandHeart,label:"الإغاثة والعمل الإنساني"},{icon:Trophy,label:"الشباب والرياضة"},{icon:HeartHandshake,label:"المرأة والأسرة"},{icon:Sprout,label:"البيئة والاستدامة"},{icon:Handshake,label:"الدعم والتنمية المجتمعية"},{icon:Sparkles,label:"أخرى"}
+  ];
+  const commitments=[
+    "أقر بصحة جميع البيانات والمستندات المقدمة.",
+    "ألتزم بالنظام الأساسي واللوائح والقرارات المنظمة للرابطة.",
+    "أحترم التسلسل الإداري والهيكل التنظيمي للرابطة.",
+    "أحافظ على سرية المعلومات والبيانات التي أطلع عليها.",
+    "أحافظ على ممتلكات الرابطة وسمعتها ولا أسيء إليها.",
+    "لا أمثل الرابطة أو أتحدث باسمها دون تفويض رسمي.",
+    "أؤدي المهام والمسؤوليات الموكلة إليّ بأمانة.",
+    "أتعاون مع الأعضاء وألتزم بالاحترام وحسن التعامل.",
+    "ألتزم بسداد رسوم العضوية والاشتراكات المعتمدة.",
+    "أحافظ على وحدة الرابطة ولا أمارس ما يضر بأهدافها.",
+    "أوافق على معالجة بياناتي الشخصية لأغراض العضوية والخدمات."
+  ];
   const regBenefits=[{icon:ShieldCheck,text:"هوية رقمية موثوقة"},{icon:Gift,text:"خدمات ومبادرات حصرية"},{icon:UsersRound,text:"تواصل فعال وبناء العلاقات"},{icon:GraduationCap,text:"فرص تعليم وتدريب"},{icon:Handshake,text:"دعم ورعاية المشاريع"},{icon:UserCheck,text:"المشاركة في صنع القرار"},{icon:LockKeyhole,text:"حماية خصوصيتك وبياناتك"}];
 
+  const fillDemo=()=>{
+    const form=formRef.current;if(!form)return;
+    const uid=Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+    const set=(label:string,value:string)=>{const el=form.querySelector<HTMLInputElement|HTMLSelectElement|HTMLTextAreaElement>("[aria-label='"+label+"']");if(!el)return;el.value=value;el.dispatchEvent(new Event("input",{bubbles:true}));el.dispatchEvent(new Event("change",{bubbles:true}));};
+    const radio=(name:string,value:string)=>{form.querySelectorAll<HTMLInputElement>("input[name='"+name+"']").forEach(el=>{el.checked=el.value===value;el.dispatchEvent(new Event("change",{bubbles:true}));});};
+    [["الاسم الرباعي","أحمد محمد عبدالله النيل"],["الاسم وفق الجواز","AHMED MOHAMED ABDALLAH"],["تاريخ الميلاد","1988-05-15"],["الرقم الوطني / رقم الجواز","P"+uid.toUpperCase()],["الجنسية","سوداني"],["عدد أفراد الأسرة","4"],["البريد الإلكتروني","demo."+uid+"@test.nile"],["رقم الجوال","09"+Math.floor(10000000+Math.random()*89999999)],["الدولة","المملكة العربية السعودية"],["المدينة","الرياض"],["العنوان بالتفصيل في بلد الإقامة","حي النخيل - شارع الملك فهد"],["رقم الجوال في بلد الإقامة","05"+Math.floor(10000000+Math.random()*89999999)],["البريد الإلكتروني في بلد الإقامة","demo."+uid+"@test.nile"],["الولاية","نهر النيل"],["المحلية","عطبرة"],["المدينة / القرية","عطبرة"],["المركز / الوحدة الإدارية","وحدة عطبرة"],["العنوان بالتفصيل في السودان","حي الداخلة - عطبرة"],["المؤهل العلمي","بكالوريوس"],["التخصص","هندسة الحاسوب"],["الجامعة / الجهة","جامعة وادي النيل"],["سنة التخرج","2010"],["إجمالي سنوات الخبرة","12"],["مجال الخبرة الأساسي","تقنية المعلومات"],["تفاصيل الخبرة","إدارة وتطوير الأنظمة الرقمية"],["المسمى الوظيفي / المهنة","مهندس نظم"],["التوقيع الإلكتروني","أحمد محمد عبدالله النيل"],["تاريخ الإقرار",new Date().toISOString().slice(0,10)]].forEach(([k,v])=>set(k,v));
+    radio("الجنس","ذكر");radio("الحالة الاجتماعية","متزوج");radio("الوضع الوظيفي","على رأس العمل");radio("طبيعة العمل","موظف");radio("المشاركة في لجان تطوعية","نعم");
+  };
+
+  const goNext=()=>{const form=formRef.current;if(!form)return;const box=form.querySelector<HTMLElement>("[data-step='"+step+"']");if(box){const inputs=Array.from(box.querySelectorAll<HTMLInputElement|HTMLSelectElement|HTMLTextAreaElement>("[required]"));for(const inp of inputs){if(inp instanceof HTMLInputElement&&inp.type==="radio"){if(!box.querySelector<HTMLInputElement>("input[name='"+inp.name+"']:checked")){inp.reportValidity();return;}}else if(inp instanceof HTMLInputElement&&inp.type==="checkbox"){if(!inp.checked){inp.reportValidity();return;}}else if(!inp.value.trim()){inp.focus();inp.reportValidity();return;}}}setStep(s=>Math.min(s+1,TOTAL-1));window.scrollTo({top:0,behavior:"smooth"});};
+  const goPrev=()=>{setStep(s=>Math.max(s-1,0));window.scrollTo({top:0,behavior:"smooth"});};
+
+  const onSubmit=async(event:FormEvent)=>{
+    event.preventDefault();setSubmitting(true);setSubmitError("");
+    const form=event.target as HTMLFormElement;
+    const missing=Array.from(form.querySelectorAll<HTMLInputElement>("[data-required-consent]")).find(el=>!el.checked);
+    if(missing){setSubmitting(false);setSubmitError("يجب الموافقة على جميع بنود الإقرار قبل إكمال التسجيل");missing.focus();return;}
+    const get=(label:string)=>{const el=form.querySelector<HTMLInputElement|HTMLSelectElement|HTMLTextAreaElement>("[aria-label='"+label+"']");return el?.value||""};
+    const getRadio=(name:string)=>form.querySelector<HTMLInputElement>("input[name='"+name+"']:checked")?.value||"";
+    const formData=new FormData(form);const applicationData:Record<string,string|string[]>={};
+    Array.from(new Set(Array.from(formData.keys()))).forEach(key=>{const values=formData.getAll(key).filter((value):value is string=>typeof value==="string");applicationData[key]=values.length>1?values:(values[0]||"");});
+    const signatureName=get("التوقيع الإلكتروني");
+    if(!signatureName.trim()){setSubmitting(false);setSubmitError("يرجى كتابة الاسم الكامل كتوقيع إلكتروني");return;}
+    const {data:result,error}=await supabase.rpc("member_register",{p:{
+      full_name:get("الاسم الرباعي"),national_id:get("الرقم الوطني / رقم الجواز"),email:get("البريد الإلكتروني"),phone:get("رقم الجوال"),gender:getRadio("الجنس")==="أنثى"?"female":"male",birth_date:get("تاريخ الميلاد")||null,country:get("الدولة"),city:get("المدينة"),state:get("الولاية"),locality:get("المحلية"),marital_status:get("الحالة الاجتماعية"),specialization:get("التخصص"),job_title:get("المسمى الوظيفي / المهنة"),membership_type:"basic",signature_name:signatureName,consent_accepted:true,application_data:applicationData
+    }});
+    setSubmitting(false);
+    if(error||!result?.member_id){console.error(error);const duplicate=/duplicate key|members_email_lower_uniq|members_national_id_uniq/i.test(error?.message||"");setSubmitError(duplicate?"يوجد تسجيل سابق بنفس البريد الإلكتروني أو الرقم الوطني":"تعذر إكمال التسجيل، يرجى التحقق من البيانات والمحاولة مرة أخرى");return;}
+    sessionStorage.setItem("new_member_id",result.member_id as string);sessionStorage.setItem(MEMBER_TOKEN_KEY,result.token as string);if(result.initial_password)sessionStorage.setItem("new_member_password",result.initial_password as string);location.href="/photo";
+  };
+
   return <div className="register-page">
-    <section className="reg-hero">
-      <div className="reg-visual"><img src="/assets/membership-register-hero-v2.webp" alt="أبناء السودان حول العالم"/></div>
-      <div className="reg-copy motion"><h1>سجل عضويتك</h1><h2>في رابطة ولاية نهر النيل الإلكترونية</h2><h3>انضم إلى أكبر قاعدة بيانات موثوقة لأبناء ولاية نهر النيل</h3><p>عضويتك في رابطة ولاية نهر النيل الإلكترونية تمنحك هوية رقمية موثوقة، وتفتح لك أبواب الخدمات والمبادرات والفرص داخل الولاية وخارجها.</p><div className="reg-stats"><b><UsersRound/><span>12,850+<small>أعضاء مسجلون</small></span></b><b><Globe2/><span>48+<small>دول العالم</small></span></b><b><MapPin/><span>320+<small>مدن</small></span></b></div></div>
-      <aside className="reg-benefits motion"><h3>مميزات العضوية</h3>{regBenefits.map(item=>{const Icon=item.icon;return <p key={item.text}><Icon/>{item.text}</p>})}</aside>
+    <section className="reg-hero"><div className="reg-visual"><img src="/assets/membership-register-hero-v2.webp" alt="أبناء السودان حول العالم"/></div><div className="reg-copy motion"><h1>طلب عضوية الرابطة</h1><h2>نموذج إلكتروني مطابق للاستمارة الرسمية</h2><h3>أدخل بياناتك بدقة وأرفق إيصال التحويل البنكي</h3><p>رسوم الاشتراك السنوي 50 ريالاً سعودياً، ويخضع الطلب للمراجعة قبل تفعيل العضوية.</p><div className="reg-stats"><b><ReceiptText/><span>50 ر.س<small>اشتراك سنوي</small></span></b><b><ShieldCheck/><span>مراجعة<small>للبيانات والإيصال</small></span></b><b><LockKeyhole/><span>آمن<small>حماية للبيانات</small></span></b></div></div><aside className="reg-benefits motion"><h3>مميزات العضوية</h3>{regBenefits.map(item=>{const Icon=item.icon;return <p key={item.text}><Icon/>{item.text}</p>})}</aside></section>
+    <section className="reg-wizard-shell"><header className="reg-wizard-header"><h2>نموذج تسجيل العضوية</h2><p>يرجى تعبئة البيانات بدقة — الخطوة <strong>{step+1}</strong> من <strong>{TOTAL}</strong></p><button type="button" className="rwz-demo-btn" onClick={fillDemo}><Sparkles size={15}/>بيانات تجريبية</button></header>
+      <div className="rwz-progress" role="tablist" aria-label="خطوات التسجيل"><div className="rwz-track"><div className="rwz-track-fill" style={{width:(step/(TOTAL-1)*100)+"%"}}/></div>{wizardSteps.map((ws,i)=>{const Icon=ws.icon;const done=i<step;const active=i===step;return <button key={ws.title} type="button" role="tab" aria-selected={active} className={"rwz-dot "+(done?"done":active?"active":"")} onClick={()=>{if(done)setStep(i)}} tabIndex={done?0:-1}><span className="rwz-dot-circle">{done?<Check size={14}/>:<Icon size={14}/>}</span><span className="rwz-dot-label">{ws.title}</span></button>})}</div>
+      <form ref={formRef} className="rwz-form" onSubmit={onSubmit} noValidate>{wizardSteps.map((ws,si)=>{const StepIcon=ws.icon;return <div key={si} className={"rwz-step"+(si===step?" active":"")} data-step={si} role="tabpanel" aria-hidden={si!==step} style={{display:si===step?"block":"none"}}><div className="rwz-step-title"><span className="rwz-step-icon-wrap"><StepIcon size={22}/></span><div><h3>{ws.label}</h3><small>{ws.desc}</small></div><span className="rwz-step-num-badge">{si+1}<em>/{TOTAL}</em></span></div><div className="rwz-fields-wrap">{ws.groupIndices.map(gi=>{const group=groups[gi];const GIcon=group.icon;return <fieldset key={group.title} className="rwz-fieldset"><legend><GIcon size={14}/>{group.title}</legend><div className="wf-grid">{group.fields.map(field=><WizardField key={field.label} field={field}/>)}</div></fieldset>})}
+        {si===3&&<fieldset className="rwz-fieldset reg-interests"><legend><Sparkles size={14}/>مجالات الاهتمام</legend><p>يمكن اختيار أكثر من مجال</p><div className="interests-grid">{interests.map(item=>{const Icon=item.icon;return <label key={item.label}><input type="checkbox" name="مجالات الاهتمام" value={item.label}/><Icon/><b>{item.label}</b></label>})}</div></fieldset>}
+        {si===TOTAL-1&&<><fieldset className="rwz-fieldset"><legend><ShieldCheck size={14}/>التعهدات والإقرارات</legend><div style={{display:"grid",gap:"0.7rem"}}>{commitments.map((text,index)=><label key={text} className="reg-privacy"><ShieldCheck/><span><b>البند {index+1}</b><small>{text}</small></span><input required data-required-consent type="checkbox" name={"إقرار "+(index+1)} value="موافق"/></label>)}</div></fieldset><fieldset className="rwz-fieldset"><legend><ReceiptText size={14}/>الإقرار النهائي والتوقيع</legend><label className="reg-privacy"><Shield/><span><b>الإقرار النهائي</b><small>أقر بأن البيانات أعلاه صحيحة، وأفوض الرابطة بمراجعتها، وأتعهد بإرفاق إيصال تحويل بنكي بقيمة 50 ريالاً سعودياً في الخطوة التالية.</small></span><input required data-required-consent type="checkbox" name="الإقرار النهائي" value="موافق"/></label><div className="wf-grid"><WizardField field={{label:"التوقيع الإلكتروني",required:true}}/><WizardField field={{label:"تاريخ الإقرار",required:true,kind:"date"}}/></div><p style={{margin:"1rem 0 0",padding:"0.9rem",borderRadius:"0.75rem",background:"#fff7ed",color:"#9a3412",fontWeight:700}}>رسوم العضوية السنوية: 50 ريال سعودي — إيصال التحويل البنكي مطلوب لإرسال الطلب للمراجعة.</p></fieldset>{submitError&&<p className="rwz-error">{submitError}</p>}</>}
+      </div></div>})}<div className="rwz-nav"><button type="button" className={"rwz-btn rwz-btn-prev"+(step===0?" rwz-btn-hidden":"")} onClick={goPrev}><ArrowLeft size={16}/> السابق</button><div className="rwz-dots-mini">{wizardSteps.map((_,i)=><span key={i} className={i===step?"on":""}/>)}</div>{step<TOTAL-1?<button type="button" className="rwz-btn rwz-btn-next" onClick={goNext}>التالي <ChevronLeft size={16}/></button>:<button type="submit" className="rwz-btn rwz-btn-submit" disabled={submitting}>{submitting?"جاري التسجيل...":"حفظ الطلب والمتابعة"}</button>}</div></form>
     </section>
-
-    <section className="reg-wizard-shell">
-      <header className="reg-wizard-header">
-        <h2>نموذج تسجيل العضوية</h2>
-        <p>يرجى تعبئة البيانات التالية بدقة — رسوم الاشتراك السنوي 50 ريال سعودي — الخطوة <strong>{step+1}</strong> من <strong>{TOTAL}</strong></p>
-        <button type="button" className="rwz-demo-btn" onClick={fillDemo} title="ملء تجريبي سريع للعرض"><Sparkles size={15}/>بيانات تجريبية</button>
-      </header>
-
-      <div className="rwz-progress" role="tablist" aria-label="خطوات التسجيل">
-        <div className="rwz-track"><div className="rwz-track-fill" style={{width:`${(step/(TOTAL-1))*100}%`}}/></div>
-        {wizardSteps.map((ws,i)=>{
-          const Icon=ws.icon;const done=i<step;const active=i===step;
-          return <button key={ws.title} type="button" role="tab" aria-selected={active} className={`rwz-dot ${done?"done":active?"active":""}`} onClick={()=>{if(done)setStep(i)}} tabIndex={done?0:-1}>
-            <span className="rwz-dot-circle">{done?<Check size={14}/>:<Icon size={14}/>}</span>
-            <span className="rwz-dot-label">{ws.title}</span>
-          </button>;
-        })}
-      </div>
-
-      <form ref={formRef} className="rwz-form" onSubmit={onSubmit} noValidate>
-        {wizardSteps.map((ws,si)=>{
-          const StepIcon=ws.icon;
-          return <div key={si} className={`rwz-step${si===step?" active":""}`} data-step={si} role="tabpanel" aria-hidden={si!==step} style={{display:si===step?"block":"none"}}>
-            <div className="rwz-step-title">
-              <span className="rwz-step-icon-wrap"><StepIcon size={22}/></span>
-              <div><h3>{ws.label}</h3><small>{ws.desc}</small></div>
-              <span className="rwz-step-num-badge">{si+1}<em>/{TOTAL}</em></span>
-            </div>
-            <div className="rwz-fields-wrap">
-              {ws.groupIndices.map(gi=>{
-                const group=groups[gi];const GIcon=group.icon;
-                return <fieldset key={group.title} className="rwz-fieldset">
-                  <legend><GIcon size={14}/>{group.title}</legend>
-                  <div className="wf-grid">{group.fields.map(field=><WizardField key={field.label} field={field}/>)}</div>
-                </fieldset>;
-              })}
-              {si===TOTAL-1&&<>
-                <fieldset className="rwz-fieldset reg-interests">
-                  <legend><Sparkles size={14}/>الاهتمامات</legend>
-                  <p>اختر المجالات التي تهتم بها للمشاركة في المبادرات والأنشطة</p>
-                  <div className="interests-grid">{interests.map(item=>{const Icon=item.icon;return <label key={item.label}><input type="checkbox"/><Icon/><b>{item.label}</b></label>})}</div>
-                </fieldset>
-                <label className="reg-privacy"><Shield/><span><b>سياسة الخصوصية</b><small>أتعهد بصحة جميع البيانات المدخلة، وأوافق على استخدامها وفق شروط وأحكام وسياسة الخصوصية للرابطة.</small></span><input required type="checkbox" aria-label="الموافقة على سياسة الخصوصية"/></label>
-                {submitError&&<p className="rwz-error">{submitError}</p>}
-              </>}
-            </div>
-          </div>;
-        })}
-
-        <div className="rwz-nav">
-          <button type="button" className={`rwz-btn rwz-btn-prev${step===0?" rwz-btn-hidden":""}`} onClick={goPrev}><ArrowLeft size={16}/> السابق</button>
-          <div className="rwz-dots-mini">{wizardSteps.map((_,i)=><span key={i} className={i===step?"on":""}/>)}</div>
-          {step<TOTAL-1
-            ? <button type="button" className="rwz-btn rwz-btn-next" onClick={goNext}>التالي <ChevronLeft size={16}/></button>
-            : <button type="submit" className="rwz-btn rwz-btn-submit" disabled={submitting}>{submitting?"جاري التسجيل...":"إكمال التسجيل"}</button>
-          }
-        </div>
-      </form>
-    </section>
-
-    <section className="reg-join-banner"><div><h2>كن جزءاً من التغيير .. <span>انضم اليوم!</span></h2><p>عضويتك تساهم في بناء مجتمع رقمي قوي ومتكامل يخدم أبناء الولاية أينما كانوا</p><div><b><UsersRound/>تواصل فعال</b><b><MapPin/>فرص أكثر</b><b><Gift/>امتيازات أعمق</b></div></div><button onClick={()=>{location.href="/photo"}}>سجل الآن <ArrowLeft/></button><MemberCardArt compact/></section>
-    <section className="reg-dashboard"><h2><span/>لوحة الإحصائيات والتقارير<span/></h2><div className="reg-dash-grid"><article className="reg-bars"><h3>توزيع الأعضاء حسب الولايات</h3>{[["الخرطوم","22%"],["نهر النيل","18%"],["القاهرة","15%"],["كسلا","12%"],["أخرى","23%"]].map(([name,value],i)=><p key={name}><b style={{width:value}}/><span>{name}</span><small>{value}</small><i data-tone={i}/></p>)}</article><article><h3>توزيع الأعضاء حسب الجنس</h3><div className="donut purple"/><p>ذكور 62% &nbsp; إناث 38%</p></article><article className="reg-total"><h3>إجمالي الأعضاء</h3><strong>12,850</strong><b>مدن <em>320</em></b><b>دول <em>48</em></b><small>+245 عضو هذا الشهر</small></article><article><h3>توزيع الأعضاء حسب الفئة العمرية</h3><div className="donut multi"/><p>أقل من 20 حتى 60 فأكثر</p></article><article className="reg-map"><h3>توزيع الأعضاء حسب الدول</h3><Globe2/><a href="/contact">طلب عرض الخريطة التفاعلية</a></article></div></section>
-    <section className="reg-bottom"><div className="reg-partners"><h3>شركاؤنا في النجاح</h3>{["اتحاد الجاليات السوداني","برنامج الأمم المتحدة","منظمة الصحة العالمية","البنك الزراعي السوداني","جامعة الخرطوم","وزارة التربية والتعليم"].map((name,index)=><b key={name}>{index%2?<Landmark/>:<Globe2/>}<small>{name}</small></b>)}</div><form className="reg-newsletter"><h3>اشترك في نشرتنا الإخبارية</h3><p>احصل على آخر أخبارنا وفعالياتنا</p><input type="email" placeholder="أدخل بريدك الإلكتروني"/><button>اشترك الآن</button></form></section>
-  </div>
+    <section className="reg-join-banner"><div><h2>رسوم عضوية واضحة .. <span>50 ريالاً سنوياً</span></h2><p>بعد حفظ البيانات ستُطلب صورة شخصية ثم إيصال التحويل البنكي لإرسال الطلب للمراجعة.</p><div><b><UsersRound/>بيانات متكاملة</b><b><ReceiptText/>إيصال إلزامي</b><b><ShieldCheck/>مراجعة إدارية</b></div></div><button onClick={()=>{location.href="/register"}}>ابدأ التسجيل <ArrowLeft/></button><MemberCardArt compact/></section>
+  </div>;
 }
 
-function MemberStepShell({children,className=""}:{children:React.ReactNode;className?:string}){return <main className={`member-step-page ${className}`}><div className="member-step-shell"><span className="step-curve top"/><span className="step-dots"/>{children}<span className="step-curve bottom"/></div></main>}
+function MemberStepShell({children,className=""}:{children:React.ReactNode;className?:string}){return <main className={"member-step-page "+className}><div className="member-step-shell"><span className="step-curve top"/><span className="step-dots"/>{children}<span className="step-curve bottom"/></div></main>}
 
 function PhotoUpload(){
   const input=useRef<HTMLInputElement>(null);
@@ -1687,7 +1486,7 @@ function PhotoUpload(){
     <h3 className="step-section-title"><span/>اختر طريقة الإرفاق<span/></h3><section className="photo-methods">{methods.map(item=>{const Icon=item.icon;return <button type="button" className={item.active?"active":""} key={item.title} onClick={()=>input.current?.click()} disabled={uploading}><Icon/><b>{item.title}</b><small>{item.text}</small><span>{item.action}</span></button>})}</section><input ref={input} hidden type="file" accept="image/jpeg,image/png" capture="user" onChange={event=>handleFile(event.target.files?.[0])}/>
     <section className="photo-conditions"><h3><span/>شروط الصورة <ShieldCheck/><span/></h3><div><ul><li>صورة حديثة وواضحة</li><li>خلفية بيضاء أو فاتحة</li><li>إظهار الوجه بوضوح</li><li>بدون نظارات شمسية</li><li>بدون فلاتر أو تعديلات</li></ul><article><p><UserCheck/>أن تكون الصورة ملونة وواضحة</p><p><ScanFace/>يجب أن يظهر الوجه كاملاً من الأمام مع فتح العينين</p><p><FileImage/><b>الصيغ المدعومة:</b><br/>JPG, JPEG, PNG<br/>الحد الأقصى للحجم: 2MB</p></article></div></section>
     <section className="step-warning"><CircleAlert/><div><b>تنبيه مهم</b><p>يتم استخدام هذه الصورة فقط لإصدار بطاقتك الإلكترونية<br/>ولا يتم نشرها أو مشاركتها مع أي جهة خارجية</p></div></section>
-    {(uploaded||preview)&&!uploading&&<a className="step-continue" href="/success">المتابعة لإتمام التسجيل <ArrowLeft/></a>}
+    {(uploaded||preview)&&!uploading&&<a className="step-continue" href="/payment">المتابعة إلى إرفاق إيصال التحويل <ArrowLeft/></a>}
   </MemberStepShell>
 }
 
