@@ -1330,7 +1330,7 @@ function Membership(){
       <div className="mp-cta-inner">
         <UsersRound size={48}/>
         <h2>انضم إلى الرابطة اليوم</h2>
-        <p>سجّل عضويتك مجاناً الآن وابدأ الاستفادة من خدمات وأنشطة رابطة ولاية نهر النيل</p>
+        <p>سجّل عضويتك  الآن وابدأ الاستفادة من خدمات وأنشطة رابطة ولاية نهر النيل</p>
         <a href="/register" className="mp-cta-button"><UserRound/>سجّل الآن</a>
       </div>
     </section>
