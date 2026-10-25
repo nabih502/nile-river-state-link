@@ -9,6 +9,9 @@ interface Member {
   marital_status: string; specialization: string; job_title: string;
   photo_url: string; membership_type: string; member_number: string;
   status: string; created_at: string;
+  application_data: Record<string,string|string[]>; signature_name: string; consent_version: string; consented_at: string | null;
+  fee_amount: number; fee_currency: string; payment_method: string; payment_receipt_path: string; payment_receipt_name: string;
+  receipt_status: 'missing'|'pending'|'approved'|'rejected'; receipt_review_notes: string; application_submitted_at: string | null;
 }
 interface Subscription {
   id: string; member_id: string; subscription_type: string;
@@ -218,7 +221,7 @@ export default function AdminMemberDetail({ memberId, onBack }: { memberId: stri
   const [subs, setSubs] = useState<Subscription[]>([]);
   const [payments, setPayments] = useState<Payment[]>([]);
   const [loading, setLoading] = useState(true);
-  const [tab, setTab] = useState<"personal" | "subs" | "payments">("personal");
+  const [tab, setTab] = useState<"application" | "personal" | "subs" | "payments">("application");
 
   // personal form state
   const [form, setForm] = useState<Member | null>(null);
@@ -226,6 +229,10 @@ export default function AdminMemberDetail({ memberId, onBack }: { memberId: stri
   const [saveMsg, setSaveMsg] = useState("");
   const [photoUploading, setPhotoUploading] = useState(false);
   const [photoErr, setPhotoErr] = useState("");
+  const [receiptUrl, setReceiptUrl] = useState("");
+  const [reviewNotes, setReviewNotes] = useState("");
+  const [reviewing, setReviewing] = useState(false);
+  const [reviewMsg, setReviewMsg] = useState("");
 
   // sub / pay form
   const [addSub, setAddSub] = useState(false);
@@ -261,6 +268,24 @@ export default function AdminMemberDetail({ memberId, onBack }: { memberId: stri
   };
 
   useEffect(() => { loadMember(); loadSubs(); loadPayments(); }, [memberId]);
+
+  useEffect(() => {
+    setReviewNotes(member?.receipt_review_notes || "");
+    if (!member?.payment_receipt_path) { setReceiptUrl(""); return; }
+    supabase.storage.from("membership-documents").createSignedUrl(member.payment_receipt_path, 600).then(({ data, error }) => {
+      if (error) console.error(error);
+      setReceiptUrl(data?.signedUrl || "");
+    });
+  }, [member?.payment_receipt_path, member?.receipt_review_notes]);
+
+  const reviewApplication = async (decision: "approved" | "rejected") => {
+    setReviewing(true); setReviewMsg("");
+    const { error } = await supabase.rpc("admin_review_membership_application", { p_member_id: memberId, p_decision: decision, p_notes: reviewNotes });
+    setReviewing(false);
+    if (error) { console.error(error); setReviewMsg("تعذر حفظ قرار المراجعة"); return; }
+    setReviewMsg(decision === "approved" ? "تم اعتماد الطلب وتفعيل العضوية وتسجيل اشتراك 50 ريال" : "تم رفض الطلب وحفظ ملاحظات المراجعة");
+    await loadMember(); await loadSubs(); await loadPayments();
+  };
 
   const setF = (k: keyof Member, v: string) => setForm(p => p ? { ...p, [k]: v } : p);
 
@@ -310,6 +335,8 @@ export default function AdminMemberDetail({ memberId, onBack }: { memberId: stri
   const tp = TYPE_MAP[member.membership_type] ?? TYPE_MAP.basic;
   const totalPaid = payments.filter(p => p.status === "paid").reduce((s, p) => s + Number(p.amount), 0);
   const activeSubs = subs.filter(s => s.status === "active").length;
+  const applicationEntries = Object.entries(member.application_data || {}).filter(([, value]) => Array.isArray(value) ? value.length > 0 : String(value || "").trim() !== "");
+  const receiptLabel = { missing: "لم يرفق", pending: "بانتظار المراجعة", approved: "معتمد", rejected: "مرفوض" }[member.receipt_status] || member.receipt_status;
 
   return (
     <>
@@ -360,13 +387,42 @@ export default function AdminMemberDetail({ memberId, onBack }: { memberId: stri
         {/* ── Tab Nav ── */}
         <div className="detail-tabs">
           {([
-            ["personal", "البيانات الشخصية"],
+            ["application", "الطلب والإيصال"],
+            ["personal", "البيانات الأساسية"],
             ["subs", `الاشتراكات (${subs.length})`],
             ["payments", `المدفوعات (${payments.length})`],
           ] as const).map(([k, lbl]) => (
             <button key={k} className={`detail-tab-btn ${tab === k ? "active" : ""}`} onClick={() => setTab(k)}>{lbl}</button>
           ))}
         </div>
+
+        {/* ── Application Review Tab ── */}
+        {tab === "application" && (
+          <div className="detail-section">
+            <div className="detail-card">
+              <h3 className="detail-card-title">مراجعة طلب العضوية الرسمي</h3>
+              <div className="detail-grid-3">
+                <div className="detail-label">حالة الإيصال<strong style={{display:"block",marginTop:"0.35rem",color:member.receipt_status==="approved"?"#15803d":member.receipt_status==="rejected"?"#b91c1c":"#c2410c"}}>{receiptLabel}</strong></div>
+                <div className="detail-label">رسوم العضوية<strong style={{display:"block",marginTop:"0.35rem"}}>{Number(member.fee_amount||50).toLocaleString()} {member.fee_currency||"SAR"}</strong></div>
+                <div className="detail-label">طريقة السداد<strong style={{display:"block",marginTop:"0.35rem"}}>تحويل بنكي</strong></div>
+                <div className="detail-label">التوقيع الإلكتروني<strong style={{display:"block",marginTop:"0.35rem"}}>{member.signature_name||"—"}</strong></div>
+                <div className="detail-label">تاريخ الإقرار<strong style={{display:"block",marginTop:"0.35rem"}}>{fmt(member.consented_at)}</strong></div>
+                <div className="detail-label">تاريخ إرسال الطلب<strong style={{display:"block",marginTop:"0.35rem"}}>{fmt(member.application_submitted_at)}</strong></div>
+              </div>
+            </div>
+            <div className="detail-card">
+              <h3 className="detail-card-title">جميع بيانات الاستمارة</h3>
+              {applicationEntries.length===0?<div className="detail-empty">هذا طلب قديم ولا يحتوي على نسخة الاستمارة الكاملة</div>:<div className="detail-grid-2">{applicationEntries.map(([key,value])=><div key={key} className="detail-label" style={{background:"#f8fafc",padding:"0.8rem",borderRadius:"0.6rem"}}><span style={{display:"block",color:"#64748b",fontSize:"0.78rem",marginBottom:"0.3rem"}}>{key}</span><strong style={{whiteSpace:"pre-wrap"}}>{Array.isArray(value)?value.join("، "):String(value)}</strong></div>)}</div>}
+            </div>
+            <div className="detail-card">
+              <h3 className="detail-card-title">إيصال التحويل البنكي</h3>
+              {member.payment_receipt_path?<div style={{display:"flex",alignItems:"center",gap:"0.8rem",flexWrap:"wrap"}}><span>{member.payment_receipt_name||"إيصال التحويل"}</span>{receiptUrl?<a href={receiptUrl} target="_blank" rel="noreferrer" className="detail-btn-save">فتح الإيصال</a>:<span>جاري تجهيز رابط العرض...</span>}</div>:<div className="detail-empty">لم يرفق المتقدم إيصال التحويل بعد</div>}
+              <label className="detail-label" style={{display:"block",marginTop:"1rem"}}>ملاحظات المراجعة<textarea className="detail-input" rows={3} value={reviewNotes} onChange={e=>setReviewNotes(e.target.value)} placeholder="اكتب سبب الرفض أو ملاحظات الاعتماد" style={{resize:"vertical",marginTop:"0.4rem"}}/></label>
+              {reviewMsg&&<p className={reviewMsg.startsWith("تعذر")?"detail-err":"detail-ok"}>{reviewMsg}</p>}
+              {member.payment_receipt_path&&member.receipt_status==="pending"&&<div className="detail-form-actions" style={{marginTop:"1rem"}}><button type="button" className="adm-btn-danger" disabled={reviewing} onClick={()=>reviewApplication("rejected")}>{reviewing?"جاري الحفظ...":"رفض الطلب"}</button><button type="button" className="detail-btn-save" disabled={reviewing} onClick={()=>reviewApplication("approved")}>{reviewing?"جاري الحفظ...":"اعتماد الإيصال وتفعيل العضوية"}</button></div>}
+            </div>
+          </div>
+        )}
 
         {/* ── Personal Tab ── */}
         {tab === "personal" && (
