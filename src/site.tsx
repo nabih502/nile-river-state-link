@@ -5,7 +5,7 @@ import SiteChatWidget from "./site-chat-widget";
 import { Aperture, ArrowLeft, Award, BadgeCheck, BadgePercent, Banknote, BookOpen, BriefcaseBusiness, Building2, Calendar, CalendarDays, Camera, ChartNoAxesCombined, ChartPie, Check, ChevronLeft, ChevronRight, CircleAlert, CircleCheckBig, Circle as CircleHelp, Clock3, CreditCard, Crown, Eye, Factory, Feather, FileImage, FileText, FileUp, Gem, Gift, Globe as Globe2, GraduationCap, HandHeart, Handshake, Headphones, HeartHandshake, HeartPulse, Landmark, LayoutDashboard, LayoutGrid, LibraryBig, Lightbulb, Menu, Megaphone, MonitorCheck, Music2, Network, Newspaper, MessageCircle, Info, LockKeyhole, Mail, MapPin, Paperclip, Percent, Phone, QrCode, ReceiptText, Palette, Pill, CirclePlay as PlayCircle, RefreshCw, ScanFace, Search, Settings2, Share2, Shield, ShieldCheck, Stethoscope, Send, ShoppingCart, Sparkles, Sprout, Store, Tags, Target, TrendingUp, Trophy, Truck, Upload, UserCheck, UserPlus, UserRound, UsersRound, Video, WalletCards, X } from "lucide-react";
 
 type InternalKey = "services" | "initiatives" | "news" | "library";
-type PageKey = "home" | "about" | "social" | "education" | "health" | "investment" | "culture" | InternalKey | "membership" | "register" | "photo" | "payment" | "success" | "contact" | "events" | "news-detail" | "events-detail" | "inv-sector" | "inv-opportunity" | "culture-event-detail" | "culture-news-detail" | "culture-artist-detail" | "culture-initiative-detail" | "culture-media-detail" | "culture-art-detail" | "culture-association-detail" | "social-initiative-detail" | "social-service-detail";
+type PageKey = "home" | "about" | "social" | "education" | "health" | "investment" | "culture" | InternalKey | "membership" | "register" | "photo" | "payment" | "success" | "membership-status" | "contact" | "events" | "news-detail" | "events-detail" | "inv-sector" | "inv-opportunity" | "culture-event-detail" | "culture-news-detail" | "culture-artist-detail" | "culture-initiative-detail" | "culture-media-detail" | "culture-art-detail" | "culture-association-detail" | "social-initiative-detail" | "social-service-detail";
 type PortalKey = "social" | "education" | "health" | "investment" | "culture";
 
 const MARKET_URL="https://sudan-market.com/";
@@ -14,7 +14,7 @@ const TRAINING_URL="https://ebhar-dvvm.bolt.host/";
 const routeMap: Record<string, PageKey> = {
   home:"home", about:"about", social:"social", education:"education", health:"health", investment:"investment", culture:"culture",
   services:"services", initiatives:"initiatives", news:"news", library:"library",
-  membership:"membership", register:"register", photo:"photo", payment:"payment", success:"success", contact:"contact",
+  membership:"membership", register:"register", photo:"photo", payment:"payment", success:"success", "membership-status":"membership-status", contact:"contact",
   events:"events", "news-detail":"news-detail", "events-detail":"events-detail",
   "culture-event-detail":"culture-event-detail","culture-news-detail":"culture-news-detail",
   "culture-artist-detail":"culture-artist-detail","culture-initiative-detail":"culture-initiative-detail",
@@ -42,7 +42,7 @@ function Brand({light=false}:{light?:boolean}){return <a href="/" className={`br
 
 function Header({active}:{active:PageKey}){
   const [open,setOpen]=useState(false);
-  return <header className="topbar dark home-topbar"><div className="topbar-inner"><Brand light/><nav className={open?"open":""}>{homeNav.map(([href,label])=>{const external=href.startsWith("http");return <a key={`${href}-${label}`} href={href} target={external?"_blank":undefined} rel={external?"noopener noreferrer":undefined} className={(href==="/"&&active==="home")||(href.startsWith("/")&&href.slice(1)===active)?"current":""}>{label}{external&&<span className="external-mark" aria-hidden>↗</span>}</a>})}</nav><div className="header-tools"><div className="hdr-panel-btns"><a className="hdr-panel-btn admin" href="/admin"><Settings2 size={15}/><span>لوحة التحكم</span></a><a className="hdr-panel-btn portal" href="/portal"><UserRound size={15}/><span>لوحة المستخدم</span></a></div><a className="primary compact" href="/membership"><UserRound size={16}/><span>انضم الآن</span></a><button className="mobile-menu" onClick={()=>setOpen(!open)} aria-label="فتح القائمة">{open?<X size={21}/>:<Menu size={21}/>}</button></div></div></header>
+  return <header className="topbar dark home-topbar"><div className="topbar-inner"><Brand light/><nav className={open?"open":""}>{homeNav.map(([href,label])=>{const external=href.startsWith("http");return <a key={`${href}-${label}`} href={href} target={external?"_blank":undefined} rel={external?"noopener noreferrer":undefined} className={(href==="/"&&active==="home")||(href.startsWith("/")&&href.slice(1)===active)?"current":""}>{label}{external&&<span className="external-mark" aria-hidden>↗</span>}</a>})}</nav><div className="header-tools"><div className="hdr-panel-btns"><a className="hdr-panel-btn admin" href="/admin"><Settings2 size={15}/><span>لوحة التحكم</span></a><a className="hdr-panel-btn portal" href="/portal"><UserRound size={15}/><span>لوحة المستخدم</span></a></div><a className="hdr-panel-btn status-link" href="/membership-status"><Search size={15}/><span>متابعة الطلب</span></a><a className="primary compact" href="/membership"><UserRound size={16}/><span>انضم الآن</span></a><button className="mobile-menu" onClick={()=>setOpen(!open)} aria-label="فتح القائمة">{open?<X size={21}/>:<Menu size={21}/>}</button></div></div></header>
 }
 
 function Footer(){return <footer className="site-footer"><div className="footer-inner"><div className="footer-brand"><Brand light/><p>منصة رقمية شاملة لخدمة أبناء ولاية نهر النيل في الداخل والخارج.</p></div><div><h4>تواصل معنا</h4><p>☎ +249 912 345 678</p><p>✉ info@nilenile.org</p><p>⌖ ولاية نهر النيل - السودان</p></div><div><h4>الدعم والمساعدة</h4><a href="/contact">الأسئلة الشائعة</a><a href="/contact">سياسة الخصوصية</a><a href="/contact">الشروط والأحكام</a><a href="/news">الأخبار والفعاليات</a></div><div><h4>خدمات الرابطة</h4><a href="/services">جميع الخدمات</a><a href="/education">التعليم</a><a href="/health">الصحة</a><a href="/investment">الاستثمار</a><a href="/culture">الثقافة</a></div><div><h4>روابط سريعة</h4><a href="/">الرئيسية</a><a href="/about">عن الرابطة</a><a href="/initiatives">المبادرات</a><a href="/library">المكتبة الرقمية</a><a href={TRAINING_URL} target="_blank" rel="noopener noreferrer">مركز التدريب ↗</a><a href={MARKET_URL} target="_blank" rel="noopener noreferrer">السوق السوداني ↗</a></div></div><div className="footer-bottom"><span>جميع الحقوق محفوظة © 2026</span><span className="socials"><b>f</b><b>𝕏</b><b>▶</b><b>◎</b><b>in</b></span></div></footer>}
@@ -1490,11 +1490,23 @@ function PhotoUpload(){
   </MemberStepShell>
 }
 
+const BANK_ACCOUNTS=[
+  {code:"SAR",currency:"ريال سعودي",number:"021117376310033040000",hint:"حساب الاشتراك بالريال السعودي"},
+  {code:"USD",currency:"دولار أمريكي",number:"021117376310023040000",hint:"حساب التحويل بالدولار الأمريكي"},
+  {code:"SDG",currency:"جنيه سوداني",number:"1401139",hint:"الحساب بالعملة المحلية"}
+] as const;
+
+function CopyNumberButton({value}:{value:string}){
+  const [copied,setCopied]=useState(false);
+  const copy=async()=>{try{await navigator.clipboard.writeText(value);setCopied(true);window.setTimeout(()=>setCopied(false),1800)}catch{setCopied(false)}};
+  return <button type="button" className={"bank-copy"+(copied?" copied":"")} onClick={copy} aria-label={"نسخ رقم الحساب "+value}><span aria-hidden>{copied?"✓":"⧉"}</span>{copied?"تم النسخ":"نسخ الرقم"}</button>;
+}
+
 function Payment(){
   const [file,setFile]=useState<File|null>(null);
+  const [selected,setSelected]=useState<(typeof BANK_ACCOUNTS)[number]>(BANK_ACCOUNTS[0]);
   const [uploading,setUploading]=useState(false);
   const [err,setErr]=useState("");
-  const [done,setDone]=useState(false);
 
   const chooseFile=(next?:File)=>{
     if(!next)return;
@@ -1510,28 +1522,91 @@ function Payment(){
     setUploading(true);setErr("");
     const ext=file.type==="application/pdf"?"pdf":file.type==="image/png"?"png":"jpg";
     const path=memberId+"/receipt-"+Date.now()+"."+ext;
-    const {error:uploadError}=await supabase.storage.from("membership-documents").upload(path,file,{upsert:false,contentType:file.type});
-    if(uploadError){console.error(uploadError);setUploading(false);setErr("تعذر رفع إيصال التحويل، يرجى المحاولة مرة أخرى");return;}
-    const {error:saveError}=await supabase.rpc("member_submit_payment_receipt",{p_path:path,p_name:file.name});
-    setUploading(false);
-    if(saveError){console.error(saveError);setErr("تم رفع الملف لكن تعذر ربطه بالطلب، يرجى التواصل مع الإدارة");return;}
-    setDone(true);setTimeout(()=>{location.href="/success"},900);
+    const {error:uploadError}=await supabase.storage.from("membership-documents").upload(path,file,{upsert:true,contentType:file.type});
+    if(uploadError){setUploading(false);setErr("تعذر رفع الإيصال. يرجى المحاولة مرة أخرى.");return;}
+    const {data,error}=await supabase.rpc("member_submit_payment_receipt",{p_path:path,p_name:file.name,p_currency:selected.code,p_account_number:selected.number});
+    if(error){setUploading(false);setErr("تم رفع الملف ولكن تعذر إرسال الطلب للمراجعة.");return;}
+    const applicationNumber=(data&&typeof data==="object"&&"application_number" in data)?String((data as {application_number?:string}).application_number||""):"";
+    if(applicationNumber)sessionStorage.setItem("new_application_number",applicationNumber);
+    sessionStorage.setItem("new_payment_currency",selected.code);
+    location.href="/success";
   };
 
-  return <MemberStepShell className="payment-step">
+  return <MemberStepShell className="payment-step bank-transfer-step">
     <div className="payment-brand"><img src="/assets/ChatGPT_Image_Jul_21,_2026,_05_25_20_PM.png" alt="رابطة ولاية نهر النيل الرقمية"/></div>
-    <header className="step-heading payment-title"><h1><span/>إيصال التحويل البنكي<span/></h1><p>الخطوة الأخيرة لإرسال طلب العضوية إلى الإدارة</p></header>
-    <section className="payment-cards">
-      <article><label><FileUp/><strong>{file?.name||"اختر إيصال التحويل البنكي أو اسحبه وأفلته هنا"}</strong><small>JPG, PNG, PDF — الحد الأقصى 5MB</small><input required type="file" accept="image/jpeg,image/png,application/pdf" onChange={event=>chooseFile(event.target.files?.[0])}/></label><div><h2>اشتراك العضوية السنوي</h2><p>حوّل مبلغ الاشتراك إلى الحساب البنكي الرسمي المعتمد للرابطة، ثم أرفق صورة أو ملف الإيصال. يمكنك التواصل مع الرابطة للحصول على بيانات الحساب.</p><strong style={{display:"inline-block",marginTop:"0.75rem",fontSize:"1.35rem",color:"#f97316"}}>50 ريال سعودي</strong></div><aside><b>01</b><Landmark/></aside></article>
+    <header className="step-heading payment-title"><h1><span/>التحويل البنكي<span/></h1><h2>بنك أم درمان الوطني</h2><p>اختر الحساب المناسب لعملة التحويل، ثم أرفق إيصال التحويل البنكي لإرسال طلب العضوية.</p></header>
+    <section className="membership-fee-note"><Landmark/><div><b>رسوم الاشتراك السنوي: 50 ريالاً سعودياً</b><p>يمكن التحويل إلى أحد حسابات بنك أم درمان الوطني التالية. عند التحويل بالدولار أو الجنيه السوداني يُحتسب المقابل حسب سعر البنك.</p></div></section>
+    <section className="bank-accounts" aria-label="حسابات بنك أم درمان الوطني">
+      {BANK_ACCOUNTS.map(account=><article className={selected.code===account.code?"selected":""} key={account.code}>
+        <label><input type="radio" name="bank-account" checked={selected.code===account.code} onChange={()=>setSelected(account)}/><span className="bank-currency">{account.code}</span><span><b>{account.currency}</b><small>{account.hint}</small></span></label>
+        <div className="bank-number" dir="ltr"><strong>{"\u200E"+account.number}</strong><CopyNumberButton value={account.number}/></div>
+      </article>)}
     </section>
-    <section className="payment-notice"><CircleAlert/><p>إرفاق إيصال التحويل البنكي حقل مطلوب. لن ينتقل الطلب إلى المراجعة إلا بعد رفع الإيصال، وسيتم التحقق منه قبل تفعيل العضوية.</p></section>
-    {err&&<p className="rwz-error" style={{textAlign:"center"}}>{err}</p>}
-    {done?<p style={{textAlign:"center",color:"#16a34a",fontWeight:700}}>✓ تم إرسال الإيصال والطلب للمراجعة</p>:<button type="button" className="step-continue" onClick={submitReceipt} disabled={uploading}>{uploading?"جاري رفع الإيصال...":"إرسال الإيصال والطلب للمراجعة"} <ArrowLeft/></button>}
-    <p className="payment-help"><Phone/> تحتاج بيانات الحساب أو مساعدة؟ تواصل معنا</p>
+    <section className="receipt-upload-card"><ReceiptText/><div><h2>إيصال التحويل البنكي <em>مطلوب</em></h2><p>ارفع صورة واضحة أو ملف PDF للإيصال بعد إتمام التحويل إلى الحساب المحدد أعلاه.</p><label className={file?"has-file":""}><FileUp/><span>{file?file.name:"اختر الإيصال من جهازك"}</span><small>JPG, PNG أو PDF — بحد أقصى 5MB</small><input type="file" accept="image/jpeg,image/png,application/pdf" onChange={event=>chooseFile(event.target.files?.[0])}/></label></div></section>
+    {err&&<p className="rwz-error bank-error">{err}</p>}
+    <section className="payment-notice"><CircleAlert/><p>بعد إرسال الإيصال ستحصل على رقم طلب فريد. احتفظ به للاستعلام عن حالة طلبك لاحقاً.<br/>لن تُفعّل العضوية أو يظهر الكارنيه إلا بعد اعتماد الطلب والإيصال من الإدارة.</p></section>
+    <button type="button" className="step-continue bank-submit" onClick={submitReceipt} disabled={uploading||!file}>{uploading?"جاري رفع الإيصال...":"إرسال الإيصال والطلب للمراجعة"}<ArrowLeft/></button>
+    <p className="payment-help"><Phone/> تحتاج مساعدة؟ تواصل معنا</p>
   </MemberStepShell>;
 }
 
-function Success(){return <MemberStepShell step={4}><div style={{maxWidth:780,margin:"0 auto",padding:"42px 30px",background:"#fff",borderRadius:24,textAlign:"center",boxShadow:"0 18px 55px rgba(17,35,58,.10)",border:"1px solid #e8edf2"}}><div style={{width:82,height:82,borderRadius:"50%",background:"#eaf8ef",color:"#25834d",fontSize:44,display:"grid",placeItems:"center",margin:"0 auto 20px"}}>✓</div><div style={{display:"inline-flex",padding:"8px 16px",borderRadius:999,background:"#fff4e7",color:"#ed7b00",fontWeight:800,marginBottom:16}}>تم استلام الطلب وإيصال التحويل البنكي</div><h1 style={{fontSize:"clamp(30px,4vw,48px)",color:"#17283d",margin:"0 0 14px"}}>طلب العضوية قيد المراجعة</h1><p style={{fontSize:19,lineHeight:1.9,color:"#536273",maxWidth:650,margin:"0 auto 24px"}}>سيقوم فريق الرابطة بمراجعة بيانات الاستمارة الرسمية والتحقق من إيصال رسوم العضوية السنوية البالغة <strong style={{color:"#ed7b00"}}>50 ريالًا سعوديًا</strong>.</p><div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(170px,1fr))",gap:12,margin:"28px 0"}}>{[["1","التحقق من البيانات"],["2","مراجعة إيصال التحويل"],["3","اعتماد العضوية"]].map(([n,t])=><div key={n} style={{padding:18,borderRadius:16,background:"#f7f9fb",border:"1px solid #e4e9ee"}}><strong style={{display:"grid",placeItems:"center",width:34,height:34,borderRadius:"50%",background:"#17283d",color:"#fff",margin:"0 auto 9px"}}>{n}</strong><span style={{color:"#17283d",fontWeight:700}}>{t}</span></div>)}</div><p style={{padding:"14px 18px",borderRadius:14,background:"#fff8ef",color:"#7a4a0d",fontWeight:700}}>لن يتم إصدار رقم العضوية أو تفعيل الحساب كعضو إلا بعد موافقة الإدارة.</p><button type="button" onClick={()=>goTo("/")} style={{marginTop:18,border:0,borderRadius:12,padding:"13px 28px",background:"#17283d",color:"#fff",fontSize:17,fontWeight:800,cursor:"pointer"}}>العودة إلى الصفحة الرئيسية</button></div></MemberStepShell>}
+type MembershipLookup={found:boolean;application_number?:string;status?:string;receipt_status?:string;full_name?:string;member_number?:string;photo_url?:string;membership_type?:string;start_date?:string;end_date?:string;is_expired?:boolean;renewal_required?:boolean;review_notes?:string};
+
+function MembershipCardView({result}:{result:MembershipLookup}){
+  const fmt=(value?:string)=>value?new Intl.DateTimeFormat("ar-SA",{year:"numeric",month:"long",day:"numeric"}).format(new Date(value)):"—";
+  return <section className={"digital-member-card"+(result.is_expired?" expired":"")}>
+    <div className="card-brand-row"><img src="/assets/membership-mark-transparent-v2.png" alt="شعار الرابطة"/><div><b>رابطة ولاية نهر النيل</b><small>البطاقة الإلكترونية للعضوية</small></div><span>{result.is_expired?"منتهية":"سارية"}</span></div>
+    <div className="card-person-row"><div className="card-photo">{result.photo_url?<img src={result.photo_url} alt="صورة العضو"/>:<UserRound/>}</div><div><small>اسم العضو</small><h2>{result.full_name}</h2><small>رقم العضوية</small><strong dir="ltr">{result.member_number}</strong></div><div className="card-qr" aria-label="رمز تحقق البطاقة"><i/><i/><i/><i/><i/><i/><i/><i/><i/></div></div>
+    <div className="card-validity"><p><small>بداية العضوية</small><b>{fmt(result.start_date)}</b></p><p><small>تاريخ الانتهاء</small><b>{fmt(result.end_date)}</b></p></div>
+    <footer><ShieldCheck/> صالحة لمدة سنة من تاريخ اعتماد الاشتراك — يجب التجديد بعد انتهاء الصلاحية</footer>
+  </section>;
+}
+
+function MembershipStatusPage(){
+  const [applicationNumber,setApplicationNumber]=useState(()=>sessionStorage.getItem("new_application_number")||"");
+  const [contact,setContact]=useState("");
+  const [loading,setLoading]=useState(false);
+  const [error,setError]=useState("");
+  const [result,setResult]=useState<MembershipLookup|null>(null);
+  const searchStatus=async(event:FormEvent)=>{
+    event.preventDefault();setError("");setResult(null);
+    if(!applicationNumber.trim()||!contact.trim()){setError("أدخل رقم الطلب أو رقم العضوية والبريد الإلكتروني أو رقم الجوال المستخدم في الطلب");return;}
+    setLoading(true);
+    const {data,error:rpcError}=await supabase.rpc("membership_application_status",{p_application_number:applicationNumber.trim(),p_contact:contact.trim()});
+    setLoading(false);
+    const value=data as MembershipLookup|null;
+    if(rpcError||!value?.found){setError("لم نعثر على عضوية مطابقة. تأكد من رقم الطلب أو رقم العضوية وبيانات التواصل.");return;}
+    setResult(value);
+  };
+  const labels:Record<string,string>={pending:"قيد المراجعة",active:"تم قبول العضوية",rejected:"تم رفض الطلب"};
+  const receiptLabels:Record<string,string>={missing:"لم يُرفق",pending:"قيد مراجعة الإيصال",approved:"تم اعتماد الإيصال",rejected:"الإيصال يحتاج إعادة رفع"};
+  return <main className="membership-status-page">
+    <section className="status-search-hero"><div><span><Search/> متابعة طلب العضوية</span><h1>استعلم عن حالة طلبك</h1><p>استخدم رقم الطلب أو رقم العضوية مع البريد الإلكتروني أو رقم الجوال المسجل لحماية بياناتك.</p></div></section>
+    <section className="status-search-shell"><form onSubmit={searchStatus}><h2>متابعة الطلب</h2><label><span>رقم الطلب أو رقم العضوية</span><input value={applicationNumber} onChange={e=>setApplicationNumber(e.target.value)} placeholder="مثال: APP-202610-000123 أو NR-2026-001" dir="ltr" required/></label><label><span>البريد الإلكتروني أو رقم الجوال</span><input value={contact} onChange={e=>setContact(e.target.value)} placeholder="أدخل نفس البيانات المستخدمة في التسجيل" required/></label>{error&&<p className="status-error">{error}</p>}<button disabled={loading}>{loading?"جاري البحث...":"عرض حالة الطلب"}<Search/></button></form>
+      <aside><ShieldCheck/><h3>استعلام آمن</h3><p>لن تظهر بيانات العضوية إلا عند تطابق رقم الطلب أو رقم العضوية مع البريد الإلكتروني أو الجوال المسجل.</p><a href="/membership">تقديم طلب عضوية جديد</a></aside>
+    </section>
+    {result&&<section className="status-result">
+      <header><div><small>رقم الطلب</small><strong dir="ltr">{result.application_number}</strong></div><span className={"status-pill "+(result.status||"pending")}>{labels[result.status||"pending"]||result.status}</span></header>
+      <div className="status-timeline"><article className="done"><CircleCheckBig/><b>استلام الطلب</b><small>تم تسجيل الطلب بنجاح</small></article><article className={result.receipt_status==="approved"?"done":"current"}><ReceiptText/><b>مراجعة الإيصال</b><small>{receiptLabels[result.receipt_status||"pending"]||result.receipt_status}</small></article><article className={result.status==="active"?"done":result.status==="rejected"?"rejected":"waiting"}><UserCheck/><b>اعتماد العضوية</b><small>{labels[result.status||"pending"]||result.status}</small></article></div>
+      {result.review_notes&&<p className="status-review-note"><CircleAlert/> {result.review_notes}</p>}
+      {result.status==="active"&&result.member_number&&<MembershipCardView result={result}/>} 
+      {result.status==="active"&&result.renewal_required&&<p className="renewal-alert"><RefreshCw/> انتهت صلاحية العضوية. يرجى تجديد الاشتراك لإعادة تفعيل الكارنيه.</p>}
+    </section>}
+  </main>;
+}
+
+function Success(){
+  const [credentials]=useState(()=>{try{const pw=sessionStorage.getItem("new_member_password");if(pw)sessionStorage.removeItem("new_member_password");return pw}catch{return null}});
+  const [applicationNumber]=useState(()=>sessionStorage.getItem("new_application_number")||"");
+  return <MemberStepShell className="success-step application-success-step">
+    <header className="success-brand"><img src="/assets/membership-mark-transparent-v2.png" alt="شعار الرابطة"/><div><h2>رابطة ولاية نهر النيل</h2><b>الإلكترونية</b></div></header>
+    <section className="success-hero"><div className="success-check"><CircleCheckBig/></div><h1>تم إرسال طلبك بنجاح</h1><h2>طلب العضوية قيد المراجعة</h2><p>تم استلام البيانات وإيصال التحويل البنكي وسيتم إشعارك بعد انتهاء المراجعة.</p></section>
+    <section className="application-number-card"><small>رقم طلب العضوية</small><strong dir="ltr">{applicationNumber||"سيظهر رقم الطلب بعد اكتمال الإرسال"}</strong>{applicationNumber&&<CopyNumberButton value={applicationNumber}/>}<p>احتفظ بهذا الرقم، فهو وسيلتك لمتابعة حالة الطلب وإظهار كارنيه العضوية بعد القبول.</p></section>
+    <section className="application-review-steps"><article><FileText/><b>الطلب مستلم</b></article><article><ReceiptText/><b>مراجعة إيصال التحويل</b></article><article><UserCheck/><b>اعتماد العضوية</b></article></section>
+    {credentials&&<section className="step-warning" style={{background:"#ecfdf5",borderColor:"#10b981"}}><ShieldCheck/><div><b>كلمة المرور الخاصة بك</b><p>احفظ كلمة المرور التالية في مكان آمن. ستستخدمها لاحقاً للدخول إلى بوابة الأعضاء بعد تفعيل العضوية.</p><strong className="temporary-password">{credentials}</strong></div></section>}
+    <section className="success-thanks"><ShieldCheck/><div><h2>رسوم الاشتراك السنوي 50 ريالاً سعودياً</h2><p>لا تُفعّل العضوية ولا يظهر الكارنيه إلا بعد قبول الطلب واعتماد الإيصال. صلاحية العضوية سنة واحدة من تاريخ الاعتماد، ويلزم التجديد بعدها.</p><a className="status-follow-link" href="/membership-status">متابعة حالة الطلب <ArrowLeft/></a></div></section>
+  </MemberStepShell>;
+}
 
 function Contact(){
   // ── types ──
@@ -3504,4 +3579,4 @@ function CultureInitiativeDetailPage({slug}:{slug?:string}){
 
 export default function NileSite({page,slug}:{page:string;slug?:string}){const active=routeMap[page]||"home";useSeo(active);return <div dir="rtl"><Motion/><Header active={active}/><main>{active==="home"?<Home/>:active==="about"?<AboutPage/>:active==="social"?<SocialPage/>:active==="education"?<EducationPage/>:active==="health"?<HealthPage/>:active==="investment"?<InvestmentPage/>:active==="inv-sector"?<InvestmentSectorDetailPage slug={slug}/>:active==="inv-opportunity"?<InvestmentOpportunityDetailPage slug={slug}/>:active==="culture"?<CulturePage/>:active==="social-initiative-detail"?<SocialInitiativeDetailPage slug={slug}/>:active==="social-service-detail"?<SocialServiceDetailPage slug={slug}/>:active==="culture-art-detail"?<CultureArtDetailPage slug={slug}/>:
 active==="culture-association-detail"?<CultureAssociationDetailPage slug={slug}/>:
-active==="culture-media-detail"?<CultureMediaDetailPage slug={slug}/>:active==="culture-event-detail"?<CultureEventDetailPage slug={slug}/>:active==="culture-news-detail"?<CultureNewsDetailPage slug={slug}/>:active==="culture-artist-detail"?<CultureArtistDetailPage slug={slug}/>:active==="culture-initiative-detail"?<CultureInitiativeDetailPage slug={slug}/>:["services","initiatives","library"].includes(active)?<InternalPage type={active as InternalKey}/>:active==="news"?<NewsListPage/>:active==="news-detail"?<NewsDetailPage slug={slug}/>:active==="events"?<EventsListPage/>:active==="events-detail"?<EventDetailPage slug={slug}/>:active==="membership"?<Membership/>:active==="register"?<Register/>:active==="photo"?<PhotoUpload/>:active==="payment"?<Payment/>:active==="success"?<Success/>:active==="contact"?<Contact/>:<Home/>}</main><Footer/><SiteChatWidget/></div>}
+active==="culture-media-detail"?<CultureMediaDetailPage slug={slug}/>:active==="culture-event-detail"?<CultureEventDetailPage slug={slug}/>:active==="culture-news-detail"?<CultureNewsDetailPage slug={slug}/>:active==="culture-artist-detail"?<CultureArtistDetailPage slug={slug}/>:active==="culture-initiative-detail"?<CultureInitiativeDetailPage slug={slug}/>:["services","initiatives","library"].includes(active)?<InternalPage type={active as InternalKey}/>:active==="news"?<NewsListPage/>:active==="news-detail"?<NewsDetailPage slug={slug}/>:active==="events"?<EventsListPage/>:active==="events-detail"?<EventDetailPage slug={slug}/>:active==="membership"?<Membership/>:active==="register"?<Register/>:active==="photo"?<PhotoUpload/>:active==="payment"?<Payment/>:active==="success"?<Success/>:active==="membership-status"?<MembershipStatusPage/>:active==="contact"?<Contact/>:<Home/>}</main><Footer/>{active!=="membership-status"&&(<a className="membership-lookup-fab" href="/membership-status" aria-label="استعلام عن حالة العضوية"><Search/><span>استعلام عن العضوية</span></a>)}<SiteChatWidget/></div>}

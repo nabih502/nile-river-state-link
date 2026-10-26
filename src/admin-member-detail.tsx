@@ -12,6 +12,8 @@ interface Member {
   application_data: Record<string,string|string[]>; signature_name: string; consent_version: string; consented_at: string | null;
   fee_amount: number; fee_currency: string; payment_method: string; payment_receipt_path: string; payment_receipt_name: string;
   receipt_status: 'missing'|'pending'|'approved'|'rejected'; receipt_review_notes: string; application_submitted_at: string | null;
+  application_number: string; payment_account_currency: string; payment_account_number: string;
+  membership_started_at: string | null; membership_expires_at: string | null;
 }
 interface Subscription {
   id: string; member_id: string; subscription_type: string;
@@ -405,9 +407,15 @@ export default function AdminMemberDetail({ memberId, onBack }: { memberId: stri
                 <div className="detail-label">حالة الإيصال<strong style={{display:"block",marginTop:"0.35rem",color:member.receipt_status==="approved"?"#15803d":member.receipt_status==="rejected"?"#b91c1c":"#c2410c"}}>{receiptLabel}</strong></div>
                 <div className="detail-label">رسوم العضوية<strong style={{display:"block",marginTop:"0.35rem"}}>{Number(member.fee_amount||50).toLocaleString()} {member.fee_currency||"SAR"}</strong></div>
                 <div className="detail-label">طريقة السداد<strong style={{display:"block",marginTop:"0.35rem"}}>تحويل بنكي</strong></div>
+                <div className="detail-label">رقم الطلب<strong dir="ltr" style={{display:"block",marginTop:"0.35rem",fontFamily:"monospace"}}>{member.application_number||"—"}</strong></div>
+                <div className="detail-label">البنك<strong style={{display:"block",marginTop:"0.35rem"}}>بنك أم درمان الوطني</strong></div>
+                <div className="detail-label">حساب التحويل<strong dir="ltr" style={{display:"block",marginTop:"0.35rem",fontFamily:"monospace"}}>{member.payment_account_currency&&member.payment_account_number?member.payment_account_currency+" · "+member.payment_account_number:"—"}</strong></div>
                 <div className="detail-label">التوقيع الإلكتروني<strong style={{display:"block",marginTop:"0.35rem"}}>{member.signature_name||"—"}</strong></div>
                 <div className="detail-label">تاريخ الإقرار<strong style={{display:"block",marginTop:"0.35rem"}}>{fmt(member.consented_at)}</strong></div>
                 <div className="detail-label">تاريخ إرسال الطلب<strong style={{display:"block",marginTop:"0.35rem"}}>{fmt(member.application_submitted_at)}</strong></div>
+                <div className="detail-label">بداية العضوية<strong style={{display:"block",marginTop:"0.35rem"}}>{fmt(member.membership_started_at)}</strong></div>
+                <div className="detail-label">انتهاء العضوية<strong style={{display:"block",marginTop:"0.35rem"}}>{fmt(member.membership_expires_at)}</strong></div>
+                <div className="detail-label">التجديد السنوي<strong style={{display:"block",marginTop:"0.35rem",color:member.membership_expires_at&&new Date(member.membership_expires_at)<new Date()?"#b91c1c":"#15803d"}}>{member.membership_expires_at?(new Date(member.membership_expires_at)<new Date()?"منتهية — يلزم التجديد":"سارية لمدة عام من تاريخ الاعتماد"):"يُحدد بعد قبول الطلب"}</strong></div>
               </div>
             </div>
             <div className="detail-card">
