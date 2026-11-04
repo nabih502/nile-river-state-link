@@ -354,7 +354,7 @@ body{font-family:"Cairo",Tahoma,Arial,sans-serif}
 /* Hero h1: gradient shimmer (runs on h1, no .motion → never killed by site-settled) */
 .home-redesign .home-hero-copy h1,.home-redesign .home-brand-main{background:linear-gradient(120deg,#1b2735 20%,#8a5500 60%,#c27a00 100%);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:hp-shimmer 5s linear 1.2s infinite}
 .two-line-brand{display:flex;flex-direction:column;line-height:1.25}
-.brand-l1{font-size:inherit;font-weight:900;line-height:1.25}
+.brand-l1{font-size:inherit;font-weight:900;line-height:1.25;white-space:nowrap}
 .brand-l2{font-size:.55em;font-weight:700;line-height:1.4;opacity:.85;margin-top:2px}
 .home-brand-main{font-size:54px;line-height:1.15;margin:4px 0 0;color:#1b2735;letter-spacing:-1.5px;font-weight:900}
 .home-brand-sub{font-size:28px;line-height:1.3;margin:6px 0 0;color:#ef8610;font-weight:800;position:relative;display:inline-block}
