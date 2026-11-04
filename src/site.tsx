@@ -364,9 +364,9 @@ function Home(){
   return <div className="home-redesign">
     <section className="home-master-hero">
       <div className="home-hero-copy motion">
-        <span className="home-eyebrow">منصة ابناء نهر النيل</span>
-        <h1>حول العالم الرقمية</h1>
-        <h2>منصة رقمية شاملة تربط أبناء ولاية نهر النيل</h2>
+        <h1 className="home-brand-main">منصة ابناء نهر النيل</h1>
+        <h2 className="home-brand-sub">حول العالم الرقمية</h2>
+        <p className="home-brand-tag">منصة رقمية شاملة تربط أبناء ولاية نهر النيل في الداخل والخارج</p>
         <p>في الداخل والخارج</p>
         <div className="home-values">
           <b><UsersRound/><small>تواصل</small></b>
@@ -395,12 +395,12 @@ function Home(){
     <section className="home-join page-width motion">
       <div className="home-member-card">
         <img src="/assets/ChatGPT_Image_Jul_21,_2026,_05_25_20_PM.png" alt="منصة ابناء نهر النيل حول العالم الرقمية"/>
-        <div><span>عضو في</span><strong>منصة ابناء نهر النيل حول العالم الرقمية</strong><small>معاً.. لنبني المستقبل</small></div>
+        <div><span>عضو في</span><strong className="two-line-brand"><span className="brand-l1">منصة ابناء نهر النيل</span><span className="brand-l2">حول العالم الرقمية</span></strong><small>معاً.. لنبني المستقبل</small></div>
         <footer><b>0001</b><span>عضوية</span></footer>
       </div>
       <div className="home-join-copy">
         <span>انضم الآن إلى</span>
-        <h2>منصة ابناء نهر النيل حول العالم الرقمية</h2>
+        <h2 className="two-line-brand"><span className="brand-l1">منصة ابناء نهر النيل</span><span className="brand-l2">حول العالم الرقمية</span></h2>
         <p>كن جزءاً من أكبر تجمع رقمي لأبناء ولاية نهر النيل واستفد من جميع الخدمات والمبادرات والفرص المتاحة.</p>
       </div>
       <a className="home-join-cta" href="/membership"><UsersRound/><b>اضغط هنا<br/>للانضمام الآن</b><span><ArrowLeft/></span></a>
@@ -1267,14 +1267,14 @@ function AboutPage(){
       <div className="ab-top-visual ab-hero-visual" aria-hidden><img src="/assets/about-top-arc-exact.webp" alt=""/></div>
       <section className="ab-hero">
         <div className="ab-hero-media"><picture><img src="/assets/about-hero-mobile-exact.webp" alt="جسر فوق نهر النيل والمناطق الزراعية المحيطة"/></picture></div>
-        <div className="ab-hero-copy motion ab-hero-intro"><h1>عن الرابطة</h1><h2>معاً.. من أجل ولاية مزدهرة ومجتمع متكافئ</h2><p>منصة ابناء نهر النيل حول العالم الإلكترونية هي منصة تجمع أبناء الولاية في كل مكان.<br/>نعمل بروح واحدة لخدمة أبنائها والارتقاء بولايتنا وتنميتها في شتى المجالات.</p></div>
+        <div className="ab-hero-copy motion ab-hero-intro"><h1>عن الرابطة</h1><h2>معاً.. من أجل ولاية مزدهرة ومجتمع متكافئ</h2><p>منصة ابناء نهر النيل حول العالم الرقمية هي منصة تجمع أبناء الولاية في كل مكان.<br/>نعمل بروح واحدة لخدمة أبنائها والارتقاء بولايتنا وتنميتها في شتى المجالات.</p></div>
         <img className="ab-hero-wave" src="/assets/about-hero-wave-exact.webp" alt="" aria-hidden/>
       </section>
 
       <section className="ab-president page-width motion ab-reveal ab-from-left">
         <div className="ab-president-photo"><picture><img src="/assets/about-president-mobile-exact.webp" alt="الأستاذ هشام محمد الحسن رئيس الرابطة"/></picture></div>
         <article><h2>كلمة رئيس الرابطة</h2><h3>الأستاذ / هشام محمد الحسن</h3><span className="ab-title-line"/><p>نؤمن بأن العمل المؤسسي والتخطيط الاستراتيجي هما أساس التغيير الحقيقي،<br/> وسنواصل العمل معكم بروح الفريق الواحد لتحقيق التنمية المستدامة<br/> لولاية نهر النيل وخدمة أبنائها أينما كانوا.</p><p>معاً.. نصنع مستقبلاً أفضل لولايتنا وأجيالنا القادمة.</p><strong className="ab-signature">Hisham Alhassan</strong></article>
-        <aside><img src="/assets/membership-mark-transparent-v2.png" alt="شعار منصة ابناء نهر النيل حول العالم"/><b>منصة ابناء<br/>نهر النيل<br/>حول العالم</b><i/><em/></aside>
+        <aside><img src="/assets/membership-mark-transparent-v2.png" alt="شعار منصة ابناء نهر النيل حول العالم"/><b className="two-line-brand"><span className="brand-l1">منصة ابناء نهر النيل</span><span className="brand-l2">حول العالم الرقمية</span></b><i/><em/></aside>
       </section>
     </div>
 
@@ -1300,7 +1300,7 @@ const memberPlans=[
 type MemberFieldSpec={label:string;required?:boolean;kind?:"text"|"email"|"date"|"number"|"select"|"radio"|"file"|"textarea"|"toggle";placeholder?:string;options?:string[]};
 type MemberGroupSpec={title:string;icon:React.ComponentType<{size?:number|string}>;fields:MemberFieldSpec[]};
 
-function MemberCardArt({compact=false}:{compact?:boolean}){return <div className={`member-card-art ${compact?"compact":""}`}><span className="member-card-ribbon"/><img src="/assets/membership-mark-transparent-v2.png" alt="شعار منصة ابناء نهر النيل حول العالم"/><div><small>عضو في</small><b>منصة ابناء<br/>نهر النيل حول العالم</b><em>معاً.. لنبني المستقبل</em></div><footer><span>0001<br/><small>عضوية</small></span><UsersRound/></footer></div>}
+function MemberCardArt({compact=false}:{compact?:boolean}){return <div className={`member-card-art ${compact?"compact":""}`}><span className="member-card-ribbon"/><img src="/assets/membership-mark-transparent-v2.png" alt="شعار منصة ابناء نهر النيل حول العالم"/><div><small>عضو في</small><b><span className="brand-l1">منصة ابناء نهر النيل</span><span className="brand-l2">حول العالم الرقمية</span></b><em>معاً.. لنبني المستقبل</em></div><footer><span>0001<br/><small>عضوية</small></span><UsersRound/></footer></div>}
 
 function Membership(){
   const [selected,setSelected]=useState(1);
@@ -1599,7 +1599,7 @@ function Success(){
   const [credentials]=useState(()=>{try{const pw=sessionStorage.getItem("new_member_password");if(pw)sessionStorage.removeItem("new_member_password");return pw}catch{return null}});
   const [applicationNumber]=useState(()=>sessionStorage.getItem("new_application_number")||"");
   return <MemberStepShell className="success-step application-success-step">
-    <header className="success-brand"><img src="/assets/membership-mark-transparent-v2.png" alt="شعار الرابطة"/><div><h2>منصة ابناء نهر النيل حول العالم</h2><b>الإلكترونية</b></div></header>
+    <header className="success-brand"><img src="/assets/membership-mark-transparent-v2.png" alt="شعار الرابطة"/><div className="two-line-brand"><h2 className="brand-l1">منصة ابناء نهر النيل</h2><b className="brand-l2">حول العالم الرقمية</b></div></header>
     <section className="success-hero"><div className="success-check"><CircleCheckBig/></div><h1>تم إرسال طلبك بنجاح</h1><h2>طلب العضوية قيد المراجعة</h2><p>تم استلام البيانات وإيصال التحويل البنكي وسيتم إشعارك بعد انتهاء المراجعة.</p></section>
     <section className="application-number-card"><small>رقم طلب العضوية</small><strong dir="ltr">{applicationNumber||"سيظهر رقم الطلب بعد اكتمال الإرسال"}</strong>{applicationNumber&&<CopyNumberButton value={applicationNumber}/>}<p>احتفظ بهذا الرقم، فهو وسيلتك لمتابعة حالة الطلب وإظهار كارنيه العضوية بعد القبول.</p></section>
     <section className="application-review-steps"><article><FileText/><b>الطلب مستلم</b></article><article><ReceiptText/><b>مراجعة إيصال التحويل</b></article><article><UserCheck/><b>اعتماد العضوية</b></article></section>

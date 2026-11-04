@@ -64,7 +64,7 @@ function Login({ onLogin }: { onLogin: (s: AdminSession) => void }) {
       <div className="adm-login-card">
         <img src="/assets/ChatGPT_Image_Jul_21,_2026,_05_25_20_PM.png" alt="شعار" className="adm-login-logo" />
         <h1>لوحة تحكم الإدارة</h1>
-        <p>منصة ابناء نهر النيل حول العالم الرقمية</p>
+        <p className="two-line-brand"><span className="brand-l1">منصة ابناء نهر النيل</span><span className="brand-l2">حول العالم الرقمية</span></p>
         <form onSubmit={submit}>
           <input
             type="text"

@@ -122,7 +122,7 @@ function PortalLogin({ onLogin }: { onLogin: (m: Member) => void }) {
       <div className="portal-login-card">
         <img src="/assets/ChatGPT_Image_Jul_21,_2026,_05_25_20_PM.png" alt="شعار الرابطة" className="portal-login-logo" />
         <h1>بوابة الأعضاء</h1>
-        <p>منصة ابناء نهر النيل حول العالم الرقمية</p>
+        <p className="two-line-brand"><span className="brand-l1">منصة ابناء نهر النيل</span><span className="brand-l2">حول العالم الرقمية</span></p>
         <form onSubmit={submit} className="portal-login-form">
           <div className="portal-field">
             <label>البريد الإلكتروني / الجوال / رقم العضوية</label>
@@ -287,7 +287,7 @@ function MembershipTab({ member }: { member: Member }) {
           <div className="pmem-card-header">
             <img src="/assets/ChatGPT_Image_Jul_21,_2026,_05_25_20_PM.png" alt="" className="pmem-card-logo" />
             <div>
-              <div className="pmem-card-org">منصة ابناء نهر النيل حول العالم الرقمية</div>
+              <div className="pmem-card-org two-line-brand"><span className="brand-l1">منصة ابناء نهر النيل</span><span className="brand-l2">حول العالم الرقمية</span></div>
               <div className="pmem-card-type" style={{ color: tp.color }}>{tp.label}</div>
             </div>
           </div>
