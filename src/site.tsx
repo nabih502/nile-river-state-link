@@ -38,7 +38,7 @@ const info: Record<PortalKey, {title:string; accent:string; lead:string; hero:st
   culture:{title:"الثقافة",accent:"هوية وإبداع.. نصون تراثنا ونبدع لمستقبلنا",lead:"منصة ثقافية رقمية شاملة تهدف إلى إبراز التراث السوداني الأصيل ودعم المواهب والإبداع في جميع المجالات الثقافية والفنية.",hero:"/assets/culture-hero-hq.webp",icon:"◈",tabs:["الفعاليات والأنشطة","الأخبار الثقافية","المكتبة الرقمية","الفنون والأدب","التراث والتاريخ"],stats:[["35","فرقة وجمعية"],["650+","عضو فني"],["120","مبادرة ثقافية"],["85","فعالية ثقافية"]],section:"الفعاليات والأنشطة الثقافية",cards:[{title:"ندوة دور الثقافة",text:"ندوة حول الثقافة في بناء المجتمع",image:"/assets/culture-seminar-hq.webp",icon:"♙"},{title:"معرض الفنون",text:"معرض الفنون التشكيلية السنوي",image:"/assets/culture-gallery-hq.webp",icon:"▥"},{title:"أمسية شعرية",text:"أمسية للشعراء والشباب",image:"/assets/culture-poetry-hq.webp",icon:"♩"},{title:"مهرجان تراث النيل",text:"مهرجان تراثي يحتفي بالهوية",image:"/assets/culture-folk-hq.webp",icon:"◈"}]},
 };
 
-function Brand({light=false}:{light?:boolean}){return <a href="/" className={`brand ${light?"light":""}`} aria-label="رابطة ولاية نهر النيل الرقمية"><img src="/assets/ChatGPT_Image_Jul_21,_2026,_05_25_20_PM.png" alt="رابطة ولاية نهر النيل الرقمية"/></a>}
+function Brand({light=false}:{light?:boolean}){return <a href="/" className={`brand ${light?"light":""}`} aria-label="منصة ابناء نهر النيل حول العالم الرقمية"><img src="/assets/ChatGPT_Image_Jul_21,_2026,_05_25_20_PM.png" alt="منصة ابناء نهر النيل حول العالم الرقمية"/></a>}
 
 function Header({active}:{active:PageKey}){
   const [open,setOpen]=useState(false);
@@ -364,8 +364,8 @@ function Home(){
   return <div className="home-redesign">
     <section className="home-master-hero">
       <div className="home-hero-copy motion">
-        <span className="home-eyebrow">رابطة ولاية</span>
-        <h1>نهر النيل الرقمية</h1>
+        <span className="home-eyebrow">منصة ابناء نهر النيل</span>
+        <h1>حول العالم الرقمية</h1>
         <h2>منصة رقمية شاملة تربط أبناء ولاية نهر النيل</h2>
         <p>في الداخل والخارج</p>
         <div className="home-values">
@@ -394,13 +394,13 @@ function Home(){
 
     <section className="home-join page-width motion">
       <div className="home-member-card">
-        <img src="/assets/ChatGPT_Image_Jul_21,_2026,_05_25_20_PM.png" alt="رابطة ولاية نهر النيل الرقمية"/>
-        <div><span>عضو في</span><strong>رابطة ولاية نهر النيل الرقمية</strong><small>معاً.. لنبني المستقبل</small></div>
+        <img src="/assets/ChatGPT_Image_Jul_21,_2026,_05_25_20_PM.png" alt="منصة ابناء نهر النيل حول العالم الرقمية"/>
+        <div><span>عضو في</span><strong>منصة ابناء نهر النيل حول العالم الرقمية</strong><small>معاً.. لنبني المستقبل</small></div>
         <footer><b>0001</b><span>عضوية</span></footer>
       </div>
       <div className="home-join-copy">
         <span>انضم الآن إلى</span>
-        <h2>رابطة ولاية نهر النيل الرقمية</h2>
+        <h2>منصة ابناء نهر النيل حول العالم الرقمية</h2>
         <p>كن جزءاً من أكبر تجمع رقمي لأبناء ولاية نهر النيل واستفد من جميع الخدمات والمبادرات والفرص المتاحة.</p>
       </div>
       <a className="home-join-cta" href="/membership"><UsersRound/><b>اضغط هنا<br/>للانضمام الآن</b><span><ArrowLeft/></span></a>
@@ -767,7 +767,7 @@ function HealthPage(){
 
     <section className="health-privacy page-width motion"><ShieldCheck/><div><h2>خصوصيتك تهمنا</h2><p>جميع بياناتك الصحية سرية وآمنة، ولا تتم مشاركتها مع أي جهة خارجية.</p></div><span><b><Clock3/> خدمة على مدار الساعة</b><b><Stethoscope/> أطباء معتمدون</b><b><LockKeyhole/> سرية تامة</b><b><ShieldCheck/> أمان البيانات</b></span></section>
 
-    <section className="health-join page-width motion"><div className="health-pulse-line" aria-hidden="true"><HeartPulse/></div><div><h2>صحتك تهمنا .. نحن دائماً معك</h2><p>انضم إلى رابطة ولاية نهر النيل الإلكترونية وتمتع بخدمات صحية متكاملة</p></div><a href="/membership">سجل عضويتك الآن <UserRound/></a></section>
+    <section className="health-join page-width motion"><div className="health-pulse-line" aria-hidden="true"><HeartPulse/></div><div><h2>صحتك تهمنا .. نحن دائماً معك</h2><p>انضم إلى منصة ابناء نهر النيل حول العالم الإلكترونية وتمتع بخدمات صحية متكاملة</p></div><a href="/membership">سجل عضويتك الآن <UserRound/></a></section>
   </div>
 }
 
@@ -1267,14 +1267,14 @@ function AboutPage(){
       <div className="ab-top-visual ab-hero-visual" aria-hidden><img src="/assets/about-top-arc-exact.webp" alt=""/></div>
       <section className="ab-hero">
         <div className="ab-hero-media"><picture><img src="/assets/about-hero-mobile-exact.webp" alt="جسر فوق نهر النيل والمناطق الزراعية المحيطة"/></picture></div>
-        <div className="ab-hero-copy motion ab-hero-intro"><h1>عن الرابطة</h1><h2>معاً.. من أجل ولاية مزدهرة ومجتمع متكافئ</h2><p>رابطة ولاية نهر النيل الإلكترونية هي منصة تجمع أبناء الولاية في كل مكان.<br/>نعمل بروح واحدة لخدمة أبنائها والارتقاء بولايتنا وتنميتها في شتى المجالات.</p></div>
+        <div className="ab-hero-copy motion ab-hero-intro"><h1>عن الرابطة</h1><h2>معاً.. من أجل ولاية مزدهرة ومجتمع متكافئ</h2><p>منصة ابناء نهر النيل حول العالم الإلكترونية هي منصة تجمع أبناء الولاية في كل مكان.<br/>نعمل بروح واحدة لخدمة أبنائها والارتقاء بولايتنا وتنميتها في شتى المجالات.</p></div>
         <img className="ab-hero-wave" src="/assets/about-hero-wave-exact.webp" alt="" aria-hidden/>
       </section>
 
       <section className="ab-president page-width motion ab-reveal ab-from-left">
         <div className="ab-president-photo"><picture><img src="/assets/about-president-mobile-exact.webp" alt="الأستاذ هشام محمد الحسن رئيس الرابطة"/></picture></div>
         <article><h2>كلمة رئيس الرابطة</h2><h3>الأستاذ / هشام محمد الحسن</h3><span className="ab-title-line"/><p>نؤمن بأن العمل المؤسسي والتخطيط الاستراتيجي هما أساس التغيير الحقيقي،<br/> وسنواصل العمل معكم بروح الفريق الواحد لتحقيق التنمية المستدامة<br/> لولاية نهر النيل وخدمة أبنائها أينما كانوا.</p><p>معاً.. نصنع مستقبلاً أفضل لولايتنا وأجيالنا القادمة.</p><strong className="ab-signature">Hisham Alhassan</strong></article>
-        <aside><img src="/assets/membership-mark-transparent-v2.png" alt="شعار رابطة ولاية نهر النيل"/><b>رابطة ولاية<br/>نهر النيل<br/>الإلكترونية</b><i/><em/></aside>
+        <aside><img src="/assets/membership-mark-transparent-v2.png" alt="شعار منصة ابناء نهر النيل حول العالم"/><b>منصة ابناء<br/>نهر النيل<br/>حول العالم</b><i/><em/></aside>
       </section>
     </div>
 
@@ -1300,7 +1300,7 @@ const memberPlans=[
 type MemberFieldSpec={label:string;required?:boolean;kind?:"text"|"email"|"date"|"number"|"select"|"radio"|"file"|"textarea"|"toggle";placeholder?:string;options?:string[]};
 type MemberGroupSpec={title:string;icon:React.ComponentType<{size?:number|string}>;fields:MemberFieldSpec[]};
 
-function MemberCardArt({compact=false}:{compact?:boolean}){return <div className={`member-card-art ${compact?"compact":""}`}><span className="member-card-ribbon"/><img src="/assets/membership-mark-transparent-v2.png" alt="شعار رابطة ولاية نهر النيل"/><div><small>عضو في</small><b>رابطة ولاية<br/>نهر النيل الرقمية</b><em>معاً.. لنبني المستقبل</em></div><footer><span>0001<br/><small>عضوية</small></span><UsersRound/></footer></div>}
+function MemberCardArt({compact=false}:{compact?:boolean}){return <div className={`member-card-art ${compact?"compact":""}`}><span className="member-card-ribbon"/><img src="/assets/membership-mark-transparent-v2.png" alt="شعار منصة ابناء نهر النيل حول العالم"/><div><small>عضو في</small><b>منصة ابناء<br/>نهر النيل حول العالم</b><em>معاً.. لنبني المستقبل</em></div><footer><span>0001<br/><small>عضوية</small></span><UsersRound/></footer></div>}
 
 function Membership(){
   const [selected,setSelected]=useState(1);
@@ -1320,7 +1320,7 @@ function Membership(){
   ];
   return <main className="member-pricing-page">
     <section className="mp-hero">
-      <div className="mp-brand"><img src="/assets/ChatGPT_Image_Jul_21,_2026,_05_25_20_PM.png" alt="رابطة ولاية نهر النيل الرقمية"/></div>
+      <div className="mp-brand"><img src="/assets/ChatGPT_Image_Jul_21,_2026,_05_25_20_PM.png" alt="منصة ابناء نهر النيل حول العالم الرقمية"/></div>
       <div className="mp-photo"><img src="/assets/membership-hero-hq.webp" alt="معلم ولاية نهر النيل عند الغروب"/></div>
       <div className="mp-copy motion"><h1>عضويتك في رابطتك</h1><h2>انضم إلى مجتمع أبناء ولاية نهر النيل</h2><p>سجّل الآن وكن جزءاً من رابطة تعمل من أجل تنمية الولاية وخدمة أبنائها</p></div>
       <div className="mp-card-wrap motion"><MemberCardArt/></div>
@@ -1330,7 +1330,7 @@ function Membership(){
       <div className="mp-cta-inner">
         <UsersRound size={48}/>
         <h2>انضم إلى الرابطة اليوم</h2>
-        <p>سجّل عضويتك برسوم اشتراك سنوية قدرها 50 ريال سعودي وابدأ الاستفادة من خدمات وأنشطة رابطة ولاية نهر النيل</p>
+        <p>سجّل عضويتك برسوم اشتراك سنوية قدرها 50 ريال سعودي وابدأ الاستفادة من خدمات وأنشطة منصة ابناء نهر النيل حول العالم</p>
         <a href="/register" className="mp-cta-button"><UserRound/>سجّل الآن</a>
       </div>
     </section>
@@ -1533,7 +1533,7 @@ function Payment(){
   };
 
   return <MemberStepShell className="payment-step bank-transfer-step">
-    <div className="payment-brand"><img src="/assets/ChatGPT_Image_Jul_21,_2026,_05_25_20_PM.png" alt="رابطة ولاية نهر النيل الرقمية"/></div>
+    <div className="payment-brand"><img src="/assets/ChatGPT_Image_Jul_21,_2026,_05_25_20_PM.png" alt="منصة ابناء نهر النيل حول العالم الرقمية"/></div>
     <header className="step-heading payment-title"><h1><span/>التحويل البنكي<span/></h1><h2>بنك أم درمان الوطني</h2><p>اختر الحساب المناسب لعملة التحويل، ثم أرفق إيصال التحويل البنكي لإرسال طلب العضوية.</p></header>
     <section className="membership-fee-note"><Landmark/><div><b>رسوم الاشتراك السنوي: 50 ريالاً سعودياً</b><p>يمكن التحويل إلى أحد حسابات بنك أم درمان الوطني التالية. عند التحويل بالدولار أو الجنيه السوداني يُحتسب المقابل حسب سعر البنك.</p></div></section>
     <section className="bank-accounts" aria-label="حسابات بنك أم درمان الوطني">
@@ -1555,7 +1555,7 @@ type MembershipLookup={found:boolean;application_number?:string;status?:string;r
 function MembershipCardView({result}:{result:MembershipLookup}){
   const fmt=(value?:string)=>value?new Intl.DateTimeFormat("ar-SA",{year:"numeric",month:"long",day:"numeric"}).format(new Date(value)):"—";
   return <section className={"digital-member-card"+(result.is_expired?" expired":"")}>
-    <div className="card-brand-row"><img src="/assets/membership-mark-transparent-v2.png" alt="شعار الرابطة"/><div><b>رابطة ولاية نهر النيل</b><small>البطاقة الإلكترونية للعضوية</small></div><span>{result.is_expired?"منتهية":"سارية"}</span></div>
+    <div className="card-brand-row"><img src="/assets/membership-mark-transparent-v2.png" alt="شعار الرابطة"/><div><b>منصة ابناء نهر النيل حول العالم</b><small>البطاقة الإلكترونية للعضوية</small></div><span>{result.is_expired?"منتهية":"سارية"}</span></div>
     <div className="card-person-row"><div className="card-photo">{result.photo_url?<img src={result.photo_url} alt="صورة العضو"/>:<UserRound/>}</div><div><small>اسم العضو</small><h2>{result.full_name}</h2><small>رقم العضوية</small><strong dir="ltr">{result.member_number}</strong></div><div className="card-qr" aria-label="رمز تحقق البطاقة"><i/><i/><i/><i/><i/><i/><i/><i/><i/></div></div>
     <div className="card-validity"><p><small>بداية العضوية</small><b>{fmt(result.start_date)}</b></p><p><small>تاريخ الانتهاء</small><b>{fmt(result.end_date)}</b></p></div>
     <footer><ShieldCheck/> صالحة لمدة سنة من تاريخ اعتماد الاشتراك — يجب التجديد بعد انتهاء الصلاحية</footer>
@@ -1599,7 +1599,7 @@ function Success(){
   const [credentials]=useState(()=>{try{const pw=sessionStorage.getItem("new_member_password");if(pw)sessionStorage.removeItem("new_member_password");return pw}catch{return null}});
   const [applicationNumber]=useState(()=>sessionStorage.getItem("new_application_number")||"");
   return <MemberStepShell className="success-step application-success-step">
-    <header className="success-brand"><img src="/assets/membership-mark-transparent-v2.png" alt="شعار الرابطة"/><div><h2>رابطة ولاية نهر النيل</h2><b>الإلكترونية</b></div></header>
+    <header className="success-brand"><img src="/assets/membership-mark-transparent-v2.png" alt="شعار الرابطة"/><div><h2>منصة ابناء نهر النيل حول العالم</h2><b>الإلكترونية</b></div></header>
     <section className="success-hero"><div className="success-check"><CircleCheckBig/></div><h1>تم إرسال طلبك بنجاح</h1><h2>طلب العضوية قيد المراجعة</h2><p>تم استلام البيانات وإيصال التحويل البنكي وسيتم إشعارك بعد انتهاء المراجعة.</p></section>
     <section className="application-number-card"><small>رقم طلب العضوية</small><strong dir="ltr">{applicationNumber||"سيظهر رقم الطلب بعد اكتمال الإرسال"}</strong>{applicationNumber&&<CopyNumberButton value={applicationNumber}/>}<p>احتفظ بهذا الرقم، فهو وسيلتك لمتابعة حالة الطلب وإظهار كارنيه العضوية بعد القبول.</p></section>
     <section className="application-review-steps"><article><FileText/><b>الطلب مستلم</b></article><article><ReceiptText/><b>مراجعة إيصال التحويل</b></article><article><UserCheck/><b>اعتماد العضوية</b></article></section>
@@ -1668,7 +1668,7 @@ function Contact(){
         <div style={{position:"absolute",inset:0,background:"linear-gradient(110deg,rgba(0,0,0,0.55) 0%,rgba(0,0,0,0.3) 55%,rgba(0,0,0,0.05) 100%)"}}/>
         <div style={{position:"absolute",inset:0,display:"flex",flexDirection:"column",justifyContent:"center",padding:"clamp(2rem,6vw,5rem)",maxWidth:"1200px",margin:"0 auto",left:0,right:0}}>
           <div style={{display:"inline-flex",alignItems:"center",gap:"0.5rem",background:"rgba(37,99,235,0.8)",backdropFilter:"blur(10px)",color:"#fff",padding:"0.4rem 1rem",borderRadius:"9999px",fontSize:"0.78rem",fontWeight:700,marginBottom:"1.25rem",width:"fit-content",border:"1px solid rgba(255,255,255,0.2)"}}>
-            <MessageCircle size={14}/> رابطة ولاية نهر النيل
+            <MessageCircle size={14}/> منصة ابناء نهر النيل حول العالم
           </div>
           <h1 style={{color:"#fff",fontSize:"clamp(2rem,5vw,3.5rem)",fontWeight:900,margin:"0 0 1rem",lineHeight:1.15,textShadow:"0 2px 20px rgba(0,0,0,0.5)"}}>
             {s("hero_title","تواصل معنا")}

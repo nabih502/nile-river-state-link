@@ -13,7 +13,7 @@ test("builds the Vite app and serves the Arabic site", async () => {
   assert.match(packageJson, /"vite"/);
   assert.doesNotMatch(packageJson, /vinext|@cloudflare\/vite-plugin/);
 
-  assert.match(html, /<title>رابطة ولاية نهر النيل الرقمية<\/title>/);
+  assert.match(html, /<title>منصة ابناء نهر النيل حول العالم الرقمية<\/title>/);
   assert.match(html, /<div id="root"><\/div>/);
   assert.match(html, /type="module"/);
 });

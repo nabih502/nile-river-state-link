@@ -195,7 +195,7 @@ export default function SiteChatWidget() {
     subscribeRealtime(convData.id);
 
     // send welcome message from bot
-    const welcome = `مرحباً ${name.trim()}! أنا المساعد الذكي لرابطة ولاية نهر النيل. كيف يمكنني مساعدتك اليوم؟`;
+    const welcome = `مرحباً ${name.trim()}! أنا المساعد الذكي لمنصة ابناء نهر النيل حول العالم. كيف يمكنني مساعدتك اليوم؟`;
     await supabase.from("visitor_messages").insert({
       conversation_id: convData.id,
       sender_type: "bot",
@@ -315,7 +315,7 @@ export default function SiteChatWidget() {
               <img src="/assets/ChatGPT_Image_Jul_21,_2026,_05_25_20_PM.png" alt="logo" />
             </div>
             <div className="vchat-header-info">
-              <span className="vchat-header-title">رابطة ولاية نهر النيل</span>
+              <span className="vchat-header-title">منصة ابناء نهر النيل حول العالم</span>
               {conv && (
                 <span className="vchat-header-status">
                   <span className="vchat-status-dot" style={{ background: statusInfo().dot }} />

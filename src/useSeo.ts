@@ -49,7 +49,7 @@ function setLink(rel: string, href: string) {
 }
 
 function applyToHead(data: SeoData) {
-  const title = data.title || "رابطة ولاية نهر النيل";
+  const title = data.title || "منصة ابناء نهر النيل حول العالم";
   const description = data.description || "";
   const ogTitle = data.og_title || title;
   const ogDesc = data.og_description || description;
@@ -74,7 +74,7 @@ function applyToHead(data: SeoData) {
   setMeta("og:type", data.og_type || "website", "property");
   setMeta("og:url", canonical, "property");
   setMeta("og:locale", "ar_SA", "property");
-  setMeta("og:site_name", "رابطة ولاية نهر النيل", "property");
+  setMeta("og:site_name", "منصة ابناء نهر النيل حول العالم", "property");
 
   // Twitter / X
   setMeta("twitter:card", data.twitter_card || "summary_large_image");
@@ -126,7 +126,7 @@ export function applyItemSeo(opts: {
   fallbackImage?: string;
   canonical?: string;
 }) {
-  const title = opts.title || opts.fallbackTitle || "رابطة ولاية نهر النيل";
+  const title = opts.title || opts.fallbackTitle || "منصة ابناء نهر النيل حول العالم";
   const description = opts.description || opts.fallbackDescription || "";
   const image = opts.image || opts.fallbackImage || "/og.png";
   const canonical =
